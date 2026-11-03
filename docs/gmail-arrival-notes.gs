@@ -13,12 +13,14 @@
 var ENDPOINT = "https://chioshotel.gr/api/gmail/arrival-notes/";
 var MESSAGES_ENDPOINT = "https://chioshotel.gr/api/gmail/booking-messages/";
 var OWN_ADDRESS = "vhouse.reservations@gmail.com";
-// Gmail search cannot match the emoji reliably, so the subject is checked below.
-var SEARCH_QUERY = "newer_than:3d -in:spam -in:trash";
+// Only what arrived since the last good run is read. Gmail search cannot match
+// the emoji reliably, so the subject is checked below.
+var FIRST_RUN_LOOKBACK_MS = 30 * 60 * 1000;
+var OVERLAP_MS = 2 * 60 * 1000;
 var BOOKING_SUBJECT = /✅\s*\d{6,10}/;
 var REPLY_SUBJECT = /^\s*(re|fw|fwd|απ|aw|sv|ynt)\s*:/i;
-var MAX_THREADS = 200;
-var PROCESSED_KEEP_DAYS = 14;
+var MAX_THREADS = 50;
+var PROCESSED_KEEP_DAYS = 3;
 
 function processArrivalReplies() {
   var secret = PropertiesService.getScriptProperties().getProperty("ARRIVAL_NOTES_SECRET");
@@ -26,12 +28,17 @@ function processArrivalReplies() {
 
   var store = PropertiesService.getScriptProperties();
   var processed = JSON.parse(store.getProperty("processed") || "{}");
-  var threads = GmailApp.search(SEARCH_QUERY, 0, MAX_THREADS);
+  var startedAt = Date.now();
+  var lastRun = Number(store.getProperty("lastRun")) || startedAt - FIRST_RUN_LOOKBACK_MS;
+  var since = lastRun - OVERLAP_MS;
+  var failed = false;
+  var query = "after:" + Math.floor(since / 1000) + " -in:spam -in:trash";
+  var threads = GmailApp.search(query, 0, MAX_THREADS);
 
   threads.forEach(function (thread) {
     thread.getMessages().forEach(function (message) {
       var id = message.getId();
-      if (processed[id]) return;
+      if (processed[id] || message.getDate().getTime() < since) return;
       var subject = message.getSubject();
       if (!BOOKING_SUBJECT.test(subject)) return;
 
@@ -70,7 +77,8 @@ function processArrivalReplies() {
       if (status >= 200 && status < 300) {
         processed[id] = Date.now();
       } else {
-        // Left unprocessed so the next run retries it.
+        // lastRun stays put, so the next run retries it.
+        failed = true;
         console.error("arrival-notes " + status + " for " + id + ": " + response.getContentText());
       }
     });
@@ -85,12 +93,17 @@ function processArrivalReplies() {
   // Booking.com and Expedia guest messages, read from Beds24 by the site.
   var sync = UrlFetchApp.fetch(MESSAGES_ENDPOINT, {
     method: "post",
+    contentType: "application/json",
     headers: { Authorization: "Bearer " + secret },
+    payload: JSON.stringify({ since: since }),
     muteHttpExceptions: true,
   });
   if (sync.getResponseCode() >= 300) {
+    failed = true;
     console.error("booking-messages " + sync.getResponseCode() + ": " + sync.getContentText());
   }
+
+  if (!failed) store.setProperty("lastRun", String(startedAt));
 }
 
 /** Run once to create the 10-minute trigger. */

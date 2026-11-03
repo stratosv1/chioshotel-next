@@ -14,7 +14,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Unauthorized." }, { status: 401 });
   }
   try {
-    return NextResponse.json({ ok: true, ...(await syncGuestMessages()) }, { headers: { "X-Robots-Tag": "noindex, nofollow" } });
+    const body = await request.json().catch(() => null);
+    return NextResponse.json({ ok: true, ...(await syncGuestMessages(Number(body?.since))) }, { headers: { "X-Robots-Tag": "noindex, nofollow" } });
   } catch (error) {
     console.error("[booking-messages] sync failed", error);
     return NextResponse.json({ ok: false, error: "Sync failed." }, { status: 502 });

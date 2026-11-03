@@ -7,7 +7,8 @@ import { isVirtualEmail } from "@/lib/crm/store";
 
 const MESSAGES_URL = "https://api.beds24.com/v2/bookings/messages";
 const WRITE_MESSAGES_URL = "https://beds24.com/api/v2/bookings/messages";
-const LOOKBACK_SECONDS = 2 * 60 * 60;
+const DEFAULT_LOOKBACK_MS = 30 * 60 * 1000;
+const MAX_LOOKBACK_MS = 24 * 60 * 60 * 1000;
 const MAX_MESSAGES_PER_RUN = 15;
 const EMAIL_IN_TEXT = /[a-z0-9._%+-]+@[a-z0-9-]+(?:\.[a-z0-9-]+)*\.[a-z]{2,}/i;
 
@@ -97,19 +98,20 @@ export async function sendOutreachToBooking(bookingId: string) {
   return sendMessage(bookingId, pickLanguage(row.guest_language ?? "", row.country ?? ""), row.firstname ?? "");
 }
 
-/** Called every 10 minutes. With no new guest messages it never touches the database. */
-export async function syncGuestMessages() {
+/** Called every 10 minutes with the last good run. Nothing new means no database access. */
+export async function syncGuestMessages(sinceMs?: number) {
+  const now = Date.now();
+  const oldest = Math.max(sinceMs && Number.isFinite(sinceMs) ? sinceMs : now - DEFAULT_LOOKBACK_MS, now - MAX_LOOKBACK_MS);
   const token = process.env.BEDS24_API_TOKEN?.trim();
   if (!token) throw new Error("BEDS24_API_TOKEN is not configured.");
   const url = new URL(MESSAGES_URL);
-  url.searchParams.set("maxAge", String(LOOKBACK_SECONDS));
+  url.searchParams.set("maxAge", String(Math.ceil((now - oldest) / 1000)));
   url.searchParams.set("source", "guest");
   const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
   if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
   const payload = (await response.json()) as any;
   // Beds24 can return older messages despite maxAge, so age is checked here too.
   // A missing or unreadable time counts as old: old messages must never reach the notes.
-  const oldest = Date.now() - LOOKBACK_SECONDS * 1000;
   const messages = (Array.isArray(payload?.data) ? payload.data : []).filter((item: any) =>
     String(item?.source ?? "") === "guest" && String(item?.message ?? "").trim() && Date.parse(String(item?.time ?? "")) >= oldest);
   const summary = { found: messages.length, stored: 0, emails: 0, notes: 0 };
