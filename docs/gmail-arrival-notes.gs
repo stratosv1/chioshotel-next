@@ -10,8 +10,8 @@
  * Setup: see docs/gmail-arrival-notes.md
  */
 
-var ENDPOINT = "https://chioshotel.gr/api/gmail/arrival-notes";
-var MESSAGES_ENDPOINT = "https://chioshotel.gr/api/gmail/booking-messages";
+var ENDPOINT = "https://chioshotel.gr/api/gmail/arrival-notes/";
+var MESSAGES_ENDPOINT = "https://chioshotel.gr/api/gmail/booking-messages/";
 var OWN_ADDRESS = "vhouse.reservations@gmail.com";
 // Gmail search cannot match the emoji reliably, so the subject is checked below.
 var SEARCH_QUERY = "newer_than:3d -in:spam -in:trash";
