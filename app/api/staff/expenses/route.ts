@@ -6,6 +6,8 @@ import {
   categoryBelongsToEntity,
   categoryExists,
   entityExists,
+  parseExpenseAmount,
+  staffExpenseAccounts,
   staffExpenseCategories,
   staffExpenseEntities,
   type StaffExpenseAccount,
@@ -54,6 +56,11 @@ type MonthlyRow = {
   count: number;
 };
 
+type TrendRow = {
+  month: string;
+  total: string;
+};
+
 type UsageRow = {
   primary_account: StaffExpenseAccount;
   category: string;
@@ -72,17 +79,29 @@ function normalizeSearch(value: string) {
     .trim();
 }
 
-// Map a free-text search to category/entity slugs by their Greek labels, so
-// "βενζινη" or "Μιχάλης" match even though the DB stores English slugs.
-function slugsMatching(search: string) {
-  const term = normalizeSearch(search);
-  if (!term) return { categories: [] as string[], entities: [] as string[] };
-  const matches = (label: string, slug: string) =>
-    normalizeSearch(label).includes(term) || slug.includes(term);
-  return {
-    categories: staffExpenseCategories.filter((c) => matches(c.label, c.slug)).map((c) => c.slug),
-    entities: staffExpenseEntities.filter((e) => matches(e.label, e.slug)).map((e) => e.slug),
-  };
+// Greek labels for each stored slug, so "βενζινη" or "Μιχάλης" match even though
+// the DB stores English slugs. Passed to SQL as JSON.
+const SEARCH_LABELS = JSON.stringify(
+  Object.fromEntries(
+    [...staffExpenseCategories, ...staffExpenseEntities, ...staffExpenseAccounts].map((item) => [
+      item.slug,
+      normalizeSearch(`${item.label} ${item.slug}`),
+    ]),
+  ),
+);
+
+// Every word must match, in any order and in part: "σπιτι μιχ φροντιστηρια".
+// Word endings are dropped so plural and singular find the same expenses.
+function searchPatterns(search: string) {
+  return normalizeSearch(search)
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 6)
+    .map((term) => {
+      const stem = term.replace(/(ων|ασ|εσ|ησ|οσ|ια|ιο|α|ε|η|ι|ο|υ|ω)$/, "");
+      return term.length >= 5 && stem.length >= 4 ? stem : term;
+    })
+    .map((term) => `%${term.replace(/[\\%_]/g, "\\$&")}%`);
 }
 
 const ATHENS_TIME_ZONE = "Europe/Athens";
@@ -159,58 +178,12 @@ function athensIsoDate(date = new Date()) {
   }).format(date);
 }
 
-function normalizeAmount(value: unknown) {
-  let raw = String(value ?? "")
-    .trim()
-    .replace(/\s/g, "")
-    .replace(/€/g, "")
-    .replace(/[^0-9.,]/g, "");
-
-  if (!raw) {
-    return 0;
-  }
-
-  const lastComma = raw.lastIndexOf(",");
-  const lastDot = raw.lastIndexOf(".");
-
-  if (lastComma >= 0 && lastDot >= 0) {
-    if (lastComma > lastDot) {
-      raw = raw.replace(/\./g, "").replace(",", ".");
-    } else {
-      raw = raw.replace(/,/g, "");
-    }
-  } else if (lastComma >= 0) {
-    const parts = raw.split(",");
-    if (parts.length > 2) {
-      const decimal = parts.pop() ?? "";
-      raw = `${parts.join("")}.${decimal}`;
-    } else {
-      raw = raw.replace(",", ".");
-    }
-  } else if (lastDot >= 0) {
-    const parts = raw.split(".");
-    if (parts.length === 2 && parts[1].length === 3 && parts[0].length <= 3) {
-      raw = parts.join("");
-    } else if (parts.length > 2) {
-      const decimal = parts.at(-1) ?? "";
-      raw = decimal.length <= 2
-        ? `${parts.slice(0, -1).join("")}.${decimal}`
-        : parts.join("");
-    }
-  }
-
-  const amount = Number(raw);
-
-  if (!Number.isFinite(amount)) {
-    return 0;
-  }
-
-  return Math.round(amount * 100) / 100;
-}
-
 function normalizeDate(value: unknown) {
   const raw = String(value ?? "");
-  return /^\d{4}-\d{2}-\d{2}$/.test(raw) ? raw : athensIsoDate();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(raw)) return null;
+  const date = new Date(`${raw}T12:00:00Z`);
+  if (Number.isNaN(date.getTime()) || date.toISOString().slice(0, 10) !== raw) return null;
+  return raw <= athensIsoDate() ? raw : null;
 }
 
 function mapRow(row: StaffExpenseRow) {
@@ -231,12 +204,16 @@ function parseFilters(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const requestedMonth = searchParams.get("month") ?? "";
   const requestedAccount = searchParams.get("account") ?? "";
+  const requestedEntity = searchParams.get("entity") ?? "";
+  const requestedCategory = searchParams.get("category") ?? "";
   const search = (searchParams.get("search") ?? "").trim().slice(0, 120);
   const requestedLimit = Number(searchParams.get("limit") ?? "80");
 
   return {
     month: /^\d{4}-\d{2}$/.test(requestedMonth) ? requestedMonth : "",
     account: accountExists(requestedAccount) ? requestedAccount : "",
+    entity: entityExists(requestedEntity) ? requestedEntity : "",
+    category: categoryExists(requestedCategory) ? requestedCategory : "",
     search,
     limit: Number.isFinite(requestedLimit)
       ? Math.min(500, Math.max(20, Math.round(requestedLimit)))
@@ -244,12 +221,51 @@ function parseFilters(request: NextRequest) {
   };
 }
 
+type ExpenseFilters = ReturnType<typeof parseFilters>;
+
+function filterClause(sql: ReturnType<typeof getSql>, filters: ExpenseFilters, month = filters.month) {
+  const { account, entity, category, search } = filters;
+
+  return sql`
+    deleted_at IS NULL
+    AND (${month} = '' OR to_char(expense_date, 'YYYY-MM') = ${month})
+    AND (${account} = '' OR primary_account = ${account})
+    AND (${entity} = '' OR entity = ${entity})
+    AND (${category} = '' OR category = ${category})
+    AND NOT EXISTS (
+      SELECT 1
+      FROM unnest(${searchPatterns(search)}::text[]) AS term
+      WHERE concat_ws(
+        ' ',
+        replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ'),
+        ${SEARCH_LABELS}::jsonb ->> category::text,
+        ${SEARCH_LABELS}::jsonb ->> entity::text,
+        ${SEARCH_LABELS}::jsonb ->> primary_account::text
+      ) NOT LIKE term
+    )
+  `;
+}
+
+async function readBody(request: NextRequest) {
+  try {
+    return (await request.json()) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+const INVALID_REQUEST = { message: "Το αίτημα δεν ήταν έγκυρο." };
+
 function validateExpenseInput(body: Record<string, unknown>) {
   const expenseDate = normalizeDate(body.expenseDate);
   const category = String(body.category ?? "");
   const entity = String(body.entity ?? "");
-  const amount = normalizeAmount(body.amount);
+  const amount = parseExpenseAmount(body.amount);
   const comments = String(body.comments ?? "").trim();
+
+  if (!expenseDate) {
+    return { error: "Δεν καταχωρήθηκε: βάλε σωστή ημερομηνία, όχι μελλοντική." } as const;
+  }
 
   if (!categoryExists(category)) {
     return { error: "Δεν καταχωρήθηκε: μη έγκυρη κατηγορία." } as const;
@@ -298,15 +314,13 @@ export async function GET(request: NextRequest) {
   }
 
   const sql = getSql();
-  const { month, account, search, limit } = parseFilters(request);
+  const filters = parseFilters(request);
   const today = athensIsoDate();
   const currentMonth = today.slice(0, 7);
-  const searchPattern = `%${normalizeSearch(search)}%`;
-  const { categories: searchCategories, entities: searchEntities } = slugsMatching(search);
   const [startYear, startMonth] = currentMonth.split("-").map(Number);
   const trendStart = new Date(Date.UTC(startYear, startMonth - 12, 1)).toISOString().slice(0, 10);
 
-  const [rows, aggregateRows, accountRows, categoryRows, globalRows, monthlyRows, usageRows] = await Promise.all([
+  const [rows, aggregateRows, accountRows, categoryRows, globalRows, monthlyRows, usageRows, trendRows] = await Promise.all([
     sql`
       SELECT
         id,
@@ -319,59 +333,27 @@ export async function GET(request: NextRequest) {
         created_at::text,
         updated_at::text
       FROM staff_expenses
-      WHERE
-        (${month} = '' OR to_char(expense_date, 'YYYY-MM') = ${month})
-        AND (${account} = '' OR primary_account = ${account})
-        AND (
-          ${search} = ''
-          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
-          OR category = ANY(${searchCategories})
-          OR entity = ANY(${searchEntities})
-        )
+      WHERE ${filterClause(sql, filters)}
       ORDER BY expense_date DESC, id DESC
-      LIMIT ${limit}
+      LIMIT ${filters.limit}
     `,
     sql`
       SELECT
         COALESCE(SUM(amount), 0)::text AS total,
         COUNT(*)::int AS count
       FROM staff_expenses
-      WHERE
-        (${month} = '' OR to_char(expense_date, 'YYYY-MM') = ${month})
-        AND (${account} = '' OR primary_account = ${account})
-        AND (
-          ${search} = ''
-          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
-          OR category = ANY(${searchCategories})
-          OR entity = ANY(${searchEntities})
-        )
+      WHERE ${filterClause(sql, filters)}
     `,
     sql`
       SELECT primary_account, COALESCE(SUM(amount), 0)::text AS total
       FROM staff_expenses
-      WHERE
-        (${month} = '' OR to_char(expense_date, 'YYYY-MM') = ${month})
-        AND (${account} = '' OR primary_account = ${account})
-        AND (
-          ${search} = ''
-          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
-          OR category = ANY(${searchCategories})
-          OR entity = ANY(${searchEntities})
-        )
+      WHERE ${filterClause(sql, filters)}
       GROUP BY primary_account
     `,
     sql`
       SELECT category, COALESCE(SUM(amount), 0)::text AS total
       FROM staff_expenses
-      WHERE
-        (${month} = '' OR to_char(expense_date, 'YYYY-MM') = ${month})
-        AND (${account} = '' OR primary_account = ${account})
-        AND (
-          ${search} = ''
-          OR replace(translate(lower(COALESCE(comments, '')), ${GREEK_ACCENTED}, ${GREEK_PLAIN}), 'ς', 'σ') LIKE ${searchPattern}
-          OR category = ANY(${searchCategories})
-          OR entity = ANY(${searchEntities})
-        )
+      WHERE ${filterClause(sql, filters)}
       GROUP BY category
       ORDER BY SUM(amount) DESC
     `,
@@ -381,6 +363,7 @@ export async function GET(request: NextRequest) {
         COALESCE(SUM(amount) FILTER (WHERE to_char(expense_date, 'YYYY-MM') = ${currentMonth}), 0)::text AS current_month_total,
         COALESCE(SUM(amount), 0)::text AS all_total
       FROM staff_expenses
+      WHERE deleted_at IS NULL
     `,
     sql`
       SELECT
@@ -390,13 +373,20 @@ export async function GET(request: NextRequest) {
         SUM(amount)::text AS total,
         COUNT(*)::int AS count
       FROM staff_expenses
-      WHERE expense_date >= CAST(${trendStart} AS date)
+      WHERE deleted_at IS NULL AND expense_date >= CAST(${trendStart} AS date)
       GROUP BY 1, 2, 3
     `,
     sql`
       SELECT primary_account, category, COUNT(*)::int AS count
       FROM staff_expenses
+      WHERE deleted_at IS NULL
       GROUP BY 1, 2
+    `,
+    sql`
+      SELECT to_char(expense_date, 'YYYY-MM') AS month, SUM(amount)::text AS total
+      FROM staff_expenses
+      WHERE ${filterClause(sql, filters, "")} AND expense_date >= CAST(${trendStart} AS date)
+      GROUP BY 1
     `,
   ]);
 
@@ -440,6 +430,10 @@ export async function GET(request: NextRequest) {
         total: Number(row.total),
         count: row.count,
       })),
+      filteredTrend: (trendRows as TrendRow[]).map((row) => ({
+        month: row.month,
+        total: Number(row.total),
+      })),
       usage: (usageRows as UsageRow[]).map((row) => ({
         account: row.primary_account,
         category: row.category,
@@ -455,7 +449,11 @@ export async function POST(request: NextRequest) {
     return unauthorizedResponse();
   }
 
-  const body = (await request.json()) as Record<string, unknown>;
+  const body = await readBody(request);
+  if (!body) {
+    return NextResponse.json(INVALID_REQUEST, { status: 400 });
+  }
+
   const validation = validateExpenseInput(body);
 
   if ("error" in validation) {
@@ -464,6 +462,8 @@ export async function POST(request: NextRequest) {
 
   const { expenseDate, primaryAccount, category, entity, amount, comments } = validation.value;
   const sql = getSql();
+  // A retry of the same form carries the same ref, so it can't save twice.
+  const clientRef = /^[\w-]{8,64}$/.test(String(body.clientRef ?? "")) ? String(body.clientRef) : null;
 
   const rows = await sql`
     INSERT INTO staff_expenses (
@@ -472,7 +472,8 @@ export async function POST(request: NextRequest) {
       category,
       entity,
       amount,
-      comments
+      comments,
+      client_ref
     )
     VALUES (
       ${expenseDate},
@@ -480,8 +481,10 @@ export async function POST(request: NextRequest) {
       ${category},
       ${entity},
       ${amount},
-      ${comments}
+      ${comments},
+      ${clientRef}
     )
+    ON CONFLICT (client_ref) DO UPDATE SET client_ref = EXCLUDED.client_ref
     RETURNING
       id,
       expense_date::text,
@@ -508,13 +511,50 @@ export async function PATCH(request: NextRequest) {
     return unauthorizedResponse();
   }
 
-  const body = (await request.json()) as Record<string, unknown>;
+  const body = await readBody(request);
+  if (!body) {
+    return NextResponse.json(INVALID_REQUEST, { status: 400 });
+  }
+
   const id = Number(body.id);
 
   if (!Number.isInteger(id) || id <= 0) {
     return NextResponse.json(
       { message: "Δεν ενημερώθηκε: λείπει σωστό ID." },
       { status: 400 },
+    );
+  }
+
+  if (body.restore === true) {
+    const restored = await getSql()`
+      UPDATE staff_expenses
+      SET deleted_at = NULL, updated_at = NOW()
+      WHERE id = ${id} AND deleted_at IS NOT NULL
+      RETURNING
+        id,
+        expense_date::text,
+        primary_account,
+        category,
+        entity,
+        amount::text,
+        comments,
+        created_at::text,
+        updated_at::text
+    `;
+
+    if (restored.length === 0) {
+      return NextResponse.json(
+        { message: "Δεν επανήλθε: δεν βρέθηκε το έξοδο." },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json(
+      {
+        message: "Το έξοδο επανήλθε.",
+        expense: mapRow((restored as StaffExpenseRow[])[0]),
+      },
+      { headers: responseHeaders() },
     );
   }
 
@@ -539,7 +579,7 @@ export async function PATCH(request: NextRequest) {
       amount = ${amount},
       comments = ${comments},
       updated_at = NOW()
-    WHERE id = ${id}
+    WHERE id = ${id} AND deleted_at IS NULL
     RETURNING
       id,
       expense_date::text,
@@ -586,8 +626,9 @@ export async function DELETE(request: NextRequest) {
   const sql = getSql();
 
   const rows = await sql`
-    DELETE FROM staff_expenses
-    WHERE id = ${id}
+    UPDATE staff_expenses
+    SET deleted_at = NOW(), updated_at = NOW()
+    WHERE id = ${id} AND deleted_at IS NULL
     RETURNING
       id,
       expense_date::text,

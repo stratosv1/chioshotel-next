@@ -18,6 +18,7 @@ import {
 import {
   accountLabel,
   categoriesForAccount,
+  parseExpenseAmount,
   staffExpenseAccounts,
   staffExpenseCategories,
   staffExpenseEntities,
@@ -65,6 +66,7 @@ type ExpensesResponse = {
   expenses: StaffExpense[];
   summary: ExpenseSummary;
   monthly?: MonthlyPoint[];
+  filteredTrend?: Array<{ month: string; total: number }>;
   usage?: UsagePoint[];
 };
 
@@ -78,6 +80,7 @@ type ExpensePayload = {
   category: string;
   entity: string;
   comments: string;
+  clientRef?: string;
 };
 
 /* ---------------------------------------------------------------- helpers */
@@ -93,6 +96,7 @@ const EMPTY_SUMMARY: ExpenseSummary = {
 };
 
 const ACCOUNT_STORAGE_KEY = "staff-expenses:last-account";
+const SAVE_FAILED = "Δεν αποθηκεύτηκε. Έλεγξε τη σύνδεση και ξαναδοκίμασε.";
 
 function athensToday() {
   return new Intl.DateTimeFormat("en-CA", {
@@ -146,37 +150,6 @@ function formatMonthShort(month: string) {
   return new Intl.DateTimeFormat("el-GR", { month: "short" })
     .format(new Date(`${month}-15T12:00:00`))
     .replace(".", "");
-}
-
-function parseMoney(value: string) {
-  let raw = value.trim().replace(/\s/g, "").replace(/€/g, "").replace(/[^0-9.,]/g, "");
-  if (!raw) return 0;
-
-  const lastComma = raw.lastIndexOf(",");
-  const lastDot = raw.lastIndexOf(".");
-
-  if (lastComma >= 0 && lastDot >= 0) {
-    raw = lastComma > lastDot ? raw.replace(/\./g, "").replace(",", ".") : raw.replace(/,/g, "");
-  } else if (lastComma >= 0) {
-    const parts = raw.split(",");
-    if (parts.length > 2) {
-      const decimal = parts.pop() ?? "";
-      raw = `${parts.join("")}.${decimal}`;
-    } else {
-      raw = raw.replace(",", ".");
-    }
-  } else if (lastDot >= 0) {
-    const parts = raw.split(".");
-    if (parts.length === 2 && parts[1].length === 3 && parts[0].length <= 3) {
-      raw = parts.join("");
-    } else if (parts.length > 2) {
-      const decimal = parts.at(-1) ?? "";
-      raw = decimal.length <= 2 ? `${parts.slice(0, -1).join("")}.${decimal}` : parts.join("");
-    }
-  }
-
-  const amount = Number(raw);
-  return Number.isFinite(amount) ? Math.round(amount * 100) / 100 : 0;
 }
 
 function categoryBySlug(slug: string) {
@@ -405,6 +378,7 @@ function ExpenseForm({
   const [subject, setSubject] = useState(initialSubject);
   const [note, setNote] = useState(initialNote);
   const [error, setError] = useState("");
+  const [clientRef] = useState(() => (initial ? undefined : crypto.randomUUID()));
   const amountRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -417,14 +391,17 @@ function ExpenseForm({
   const hasHome = canUseCategory("home", category);
   const showPeople = account === "family" && people.length > 0;
   const needsPerson = account === "family" && !hasHome && people.length > 0;
-  const showSubject = category === "tuition" && account === "family" && ["michalis", "sideris"].includes(person);
-  const parsed = parseMoney(amount);
+  const chosenPerson = account === "family" && canUseCategory(person, category) ? person : "";
+  const showSubject = category === "tuition" && ["michalis", "sideris"].includes(chosenPerson);
+  const parsed = parseExpenseAmount(amount);
   const customDate = expenseDate !== today && expenseDate !== yesterday;
 
   function submit(event: React.FormEvent) {
     event.preventDefault();
-    if (parsed <= 0) return setError("Βάλε ποσό.");
-    if (needsPerson && !person) return setError("Διάλεξε για ποιον είναι.");
+    if (parsed <= 0) {
+      return setError(amount.trim() ? "Το ποσό δεν είναι σωστό. Γράψε το π.χ. 12,50." : "Βάλε ποσό.");
+    }
+    if (needsPerson && !chosenPerson) return setError("Διάλεξε για ποιον είναι.");
     if (category === "service" && !note.trim()) return setError("Για την Υπηρεσία γράψε μια σημείωση.");
     setError("");
 
@@ -432,9 +409,9 @@ function ExpenseForm({
     const comments = showSubject && subject
       ? trimmed ? `Μάθημα: ${subject} — ${trimmed}` : `Μάθημα: ${subject}`
       : trimmed;
-    const entity = account === "family" ? person || "home" : defaultEntityForAccount(account);
+    const entity = account === "family" ? chosenPerson || "home" : defaultEntityForAccount(account);
 
-    onSubmit({ expenseDate, amount, category, entity, comments });
+    onSubmit({ expenseDate, amount, category, entity, comments, clientRef });
   }
 
   return (
@@ -461,12 +438,12 @@ function ExpenseForm({
           </p>
           <div className="flex flex-wrap gap-2">
             {hasHome ? (
-              <Chip active={person === ""} onClick={() => { setPerson(""); setSubject(""); }}>
+              <Chip active={chosenPerson === ""} onClick={() => { setPerson(""); setSubject(""); }}>
                 🏠 Σπίτι
               </Chip>
             ) : null}
             {people.map((item) => (
-              <Chip key={item.slug} active={person === item.slug} onClick={() => { setPerson(item.slug); setSubject(""); }}>
+              <Chip key={item.slug} active={chosenPerson === item.slug} onClick={() => { setPerson(item.slug); setSubject(""); }}>
                 {personName(item.slug)}
               </Chip>
             ))}
@@ -554,12 +531,30 @@ function EditSheet({
   onDelete: () => void;
 }) {
   const [category, setCategory] = useState(expense.category);
-  const account = expense.primaryAccount;
+  const [account, setAccount] = useState(expense.primaryAccount);
   const allowed = categoriesForAccount(account);
   const meta = categoryBySlug(category);
 
+  function changeAccount(next: StaffExpenseAccount) {
+    const nextAllowed = categoriesForAccount(next);
+    setAccount(next);
+    if (!nextAllowed.some((item) => item.slug === category)) setCategory(nextAllowed[0].slug);
+  }
+
   return (
     <Sheet title={`${meta?.icon ?? ""} ${meta?.label ?? category}`} eyebrow={`Επεξεργασία · ${accountLabel(account)}`} onClose={onClose}>
+      <div className="mb-4">
+        <Segmented
+          label="Λογαριασμός εξόδου"
+          value={account}
+          onChange={changeAccount}
+          options={staffExpenseAccounts.map((item) => ({
+            value: item.slug,
+            label: item.shortLabel,
+            activeClass: accountTone[item.slug],
+          }))}
+        />
+      </div>
       <label className="mb-4 block">
         <span className="mb-1.5 block text-sm font-extrabold text-stone-600">Κατηγορία</span>
         <select
@@ -575,7 +570,6 @@ function EditSheet({
         </select>
       </label>
       <ExpenseForm
-        key={category}
         account={account}
         category={category}
         initial={expense}
@@ -630,7 +624,10 @@ export default function ExpensesApp() {
   const [toast, setToast] = useState<ToastState | null>(null);
 
   const [month, setMonth] = useState(thisMonth);
+  const [allMonths, setAllMonths] = useState(false);
   const [filterAccount, setFilterAccount] = useState<FilterAccount>("all");
+  const [filterEntity, setFilterEntity] = useState("");
+  const [filterCategory, setFilterCategory] = useState("");
   const [search, setSearch] = useState("");
   const [openCategory, setOpenCategory] = useState<string | null>(null);
 
@@ -642,7 +639,9 @@ export default function ExpensesApp() {
   // period data: the selected month / account / search
   const [periodExpenses, setPeriodExpenses] = useState<StaffExpense[]>([]);
   const [periodSummary, setPeriodSummary] = useState<ExpenseSummary>(EMPTY_SUMMARY);
+  const [periodTrend, setPeriodTrend] = useState<Array<{ month: string; total: number }>>([]);
   const [periodLoading, setPeriodLoading] = useState(true);
+  const periodRequest = useRef(0);
 
   useEffect(() => {
     try {
@@ -710,22 +709,27 @@ export default function ExpensesApp() {
   }, [fetchExpenses]);
 
   const loadPeriod = useCallback(async () => {
+    const request = ++periodRequest.current;
     setPeriodLoading(true);
     try {
       const data = await fetchExpenses({
-        month,
+        month: allMonths ? "" : month,
         account: filterAccount === "all" ? "" : filterAccount,
+        entity: filterEntity,
+        category: filterCategory,
         search: search.trim(),
         limit: "500",
       });
+      if (request !== periodRequest.current) return; // a newer filter is already loading
       setPeriodExpenses(data.expenses);
       setPeriodSummary(data.summary);
+      setPeriodTrend(data.filteredTrend ?? []);
     } catch {
-      showToast("Δεν φορτώθηκαν τα έξοδα.");
+      if (request === periodRequest.current) showToast("Δεν φορτώθηκαν τα έξοδα.");
     } finally {
-      setPeriodLoading(false);
+      if (request === periodRequest.current) setPeriodLoading(false);
     }
-  }, [fetchExpenses, month, filterAccount, search]);
+  }, [fetchExpenses, allMonths, month, filterAccount, filterEntity, filterCategory, search]);
 
   useEffect(() => {
     void loadBase();
@@ -743,14 +747,18 @@ export default function ExpensesApp() {
   /* -------------------------------------------------------- mutations */
 
   async function send(method: "POST" | "PATCH", body: Record<string, unknown>) {
-    const response = await fetch("/api/staff/expenses/", {
-      method,
-      credentials: "same-origin",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    const data = (await response.json()) as { message?: string; expense?: StaffExpense };
-    return response.ok && data.expense ? { expense: data.expense } : { error: data.message ?? "Κάτι πήγε στραβά." };
+    try {
+      const response = await fetch("/api/staff/expenses/", {
+        method,
+        credentials: "same-origin",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = (await response.json().catch(() => ({}))) as { message?: string; expense?: StaffExpense };
+      return response.ok && data.expense ? { expense: data.expense } : { error: data.message ?? SAVE_FAILED };
+    } catch {
+      return { error: SAVE_FAILED };
+    }
   }
 
   async function addExpense(payload: ExpensePayload) {
@@ -783,16 +791,20 @@ export default function ExpensesApp() {
     if (!pendingDelete) return;
     const expense = pendingDelete;
     setPendingDelete(null);
-    setEditing(null);
-    const response = await fetch(`/api/staff/expenses/?id=${encodeURIComponent(expense.id)}`, {
-      method: "DELETE",
-      credentials: "same-origin",
-    });
-    const data = (await response.json()) as { message?: string; expense?: StaffExpense };
-    if (!response.ok || !data.expense) return showToast(data.message ?? "Δεν διαγράφηκε.");
-    setLastDeleted(data.expense);
-    showToast("Το έξοδο διαγράφηκε.", true);
-    await refreshAll();
+    try {
+      const response = await fetch(`/api/staff/expenses/?id=${encodeURIComponent(expense.id)}`, {
+        method: "DELETE",
+        credentials: "same-origin",
+      });
+      const data = (await response.json().catch(() => ({}))) as { message?: string; expense?: StaffExpense };
+      if (!response.ok || !data.expense) return showToast(data.message ?? SAVE_FAILED);
+      setEditing(null);
+      setLastDeleted(data.expense);
+      showToast("Το έξοδο διαγράφηκε.", true);
+      await refreshAll();
+    } catch {
+      showToast(SAVE_FAILED);
+    }
   }
 
   async function undoDelete() {
@@ -800,13 +812,7 @@ export default function ExpensesApp() {
     const expense = lastDeleted;
     setLastDeleted(null);
     setToast(null);
-    const result = await send("POST", {
-      expenseDate: expense.expenseDate,
-      category: expense.category,
-      entity: expense.entity,
-      amount: expense.amount,
-      comments: expense.comments,
-    });
+    const result = await send("PATCH", { id: expense.id, restore: true });
     if ("error" in result) return showToast(result.error);
     showToast("Το έξοδο επανήλθε.");
     await refreshAll();
@@ -827,7 +833,7 @@ export default function ExpensesApp() {
     const url = window.URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `exoda-${month}${filterAccount === "all" ? "" : `-${filterAccount}`}.csv`;
+    anchor.download = `exoda-${allMonths ? "ola" : month}${filterAccount === "all" ? "" : `-${filterAccount}`}.csv`;
     anchor.click();
     window.URL.revokeObjectURL(url);
   }
@@ -859,17 +865,13 @@ export default function ExpensesApp() {
     const months = Array.from({ length: 12 }, (_, index) => shiftMonth(thisMonth, index - 11));
     return months.map((m) => ({
       month: m,
-      total: monthly
-        .filter((p) => p.month === m && (filterAccount === "all" || p.account === filterAccount))
-        .reduce((sum, p) => sum + p.total, 0),
+      total: periodTrend.find((point) => point.month === m)?.total ?? 0,
     }));
-  }, [monthly, thisMonth, filterAccount]);
+  }, [periodTrend, thisMonth]);
 
   const trendMax = Math.max(1, ...trend.map((t) => t.total));
-  const previousTotal = monthly
-    .filter((p) => p.month === shiftMonth(month, -1) && (filterAccount === "all" || p.account === filterAccount))
-    .reduce((sum, p) => sum + p.total, 0);
-  const hasPreviousData = monthly.some((p) => p.month <= shiftMonth(month, -1));
+  const previousTotal = periodTrend.find((point) => point.month === shiftMonth(month, -1))?.total ?? 0;
+  const hasPreviousData = !allMonths && monthly.some((p) => p.month <= shiftMonth(month, -1));
 
   const categoryRows = useMemo(() => {
     const counts = new Map<string, number>();
@@ -906,10 +908,109 @@ export default function ExpensesApp() {
     })),
   ];
 
+  const filterPeople = staffExpenseEntities.filter((item) => item.account === "family");
+  const filterCategories = (
+    filterEntity
+      ? staffExpenseCategories.filter((item) => canUseCategory(filterEntity, item.slug))
+      : filterAccount === "all"
+        ? staffExpenseCategories
+        : categoriesForAccount(filterAccount)
+  );
+  const hasFilters = allMonths || filterAccount !== "all" || Boolean(filterEntity || filterCategory || search);
+
+  function changeFilterAccount(next: FilterAccount) {
+    setFilterAccount(next);
+    setFilterEntity("");
+    if (next !== "all" && !categoriesForAccount(next).some((item) => item.slug === filterCategory)) {
+      setFilterCategory("");
+    }
+    setOpenCategory(null);
+  }
+
+  function changeFilterEntity(next: string) {
+    setFilterEntity(next);
+    if (next && !canUseCategory(next, filterCategory)) setFilterCategory("");
+    setOpenCategory(null);
+  }
+
+  function clearFilters() {
+    setAllMonths(false);
+    setMonth(thisMonth);
+    setFilterAccount("all");
+    setFilterEntity("");
+    setFilterCategory("");
+    setSearch("");
+    setOpenCategory(null);
+  }
+
   const periodControls = (
     <div className="space-y-2">
-      <MonthNav month={month} maxMonth={thisMonth} onChange={(m) => { setMonth(m); setOpenCategory(null); }} />
-      <Segmented label="Λογαριασμός" value={filterAccount} options={filterOptions} onChange={(v) => { setFilterAccount(v); setOpenCategory(null); }} />
+      {allMonths ? null : (
+        <MonthNav month={month} maxMonth={thisMonth} onChange={(m) => { setMonth(m); setOpenCategory(null); }} />
+      )}
+      <Segmented label="Λογαριασμός" value={filterAccount} options={filterOptions} onChange={changeFilterAccount} />
+
+      {filterAccount === "family" ? (
+        <div className="flex flex-wrap gap-2" role="group" aria-label="Πρόσωπο">
+          <Chip active={filterEntity === ""} onClick={() => changeFilterEntity("")}>Όλοι</Chip>
+          {filterPeople.map((item) => (
+            <Chip key={item.slug} active={filterEntity === item.slug} onClick={() => changeFilterEntity(item.slug)}>
+              {item.slug === "home" ? "🏠 Σπίτι" : personName(item.slug)}
+            </Chip>
+          ))}
+        </div>
+      ) : null}
+
+      <div className="grid grid-cols-2 gap-2">
+        <select
+          value={filterCategory}
+          onChange={(event) => { setFilterCategory(event.target.value); setOpenCategory(null); }}
+          aria-label="Κατηγορία"
+          className="min-h-12 min-w-0 rounded-2xl border border-stone-200 bg-white px-3 font-bold outline-none focus:border-[#b17a43]"
+        >
+          <option value="">Όλες οι κατηγορίες</option>
+          {filterCategories.map((item) => (
+            <option key={item.slug} value={item.slug}>{item.icon} {item.label}</option>
+          ))}
+        </select>
+        <button
+          type="button"
+          aria-pressed={allMonths}
+          onClick={() => { setAllMonths(!allMonths); setOpenCategory(null); }}
+          className={`min-h-12 rounded-2xl border px-3 text-sm font-extrabold ${
+            allMonths ? "border-[#8c633b] bg-[#f4eadc] text-[#674722]" : "border-stone-200 bg-white text-stone-600"
+          }`}
+        >
+          Όλοι οι μήνες
+        </button>
+      </div>
+
+      <label className="relative block">
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
+        <input
+          value={search}
+          onChange={(event) => { setSearch(event.target.value); setOpenCategory(null); }}
+          placeholder="Αναζήτηση π.χ. μιχ φροντιστήριο"
+          aria-label="Αναζήτηση εξόδων"
+          className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white pl-10 pr-10 font-bold outline-none focus:border-[#b17a43]"
+        />
+        {search ? (
+          <button
+            type="button"
+            onClick={() => setSearch("")}
+            className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-stone-500"
+            aria-label="Καθαρισμός αναζήτησης"
+          >
+            <X className="size-4" />
+          </button>
+        ) : null}
+      </label>
+
+      {hasFilters ? (
+        <button type="button" onClick={clearFilters} className="min-h-9 px-1 text-sm font-extrabold text-[#8a5f37] underline">
+          Καθαρισμός φίλτρων
+        </button>
+      ) : null}
     </div>
   );
 
@@ -1017,7 +1118,7 @@ export default function ExpensesApp() {
             {periodControls}
 
             <section className="rounded-3xl bg-white p-4 ring-1 ring-stone-200">
-              <p className="text-sm font-extrabold text-stone-500">Σύνολο {formatMonthLong(month)}</p>
+              <p className="text-sm font-extrabold text-stone-500">Σύνολο {allMonths ? "όλων των μηνών" : formatMonthLong(month)}</p>
               <p className="mt-0.5 text-4xl font-black tabular-nums tracking-tight">{formatMoney(periodSummary.filteredTotal)}</p>
               <p className="mt-1 text-sm font-bold text-stone-500">
                 {periodSummary.filteredCount} {periodSummary.filteredCount === 1 ? "κίνηση" : "κινήσεις"}
@@ -1035,13 +1136,13 @@ export default function ExpensesApp() {
               <div className="mt-4" role="group" aria-label="Έξοδα ανά μήνα, τελευταίοι 12 μήνες">
                 <div className="flex h-28 items-end gap-[2px]">
                   {trend.map((point) => {
-                    const selected = point.month === month;
+                    const selected = !allMonths && point.month === month;
                     const height = point.total > 0 ? Math.max(4, (point.total / trendMax) * 80) : 0;
                     return (
                       <button
                         key={point.month}
                         type="button"
-                        onClick={() => { setMonth(point.month); setOpenCategory(null); }}
+                        onClick={() => { setMonth(point.month); setAllMonths(false); setOpenCategory(null); }}
                         title={`${formatMonthLong(point.month)}: ${formatMoney(point.total)}`}
                         aria-label={`${formatMonthLong(point.month)}: ${formatMoney(point.total)}`}
                         aria-pressed={selected}
@@ -1067,7 +1168,7 @@ export default function ExpensesApp() {
                     <span
                       key={point.month}
                       className={`min-w-0 flex-1 truncate text-center text-[10px] font-bold ${
-                        point.month === month ? "text-[#49392f]" : "text-stone-400"
+                        !allMonths && point.month === month ? "text-[#49392f]" : "text-stone-400"
                       }`}
                     >
                       {formatMonthShort(point.month)}
@@ -1094,7 +1195,7 @@ export default function ExpensesApp() {
               {periodLoading && categoryRows.length === 0 ? (
                 <p className="p-8 text-center text-sm font-extrabold text-stone-500">Φόρτωση...</p>
               ) : categoryRows.length === 0 ? (
-                <p className="p-8 text-center text-sm font-extrabold text-stone-500">Κανένα έξοδο αυτόν τον μήνα.</p>
+                <p className="p-8 text-center text-sm font-extrabold text-stone-500">Δεν βρέθηκαν έξοδα.</p>
               ) : (
                 <ul className="divide-y divide-stone-100">
                   {categoryRows.map((row) => {
@@ -1162,7 +1263,7 @@ export default function ExpensesApp() {
                   <button
                     key={item.slug}
                     type="button"
-                    onClick={() => setFilterAccount(item.slug)}
+                    onClick={() => changeFilterAccount(item.slug)}
                     className="min-w-0 rounded-2xl bg-white px-2 py-3 text-center ring-1 ring-stone-200"
                   >
                     <p className="truncate text-xs font-extrabold text-stone-500">{item.icon} {item.shortLabel}</p>
@@ -1178,26 +1279,6 @@ export default function ExpensesApp() {
         {tab === "list" ? (
           <div className="space-y-3">
             {periodControls}
-            <label className="relative block">
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
-              <input
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Αναζήτηση (κατηγορία, πρόσωπο, σημείωση)"
-                className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white pl-10 pr-10 font-bold outline-none focus:border-[#b17a43]"
-              />
-              {search ? (
-                <button
-                  type="button"
-                  onClick={() => setSearch("")}
-                  className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-stone-500"
-                  aria-label="Καθαρισμός αναζήτησης"
-                >
-                  <X className="size-4" />
-                </button>
-              ) : null}
-            </label>
-
             <p className="px-1 text-sm font-bold text-stone-500">
               {periodSummary.filteredCount} κινήσεις · <span className="font-black text-[#49392f] tabular-nums">{formatMoney(periodSummary.filteredTotal)}</span>
             </p>

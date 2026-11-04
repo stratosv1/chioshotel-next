@@ -191,6 +191,31 @@ export const staffTuitionSubjects = [
   "Γλώσσα",
 ];
 
+// Reads an amount the way it is typed in Greece: comma for decimals, dot for
+// thousands. Returns 0 for anything unclear, so the form asks again instead of
+// guessing (negative numbers, "1,250", "0.500", letters).
+export function parseExpenseAmount(value: unknown) {
+  const raw = String(value ?? "").replace(/[\s€]/g, "");
+  if (!/^[\d.,]+$/.test(raw)) return 0;
+
+  const commas = raw.split(",").length - 1;
+  const dots = raw.split(".").length - 1;
+  let decimalAt = -1;
+
+  if (commas > 0 && dots > 0) decimalAt = Math.max(raw.lastIndexOf(","), raw.lastIndexOf("."));
+  else if (commas === 1) decimalAt = raw.indexOf(",");
+  else if (dots === 1 && !/^[1-9]\d{0,2}\.\d{3}$/.test(raw)) decimalAt = raw.indexOf(".");
+
+  const whole = decimalAt >= 0 ? raw.slice(0, decimalAt) : raw;
+  const decimals = decimalAt >= 0 ? raw.slice(decimalAt + 1) : "";
+
+  if (/[.,]/.test(whole) && !/^\d{1,3}([.,]\d{3})+$/.test(whole)) return 0;
+  if (!/^\d{0,2}$/.test(decimals)) return 0;
+
+  const amount = Number(`${whole.replace(/[.,]/g, "") || "0"}.${decimals || "0"}`);
+  return Number.isFinite(amount) && amount <= 99_999_999.99 ? amount : 0;
+}
+
 export function accountExists(value: string): value is StaffExpenseAccount {
   return staffExpenseAccounts.some((account) => account.slug === value);
 }
