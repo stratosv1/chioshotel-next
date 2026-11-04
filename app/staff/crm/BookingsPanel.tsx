@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 type BoardEvent = { time: string; channel: "guest" | "staff" | "email" | "sms" | "whatsapp" | "ota"; title: string; body: string | null; summary: string | null; status: string | null };
 type Booking = {
   bookingIds: string[]; name: string; firstName: string; rooms: string[]; checkin: string; checkout: string; status: string;
-  channel: string; email: string | null; emailState: "real" | "virtual" | "none"; phone: string | null; arrivalTime: string | null; smsTemplate: string; deliveryProblem: string | null; emailSyncError: string | null; events: BoardEvent[];
+  channel: string; email: string | null; emailState: "real" | "virtual" | "none"; phone: string | null; arrivalTime: string | null; arrivalDetails: string | null; arrivalClosed: boolean; smsTemplate: string; deliveryProblem: string | null; emailSyncError: string | null; events: BoardEvent[];
 };
 type Filter = "all" | "no_email" | "no_arrival" | "messages";
 
@@ -53,6 +53,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
   const [notes, setNotes] = useState<string | null | undefined>(undefined);
   const [sms, setSms] = useState({ phone: "", message: "" });
   const [realEmail, setRealEmail] = useState("");
+  const [arrivalForm, setArrivalForm] = useState({ time: "", details: "" });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -72,7 +73,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
 
   const visible = useMemo(() => (bookings ?? []).filter((booking) => {
     if (filter === "no_email") return booking.emailState !== "real";
-    if (filter === "no_arrival") return !booking.arrivalTime;
+    if (filter === "no_arrival") return !booking.arrivalTime && !booking.arrivalClosed;
     if (filter === "messages") return booking.events.some((event) => event.channel === "guest");
     return true;
   }), [bookings, filter]);
@@ -87,6 +88,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     setNotes(undefined);
     setSms({ phone: booking.phone ?? "", message: "" });
     setRealEmail("");
+    setArrivalForm({ time: booking.arrivalTime ?? "", details: booking.arrivalDetails ?? "" });
     setNotice("");
     await loadNotes(id);
   };
@@ -189,9 +191,31 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     }
   };
 
+  const saveArrival = async (booking: Booking, time: string, details: string) => {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "arrival", bookingIds: booking.bookingIds, time, details }),
+      });
+      const payload = await response.json();
+      if (!payload.ok) throw new Error(payload.error);
+      setOpenId(null);
+      setNotice(!time && !details ? "Η εκκρεμότητα άνοιξε ξανά." : payload.noted ? "Η άφιξη καταχωρήθηκε και γράφτηκε στα Notes του Beds24." : "Η άφιξη αποθηκεύτηκε στο CRM, αλλά όχι στα Notes του Beds24.");
+      await load();
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "Δεν αποθηκεύτηκε.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   const total = bookings?.length ?? 0;
   const withEmail = (bookings ?? []).filter((booking) => booking.emailState === "real").length;
-  const withArrival = (bookings ?? []).filter((booking) => booking.arrivalTime).length;
+  const withArrival = (bookings ?? []).filter((booking) => booking.arrivalTime || booking.arrivalClosed).length;
 
   return (
     <div className="grid gap-4">
@@ -236,7 +260,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                 <span className="text-sm text-stone-600">{booking.rooms.join(", ")} · #{booking.bookingIds.join(", ")}</span>
                 <span className="flex flex-wrap gap-2">
                   <Chip ok={booking.emailState === "real"}>{booking.emailState === "real" ? "✓ Email" : "✕ Χωρίς email"}</Chip>
-                  <Chip ok={Boolean(booking.arrivalTime)}>{booking.arrivalTime ? `✓ Άφιξη ${booking.arrivalTime}` : "✕ Χωρίς ώρα άφιξης"}</Chip>
+                  <Chip ok={Boolean(booking.arrivalTime || booking.arrivalClosed)}>{booking.arrivalTime ? `✓ Άφιξη ${booking.arrivalTime}` : booking.arrivalClosed ? "✓ Άφιξη καταχωρήθηκε" : "✕ Χωρίς ώρα άφιξης"}</Chip>
                   {booking.deliveryProblem ? <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white">⚠ {booking.deliveryProblem}</span> : null}
                   {booking.emailSyncError ? <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white">⚠ Το email δεν γράφτηκε στο Beds24</span> : null}
                   {guestMessages ? <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-black">💬 {guestMessages}</span> : null}
@@ -293,6 +317,24 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                         Ζήτα email μέσω {booking.channel}
                       </button>
                     ) : null}
+
+                    <form className="grid gap-2 rounded-xl bg-stone-50 p-3" onSubmit={(event) => { event.preventDefault(); void saveArrival(booking, arrivalForm.time, arrivalForm.details); }}>
+                      <h3 className="font-black">Άφιξη</h3>
+                      <div className="flex flex-wrap items-end gap-2">
+                        <div>
+                          <label htmlFor={`crm-board-arrival-${booking.bookingIds[0]}`} className="mb-1 block text-sm font-bold">Ώρα</label>
+                          <input id={`crm-board-arrival-${booking.bookingIds[0]}`} type="time" className={inputClass} value={arrivalForm.time} onChange={(event) => setArrivalForm({ ...arrivalForm, time: event.target.value })} />
+                        </div>
+                        <div className="min-w-[200px] flex-1">
+                          <label htmlFor={`crm-board-arrival-details-${booking.bookingIds[0]}`} className="mb-1 block text-sm font-bold">Λεπτομέρειες</label>
+                          <input id={`crm-board-arrival-details-${booking.bookingIds[0]}`} type="text" maxLength={300} placeholder="π.χ. πλοίο, ταξί, αυτοκίνητο" className={inputClass} value={arrivalForm.details} onChange={(event) => setArrivalForm({ ...arrivalForm, details: event.target.value })} />
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <button type="submit" disabled={busy || (!arrivalForm.time && !arrivalForm.details.trim())} className={primaryButton}>Αποθήκευση και κλείσιμο</button>
+                        {booking.arrivalClosed ? <button type="button" disabled={busy} className={secondaryButton} onClick={() => saveArrival(booking, "", "")}>Άνοιγμα ξανά</button> : null}
+                      </div>
+                    </form>
 
                     <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
                       <h3 className="font-black">Αποστολή SMS</h3>

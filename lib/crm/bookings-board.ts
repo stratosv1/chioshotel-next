@@ -1,6 +1,7 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
 import { fetchBeds24BookingById } from "@/lib/beds24/api-v2-booking";
+import { appendBookingNote, getBeds24WriteToken } from "@/lib/crm/booking-notes";
 import { buildGuestSms } from "@/lib/crm/ota-message-text";
 import { isVirtualEmail } from "@/lib/crm/store";
 
@@ -32,6 +33,8 @@ export type BoardBooking = {
   emailState: "real" | "virtual" | "none";
   phone: string | null;
   arrivalTime: string | null;
+  arrivalDetails: string | null;
+  arrivalClosed: boolean;
   smsTemplate: string;
   deliveryProblem: string | null;
   emailSyncError: string | null;
@@ -66,7 +69,7 @@ function boardLanguage(language: string | null, country: string | null) {
 export async function listAttentionBookings() {
   const bookings = await listBookings(null);
   const arrivalLimit = new Date(Date.now() + ARRIVAL_ATTENTION_DAYS * 86_400_000).toISOString().slice(0, 10);
-  return bookings.filter((booking) => booking.emailState !== "real" || booking.emailSyncError || (!booking.arrivalTime && booking.checkin <= arrivalLimit));
+  return bookings.filter((booking) => booking.emailState !== "real" || booking.emailSyncError || (!booking.arrivalTime && !booking.arrivalClosed && booking.checkin <= arrivalLimit));
 }
 
 export const listMonthBookings = (month: string) => listBookings(month);
@@ -76,7 +79,8 @@ async function listBookings(month: string | null): Promise<BoardBooking[]> {
   const rows = (await sql`
     select b.booking_id, b.status, b.firstname, b.lastname, b.email, b.phone, b.room, b.guest_language, b.country,
       to_char(b.checkin, 'YYYY-MM-DD') as checkin, to_char(b.checkout, 'YYYY-MM-DD') as checkout,
-      nullif(c.real_email, '') as real_email, c.beds24_email_error
+      nullif(c.real_email, '') as real_email, c.beds24_email_error, c.arrival_time as manual_arrival_time, c.arrival_details,
+      to_char(c.arrival_saved_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as arrival_saved_at
     from public.beds24_bookings b
     left join public.crm_booking_contacts c using (booking_id)
     where lower(b.status) in ('confirmed', 'new', 'request')
@@ -118,9 +122,11 @@ async function listBookings(month: string | null): Promise<BoardBooking[]> {
     const address = (first.real_email ?? first.email ?? "").trim().toLowerCase();
     const virtual = address ? isVirtualEmail(address) : false;
     const own = messages.filter((row) => row.booking_ids.some(has));
+    const manualArrival = group.find((row) => row.arrival_saved_at);
 
     const events: BoardEvent[] = ([
       ...own.map((row) => ({ time: row.time, channel: row.direction === "staff" ? "staff" as const : "guest" as const, title: row.direction === "staff" ? "Δική μας απάντηση" : "Μήνυμα πελάτη", body: row.body, summary: row.summary, status: null })),
+      ...(manualArrival ? [{ time: manualArrival.arrival_saved_at, channel: "staff" as const, title: "Καταχώρηση άφιξης από εμάς", body: [manualArrival.manual_arrival_time, manualArrival.arrival_details].filter(Boolean).join(", ") || null, summary: null, status: null }] : []),
       ...emails.filter((row) => has(row.booking_id)).map((row) => ({ time: row.time, channel: "email" as const, title: `Email: ${EMAIL_TITLES[row.email_type] ?? row.email_type}${row.mode === "test" ? " (δοκιμή)" : ""}`, body: row.recipient, summary: null, status: row.status === "failed" ? `Απέτυχε: ${row.error ?? ""}` : "Στάλθηκε" })),
       ...comms.filter((row) => has(row.booking_id)).map((row) => ({ time: row.time, channel: (row.channel === "sms" ? "sms" : "whatsapp") as BoardEvent["channel"], title: row.channel === "sms" ? `SMS προς ${row.recipient_phone ?? ""}` : "WhatsApp", body: row.message, summary: null, status: row.status })),
       ...outreach.filter((row) => has(row.booking_id)).flatMap((row) => [
@@ -146,13 +152,42 @@ async function listBookings(month: string | null): Promise<BoardBooking[]> {
       email: address || null,
       emailState: !address ? "none" : virtual ? "virtual" : "real",
       phone: first.phone,
-      arrivalTime: arrival ? arrival.arrival_time || arrivalFromSummary(arrival.summary) : null,
+      arrivalTime: manualArrival?.manual_arrival_time || (arrival ? arrival.arrival_time || arrivalFromSummary(arrival.summary) : null),
+      arrivalDetails: manualArrival?.arrival_details ?? null,
+      arrivalClosed: Boolean(manualArrival),
       smsTemplate: buildGuestSms(boardLanguage(first.guest_language, first.country), first.firstname ?? ""),
       deliveryProblem: failedSms ? "Το SMS δεν παραδόθηκε" : failedChannel ? "Το μήνυμα Booking/Expedia απέτυχε" : null,
       emailSyncError: group.find((row) => row.beds24_email_error)?.beds24_email_error ?? null,
       events,
     };
   });
+}
+
+/** Staff entry closes the pending arrival item; empty values reopen it. */
+export async function saveManualArrival(bookingIds: string[], time: string, details: string) {
+  const sql = getSql();
+  const empty = !time && !details;
+  for (const id of bookingIds) {
+    await sql`insert into public.crm_booking_contacts (booking_id, arrival_time, arrival_details, arrival_saved_at)
+      values (${id}, ${time || null}, ${details || null}, ${empty ? null : new Date().toISOString()}::timestamptz)
+      on conflict (booking_id) do update set arrival_time = excluded.arrival_time, arrival_details = excluded.arrival_details,
+        arrival_saved_at = excluded.arrival_saved_at, updated_at = now()`;
+  }
+  if (empty) return { noted: true };
+
+  const entry = [time, details].filter(Boolean).join(", ");
+  try {
+    const token = await getBeds24WriteToken();
+    let noted = true;
+    for (const id of bookingIds) {
+      const outcome = await appendBookingNote(id, `Άφιξη: ${entry}`, entry, token);
+      if (outcome !== "written" && outcome !== "already_noted") noted = false;
+    }
+    return { noted };
+  } catch (error) {
+    console.error("[bookings-board] arrival note failed", error);
+    return { noted: false };
+  }
 }
 
 export async function getBookingNotes(bookingId: string) {

@@ -123,7 +123,8 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
   const excluded = new Set(((await sql`select email from public.crm_excluded_emails`) as any[]).map((row) => row.email));
   const arrivalOn = (await getEmailSettings()).enabledTypes.includes("arrival");
   const sentArrival = new Set(((await sql`select dedupe_key from public.crm_email_log where email_type = 'arrival' and status = 'sent'`) as any[]).map((row) => String(row.dedupe_key).replace(/^test:\d{4}-\d{2}-\d{2}:/, "")));
-  const knownArrival = new Set(((await sql`select unnest(booking_ids) as booking_id from public.crm_guest_messages where arrival_time is not null`) as any[]).map((row) => row.booking_id));
+  const knownArrival = new Set(((await sql`select unnest(booking_ids) as booking_id from public.crm_guest_messages where arrival_time is not null
+    union select booking_id from public.crm_booking_contacts where arrival_saved_at is not null`) as any[]).map((row) => row.booking_id));
   const virtual = new RegExp(VIRTUAL_EMAIL);
   const now = dayNumber(today);
   const due = new Map<string, DueEmail>();

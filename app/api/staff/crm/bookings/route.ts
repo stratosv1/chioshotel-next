@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkBookingCommunication } from "@/lib/crm/booking-check";
-import { getBookingNotes, listAttentionBookings, listMonthBookings } from "@/lib/crm/bookings-board";
+import { getBookingNotes, listAttentionBookings, listMonthBookings, saveManualArrival } from "@/lib/crm/bookings-board";
 import { sendBookingSms } from "@/lib/crm/sms";
 
 export const runtime = "nodejs";
@@ -39,6 +39,15 @@ export async function POST(request: NextRequest) {
       if (!bookingIds.length) return fail("Μη έγκυρη κράτηση.");
       const email = typeof body.email === "string" && body.email ? body.email.trim().toLowerCase() : null;
       return NextResponse.json({ ok: true, ...(await checkBookingCommunication(bookingIds, email)) }, { headers });
+    }
+    if (body.action === "arrival") {
+      const bookingIds = (Array.isArray(body.bookingIds) ? body.bookingIds : []).map(String).filter((id) => /^\d{4,12}$/.test(id));
+      if (!bookingIds.length) return fail("Μη έγκυρη κράτηση.");
+      const time = String(body.time ?? "").trim();
+      const details = String(body.details ?? "").trim().replace(/\s+/g, " ");
+      if (time && !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return fail("Μη έγκυρη ώρα.");
+      if (details.length > 300) return fail("Οι λεπτομέρειες είναι πολύ μεγάλες.");
+      return NextResponse.json({ ok: true, ...(await saveManualArrival(bookingIds, time, details)) }, { headers });
     }
     const bookingId = String(body.bookingId ?? "").trim();
     const message = String(body.message ?? "").trim();
