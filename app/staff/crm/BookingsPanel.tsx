@@ -5,7 +5,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 type BoardEvent = { time: string; channel: "guest" | "staff" | "email" | "sms" | "whatsapp" | "ota"; title: string; body: string | null; summary: string | null; status: string | null };
 type Booking = {
   bookingIds: string[]; name: string; firstName: string; rooms: string[]; checkin: string; checkout: string; status: string;
-  channel: string; email: string | null; emailState: "real" | "virtual" | "none"; phone: string | null; arrivalTime: string | null; smsTemplate: string; deliveryProblem: string | null; events: BoardEvent[];
+  channel: string; email: string | null; emailState: "real" | "virtual" | "none"; phone: string | null; arrivalTime: string | null; smsTemplate: string; deliveryProblem: string | null; emailSyncError: string | null; events: BoardEvent[];
 };
 type Filter = "all" | "no_email" | "no_arrival" | "messages";
 
@@ -168,7 +168,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     }
   };
 
-  const saveEmail = async (booking: Booking) => {
+  const saveEmail = async (booking: Booking, email: string) => {
     setBusy(true);
     setError("");
     setNotice("");
@@ -176,7 +176,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
       const response = await fetch("/api/staff/crm/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "set_real_email", bookingId: booking.bookingIds[0], email: realEmail }),
+        body: JSON.stringify({ action: "set_real_email", bookingId: booking.bookingIds[0], email }),
       });
       const payload = await response.json();
       if (!payload.ok) throw new Error(payload.error);
@@ -196,7 +196,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
   return (
     <div className="grid gap-4">
       {attention ? (
-        <p className="text-sm font-bold text-stone-600">{total} κρατήσεις θέλουν έλεγχο: χωρίς email, ή χωρίς ώρα άφιξης αν έρχονται μέσα σε 14 μέρες.</p>
+        <p className="text-sm font-bold text-stone-600">{total} κρατήσεις θέλουν έλεγχο: χωρίς email, με email που δεν γράφτηκε στο Beds24, ή χωρίς ώρα άφιξης αν έρχονται μέσα σε 14 μέρες.</p>
       ) : (
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
@@ -238,6 +238,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                   <Chip ok={booking.emailState === "real"}>{booking.emailState === "real" ? "✓ Email" : "✕ Χωρίς email"}</Chip>
                   <Chip ok={Boolean(booking.arrivalTime)}>{booking.arrivalTime ? `✓ Άφιξη ${booking.arrivalTime}` : "✕ Χωρίς ώρα άφιξης"}</Chip>
                   {booking.deliveryProblem ? <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white">⚠ {booking.deliveryProblem}</span> : null}
+                  {booking.emailSyncError ? <span className="rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white">⚠ Το email δεν γράφτηκε στο Beds24</span> : null}
                   {guestMessages ? <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-black">💬 {guestMessages}</span> : null}
                   {lastSms ? <span className={`rounded-full bg-violet-50 px-3 py-1 text-xs font-black ${SMS_STATUS[lastSms.status ?? ""]?.tone ?? ""}`}>SMS: {SMS_STATUS[lastSms.status ?? ""]?.label ?? lastSms.status}</span> : null}
                 </span>
@@ -271,8 +272,14 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                   <section className="grid content-start gap-3">
                     <h3 className="font-black">Στοιχεία</h3>
                     <p className="break-all text-sm">{booking.email ?? "Χωρίς email"}{booking.emailState === "virtual" ? " (εικονικό)" : ""}</p>
+                    {booking.emailSyncError ? (
+                      <div className="grid gap-2 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-900">
+                        <p>⚠ {booking.emailSyncError}. Το CRM το έχει, αλλά τα μηνύματα του Beds24 πάνε ακόμα στο παλιό email. Ξαναδοκιμάζει μόνο του κάθε πρωί.</p>
+                        <button type="button" disabled={busy} className={secondaryButton} onClick={() => saveEmail(booking, booking.email ?? "")}>Δοκίμασε ξανά τώρα</button>
+                      </div>
+                    ) : null}
                     {booking.emailState !== "real" ? (
-                      <form className="flex flex-wrap items-end gap-2" onSubmit={(event) => { event.preventDefault(); void saveEmail(booking); }}>
+                      <form className="flex flex-wrap items-end gap-2" onSubmit={(event) => { event.preventDefault(); void saveEmail(booking, realEmail); }}>
                         <div className="min-w-[200px] flex-1">
                           <label htmlFor={`crm-board-email-${booking.bookingIds[0]}`} className="mb-1 block text-sm font-bold">Πραγματικό email</label>
                           <input id={`crm-board-email-${booking.bookingIds[0]}`} type="email" required className={inputClass} value={realEmail} onChange={(event) => setRealEmail(event.target.value)} />

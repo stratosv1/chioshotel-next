@@ -1,6 +1,7 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
-import { appendBookingNote, getBeds24WriteToken, noteDate, summarizeGuestMessage, updateBookingEmail } from "@/lib/crm/booking-notes";
+import { syncBookingEmail } from "@/lib/crm/booking-email-sync";
+import { appendBookingNote, getBeds24WriteToken, noteDate, summarizeGuestMessage } from "@/lib/crm/booking-notes";
 import type { EmailLanguage } from "@/lib/crm/email-design";
 import { buildGuestSms, buildOtaMessage, buildOtaReminder } from "@/lib/crm/ota-message-text";
 import { sendBookingSms } from "@/lib/crm/sms";
@@ -208,7 +209,7 @@ export async function processBeds24Messages(messages: any[]) {
         on conflict (booking_id) do update set real_email = coalesce(nullif(public.crm_booking_contacts.real_email, ''), excluded.real_email),
           source = coalesce(public.crm_booking_contacts.source, excluded.source), updated_at = now()`;
       summary.emails += 1;
-      await updateBookingEmail(bookingId, realEmail, writeToken);
+      await syncBookingEmail(bookingId, realEmail);
       if (await appendBookingNote(bookingId, `Email πελάτη (μήνυμα ${received}): ${realEmail}`, realEmail, writeToken) === "written") summary.notes += 1;
     }
     if (note.hasInfo && note.note) {

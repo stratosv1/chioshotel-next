@@ -34,6 +34,7 @@ export type BoardBooking = {
   arrivalTime: string | null;
   smsTemplate: string;
   deliveryProblem: string | null;
+  emailSyncError: string | null;
   events: BoardEvent[];
 };
 
@@ -65,7 +66,7 @@ function boardLanguage(language: string | null, country: string | null) {
 export async function listAttentionBookings() {
   const bookings = await listBookings(null);
   const arrivalLimit = new Date(Date.now() + ARRIVAL_ATTENTION_DAYS * 86_400_000).toISOString().slice(0, 10);
-  return bookings.filter((booking) => booking.emailState !== "real" || (!booking.arrivalTime && booking.checkin <= arrivalLimit));
+  return bookings.filter((booking) => booking.emailState !== "real" || booking.emailSyncError || (!booking.arrivalTime && booking.checkin <= arrivalLimit));
 }
 
 export const listMonthBookings = (month: string) => listBookings(month);
@@ -75,7 +76,7 @@ async function listBookings(month: string | null): Promise<BoardBooking[]> {
   const rows = (await sql`
     select b.booking_id, b.status, b.firstname, b.lastname, b.email, b.phone, b.room, b.guest_language, b.country,
       to_char(b.checkin, 'YYYY-MM-DD') as checkin, to_char(b.checkout, 'YYYY-MM-DD') as checkout,
-      nullif(c.real_email, '') as real_email
+      nullif(c.real_email, '') as real_email, c.beds24_email_error
     from public.beds24_bookings b
     left join public.crm_booking_contacts c using (booking_id)
     where lower(b.status) in ('confirmed', 'new', 'request')
@@ -148,6 +149,7 @@ async function listBookings(month: string | null): Promise<BoardBooking[]> {
       arrivalTime: arrival ? arrival.arrival_time || arrivalFromSummary(arrival.summary) : null,
       smsTemplate: buildGuestSms(boardLanguage(first.guest_language, first.country), first.firstname ?? ""),
       deliveryProblem: failedSms ? "Το SMS δεν παραδόθηκε" : failedChannel ? "Το μήνυμα Booking/Expedia απέτυχε" : null,
+      emailSyncError: group.find((row) => row.beds24_email_error)?.beds24_email_error ?? null,
       events,
     };
   });

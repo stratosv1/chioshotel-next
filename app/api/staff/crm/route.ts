@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBeds24WriteToken, updateBookingEmail } from "@/lib/crm/booking-notes";
+import { syncBookingEmail } from "@/lib/crm/booking-email-sync";
 import {
   addExclusion,
   getSummary,
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         if (!bookingId) return fail("Λείπει η κράτηση.");
         if (!isValidEmail(email) || isVirtualEmail(email)) return fail("Βάλε το πραγματικό email του πελάτη.");
         await setBookingRealEmail(bookingId, email);
-        if (!(await updateBookingEmail(bookingId, email, await getBeds24WriteToken()))) {
+        if (!(await syncBookingEmail(bookingId, email)).ok) {
           return fail("Αποθηκεύτηκε στο CRM, αλλά όχι στο Beds24.", 502);
         }
         break;
