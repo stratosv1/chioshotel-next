@@ -43,6 +43,11 @@ const CHANNEL_DOT: Record<BoardEvent["channel"], string> = {
   guest: "bg-stone-100", staff: "bg-emerald-50", email: "bg-sky-50", sms: "bg-violet-50", whatsapp: "bg-emerald-50", ota: "bg-amber-50",
 };
 
+const CHANNEL_MARK: Record<BoardEvent["channel"], string> = {
+  guest: "bg-stone-500", staff: "bg-emerald-600", email: "bg-sky-600", sms: "bg-violet-600", whatsapp: "bg-emerald-600", ota: "bg-amber-600",
+};
+const GSM_TEXT = /^[@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !"#¤%&'()*+,\-./0-9:;<=>?¡A-ZÄÖÑÜ§¿a-zäöñüà^{}\\[~\]|€]*$/;
+
 const thisMonth = () => new Date().toISOString().slice(0, 7);
 function shiftMonth(month: string, delta: number) {
   const [year, mon] = month.split("-").map(Number);
@@ -69,6 +74,31 @@ function relativeDay(booking: Booking, today: string) {
   if (days < 60) return `σε ${Math.round(days / 7)} εβδομάδες`;
   const months = Math.round(days / 30);
   return months === 1 ? "σε 1 μήνα" : `σε ${months} μήνες`;
+}
+
+/** Same parts a phone would send, so the cost of a long text is visible before sending. */
+function smsParts(text: string) {
+  const gsm = GSM_TEXT.test(text);
+  const single = gsm ? 160 : 70;
+  const part = gsm ? 153 : 67;
+  return { parts: text.length <= single ? 1 : Math.ceil(text.length / part), single, gsm };
+}
+
+/** A number typed for an earlier SMS is reused when the booking itself has none. */
+function lastSmsPhone(booking: Booking) {
+  const match = [...booking.events].reverse().map((event) => /^SMS προς \+?(\d{6,})/.exec(event.title)).find(Boolean);
+  return match ? `+${match[1]}` : "";
+}
+
+function eventWhen(time: string, today: string) {
+  const match = /^(\d{4}-\d{2}-\d{2})[ T](\d{2}:\d{2})/.exec(time);
+  if (!match) return time;
+  const ago = daysFrom(today, match[1]);
+  return `${ago === 0 ? "Σήμερα" : ago === 1 ? "Χθες" : shortDate(match[1])}, ${match[2]}`;
+}
+
+function eventStatus(status: string) {
+  return SMS_STATUS[status] ?? { label: status, tone: status.startsWith("Απέτυχε") ? "text-red-800" : "text-stone-600" };
 }
 
 /** Rooms booked together show once with a count, in place of a repeated list. */
@@ -111,6 +141,9 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  // The result of SMS and check shows next to their button, not at the top of a long card.
+  const [running, setRunning] = useState<"sms" | "check" | null>(null);
+  const [feedback, setFeedback] = useState<{ where: "sms" | "check"; ok: boolean; text: string } | null>(null);
 
   const load = useCallback(async () => {
     const response = await fetch(attention ? `${API}?attention=1` : `${API}?month=${month}`, { cache: "no-store" });
@@ -140,7 +173,8 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     }
     setOpenId(id);
     setNotes(undefined);
-    setSms({ phone: booking.phone ?? "", message: "" });
+    setSms({ phone: booking.phone ?? lastSmsPhone(booking), message: "" });
+    setFeedback(null);
     setRealEmail("");
     setArrivalForm({ time: booking.arrivalTime ?? "", details: booking.arrivalDetails ?? "" });
     setNotice("");
@@ -155,8 +189,8 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
 
   const runCheck = async (booking: Booking) => {
     setBusy(true);
-    setError("");
-    setNotice("");
+    setRunning("check");
+    setFeedback(null);
     try {
       const response = await fetch(API, {
         method: "POST",
@@ -167,13 +201,14 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
       if (!payload.ok) throw new Error(payload.error);
       const found = payload.beds24 + payload.gmail;
       const gmailNote = payload.gmailReady ? "" : " Το Gmail δεν έχει συνδεθεί ακόμα, ελέγχθηκαν μόνο τα μηνύματα Booking/Expedia.";
-      setNotice(`${found ? `Βρέθηκαν ${found} νέα: ${payload.gmail} email, ${payload.beds24} μηνύματα.` : "Δεν βρέθηκε κάτι νέο."}${gmailNote}`);
+      setFeedback({ where: "check", ok: true, text: `${found ? `Βρέθηκαν ${found} νέα: ${payload.gmail} email, ${payload.beds24} μηνύματα.` : "Δεν βρέθηκε κάτι νέο."}${gmailNote}` });
       await load();
       await loadNotes(booking.bookingIds[0]);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Ο έλεγχος απέτυχε.");
+      setFeedback({ where: "check", ok: false, text: reason instanceof Error ? reason.message : "Ο έλεγχος απέτυχε." });
     } finally {
       setBusy(false);
+      setRunning(null);
     }
   };
 
@@ -203,8 +238,8 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
   const sendSms = async (booking: Booking) => {
     if (!window.confirm(`Να σταλεί SMS στο ${sms.phone};`)) return;
     setBusy(true);
-    setError("");
-    setNotice("");
+    setRunning("sms");
+    setFeedback(null);
     try {
       const response = await fetch(API, {
         method: "POST",
@@ -214,13 +249,14 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
       const payload = await response.json();
       if (!payload.ok) throw new Error(payload.error);
       setSms({ ...sms, message: "" });
-      setNotice("Το SMS στάλθηκε. Η παράδοση θα φανεί στο ιστορικό.");
+      setFeedback({ where: "sms", ok: true, text: "Το SMS στάλθηκε. Η παράδοση θα φανεί στο ιστορικό." });
       await load();
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "Το SMS απέτυχε.");
+      setFeedback({ where: "sms", ok: false, text: reason instanceof Error ? reason.message : "Το SMS απέτυχε." });
       await load().catch(() => undefined);
     } finally {
       setBusy(false);
+      setRunning(null);
     }
   };
 
@@ -285,6 +321,9 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     const soon = days >= 0 && days <= ACTION_DAYS;
     const missingArrival = !booking.arrivalTime && !booking.arrivalClosed;
     const when = relativeDay(booking, today);
+    const parts = smsParts(sms.message);
+    const smsFeedback = feedback?.where === "sms" ? feedback : null;
+    const checkFeedback = feedback?.where === "check" ? feedback : null;
     return (
       <li key={booking.bookingIds[0]} className={`overflow-hidden rounded-2xl border-l-4 bg-white shadow-sm ${attention ? TIER_BAR[tier] : "border-transparent"}`}>
         <button type="button" aria-expanded={open} onClick={() => toggle(booking)} className="grid w-full grid-cols-[3.25rem_minmax(0,1fr)] gap-3 p-4 text-left">
@@ -360,43 +399,63 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                 </div>
               </form>
 
-              <details className="rounded-xl bg-stone-50 p-3">
-                <summary className="cursor-pointer font-black">Αποστολή SMS</summary>
-                <div className="mt-3 grid gap-2">
-                  {!booking.phone ? <p className="rounded-xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-900">Δεν υπάρχει κινητό σε αυτή την κράτηση.</p> : null}
-                  <button type="button" className={`${secondaryButton} justify-self-start`} onClick={() => setSms({ ...sms, message: booking.smsTemplate })}>Έτοιμο κείμενο</button>
-                  <form className="grid gap-2" onSubmit={(event) => { event.preventDefault(); void sendSms(booking); }}>
-                    <div>
-                      <label htmlFor={`crm-sms-phone-${booking.bookingIds[0]}`} className="mb-1 block text-sm font-bold">Κινητό</label>
-                      <input id={`crm-sms-phone-${booking.bookingIds[0]}`} required className={inputClass} value={sms.phone} onChange={(event) => setSms({ ...sms, phone: event.target.value })} />
+              <details className="group rounded-xl bg-stone-50 p-3">
+                <summary className="flex min-h-8 cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">
+                  <span aria-hidden="true" className="text-xs text-stone-500 transition-transform group-open:rotate-90">▶</span>
+                  <span className="font-black">Αποστολή SMS</span>
+                  {lastSms ? <span className={`ml-auto text-right text-xs font-bold ${eventStatus(lastSms.status ?? "").tone}`}>{eventStatus(lastSms.status ?? "").label}</span> : null}
+                </summary>
+                <form className="mt-3 grid gap-3" onSubmit={(event) => { event.preventDefault(); void sendSms(booking); }}>
+                  <div>
+                    <label htmlFor={`crm-sms-phone-${booking.bookingIds[0]}`} className="mb-1 block text-sm font-bold">Κινητό</label>
+                    <input id={`crm-sms-phone-${booking.bookingIds[0]}`} type="tel" inputMode="tel" autoComplete="off" required placeholder="+39 338 000 0000" aria-describedby={`crm-sms-phone-hint-${booking.bookingIds[0]}`} className={inputClass} value={sms.phone} onChange={(event) => setSms({ ...sms, phone: event.target.value })} />
+                    {!booking.phone ? <p id={`crm-sms-phone-hint-${booking.bookingIds[0]}`} className="mt-1 text-xs text-stone-600">{sms.phone && sms.phone === lastSmsPhone(booking) ? "Από το προηγούμενο SMS. Η κράτηση δεν έχει δικό της κινητό." : "Η κράτηση δεν έχει κινητό. Γράψ' το με τον κωδικό χώρας."}</p> : null}
+                  </div>
+                  <div>
+                    <div className="mb-1 flex items-center justify-between gap-2">
+                      <label htmlFor={`crm-sms-text-${booking.bookingIds[0]}`} className="text-sm font-bold">Μήνυμα</label>
+                      <button type="button" className="min-h-8 rounded-full px-2 text-sm font-black text-amber-900 underline underline-offset-2" onClick={() => setSms({ ...sms, message: booking.smsTemplate })}>Έτοιμο κείμενο</button>
                     </div>
-                    <div>
-                      <label htmlFor={`crm-sms-text-${booking.bookingIds[0]}`} className="mb-1 block text-sm font-bold">Μήνυμα ({sms.message.length})</label>
-                      <textarea id={`crm-sms-text-${booking.bookingIds[0]}`} required rows={4} maxLength={918} className={inputClass} value={sms.message} onChange={(event) => setSms({ ...sms, message: event.target.value })} />
-                    </div>
-                    <button type="submit" disabled={busy} className={`${primaryButton} justify-self-start`}>Αποστολή SMS</button>
-                  </form>
-                </div>
+                    <textarea id={`crm-sms-text-${booking.bookingIds[0]}`} required rows={5} maxLength={918} placeholder="Γράψε το μήνυμα ή πάτα «Έτοιμο κείμενο»" className={inputClass} value={sms.message} onChange={(event) => setSms({ ...sms, message: event.target.value })} />
+                    <p className={`mt-1 text-xs ${parts.parts > 1 ? "font-bold text-amber-900" : "text-stone-600"}`}>{sms.message.length} / {parts.single} χαρακτήρες · {parts.parts} SMS{parts.gsm ? "" : " (ελληνικά: 70 ανά SMS)"}</p>
+                  </div>
+                  <button type="submit" disabled={busy || !sms.phone.trim() || !sms.message.trim()} className={`${primaryButton} min-h-11 w-full sm:w-auto sm:justify-self-start`}>{running === "sms" ? "Αποστολή…" : "Αποστολή SMS"}</button>
+                  {smsFeedback ? <p role={smsFeedback.ok ? "status" : "alert"} className={`rounded-xl px-3 py-2 text-sm font-bold ${smsFeedback.ok ? "bg-emerald-100 text-emerald-900" : "bg-red-100 text-red-900"}`}>{smsFeedback.text}</p> : null}
+                </form>
               </details>
             </section>
 
-            <section className="grid content-start gap-2">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <h3 className="font-black">Ιστορικό</h3>
-                <button type="button" disabled={busy} className={secondaryButton} onClick={() => runCheck(booking)}>
-                  {busy ? "Έλεγχος…" : "Έλεγχος email & μηνυμάτων"}
+            <section className="grid content-start gap-3">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-black">Ιστορικό{booking.events.length ? ` · ${booking.events.length}` : ""}</h3>
+                <button type="button" disabled={busy} className={`${secondaryButton} shrink-0`} onClick={() => runCheck(booking)}>
+                  {running === "check" ? "Έλεγχος…" : "↻ Έλεγχος νέων"}
                 </button>
               </div>
+              {checkFeedback ? <p role={checkFeedback.ok ? "status" : "alert"} className={`rounded-xl px-3 py-2 text-sm font-bold ${checkFeedback.ok ? "bg-emerald-100 text-emerald-900" : "bg-red-100 text-red-900"}`}>{checkFeedback.text}</p> : null}
               {!booking.events.length ? <p className="text-sm text-stone-600">Δεν υπάρχει επικοινωνία ακόμα.</p> : null}
-              {[...booking.events].reverse().map((event, index) => (
-                <article key={`${event.time}-${index}`} className={`rounded-xl p-3 text-sm ${CHANNEL_DOT[event.channel]}`}>
-                  <p className="font-bold">{event.title} · {event.time}</p>
-                  {event.summary ? <p className="mt-1 font-bold text-amber-900">{event.summary}</p> : null}
-                  {event.body ? <p className="mt-1 whitespace-pre-wrap break-words">{event.body}</p> : null}
-                  {event.status ? <p className={`mt-1 font-black ${SMS_STATUS[event.status]?.tone ?? "text-stone-600"}`}>{SMS_STATUS[event.status]?.label ?? event.status}</p> : null}
-                </article>
-              ))}
-              <h3 className="mt-2 font-black">Notes Beds24</h3>
+              {booking.events.length ? (
+                <ol>
+                  {[...booking.events].reverse().map((event, index) => {
+                    const status = event.status ? eventStatus(event.status) : null;
+                    return (
+                      <li key={`${event.time}-${index}`} className="relative border-l-2 border-stone-200 pb-3 pl-4 last:border-transparent last:pb-0">
+                        <span aria-hidden="true" className={`absolute -left-[7px] top-3.5 size-3 rounded-full ring-2 ring-white ${CHANNEL_MARK[event.channel]}`} />
+                        <article className={`rounded-xl p-3 text-sm ${CHANNEL_DOT[event.channel]}`}>
+                          <div className="flex flex-wrap items-baseline justify-between gap-x-3">
+                            <p className="min-w-0 break-words font-bold">{event.title.replace(/^SMS προς (\d)/, "SMS προς +$1")}</p>
+                            <time dateTime={event.time.replace(" ", "T")} className="text-xs text-stone-600">{eventWhen(event.time, today)}</time>
+                          </div>
+                          {event.summary ? <p className="mt-1 font-bold text-amber-900">{event.summary}</p> : null}
+                          {event.body ? <p className="mt-1 whitespace-pre-wrap break-words text-stone-800">{event.body}</p> : null}
+                          {status ? <p className={`mt-1 text-xs font-black ${status.tone}`}>{status.label}</p> : null}
+                        </article>
+                      </li>
+                    );
+                  })}
+                </ol>
+              ) : null}
+              <h3 className="border-t border-stone-100 pt-3 font-black">Notes Beds24</h3>
               {notes === undefined ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
               {notes === null ? <p className="text-sm text-stone-600">Δεν φορτώθηκαν.</p> : null}
               {notes ? <p className="whitespace-pre-wrap break-words rounded-xl bg-stone-100 p-3 text-sm">{notes}</p> : null}
