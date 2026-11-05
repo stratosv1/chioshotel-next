@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkBookingCommunication } from "@/lib/crm/booking-check";
-import { getBookingNotes, getTodayCounts, listAttentionBookings, listMonthBookings, saveManualArrival } from "@/lib/crm/bookings-board";
+import { getBookingNotes, listAttentionBookings, listMonthBookings, saveManualArrival } from "@/lib/crm/bookings-board";
 import { sendBookingSms } from "@/lib/crm/sms";
 
 export const runtime = "nodejs";
@@ -20,8 +20,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ ok: true, notes: await getBookingNotes(notesFor) }, { headers });
     }
     if (request.nextUrl.searchParams.get("attention")) {
-      const [bookings, today] = await Promise.all([listAttentionBookings(), getTodayCounts()]);
-      return NextResponse.json({ ok: true, bookings, today }, { headers });
+      return NextResponse.json({ ok: true, bookings: await listAttentionBookings() }, { headers });
     }
     const month = request.nextUrl.searchParams.get("month") ?? "";
     if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return fail("Μη έγκυρος μήνας.");

@@ -62,6 +62,13 @@ const staffLinks = [
     className: styles.performance,
   },
   {
+    href: "/staff/rooms",
+    icon: "🛏️",
+    label: "Δωμάτια ημέρας",
+    subText: "Ποια φεύγουν, ποια έρχονται, πόσα άτομα και τι ώρα",
+    className: styles.expenses,
+  },
+  {
     href: "/staff/expenses",
     icon: "🧾",
     label: "Έξοδα",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import RoomDayPanel from "../rooms/RoomDayPanel";
 
 type BoardEvent = { time: string; channel: "guest" | "staff" | "email" | "sms" | "whatsapp" | "ota"; title: string; body: string | null; summary: string | null; status: string | null };
 type Booking = {
@@ -9,7 +10,6 @@ type Booking = {
 };
 type Filter = "all" | "no_email" | "no_arrival" | "messages";
 type Tier = "arriving" | "action" | "later";
-type TodayCounts = { arrivals: number; inHouse: number; departures: number };
 
 const API = "/api/staff/crm/bookings/";
 // The same window the server uses for a missing arrival time.
@@ -102,7 +102,6 @@ function nextStep(booking: Booking, days: number) {
 export default function BookingsPanel({ attention = false }: { attention?: boolean }) {
   const [month, setMonth] = useState(thisMonth);
   const [bookings, setBookings] = useState<Booking[] | null>(null);
-  const [counts, setCounts] = useState<TodayCounts | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [openId, setOpenId] = useState<string | null>(null);
   const [notes, setNotes] = useState<string | null | undefined>(undefined);
@@ -118,7 +117,6 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     const payload = await response.json();
     if (!payload.ok) throw new Error(payload.error);
     setBookings(payload.bookings);
-    setCounts(payload.today ?? null);
   }, [attention, month]);
 
   useEffect(() => {
@@ -414,16 +412,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     <div className="grid gap-4">
       {attention ? (
         <>
-          {counts ? (
-            <dl className="grid grid-cols-3 gap-2">
-              {[["Αφίξεις σήμερα", counts.arrivals], ["Μένουν τώρα", counts.inHouse], ["Αναχωρήσεις", counts.departures]].map(([label, value]) => (
-                <div key={label} className="rounded-2xl bg-white p-3 text-center shadow-sm">
-                  <dd className="text-2xl font-black">{value}</dd>
-                  <dt className="text-xs font-bold text-stone-500">{label}</dt>
-                </div>
-              ))}
-            </dl>
-          ) : null}
+          <RoomDayPanel />
           {bookings ? <p className="text-base font-black">{actionCount ? `${actionCount} ${actionCount === 1 ? "κράτηση θέλει" : "κρατήσεις θέλουν"} εσένα τώρα` : "Τίποτα επείγον τώρα"}</p> : null}
         </>
       ) : (

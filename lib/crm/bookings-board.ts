@@ -44,7 +44,7 @@ export type BoardBooking = {
 const TIME_IN_TEXT = /\b([01]?\d|2[0-3])[:.][0-5]\d\b/;
 
 /** Older messages have no stored arrival time: a time in a non-departure summary is used. */
-function arrivalFromSummary(summary: string | null) {
+export function arrivalFromSummary(summary: string | null) {
   if (!summary || /αναχώρηση/i.test(summary)) return null;
   return summary.match(TIME_IN_TEXT)?.[0]?.replace(".", ":") ?? null;
 }
@@ -71,20 +71,6 @@ export async function listAttentionBookings() {
   const arrivalLimit = new Date(Date.now() + ARRIVAL_ATTENTION_DAYS * 86_400_000).toISOString().slice(0, 10);
   const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
   return bookings.filter((booking) => booking.checkin <= tomorrow || booking.emailState !== "real" || booking.emailSyncError || booking.deliveryProblem || (!booking.arrivalTime && !booking.arrivalClosed && booking.checkin <= arrivalLimit));
-}
-
-/** Rooms arriving, staying and leaving today, for the top of the CRM. */
-export async function getTodayCounts() {
-  const sql = getSql();
-  const [row] = (await sql`
-    with today as (select (now() at time zone 'Europe/Athens')::date as day)
-    select count(*) filter (where b.checkin = t.day)::int as arrivals,
-      count(*) filter (where b.checkin <= t.day and b.checkout > t.day)::int as in_house,
-      count(*) filter (where b.checkout = t.day)::int as departures
-    from public.beds24_bookings b cross join today t
-    where lower(b.status) in ('confirmed', 'new', 'request')
-  `) as any[];
-  return { arrivals: row?.arrivals ?? 0, inHouse: row?.in_house ?? 0, departures: row?.departures ?? 0 };
 }
 
 export const listMonthBookings = (month: string) => listBookings(month);
