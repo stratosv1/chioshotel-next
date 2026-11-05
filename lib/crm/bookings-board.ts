@@ -65,11 +65,26 @@ function boardLanguage(language: string | null, country: string | null) {
   return country === "TR" ? "tr" : "en";
 }
 
-/** Upcoming bookings still missing the email or the arrival time, soonest first. */
+/** Upcoming bookings still missing something, plus every arrival of today and tomorrow, soonest first. */
 export async function listAttentionBookings() {
   const bookings = await listBookings(null);
   const arrivalLimit = new Date(Date.now() + ARRIVAL_ATTENTION_DAYS * 86_400_000).toISOString().slice(0, 10);
-  return bookings.filter((booking) => booking.emailState !== "real" || booking.emailSyncError || (!booking.arrivalTime && !booking.arrivalClosed && booking.checkin <= arrivalLimit));
+  const tomorrow = new Date(Date.now() + 86_400_000).toISOString().slice(0, 10);
+  return bookings.filter((booking) => booking.checkin <= tomorrow || booking.emailState !== "real" || booking.emailSyncError || booking.deliveryProblem || (!booking.arrivalTime && !booking.arrivalClosed && booking.checkin <= arrivalLimit));
+}
+
+/** Rooms arriving, staying and leaving today, for the top of the CRM. */
+export async function getTodayCounts() {
+  const sql = getSql();
+  const [row] = (await sql`
+    with today as (select (now() at time zone 'Europe/Athens')::date as day)
+    select count(*) filter (where b.checkin = t.day)::int as arrivals,
+      count(*) filter (where b.checkin <= t.day and b.checkout > t.day)::int as in_house,
+      count(*) filter (where b.checkout = t.day)::int as departures
+    from public.beds24_bookings b cross join today t
+    where lower(b.status) in ('confirmed', 'new', 'request')
+  `) as any[];
+  return { arrivals: row?.arrivals ?? 0, inHouse: row?.in_house ?? 0, departures: row?.departures ?? 0 };
 }
 
 export const listMonthBookings = (month: string) => listBookings(month);

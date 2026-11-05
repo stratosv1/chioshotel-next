@@ -46,10 +46,12 @@ type Exclusion = { email: string; note: string };
 type GuestMessage = { direction: "guest" | "staff"; subject: string | null; body: string; summary: string | null; bookingIds: string[]; sentAt: string };
 
 const TABS: { key: Tab; label: string }[] = [
-  { key: "attention", label: "Εκκρεμότητες" },
+  { key: "attention", label: "Σήμερα" },
   { key: "bookings", label: "Κρατήσεις" },
-  { key: "summary", label: "Πίνακας" },
   { key: "guests", label: "Πελάτες" },
+];
+const MORE_TABS: { key: Tab; label: string }[] = [
+  { key: "summary", label: "Στατιστικά" },
   { key: "confirmation", label: "Επιβεβαίωση κράτησης" },
   { key: "emails", label: "Αυτόματα email" },
   { key: "exclusions", label: "Εξαιρέσεις" },
@@ -280,22 +282,32 @@ export default function CrmApp() {
   return (
     <main className="min-h-screen bg-[#f6efe5] px-4 py-6 text-stone-900 md:px-8">
       <div className="mx-auto max-w-[1280px]">
-        <header className="mb-6">
+        <header className="mb-4">
           <a href="/staff" className="text-sm font-bold text-amber-800">← Staff</a>
-          <h1 className="mt-1 text-3xl font-black tracking-tight">Πελάτες & CRM</h1>
-          <p className="mt-1 text-sm text-stone-600">
-            Οι πελάτες προκύπτουν από τις κρατήσεις του Beds24.
-          </p>
+          <h1 className="mt-1 text-2xl font-black tracking-tight">Πελάτες & CRM</h1>
         </header>
 
-        <nav className="mb-5 flex flex-wrap gap-2" aria-label="Ενότητες CRM">
+        <nav className="mb-2 grid grid-cols-3 gap-1 rounded-2xl bg-white p-1 shadow-sm md:max-w-md" aria-label="Κύριες ενότητες CRM">
           {TABS.map(({ key, label }) => (
             <button
               key={key}
               type="button"
               aria-pressed={tab === key}
               onClick={() => { setTab(key); setNotice(""); }}
-              className={`rounded-full px-5 py-2 text-sm font-black ${tab === key ? "bg-stone-900 text-white" : "bg-white text-stone-700"}`}
+              className={`min-h-11 rounded-xl px-2 text-sm font-black ${tab === key ? "bg-stone-900 text-white" : "text-stone-700"}`}
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+        <nav className="mb-5 flex flex-wrap gap-x-4 gap-y-1 px-1" aria-label="Ρυθμίσεις και στατιστικά CRM">
+          {MORE_TABS.map(({ key, label }) => (
+            <button
+              key={key}
+              type="button"
+              aria-pressed={tab === key}
+              onClick={() => { setTab(key); setNotice(""); }}
+              className={`min-h-8 text-xs font-bold ${tab === key ? "text-stone-900 underline underline-offset-4" : "text-stone-500"}`}
             >
               {label}
             </button>
