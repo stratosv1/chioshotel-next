@@ -1,0 +1,32 @@
+/* Voulamandis House – Christmas layer. Everything is scoped to html.vh-xmas. */
+html.vh-xmas header strong { overflow: visible; }
+.vh-house { position: relative; display: inline-block; margin-left: .3em; }
+.vh-hat { position: absolute; left: -.7em; top: -.82em; width: 1.75em; height: 1.5em; overflow: visible; pointer-events: none; }
+
+.vh-cane { flex: none; width: .85em; height: 1.35em; margin-right: .45em; vertical-align: -.3em; }
+
+.vh-fx { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 5; contain: strict; }
+.vh-lights { position: absolute; top: 0; left: 0; display: flex; height: 40px; }
+.vh-lights svg { flex: 0 0 240px; width: 240px; height: 40px; }
+.vh-tw { animation: vhTwinkle 2.6s ease-in-out infinite; }
+.vh-tw.b { animation-delay: -.9s; }
+.vh-tw.c { animation-delay: -1.7s; }
+@keyframes vhTwinkle { 0%, 100% { opacity: 1; } 50% { opacity: .4; } }
+
+.vh-corner { position: absolute; top: 46px; width: 34px; height: 54px; }
+.vh-corner.l { left: 20px; transform: rotate(-8deg); }
+.vh-corner.r { right: 20px; transform: scaleX(-1) rotate(-8deg); }
+
+.vh-flake { position: absolute; top: -8px; border-radius: 50%; background: #fff; animation: vhSnow linear infinite; will-change: transform; }
+@keyframes vhSnow { to { transform: translate3d(36px, var(--vh-fall, 700px), 0); } }
+
+@media (max-width: 767px) {
+  .vh-lights { height: 28px; }
+  .vh-lights svg { flex-basis: 160px; width: 160px; height: 28px; }
+  .vh-corner.l { display: none; }
+  .vh-corner.r { top: 34px; right: 12px; width: 24px; height: 38px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vh-tw { animation: none; }
+  .vh-flake { display: none; }
+}

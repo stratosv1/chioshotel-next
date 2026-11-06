@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { headers } from "next/headers";
+import Script from "next/script";
 import { BookingFunnelAnalytics } from "@/components/analytics/BookingFunnelAnalytics";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { ConsentRealtimeProbe } from "@/components/analytics/ConsentRealtimeProbe";
@@ -13,6 +14,7 @@ import { ExploreVoulamandisJourney } from "@/components/seo/ExploreVoulamandisJo
 import { VoulamandisFooterTailwind } from "@/components/VoulamandisFooterTailwind";
 import { VoulamandisHeaderTailwind } from "@/components/VoulamandisHeaderTailwind";
 import { getHeaderLinks } from "@/lib/header-links";
+import { SEASONAL_THEME } from "@/lib/seasonal-theme";
 import { ensureKarfasElintaBeachCards } from "@/content/karfas-beach-card";
 import { siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
@@ -175,6 +177,12 @@ export default async function RootLayout({
         {publicWebMcpPath ? <RoomFinderWebMCP /> : null}
         {publicWebMcpPath ? <JsSelfProfilingMarkers /> : null}
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
+        {!hideGlobalChrome && SEASONAL_THEME !== "off" ? (
+          <>
+            <link rel="stylesheet" href={`/seasonal/${SEASONAL_THEME}.css`} />
+            <Script src={`/seasonal/${SEASONAL_THEME}.js`} strategy="lazyOnload" />
+          </>
+        ) : null}
         {!hideGlobalChrome ? (
           <VoulamandisHeaderTailwind language={sharedLanguage} pathname={pathname} headerLinks={getHeaderLinks(sharedLanguage, pathname)} />
         ) : null}
