@@ -17,7 +17,7 @@
   var SWAG = '<svg viewBox="0 0 240 40" aria-hidden="true"><path d="M0 2Q60 28 120 2Q180 28 240 2" fill="none" stroke="#2b1f14" stroke-width="1.6"/>' +
     bulbs([30, 210], 16, '') + bulbs([60, 150], 19, 'b') + bulbs([90, 180], 16, 'c') + '</svg>';
   var HAT = '<svg class="vh-hat" viewBox="0 0 30 26" aria-hidden="true"><path d="M25 18C24 9 19 2 12 3C7 4 4 9 3 14L6 14C8 11 9 10 11 10C11 13 10 15 10 18Z" fill="' + RED +
-    '"/><rect x="8" y="16" width="19" height="5" rx="2.5" fill="#fff" stroke="#cfc6b8" stroke-width=".8"/><circle cx="4.5" cy="16" r="3.2" fill="#fff" stroke="#cfc6b8" stroke-width=".8"/></svg>';
+    '"/><rect x="8" y="16" width="19" height="5" rx="2.5" fill="#fff" stroke="#a99c8a" stroke-width="1"/><circle cx="4.5" cy="16" r="3.2" fill="#fff" stroke="#a99c8a" stroke-width="1"/></svg>';
 
   function addHat() {
     var logo = document.querySelector('header strong');
