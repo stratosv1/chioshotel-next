@@ -62,7 +62,33 @@
   var TREE = '<svg class="vh-deco" viewBox="0 0 24 28" aria-hidden="true"><rect x="10.5" y="23" width="3" height="4" fill="#6f3f1d"/><path d="M12 3L5 12h3L3 19h4L1.500 25h21L17 19h4l-5-7h3z" fill="#1f4d2b"/><path d="M12 0l1 2.200 2.400.3-1.800 1.600.5 2.400L12 5.300 9.900 6.500l.5-2.400L8.600 2.500l2.400-.3z" fill="#d9a441"/><circle cx="10" cy="13" r="1.400" fill="#b3261e"/><circle cx="15" cy="18" r="1.400" fill="#d9a441"/><circle cx="8" cy="21" r="1.400" fill="#d9a441"/><circle cx="16" cy="23" r="1.400" fill="#b3261e"/></svg>';
   var GIFT = '<svg class="vh-deco" viewBox="0 0 24 26" aria-hidden="true"><rect x="2" y="10" width="20" height="15" rx="1.500" fill="' + RED + '"/><rect x="1" y="7" width="22" height="5" rx="1.200" fill="#a82828"/><rect x="10.500" y="7" width="3" height="18" fill="#d9a441"/><path d="M12 7C9 1 3 2 5 5.500 6 7 9 7 12 7zM12 7c3-6 9-5 7-1.500C18 7 15 7 12 7z" fill="none" stroke="#d9a441" stroke-width="2"/></svg>';
   /* Homepage section titles, by their order on the page: hat on the title, tree or gift after it. */
-  var TITLES = { 0: 'hat', 1: 'tree', 4: 'gift', 6: 'hat', 7: 'tree', 9: 'gift' };
+  var TITLES = { 1: 'tree', 4: 'gift' };
+
+  function badge(bg, art) {
+    return '<svg class="vh-badge" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="20" fill="' + bg + '"/>' + art + '</svg>';
+  }
+  var CREAM = '#f8dfa8', GOLD = '#d9a441', PINE = '#1f4d2b', NIGHT = '#21404a', MUSTARD = '#d8b52e';
+  var BADGES = {
+    fireplace: badge(RED, '<rect x="9" y="14" width="22" height="16" fill="#b5653a"/><path d="M9 19h22M9 24h22M15 14v5M25 14v5" stroke="#7d3f22"/><rect x="7" y="12" width="26" height="3" rx="1" fill="#f3d9b1"/><rect x="14" y="19" width="12" height="11" rx="1.500" fill="#1c1410"/><path d="M20 21c1 3 4 4 3 7a3 3 0 0 1-6 0c0-2 1-2 1.500-3.500.5 1 1 1.200 1.500.5.300-1.500-.2-2.500 0-4z" fill="#f2a33a"/><path d="M12 12v-6h4v6z" fill="#fff" opacity="0"/>'),
+    stocking: badge(CREAM, '<path d="M15 12h10v12l4 3a4 4 0 0 1-3 7h-5a6 6 0 0 1-6-6z" fill="#b3261e"/><rect x="13.500" y="8" width="13" height="5.500" rx="1.800" fill="#fff"/><path d="M15 19l10-3M15 24l10-3" stroke="#fff" stroke-width="1.300"/>'),
+    globe: badge(NIGHT, '<circle cx="20" cy="18" r="12" fill="#cfe6ec"/><path d="M8.500 21c4-2 8-2 11.500 0s8 2 11.500 0a12 12 0 0 1-23 0z" fill="#fff"/><path d="M15 21v-5l5-4 5 4v5z" fill="#b5653a"/><path d="M13.500 16.500L20 11l6.500 5.500" fill="none" stroke="' + RED + '" stroke-width="1.800"/><rect x="18.500" y="17" width="3" height="4" fill="#ffd56b"/><path d="M11 30h18l2 4H9z" fill="' + RED + '"/>'),
+    sweets: badge(RED, '<ellipse cx="20" cy="21" rx="12" ry="8.500" fill="#8a4f1d"/><ellipse cx="20" cy="19.500" rx="12" ry="7.500" fill="#b87228"/><path d="M12 19c3-2 5 1 8 0s5-2 8 0" fill="none" stroke="#e7b061" stroke-width="1.600" stroke-linecap="round"/><circle cx="15" cy="16.500" r="1" fill="#5d3312"/><circle cx="22" cy="16" r="1" fill="#5d3312"/><circle cx="26" cy="21" r="1" fill="#5d3312"/><circle cx="18" cy="22.500" r="1" fill="#5d3312"/>'),
+    beanie: badge(CREAM, '<path d="M9 26c0-10 5-15 11-15s11 5 11 15z" fill="#b3261e"/><path d="M12 20l4-3 4 3 4-3 4 3" fill="none" stroke="#fff" stroke-width="1.500"/><rect x="7.500" y="25" width="25" height="6" rx="2.500" fill="#fff"/><circle cx="20" cy="9.500" r="3.500" fill="#fff"/>'),
+    mandarin: badge(PINE, '<circle cx="20" cy="22" r="11" fill="#e8892a"/><path d="M13 17a9 9 0 0 1 6-4" fill="none" stroke="#ffc27a" stroke-width="1.800" stroke-linecap="round"/><path d="M20 12c-1-4 3-7 8-6-1 5-4 7-8 6z" fill="#5f9e5f"/><path d="M14 33l6-5 6 5M20 28v-5" stroke="#b3261e" stroke-width="2" fill="none" stroke-linecap="round"/><circle cx="20" cy="28" r="1.800" fill="#b3261e"/>'),
+    baubles: badge(MUSTARD, '<path d="M15 5v13M26 3v10" stroke="#7a5a12"/><circle cx="15" cy="23" r="7.500" fill="#b3261e"/><circle cx="26" cy="18" r="6" fill="#fff4d6"/><path d="M8 23c3 2 4-2 7 0s4-2 7 0" fill="none" stroke="#f8dfa8" stroke-width="1.300"/><path d="M24 30c3-4 6-3 9-1-1 4-5 6-9 1z" fill="' + PINE + '"/><circle cx="24" cy="30" r="1.700" fill="#b3261e"/>'),
+    tree: badge(NIGHT, '<path d="M20 6l5 8h-3l6 8h-4l6 8H10l6-8h-4l6-8h-3z" fill="#5f9e5f"/><rect x="18" y="30" width="4" height="4" fill="#8a4f1d"/><circle cx="20" cy="6" r="2" fill="#ffd56b"/><circle cx="18" cy="16" r="1.300" fill="#fff"/><circle cx="23" cy="22" r="1.300" fill="#ffd56b"/><circle cx="16" cy="26" r="1.300" fill="#fff"/>')
+  };
+  /* Homepage title icons, in the order the titles appear. */
+  var CHIPS = ['fireplace', 'stocking', 'mandarin', 'sweets', 'beanie', 'globe', 'baubles', 'tree', 'mandarin'];
+
+  function addBadges() {
+    if (!document.getElementById('home-hero')) return;
+    document.querySelectorAll('main h2 span[data-icon]').forEach(function (chip, i) {
+      if (!CHIPS[i] || chip.querySelector('.vh-badge')) return;
+      chip.classList.add('vh-chip');
+      chip.innerHTML = BADGES[CHIPS[i]];
+    });
+  }
 
   function addTitleDecor() {
     if (!document.getElementById('home-hero')) return;
@@ -87,7 +113,7 @@
   }
   function run() {
     document.documentElement.classList.add('vh-xmas');
-    addHat(); addCanes(); addHeroFx(); addTitleDecor();
+    addHat(); addCanes(); addHeroFx(); addTitleDecor(); addBadges();
   }
   function start() {
     run();

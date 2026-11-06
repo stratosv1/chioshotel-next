@@ -36,3 +36,7 @@ html.vh-xmas a.vh-book { background: #8f1d1d; background-image: none; color: #ff
 .vh-title-hat { position: relative; display: inline-block; width: 0; height: 0; }
 .vh-title-hat .vh-hat { left: -.2em; top: auto; bottom: .58em; width: 1.05em; height: .91em; transform: rotate(-12deg); }
 .vh-deco { display: inline-block; width: .85em; height: 1em; margin-left: .32em; vertical-align: -.12em; }
+
+.vh-chip { width: 2.75rem; height: 2.75rem; background: none; box-shadow: none; filter: none; --tw-ring-shadow: 0 0 #0000; }
+.vh-chip::before { content: none !important; }
+.vh-badge { display: block; width: 100%; height: 100%; }
