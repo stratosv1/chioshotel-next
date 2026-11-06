@@ -1,6 +1,7 @@
 /* Christmas layer. Loaded only when SEASONAL_THEME in lib/seasonal-theme.ts is "christmas". */
 (function () {
   var RED = '#8f1d1d';
+  var BOOKING = /(rates|kratisi|hotelpreise|tarifs|prezzi|precios|rezervasyon)/i;
   var CANE = 'M17 34V12a6.5 6.5 0 0 0-13 0';
   function cane(cls, stripe) {
     return '<svg class="' + cls + '" viewBox="0 0 24 38" aria-hidden="true"><path d="' + CANE +
@@ -9,12 +10,12 @@
   }
   function bulbs(xs, y, cls) {
     return '<g class="vh-tw ' + cls + '">' + xs.map(function (x) {
-      return '<circle cx="' + x + '" cy="' + y + '" r="9" fill="#ffc65c" opacity=".28"/>' +
-        '<circle cx="' + x + '" cy="' + y + '" r="4" fill="#ffe7ae"/>';
+      return '<circle cx="' + x + '" cy="' + y + '" r="9" fill="#ffb938" opacity=".4"/>' +
+        '<circle cx="' + x + '" cy="' + y + '" r="4" fill="#ffdc7a" stroke="#a8701a" stroke-width=".8"/>';
     }).join('') + '</g>';
   }
   var SWAG = '<svg viewBox="0 0 240 40" aria-hidden="true"><path d="M0 2Q60 28 120 2Q180 28 240 2" fill="none" stroke="#2b1f14" stroke-width="1.6"/>' +
-    bulbs([30, 210], 21, '') + bulbs([60, 150], 24, 'b') + bulbs([90, 180], 21, 'c') + '</svg>';
+    bulbs([30, 210], 16, '') + bulbs([60, 150], 19, 'b') + bulbs([90, 180], 16, 'c') + '</svg>';
   var HAT = '<svg class="vh-hat" viewBox="0 0 30 26" aria-hidden="true"><path d="M25 18C24 9 19 2 12 3C7 4 4 9 3 14L6 14C8 11 9 10 11 10C11 13 10 15 10 18Z" fill="' + RED +
     '"/><rect x="8" y="16" width="19" height="5" rx="2.5" fill="#fff" stroke="#cfc6b8" stroke-width=".8"/><circle cx="4.5" cy="16" r="3.2" fill="#fff" stroke="#cfc6b8" stroke-width=".8"/></svg>';
 
@@ -25,7 +26,15 @@
     logo.innerHTML = logo.innerHTML.replace('House', '<span class="vh-house">House' + HAT + '</span>');
   }
   function addCanes() {
-    document.querySelectorAll('header a[href*="rates"], #home-hero a[href*="rates"]').forEach(function (a) {
+    var heroBook = document.querySelector('#home-hero .grid a:last-child');
+    var path = heroBook && heroBook.getAttribute('href');
+    var links = Array.prototype.slice.call(document.querySelectorAll('header a')).filter(function (a) {
+      var href = a.getAttribute('href') || '';
+      return a.offsetParent !== null && (href === path || BOOKING.test(href));
+    });
+    if (heroBook) links.push(heroBook);
+    links.forEach(function (a) {
+      a.classList.add('vh-book');
       if (!a.querySelector('.vh-cane')) a.insertAdjacentHTML('afterbegin', cane('vh-cane', '#d9a441'));
     });
   }
@@ -54,6 +63,15 @@
     document.documentElement.classList.add('vh-xmas');
     addHat(); addCanes(); addHeroFx();
   }
-  if ('requestIdleCallback' in window) requestIdleCallback(run, { timeout: 2000 });
-  else setTimeout(run, 300);
+  function start() {
+    run();
+    var queued = false;
+    new MutationObserver(function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; run(); });
+    }).observe(document.body, { childList: true, subtree: true });
+  }
+  if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2000 });
+  else setTimeout(start, 300);
 })();

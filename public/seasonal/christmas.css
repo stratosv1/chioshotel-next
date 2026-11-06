@@ -1,7 +1,7 @@
 /* Voulamandis House – Christmas layer. Everything is scoped to html.vh-xmas. */
 html.vh-xmas header strong { overflow: visible; }
 .vh-house { position: relative; display: inline-block; margin-left: .3em; }
-.vh-hat { position: absolute; left: -.7em; top: -.82em; width: 1.75em; height: 1.5em; overflow: visible; pointer-events: none; }
+.vh-hat { position: absolute; left: -.55em; top: -.9em; width: 1.5em; height: 1.3em; overflow: visible; pointer-events: none; }
 
 .vh-cane { flex: none; width: .85em; height: 1.35em; margin-right: .45em; vertical-align: -.3em; }
 
@@ -30,3 +30,5 @@ html.vh-xmas header strong { overflow: visible; }
   .vh-tw { animation: none; }
   .vh-flake { display: none; }
 }
+
+html.vh-xmas a.vh-book { background: #8f1d1d; background-image: none; color: #fff; }

@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import { headers } from "next/headers";
-import Script from "next/script";
 import { BookingFunnelAnalytics } from "@/components/analytics/BookingFunnelAnalytics";
 import { ConsentAnalytics } from "@/components/analytics/ConsentAnalytics";
 import { ConsentRealtimeProbe } from "@/components/analytics/ConsentRealtimeProbe";
@@ -180,7 +179,7 @@ export default async function RootLayout({
         {!hideGlobalChrome && SEASONAL_THEME !== "off" ? (
           <>
             <link rel="stylesheet" href={`/seasonal/${SEASONAL_THEME}.css`} />
-            <Script src={`/seasonal/${SEASONAL_THEME}.js`} strategy="lazyOnload" />
+            <script src={`/seasonal/${SEASONAL_THEME}.js`} defer />
           </>
         ) : null}
         {!hideGlobalChrome ? (
