@@ -138,6 +138,8 @@ export default async function RootLayout({
   const privatePhysicsPath = isPrivateStudyPath(pathname);
   const staffPath = isStaffPath(pathname);
   const hideGlobalChrome = hideHeader || isPolishPath || privatePhysicsPath || staffPath || isTripPlannerPath(pathname);
+  const showSeasonalTheme =
+    SEASONAL_THEME !== "off" && (!hideGlobalChrome || /\/ai-assistant\/?$/.test(pathname));
   const hideJourney = isTripPlannerPath(pathname) || isAgentRoomPath(pathname) || privatePhysicsPath;
   const hideFooter = isTripPlannerPath(pathname) || privatePhysicsPath;
   const excludeAnalytics = staffPath || privatePhysicsPath;
@@ -176,7 +178,7 @@ export default async function RootLayout({
         {publicWebMcpPath ? <RoomFinderWebMCP /> : null}
         {publicWebMcpPath ? <JsSelfProfilingMarkers /> : null}
         {!isPolishPath && !excludeAnalytics ? <RoomFinderCtaRouter /> : null}
-        {!hideGlobalChrome && SEASONAL_THEME !== "off" ? (
+        {showSeasonalTheme ? (
           <>
             <link rel="stylesheet" href={`/seasonal/${SEASONAL_THEME}.css`} />
             <script src={`/seasonal/${SEASONAL_THEME}.js`} defer />

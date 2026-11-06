@@ -6,7 +6,7 @@
   function cane(cls, stripe) {
     return '<svg class="' + cls + '" viewBox="0 0 24 38" aria-hidden="true"><path d="' + CANE +
       '" fill="none" stroke="#fff7ea" stroke-width="6" stroke-linecap="round"/><path d="' + CANE +
-      '" fill="none" stroke="' + stripe + '" stroke-width="6" stroke-dasharray="4 6"/></svg>';
+      '" fill="none" stroke="' + stripe + '" stroke-width="6" stroke-dasharray="3 7"/></svg>';
   }
   function bulbs(xs, y, cls) {
     return '<g class="vh-tw ' + cls + '">' + xs.map(function (x) {
@@ -38,6 +38,16 @@
       if (!a.querySelector('.vh-cane')) a.insertAdjacentHTML('afterbegin', cane('vh-cane', '#d9a441'));
     });
   }
+  function flakes(count) {
+    var html = '';
+    for (var i = 0; i < count; i++) {
+      var size = 3 + (i * 7) % 4;
+      html += '<span class="vh-flake" style="left:' + (i * 37) % 100 + '%;width:' + size + 'px;height:' + size +
+        'px;opacity:' + (0.45 + (size - 3) * 0.13) + ';animation-duration:' + (9 + (i * 5) % 8) +
+        's;animation-delay:-' + (i * 13) % 17 + 's"></span>';
+    }
+    return html;
+  }
   function addHeroFx() {
     var hero = document.getElementById('home-hero');
     if (!hero || hero.querySelector('.vh-fx')) return;
@@ -45,16 +55,9 @@
     var fx = document.createElement('div');
     fx.className = 'vh-fx';
     fx.setAttribute('aria-hidden', 'true');
-    var swags = Math.ceil(window.innerWidth / (mobile ? 160 : 240)) + 1;
-    var html = '<div class="vh-lights">' + new Array(swags + 1).join(SWAG) + '</div>' +
+    var html = lightsHtml(mobile) +
       cane('vh-corner l', RED) + cane('vh-corner r', RED);
-    var count = mobile ? 12 : 28;
-    for (var i = 0; i < count; i++) {
-      var size = 3 + (i * 7) % 4;
-      html += '<span class="vh-flake" style="left:' + (i * 37) % 100 + '%;width:' + size + 'px;height:' + size +
-        'px;opacity:' + (0.45 + (size - 3) * 0.13) + ';animation-duration:' + (9 + (i * 5) % 8) +
-        's;animation-delay:-' + (i * 13) % 17 + 's"></span>';
-    }
+    html += flakes(mobile ? 12 : 28);
     fx.innerHTML = html;
     fx.style.setProperty('--vh-fall', hero.offsetHeight + 20 + 'px');
     hero.appendChild(fx);
@@ -90,6 +93,76 @@
     });
   }
 
+  function hatOn(el) {
+    if (!el || el.querySelector('.vh-title-hat')) return;
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    var node;
+    while ((node = walker.nextNode()) && !/\p{L}/u.test(node.nodeValue));
+    if (!node) return;
+    var anchor = document.createElement('span');
+    anchor.className = 'vh-title-hat';
+    anchor.setAttribute('aria-hidden', 'true');
+    anchor.innerHTML = HAT;
+    node.parentNode.insertBefore(anchor, node);
+  }
+
+  var BOW = '<svg class="vh-bow" viewBox="0 0 40 36" aria-hidden="true"><path d="M20 15L12 33l6-3 2 5zM20 15l8 18-6-3-2 5z" fill="#a82828"/><path d="M20 14C10 2 1 4 3 12s10 7 17 2zM20 14c10-12 19-10 17-2s-10 7-17 2z" fill="' + RED + '" stroke="#6e1a1a" stroke-width="1"/><circle cx="20" cy="14" r="4" fill="#d9a441"/></svg>';
+  var MINI_GIFT = '<svg class="vh-mini-gift" viewBox="0 0 24 26" aria-hidden="true"><rect x="2" y="10" width="20" height="15" rx="1.500" fill="' + RED + '"/><rect x="1" y="7" width="22" height="5" rx="1.200" fill="#a82828"/><rect x="10.500" y="7" width="3" height="18" fill="#d9a441"/><path d="M12 7C9 1 3 2 5 5.500 6 7 9 7 12 7zM12 7c3-6 9-5 7-1.500C18 7 15 7 12 7z" fill="none" stroke="#d9a441" stroke-width="2"/></svg>';
+
+  function addBow(box) {
+    if (!box || box.querySelector('.vh-bow')) return;
+    box.classList.add('vh-rel');
+    box.insertAdjacentHTML('beforeend', BOW);
+  }
+  /* Room cards, on every page that shows them. */
+  function addRoomCards() {
+    document.querySelectorAll('a[class*="scroll-mt-28"]').forEach(function (card) {
+      addBow(card.querySelector(':scope > div'));
+      var deal = card.querySelector('p[class*="166534"]');
+      if (deal && !deal.querySelector('.vh-mini-gift')) deal.insertAdjacentHTML('afterbegin', MINI_GIFT);
+    });
+  }
+  function lightsHtml(mobile) {
+    var swags = Math.ceil(window.innerWidth / (mobile ? 160 : 240)) + 1;
+    return '<div class="vh-lights">' + new Array(swags + 1).join(SWAG) + '</div>';
+  }
+  /* Rooms pages and room details: hat on the main title, bow on the photo, lights on top. */
+  function addRoomHeroes() {
+    var h1 = document.querySelector('main h1[id$="-hero-title"]') || document.querySelector('h1[id$="-hero-title"]');
+    if (!h1) return;
+    hatOn(h1);
+    var box = h1.closest('section');
+    var card = h1.parentElement && h1.parentElement.parentElement;
+    if (card && card.className.indexOf('rounded-') >= 0) box = card;
+    if (!box || box.querySelector('.vh-fx')) return;
+    box.classList.add('vh-rel');
+    var fx = document.createElement('div');
+    fx.className = 'vh-fx';
+    fx.setAttribute('aria-hidden', 'true');
+    fx.innerHTML = lightsHtml(window.innerWidth < 768);
+    box.appendChild(fx);
+    var img = box.querySelector('img');
+    if (img) addBow(img.closest('[class*="overflow-hidden"], [class*="rounded"]') || img.parentElement);
+  }
+  /* AI Room Finder: hat on the name, lights under its top bar, light snow. Nothing else in the chat changes. */
+  function addRoomFinder() {
+    if (!/\/ai-assistant\/?$/.test(location.pathname)) return;
+    var bar = document.querySelector('header');
+    if (!bar) return;
+    var name = bar.querySelector('h1');
+    if (name) name.classList.add('vh-open');
+    hatOn(name);
+    if (document.querySelector('.vh-ai-fx')) return;
+    var mobile = window.innerWidth < 768;
+    var fx = document.createElement('div');
+    fx.className = 'vh-ai-fx';
+    fx.setAttribute('aria-hidden', 'true');
+    fx.style.top = bar.getBoundingClientRect().bottom + 'px';
+    fx.style.setProperty('--vh-fall', window.innerHeight + 'px');
+    fx.innerHTML = lightsHtml(mobile) + flakes(mobile ? 8 : 16);
+    document.body.appendChild(fx);
+  }
+
   function addTitleDecor() {
     if (!document.getElementById('home-hero')) return;
     var titles = document.querySelectorAll('main h2');
@@ -97,15 +170,7 @@
       var h = titles[i];
       if (!h || h.querySelector('.vh-deco, .vh-title-hat')) return;
       if (TITLES[i] === 'hat') {
-        var walker = document.createTreeWalker(h, NodeFilter.SHOW_TEXT);
-        var node;
-        while ((node = walker.nextNode()) && !/\p{L}/u.test(node.nodeValue));
-        if (!node) return;
-        var anchor = document.createElement('span');
-        anchor.className = 'vh-title-hat';
-        anchor.setAttribute('aria-hidden', 'true');
-        anchor.innerHTML = HAT;
-        node.parentNode.insertBefore(anchor, node);
+        hatOn(h);
       } else {
         h.insertAdjacentHTML('beforeend', TITLES[i] === 'tree' ? TREE : GIFT);
       }
@@ -113,7 +178,7 @@
   }
   function run() {
     document.documentElement.classList.add('vh-xmas');
-    addHat(); addCanes(); addHeroFx(); addTitleDecor(); addBadges();
+    addHat(); addCanes(); addHeroFx(); addTitleDecor(); addBadges(); addRoomCards(); addRoomHeroes(); addRoomFinder();
   }
   function start() {
     run();
@@ -124,6 +189,14 @@
       requestAnimationFrame(function () { queued = false; run(); });
     }).observe(document.body, { childList: true, subtree: true });
   }
-  if ('requestIdleCallback' in window) requestIdleCallback(start, { timeout: 2000 });
-  else setTimeout(start, 300);
+  /* Touch the page only after React has hydrated it, otherwise React throws the page away and redraws it. */
+  function hydrated() {
+    var el = document.querySelector('main') || document.querySelector('header');
+    return !!el && Object.keys(el).some(function (k) { return k.indexOf('__reactFiber') === 0; });
+  }
+  var tries = 0;
+  (function wait() {
+    if (hydrated()) { setTimeout(start, 300); return; }
+    if (++tries < 100) setTimeout(wait, 150);
+  })();
 })();
