@@ -842,13 +842,13 @@ export function RoomFinderProduction({
           >
             <ArrowLeft className="h-5 w-5" aria-hidden="true" />
           </a>
-          <div className="relative hidden h-9 w-9 shrink-0 overflow-hidden rounded-full ring-2 ring-white shadow-sm min-[400px]:block">
+          <div className="relative hidden h-9 w-9 shrink-0 overflow-hidden rounded-full bg-white ring-2 ring-white shadow-sm min-[400px]:block">
             <Image
-              src="/images/welcome/voulamandis-welcome-hero.webp"
+              src="/favicon/vh-heart-128.webp"
               alt="Voulamandis House"
               fill
               sizes="36px"
-              className="object-cover"
+              className="object-contain p-1"
             />
           </div>
           <div className="min-w-0 flex-1 pl-1">
