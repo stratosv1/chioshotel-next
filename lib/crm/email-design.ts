@@ -101,7 +101,7 @@ const FOOTER = {
   tr: { sign: "Sevgilerimizle,", team: "Angeliki, Stratos &amp; Mike", map: "Harita", site: "Web sitesi", place: "Kambos, Sakız Adası" },
 };
 
-export function emailShell(params: { language: EmailLanguage; preheader: string; eyebrow: string; heading: string; body: string; heroImage?: string | null }) {
+export function emailShell(params: { language: EmailLanguage; preheader: string; eyebrow: string; heading: string; body: string; heroImage?: string | null; footerNote?: string }) {
   const footer = FOOTER[params.language];
   const hero = params.heroImage === null ? "" : `<tr><td style="padding:0;font-size:0;line-height:0"><img src="${esc(params.heroImage ?? HERO_IMAGE)}" width="600" alt="Voulamandis House" style="display:block;width:100%;max-width:600px;height:auto;max-height:260px;object-fit:cover;border:0"></td></tr>`;
   const footerLink = (href: string, label: string) => `<a href="${esc(href)}" style="color:${GREEN};font-weight:600;text-decoration:none">${label}</a>`;
@@ -125,7 +125,7 @@ export function emailShell(params: { language: EmailLanguage; preheader: string;
   </td></tr>
   <tr><td align="center" style="padding:22px 12px 8px;font-size:13px;line-height:1.8;color:${MUTED}">
     ${footerLink(SITE_URL, footer.site)} &nbsp;·&nbsp; ${footerLink(MAPS_URL, footer.map)} &nbsp;·&nbsp; ${footerLink(WHATSAPP_URL, "WhatsApp")} &nbsp;·&nbsp; ${footerLink(`mailto:${RESERVATIONS_EMAIL}`, "Email")}<br>
-    Voulamandis House · ${footer.place}
+    Voulamandis House · ${footer.place}${params.footerNote ? `<br>${params.footerNote}` : ""}
   </td></tr>
 </table></td></tr></table></body></html>`;
 }

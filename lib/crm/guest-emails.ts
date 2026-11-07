@@ -56,7 +56,7 @@ function athensToday() {
 
 const dayNumber = (iso: string) => Date.UTC(Number(iso.slice(0, 4)), Number(iso.slice(5, 7)) - 1, Number(iso.slice(8, 10))) / 86_400_000;
 
-function chooseLanguage(language: string | null, country: string | null): EmailLanguage {
+export function chooseLanguage(language: string | null, country: string | null): EmailLanguage {
   if (language === "el" || language === "en" || language === "tr") return language;
   if (country === "GR" || country === "CY") return "el";
   if (country === "TR") return "tr";
@@ -163,7 +163,7 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
   return [...due.values()];
 }
 
-export async function deliverEmail(to: string, subject: string, html: string, text: string) {
+export async function deliverEmail(to: string, subject: string, html: string, text: string, headers?: Record<string, string>) {
   const user = process.env.SMTP_USER;
   const pass = process.env.SMTP_PASS;
   if (!user || !pass) throw new Error("SMTP is not configured.");
@@ -181,6 +181,7 @@ export async function deliverEmail(to: string, subject: string, html: string, te
     subject,
     html,
     text,
+    headers,
   });
 }
 

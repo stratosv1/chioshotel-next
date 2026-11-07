@@ -4,8 +4,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BookingsPanel from "./BookingsPanel";
 import ConfirmationPanel from "./ConfirmationPanel";
 import EmailsPanel from "./EmailsPanel";
+import GreetingsPanel from "./GreetingsPanel";
 
-type Tab = "attention" | "bookings" | "summary" | "guests" | "pending" | "confirmation" | "emails" | "exclusions";
+type Tab = "attention" | "bookings" | "summary" | "guests" | "pending" | "confirmation" | "emails" | "greetings" | "exclusions";
 type Bucket = { key: string; count: number };
 type Summary = {
   bookings: number;
@@ -54,6 +55,7 @@ const MORE_TABS: { key: Tab; label: string }[] = [
   { key: "summary", label: "Στατιστικά" },
   { key: "confirmation", label: "Επιβεβαίωση κράτησης" },
   { key: "emails", label: "Αυτόματα email" },
+  { key: "greetings", label: "Ευχές" },
   { key: "exclusions", label: "Εξαιρέσεις" },
 ];
 const LANGUAGES = ["el", "en", "de", "fr", "it", "es", "tr"];
@@ -183,7 +185,7 @@ export default function CrmApp() {
 
   useEffect(() => {
     setError("");
-    if (tab === "emails" || tab === "confirmation" || tab === "bookings" || tab === "attention") return;
+    if (tab === "emails" || tab === "greetings" || tab === "confirmation" || tab === "bookings" || tab === "attention") return;
     const load =
       tab === "summary" ? loadSummary() :
       tab === "guests" ? loadGuests() :
@@ -530,6 +532,8 @@ export default function CrmApp() {
         {tab === "confirmation" ? <ConfirmationPanel /> : null}
 
         {tab === "emails" ? <EmailsPanel /> : null}
+
+        {tab === "greetings" ? <GreetingsPanel /> : null}
 
         {tab === "exclusions" ? (
           <section className="grid gap-4">
