@@ -1,12 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GREETING_LABELS, GREETING_TYPES, type GreetingType } from "@/lib/crm/greeting-templates";
 import type { EmailLanguage } from "@/lib/crm/email-design";
+import { useBulkSend, type BulkBatchResult } from "./useBulkSend";
 
 type Counts = { total: number; sent: number; failed: number; waiting: number };
 type Status = { type: GreetingType; year: number; byLanguage: Record<EmailLanguage, Counts>; sentToday: number; dailyLimit: number };
-type BatchResult = { sent: number; failed: number; remaining: number; limitReached: boolean };
 
 const API = "/api/staff/crm/greetings/";
 const LANGUAGES: { key: EmailLanguage; label: string }[] = [
@@ -30,8 +30,6 @@ async function request(url: string, body?: Record<string, unknown>) {
   return payload;
 }
 
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export default function GreetingsPanel() {
   const [type, setType] = useState<GreetingType>("christmas");
   const [status, setStatus] = useState<Status | null>(null);
@@ -39,12 +37,10 @@ export default function GreetingsPanel() {
   const [selected, setSelected] = useState<EmailLanguage[]>(["el", "en", "tr"]);
   const [previewLanguage, setPreviewLanguage] = useState<EmailLanguage>("el");
   const [preview, setPreview] = useState<{ subject: string; html: string } | null>(null);
-  const [sending, setSending] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [progress, setProgress] = useState("");
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
-  const stop = useRef(false);
+  const { sending, progress, run, stop } = useBulkSend();
 
   const load = useCallback(async () => {
     const payload = await request(`${API}?type=${type}`);
@@ -85,34 +81,13 @@ export default function GreetingsPanel() {
     const count = retryFailed ? failedSelected : waitingSelected;
     const names = LANGUAGES.filter((language) => selected.includes(language.key)).map((language) => language.label).join(", ");
     if (!window.confirm(`Να σταλούν οι ευχές «${GREETING_LABELS[type]}» σε ${count} πελάτες (${names});`)) return;
-    stop.current = false;
-    setSending(true);
     setError("");
     setNotice("");
-    let sent = 0;
-    let failed = 0;
     try {
-      while (!stop.current) {
-        const { result } = (await request(API, { action: "send_batch", type, languages: selected, retryFailed })) as { result: BatchResult };
-        sent += result.sent;
-        failed += result.failed;
-        setProgress(`Στάλθηκαν ${sent}${failed ? `, απέτυχαν ${failed}` : ""} · απομένουν ${result.remaining}`);
-        if (result.limitReached) {
-          setNotice(`Φτάσαμε το ημερήσιο όριο του Gmail. Πάτα ξανά «Αποστολή» αύριο για τους υπόλοιπους ${result.remaining}.`);
-          break;
-        }
-        if (result.remaining <= 0) {
-          setNotice(`Ολοκληρώθηκε: ${sent} στάλθηκαν${failed ? `, ${failed} απέτυχαν` : ""}.`);
-          break;
-        }
-        await wait(1_000);
-      }
-      if (stop.current) setNotice(`Σταμάτησε: ${sent} στάλθηκαν. Συνεχίζει από εκεί που έμεινε, χωρίς διπλά.`);
+      setNotice(await run(async () => (await request(API, { action: "send_batch", type, languages: selected, retryFailed })).result as BulkBatchResult));
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Κάτι πήγε στραβά.");
     } finally {
-      setSending(false);
-      setProgress("");
       await load().catch(() => undefined);
     }
   };
@@ -125,7 +100,7 @@ export default function GreetingsPanel() {
       <section className={panelClass}>
         <h2 className="text-lg font-black">Ευχές σε πελάτες</h2>
         <p className="mt-1 text-sm text-stone-600">
-          Πηγαίνουν σε όλους τους πελάτες με πραγματικό email, στη γλώσσα τους: ελληνικά για Ελλάδα και Κύπρο, τουρκικά για Τουρκία, αγγλικά για όλους τους άλλους.
+          Πηγαίνουν σε όλη τη λίστα του Newsletter (πελάτες του Beds24, εγγραφές από το site και όσα email έχεις προσθέσει), στη γλώσσα του καθενός: ελληνικά για Ελλάδα και Κύπρο, τουρκικά για Τουρκία, αγγλικά για όλους τους άλλους.
           Όσοι έχουν κάνει διαγραφή και οι εξαιρέσεις δεν παίρνουν τίποτα. Κάθε πελάτης παίρνει τις ευχές μία φορά τον χρόνο.
         </p>
         <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Είδος ευχών">
@@ -176,7 +151,7 @@ export default function GreetingsPanel() {
                 {sending ? "Αποστολή…" : `Αποστολή σε ${waitingSelected}`}
               </button>
               {sending ? (
-                <button type="button" className={secondaryButton} onClick={() => { stop.current = true; }}>Διακοπή</button>
+                <button type="button" className={secondaryButton} onClick={stop}>Διακοπή</button>
               ) : null}
               {!sending && failedSelected ? (
                 <button type="button" className={secondaryButton} disabled={busy} onClick={() => sendAll(true)}>

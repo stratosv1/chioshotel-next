@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isValidUnsubscribe, unsubscribeGuest } from "@/lib/crm/greetings";
+import { isValidUnsubscribe, unsubscribeGuest } from "@/lib/crm/bulk-email";
 import { normalizeEmail } from "@/lib/crm/store";
 import type { EmailLanguage } from "@/lib/crm/email-design";
 

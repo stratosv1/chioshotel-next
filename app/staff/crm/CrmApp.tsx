@@ -5,8 +5,9 @@ import BookingsPanel from "./BookingsPanel";
 import ConfirmationPanel from "./ConfirmationPanel";
 import EmailsPanel from "./EmailsPanel";
 import GreetingsPanel from "./GreetingsPanel";
+import NewsletterPanel from "./NewsletterPanel";
 
-type Tab = "attention" | "bookings" | "summary" | "guests" | "pending" | "confirmation" | "emails" | "greetings" | "exclusions";
+type Tab = "attention" | "bookings" | "summary" | "guests" | "pending" | "confirmation" | "emails" | "newsletter" | "greetings" | "exclusions";
 type Bucket = { key: string; count: number };
 type Summary = {
   bookings: number;
@@ -55,6 +56,7 @@ const MORE_TABS: { key: Tab; label: string }[] = [
   { key: "summary", label: "Στατιστικά" },
   { key: "confirmation", label: "Επιβεβαίωση κράτησης" },
   { key: "emails", label: "Αυτόματα email" },
+  { key: "newsletter", label: "Newsletter" },
   { key: "greetings", label: "Ευχές" },
   { key: "exclusions", label: "Εξαιρέσεις" },
 ];
@@ -185,7 +187,7 @@ export default function CrmApp() {
 
   useEffect(() => {
     setError("");
-    if (tab === "emails" || tab === "greetings" || tab === "confirmation" || tab === "bookings" || tab === "attention") return;
+    if (tab === "emails" || tab === "newsletter" || tab === "greetings" || tab === "confirmation" || tab === "bookings" || tab === "attention") return;
     const load =
       tab === "summary" ? loadSummary() :
       tab === "guests" ? loadGuests() :
@@ -532,6 +534,8 @@ export default function CrmApp() {
         {tab === "confirmation" ? <ConfirmationPanel /> : null}
 
         {tab === "emails" ? <EmailsPanel /> : null}
+
+        {tab === "newsletter" ? <NewsletterPanel /> : null}
 
         {tab === "greetings" ? <GreetingsPanel /> : null}
 
