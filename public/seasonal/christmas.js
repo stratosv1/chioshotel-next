@@ -144,7 +144,7 @@
     var img = box.querySelector('img');
     if (img) addBow(img.closest('[class*="overflow-hidden"], [class*="rounded"]') || img.parentElement);
   }
-  /* AI Room Finder: hat on the name, lights under its top bar, light snow. Nothing else in the chat changes. */
+  /* AI Room Finder: hat on the name, lights under its top bar, light snow behind the chat. Nothing else in the chat changes. */
   function addRoomFinder() {
     if (!/\/ai-assistant\/?$/.test(location.pathname)) return;
     var bar = document.querySelector('header');
@@ -152,15 +152,26 @@
     var name = bar.querySelector('h1');
     if (name) name.classList.add('vh-open');
     hatOn(name);
-    if (document.querySelector('.vh-ai-fx')) return;
+    var shell = bar.parentElement;
+    if (!shell || shell.querySelector('.vh-ai-fx')) return;
+    shell.classList.add('vh-ai-shell');
     var mobile = window.innerWidth < 768;
-    var fx = document.createElement('div');
-    fx.className = 'vh-ai-fx';
-    fx.setAttribute('aria-hidden', 'true');
-    fx.style.top = bar.getBoundingClientRect().bottom + 'px';
-    fx.style.setProperty('--vh-fall', window.innerHeight + 'px');
-    fx.innerHTML = lightsHtml(mobile) + flakes(mobile ? 8 : 16);
-    document.body.appendChild(fx);
+    var top = bar.offsetHeight + 'px';
+    /* Snow sits behind the messages, so it never lands on text. */
+    var snow = document.createElement('div');
+    snow.className = 'vh-ai-fx vh-ai-snow';
+    snow.setAttribute('aria-hidden', 'true');
+    snow.style.top = top;
+    snow.style.setProperty('--vh-fall', window.innerHeight + 'px');
+    snow.innerHTML = flakes(mobile ? 8 : 16);
+    /* Lights hang above the chat; the feed gets extra top room so they never touch a card. */
+    var lights = document.createElement('div');
+    lights.className = 'vh-ai-fx vh-ai-lights';
+    lights.setAttribute('aria-hidden', 'true');
+    lights.style.top = top;
+    lights.innerHTML = lightsHtml(mobile);
+    shell.insertBefore(snow, shell.firstChild);
+    shell.appendChild(lights);
   }
 
   function addTitleDecor() {

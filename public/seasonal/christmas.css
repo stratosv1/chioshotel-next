@@ -44,10 +44,19 @@ html.vh-xmas a.vh-book { background: #8f1d1d; background-image: none; color: #ff
 .vh-rel { position: relative; }
 .vh-bow { position: absolute; top: 8px; right: 10px; width: 46px; height: 42px; z-index: 6; pointer-events: none; }
 .vh-mini-gift { display: inline-block; width: 1.1em; height: 1.2em; margin-right: .3em; vertical-align: -.25em; }
-.vh-ai-fx { position: fixed; left: 0; right: 0; bottom: 0; overflow: hidden; pointer-events: none; z-index: 30; }
+.vh-ai-fx { position: absolute; left: 0; right: 0; bottom: 0; overflow: hidden; pointer-events: none; }
 .vh-ai-fx .vh-flake { background: #d9c7a8; }
+.vh-ai-snow { z-index: 0; }
+.vh-ai-lights { bottom: auto; height: 40px; z-index: 2; }
+html.vh-xmas .vh-ai-shell > header,
+html.vh-xmas .vh-ai-shell > [data-room-finder-feed] { position: relative; z-index: 1; }
+html.vh-xmas .vh-ai-shell [data-room-finder-feed] > div { padding-top: 60px; }
+@media (max-width: 767px) {
+  .vh-ai-lights { height: 28px; }
+  html.vh-xmas .vh-ai-shell [data-room-finder-feed] > div { padding-top: 48px; }
+}
 
 .vh-open { overflow: visible !important; }
 h1 .vh-title-hat .vh-hat { bottom: .66em; width: .72em; height: .62em; }
 
-.vh-open .vh-title-hat .vh-hat { left: -.25em; bottom: .42em; width: 1.25em; height: 1.08em; transform: rotate(-10deg); }
+.vh-open .vh-title-hat .vh-hat { left: -.5em; bottom: .68em; width: 1.15em; height: 1em; transform: rotate(-14deg); }
