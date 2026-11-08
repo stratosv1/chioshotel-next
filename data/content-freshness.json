@@ -71,7 +71,7 @@
       "modified": "2026-11-08"
     },
     "/chios-medieval-villages/": {
-      "hash": "5b7c1a84397b10bcbaa5",
+      "hash": "0b45d5ef38cf0e423ef8",
       "modified": "2026-11-08"
     },
     "/chios-orchids/": {
@@ -207,39 +207,43 @@
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/": {
-      "hash": "72b4f06dfac8ee4c36e1",
+      "hash": "8b3e5c44781f0fd6c032",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/anavatos-chios/": {
-      "hash": "6eb582cb41bacb577eb7",
+      "hash": "23a8ca6893b586a2ad19",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/armolia-chios/": {
-      "hash": "a1aea5cc5e3de04d42c7",
+      "hash": "8a2fe0cd999030755f4b",
+      "modified": "2026-11-08"
+    },
+    "/chios/chios-villages/avgonyma-chios/": {
+      "hash": "fb1c94a01f2cd5d2d7a2",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/chios-pyrgi/": {
-      "hash": "12109e0bd9f71f59d423",
+      "hash": "555cb02ce5302f3e2af9",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/lagada-chios/": {
-      "hash": "71e584992c24ff721068",
+      "hash": "690cc9e90884a0284957",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/mesta-chios/": {
-      "hash": "e55d9deb423d5c58e2e0",
+      "hash": "2d065265580c59fc5d18",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/olympoi-chios/": {
-      "hash": "6dcb7a8f0b12256e0d2d",
+      "hash": "70e339aefa85a6fd31a4",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/vessa-chios/": {
-      "hash": "93ef00eff3d7f2110ff0",
+      "hash": "a2a1a8e1b17f867ccc94",
       "modified": "2026-11-08"
     },
     "/chios/chios-villages/volissos-chios/": {
-      "hash": "ab3d8cec8dbe8a8a654d",
+      "hash": "b265d8b1445f995bc69b",
       "modified": "2026-11-08"
     },
     "/chios/kampos-chios/": {
@@ -303,39 +307,43 @@
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/": {
-      "hash": "81dc451b53ab8a925de2",
+      "hash": "94680857d20c93624890",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/anavatos-dorf/": {
-      "hash": "c1b4fa3b38fa888150df",
+      "hash": "98eed2b9e5c12cbaa4bd",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/armolia-dorf/": {
-      "hash": "9622fd25d97aeead8439",
+      "hash": "acfd1bd17044e8bb8476",
+      "modified": "2026-11-08"
+    },
+    "/de/doerfer-chios/avgonyma-dorf/": {
+      "hash": "491df6a4dd7a0a13230d",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/lagada-dorf/": {
-      "hash": "31ca2fb7a41999439c06",
+      "hash": "b3043152855389078436",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/mesta-dorf/": {
-      "hash": "d9787939667cc9569899",
+      "hash": "ba51d24c484a5faa96ba",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/olympoi-dorf/": {
-      "hash": "a38b92883de12ea61a71",
+      "hash": "1d3e45a5e3cf8236bc71",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/pyrgi-dorf/": {
-      "hash": "415a6b9431acd26445cb",
+      "hash": "62c570923a81ff6d3b71",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/vessa-dorf/": {
-      "hash": "83af5ed3ec1cc193698f",
+      "hash": "4eac8faf168ffeff8c88",
       "modified": "2026-11-08"
     },
     "/de/doerfer-chios/volissos-dorf/": {
-      "hash": "0a0bcc8896fd77a0d2ff",
+      "hash": "b647d6123283864a9c58",
       "modified": "2026-11-08"
     },
     "/de/familienurlaub-auf-chios/": {
@@ -375,7 +383,7 @@
       "modified": "2026-11-08"
     },
     "/de/mittelalterliche-doerfer-chios/": {
-      "hash": "0089d978163f838c6348",
+      "hash": "cabca508e9b0b41dd148",
       "modified": "2026-11-08"
     },
     "/de/mostra-festival-chios/": {
@@ -615,7 +623,7 @@
       "modified": "2026-11-08"
     },
     "/el/mesaionika-xoria-xios/": {
-      "hash": "9533a000bdafc090abaa",
+      "hash": "8ad2682adeeaf1828291",
       "modified": "2026-11-08"
     },
     "/el/mouseia-xios/": {
@@ -755,39 +763,43 @@
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/": {
-      "hash": "97ac778abadfb62a4e02",
+      "hash": "4d0714c24068a0af54b6",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/anavatos-xios/": {
-      "hash": "6e9845da8bae461c388d",
+      "hash": "b99c2cb033a3b103d666",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/armolia-xios/": {
-      "hash": "658e26ca68f1f762b3a2",
+      "hash": "15056fa0e6bc854132e1",
+      "modified": "2026-11-08"
+    },
+    "/el/xoria-xios/avgonyma-xios/": {
+      "hash": "4f3d9263a35227137485",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/lagada-xios/": {
-      "hash": "ad9da384e445cb369d20",
+      "hash": "9e9de1afeffc57b667fe",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/mesta-xios/": {
-      "hash": "d2765c5df3e8a5fa197b",
+      "hash": "738ee0f18b5b90937f3d",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/olympoi-xios/": {
-      "hash": "1f73893ae1d18bb03abf",
+      "hash": "d51da12e542b05e03699",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/pyrgi-xios/": {
-      "hash": "006d293e9f6226cec76e",
+      "hash": "7042261edff47fefcb80",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/vessa-xios/": {
-      "hash": "7823b7ab2f2fa9972566",
+      "hash": "c3f9b28fbf4c5e3965db",
       "modified": "2026-11-08"
     },
     "/el/xoria-xios/volissos-xios/": {
-      "hash": "360c068d78233cc10a1e",
+      "hash": "d7a7310f3b1f17a2e69b",
       "modified": "2026-11-08"
     },
     "/es/": {
@@ -995,39 +1007,43 @@
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/": {
-      "hash": "9b15e4caca02ccc1b274",
+      "hash": "5247ef6ed7ce7f717acb",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-anavatos/": {
-      "hash": "276b7cf24ff67fa039b3",
+      "hash": "da59be5001bc0211ed75",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-armolia/": {
-      "hash": "11d291160206363f868e",
+      "hash": "5355577cf70fed557578",
+      "modified": "2026-11-08"
+    },
+    "/es/pueblos-chios/pueblo-avgonyma/": {
+      "hash": "5e706a2f8728a3efc949",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-lagada/": {
-      "hash": "a8d5aaa7a9a65dd0f931",
+      "hash": "561ad9481a0645fbfed6",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-mesta/": {
-      "hash": "2a79b5f27ebdd36a29ec",
+      "hash": "09377f9709641f34b9e7",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-olympoi/": {
-      "hash": "f33225a4310e0a9e6a3f",
+      "hash": "5563690cc2c38c40f09e",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-pyrgi/": {
-      "hash": "29b4f57387ca084d3652",
+      "hash": "f50bcd5e71f519367d41",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-vessa/": {
-      "hash": "e2f9157e3c0db0004d75",
+      "hash": "4631f45696a48ffad845",
       "modified": "2026-11-08"
     },
     "/es/pueblos-chios/pueblo-volissos/": {
-      "hash": "1b1c73fdbf8382ba5ace",
+      "hash": "541c6003ec5be724e42b",
       "modified": "2026-11-08"
     },
     "/es/pueblos-costeros-quios/": {
@@ -1039,7 +1055,7 @@
       "modified": "2026-11-08"
     },
     "/es/pueblos-medievales-quios/": {
-      "hash": "d5262b83569b794484a4",
+      "hash": "b56eef7b54677aaf6ecd",
       "modified": "2026-11-08"
     },
     "/es/quios-para-amantes-de-la-playa/": {
@@ -1291,39 +1307,43 @@
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/": {
-      "hash": "62e9d782c5cc451a7a63",
+      "hash": "e8b860f115b7b4729874",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-anavatos/": {
-      "hash": "5915ba6b3b636a5ed7bf",
+      "hash": "0a4daf7fcdbaaa6db22e",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-armolia/": {
-      "hash": "738fd27d3515271f5ecd",
+      "hash": "122b0ef5075f5a37250a",
+      "modified": "2026-11-08"
+    },
+    "/fr/villages-de-chios/village-avgonyma/": {
+      "hash": "3766b38a4f699d394826",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-lagada/": {
-      "hash": "44c94729c0635da87ded",
+      "hash": "0a9f70ee71c5013f417c",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-mesta/": {
-      "hash": "03bbbf64a528f04d5a54",
+      "hash": "eeaa4498be53c612d35d",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-olympoi/": {
-      "hash": "63b157644f1946def74a",
+      "hash": "eb2154a8786246c27e46",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-pyrgi/": {
-      "hash": "4c4e9ca3f22f2391df85",
+      "hash": "ece17990c1b2122092cf",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-vessa/": {
-      "hash": "75d1fcf1c33a0c0804c8",
+      "hash": "e7d4496f5868f8413f47",
       "modified": "2026-11-08"
     },
     "/fr/villages-de-chios/village-volissos/": {
-      "hash": "00f9b0966f57cea7f711",
+      "hash": "30deb936fbd21553bcc8",
       "modified": "2026-11-08"
     },
     "/fr/villages-du-mastic-chios/": {
@@ -1335,7 +1355,7 @@
       "modified": "2026-11-08"
     },
     "/fr/villages-medievaux-chios/": {
-      "hash": "54b49c72b1266c92b698",
+      "hash": "eb76310cbe32017c8f28",
       "modified": "2026-11-08"
     },
     "/frequently-asked-questions/": {
@@ -1571,39 +1591,43 @@
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/": {
-      "hash": "f41d89a7dac19f8f1b21",
+      "hash": "db14441a632f2d79a2e0",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-anavatos/": {
-      "hash": "83cdc173a0b58e3cdbe1",
+      "hash": "35a9670ff5bc1c31df33",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-armolia/": {
-      "hash": "129010d1f03189e36108",
+      "hash": "e633cb064a95e6753317",
+      "modified": "2026-11-08"
+    },
+    "/it/villaggi-chios/villaggio-avgonyma/": {
+      "hash": "170c20efd0f08afde5e7",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-lagada/": {
-      "hash": "12b49c262def9f7cd854",
+      "hash": "6be56c8cd8c1cd521d12",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-mesta/": {
-      "hash": "fdddb18320a9a65cf1fd",
+      "hash": "423a2d270cdd335a5342",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-olympoi/": {
-      "hash": "d7e2e3cf44d231915589",
+      "hash": "06fddb98f9819d90e790",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-pyrgi/": {
-      "hash": "1f1c444ca8b0b54f254e",
+      "hash": "12b8af26dc86ef9ca794",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-vessa/": {
-      "hash": "57cc32b111ac11a28042",
+      "hash": "fbb4b0926a0098cf2846",
       "modified": "2026-11-08"
     },
     "/it/villaggi-chios/villaggio-volissos/": {
-      "hash": "2b344c47ca935720b7ad",
+      "hash": "0dc307a4dbad2a357590",
       "modified": "2026-11-08"
     },
     "/it/villaggi-del-mastice-chios/": {
@@ -1611,7 +1635,7 @@
       "modified": "2026-11-08"
     },
     "/it/villaggi-medievali-chios/": {
-      "hash": "31ba34eb6bb7798c74f7",
+      "hash": "4d63e556edef68819641",
       "modified": "2026-11-08"
     },
     "/it/villaggi-sul-mare-chios/": {
@@ -1731,39 +1755,43 @@
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/": {
-      "hash": "ae9817ec5bb65281247f",
+      "hash": "6844e3158b7c1f904258",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/anavatos-koyu/": {
-      "hash": "67ab3205a8210046c417",
+      "hash": "b85523dcd9a206025c05",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/armolia-koyu/": {
-      "hash": "0aa908f041bbd21fc710",
+      "hash": "85ba4fc2ca86ae14e6d9",
+      "modified": "2026-11-08"
+    },
+    "/tr/sakiz-adasi-koyleri/avgonyma-koyu/": {
+      "hash": "20b578c34445fd6e2a9c",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/lagada-koyu/": {
-      "hash": "325b9cda063f00eca5c2",
+      "hash": "cb4ec15a996b7a9b9a9f",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/mesta-koyu/": {
-      "hash": "bad600ba8fa7dfeb740d",
+      "hash": "0e2c944862396b1346c5",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/olympoi-koyu/": {
-      "hash": "42372d521314cbb664d3",
+      "hash": "eded1830d59466545e03",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/pyrgi-koyu/": {
-      "hash": "94c215e5cd72a6181dda",
+      "hash": "132c815f6dc0148a1eab",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/vessa-koyu/": {
-      "hash": "01d451b9dd86d0b533a6",
+      "hash": "90b07b5c271d22cf3bcb",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-koyleri/volissos-koyu/": {
-      "hash": "4937018e0cf3a6ff32c9",
+      "hash": "20837a8964e3d27c7b8b",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-kumlu-plajlar/": {
@@ -1819,7 +1847,7 @@
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-orta-cag-koyleri/": {
-      "hash": "077ac94ed7eb543cfff5",
+      "hash": "6f4cbc9f999c4b2a2e4d",
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-otel-firsatlari/": {
