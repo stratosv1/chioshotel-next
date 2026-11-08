@@ -1,3 +1,14 @@
+import {
+  chiosIslandGuideDe,
+  chiosIslandGuideEl,
+  chiosIslandGuideEn,
+  chiosIslandGuideEs,
+  chiosIslandGuideFr,
+  chiosIslandGuideIt,
+  chiosIslandGuideTr,
+  type ChiosIslandGuide,
+} from "@/content/chios-island-guide";
+
 export type ChiosIslandPageData = {
   seo: {
     canonicalPath: string;
@@ -70,6 +81,8 @@ export type ChiosIslandPageData = {
     title: string;
     items: { question: string; answer: string }[];
   };
+  /** Optional long-form local guide (content/chios-island-guide.ts). */
+  guide?: ChiosIslandGuide;
 };
 
 const chiosIslandHeroImage =
@@ -945,6 +958,28 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
     bookingHref: "/tr/sakiz-adasi-rezervasyon/",
   },
 };
+
+// Attach the local guide: its FAQs join the page FAQ (and the FAQPage schema),
+// and the "what should I see" answer is replaced with the local top five.
+function attachGuide(page: ChiosIslandPageData, guide: ChiosIslandGuide) {
+  page.guide = guide;
+  if (!page.faq) {
+    page.faq = guide.faq;
+    return;
+  }
+  const items = page.faq.items.map((item, index) =>
+    index === 1 ? { ...item, answer: guide.seeAnswer } : item,
+  );
+  page.faq = { ...page.faq, items: [...items, ...guide.faq.items] };
+}
+
+attachGuide(chiosIslandPageEn, chiosIslandGuideEn);
+attachGuide(chiosIslandPageEl, chiosIslandGuideEl);
+attachGuide(chiosIslandPageFr, chiosIslandGuideFr);
+attachGuide(chiosIslandPageDe, chiosIslandGuideDe);
+attachGuide(chiosIslandPageIt, chiosIslandGuideIt);
+attachGuide(chiosIslandPageEs, chiosIslandGuideEs);
+attachGuide(chiosIslandPageTr, chiosIslandGuideTr);
 
 export function getLocalizedChiosIslandPageByPath(
   path: string,

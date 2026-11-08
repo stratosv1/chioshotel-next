@@ -226,6 +226,56 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         </div>
       </section>
 
+      {data.guide ? (
+        <section className="py-12 md:py-16" id="guide" aria-labelledby="ci-guide-title">
+          <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
+            <header className="mx-auto mb-9 max-w-[820px] text-center">
+              <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
+                {data.guide.kicker}
+              </span>
+              <h2 id="ci-guide-title" className="m-0 text-[clamp(32px,4.6vw,58px)] font-black leading-none tracking-[-0.055em] text-stone-800">
+                {data.guide.title}
+              </h2>
+              <p className="mx-auto mt-5 max-w-[760px] text-base leading-8 text-stone-600">{data.guide.intro}</p>
+            </header>
+
+            <div className="grid gap-5">
+              {data.guide.sections.map((section) => (
+                <article
+                  className="rounded-[1.875rem] border border-amber-800/15 bg-white/90 p-[clamp(22px,4vw,40px)] shadow-xl shadow-stone-900/5"
+                  id={`guide-${section.id}`}
+                  key={section.id}
+                >
+                  <h3 className="m-0 text-[clamp(24px,3vw,34px)] font-black leading-tight tracking-[-0.04em] text-stone-800">
+                    {section.title}
+                  </h3>
+                  {section.paragraphs?.map((paragraph) => (
+                    <p className="mt-4 text-[15px] leading-8 text-stone-600 md:text-base" key={paragraph}>
+                      {paragraph}
+                    </p>
+                  ))}
+                  {section.items?.length ? (
+                    <ul className="m-0 mt-5 grid list-none gap-3 p-0 md:grid-cols-2">
+                      {section.items.map((item) => (
+                        <li className="rounded-[22px] bg-[#fff7ee] px-5 py-4 ring-1 ring-amber-800/10" key={item.title}>
+                          <strong className="block text-base font-black leading-7 text-stone-800">{item.title}</strong>
+                          <span className="mt-1 block text-[15px] leading-7 text-stone-600">{item.text}</span>
+                          {item.href ? (
+                            <a className="mt-2 inline-flex text-[12px] font-black uppercase tracking-[0.1em] text-amber-900 underline-offset-4 hover:underline" href={item.href}>
+                              {item.linkLabel ?? item.title} →
+                            </a>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {data.faq ? (
         <section className="py-12 md:py-16" aria-labelledby="ci-faq-title">
           <div className="mx-auto w-[min(1180px,calc(100%-40px))] rounded-[2rem] border border-amber-800/15 bg-white/90 p-[clamp(24px,4vw,40px)] shadow-xl shadow-stone-900/5 max-md:w-[calc(100%-24px)]">
