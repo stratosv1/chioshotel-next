@@ -72,9 +72,8 @@ function buildChiosDestinationSchema(data: ChiosIslandPageData): SchemaObject {
   const canonicalPath = data.seo.canonicalPath;
   const language = getLanguageForPath(canonicalPath);
   const address = getLocalizedSchemaAddress(canonicalPath);
-  const touristTypes = Array.from(
-    new Set(data.experiences.items.flatMap((item) => item.tags)),
-  );
+  // touristType describes who visits (audience), not scenery tags.
+  const touristTypes = data.guide?.touristTypes;
 
   return {
     "@type": "TouristDestination",
@@ -91,7 +90,7 @@ function buildChiosDestinationSchema(data: ChiosIslandPageData): SchemaObject {
       addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
-    touristType: touristTypes,
+    ...(touristTypes?.length ? { touristType: touristTypes } : {}),
     includesAttraction: data.experiences.items.map((item) => ({
       "@id": schemaId(item.href, "place"),
     })),
@@ -122,7 +121,6 @@ function buildExperiencePlaceSchema(
       addressRegion: address.addressRegion,
       addressCountry: "GR",
     },
-    touristType: item.tags,
     isPartOf: {
       "@id": schemaId(parentPath, "destination"),
     },

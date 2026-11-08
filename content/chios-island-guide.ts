@@ -32,6 +32,8 @@ export type ChiosIslandGuide = {
   title: string;
   intro: string;
   sections: ChiosIslandGuideSection[];
+  /** Who the island suits (schema.org touristType). */
+  touristTypes: string[];
   /** Replaces the answer of the existing "What should I see" FAQ, if present. */
   seeAnswer: string;
   faq: {
@@ -42,6 +44,7 @@ export type ChiosIslandGuide = {
 };
 
 export const chiosIslandGuideEn: ChiosIslandGuide = {
+  touristTypes: ["Families", "Couples", "Beach lovers", "Culture and history lovers"],
   kicker: "Local guide",
   title: "Chios island guide from people who live here",
   intro:
@@ -119,7 +122,7 @@ export const chiosIslandGuideEn: ChiosIslandGuide = {
       items: [
         { title: "Day 1", text: "A walk through Kambos, then Chios Town, its castle and the harbour." },
         { title: "Day 2", text: "The south: Pyrgi, Mesta and a swim at Mavra Volia." },
-        { title: "Day 3", text: "Central Chios: Nea Moni, Anavatos and sunset dinner in Avgonyma." },
+        { title: "Day 3", text: "Central Chios: Nea Moni, Anavatos and sunset dinner in Avgonyma.", href: "/chios/chios-villages/anavatos-chios/", linkLabel: "Anavatos" },
         { title: "Day 4", text: "A beach day — pick the calmest beach from the sea forecast." },
         { title: "Day 5", text: "A day trip to Çeşme in Turkey with Sunrise Tours, or the north: Volissos and its beaches." },
       ],
@@ -178,6 +181,7 @@ export const chiosIslandGuideEn: ChiosIslandGuide = {
 };
 
 export const chiosIslandGuideEl: ChiosIslandGuide = {
+  touristTypes: ["Οικογένειες", "Ζευγάρια", "Λάτρεις της θάλασσας", "Λάτρεις του πολιτισμού και της ιστορίας"],
   kicker: "Οδηγός ντόπιων",
   title: "Η Χίος όπως τη δείχνουμε στους επισκέπτες μας",
   intro:
@@ -255,7 +259,7 @@ export const chiosIslandGuideEl: ChiosIslandGuide = {
       items: [
         { title: "1η μέρα", text: "Βόλτα στον Κάμπο, μετά η πόλη της Χίου, το Κάστρο και το λιμάνι." },
         { title: "2η μέρα", text: "Ο νότος: Πυργί, Μεστά και μπάνιο στα Μαύρα Βόλια." },
-        { title: "3η μέρα", text: "Κεντρική Χίος: Νέα Μονή, Ανάβατος και φαγητό με ηλιοβασίλεμα στα Αυγώνυμα." },
+        { title: "3η μέρα", text: "Κεντρική Χίος: Νέα Μονή, Ανάβατος και φαγητό με ηλιοβασίλεμα στα Αυγώνυμα.", href: "/el/xoria-xios/anavatos-xios/", linkLabel: "Anavatos" },
         { title: "4η μέρα", text: "Μέρα παραλίας — διαλέξτε την πιο ήρεμη από την πρόβλεψη θάλασσας." },
         { title: "5η μέρα", text: "Ημερήσια εκδρομή στον Τσεσμέ της Τουρκίας με τη Sunrise Tours ή ο βορράς: η Βολισσός και οι παραλίες της." },
       ],
@@ -314,6 +318,7 @@ export const chiosIslandGuideEl: ChiosIslandGuide = {
 };
 
 export const chiosIslandGuideFr: ChiosIslandGuide = {
+  touristTypes: ["Familles", "Couples", "Amateurs de plage", "Amateurs de culture et d’histoire"],
   kicker: "Guide local",
   title: "Chios racontée par ceux qui y vivent",
   intro:
@@ -378,7 +383,7 @@ export const chiosIslandGuideFr: ChiosIslandGuide = {
       items: [
         { title: "Jour 1", text: "Promenade à Kambos, puis la ville de Chios, son château et le port." },
         { title: "Jour 2", text: "Le sud : Pyrgi, Mesta et baignade à Mavra Volia." },
-        { title: "Jour 3", text: "Le centre : Nea Moni, Anavatos et dîner au coucher du soleil à Avgonyma." },
+        { title: "Jour 3", text: "Le centre : Nea Moni, Anavatos et dîner au coucher du soleil à Avgonyma.", href: "/fr/villages-de-chios/village-anavatos/", linkLabel: "Anavatos" },
         { title: "Jour 4", text: "Journée plage — choisissez la plus calme grâce à la prévision de mer." },
         { title: "Jour 5", text: "Excursion d’une journée à Çeşme, en Turquie, avec Sunrise Tours, ou le nord : Volissos et ses plages." },
       ],
@@ -422,6 +427,7 @@ export const chiosIslandGuideFr: ChiosIslandGuide = {
 };
 
 export const chiosIslandGuideDe: ChiosIslandGuide = {
+  touristTypes: ["Familien", "Paare", "Strandliebhaber", "Kultur- und Geschichtsinteressierte"],
   kicker: "Lokaler Guide",
   title: "Chios, erzählt von denen, die hier leben",
   intro:
@@ -486,7 +492,7 @@ export const chiosIslandGuideDe: ChiosIslandGuide = {
       items: [
         { title: "Tag 1", text: "Spaziergang durch Kambos, dann Chios-Stadt mit Burg und Hafen." },
         { title: "Tag 2", text: "Der Süden: Pyrgi, Mesta und Baden in Mavra Volia." },
-        { title: "Tag 3", text: "Zentral-Chios: Nea Moni, Anavatos und Abendessen zum Sonnenuntergang in Avgonyma." },
+        { title: "Tag 3", text: "Zentral-Chios: Nea Moni, Anavatos und Abendessen zum Sonnenuntergang in Avgonyma.", href: "/de/doerfer-chios/anavatos-dorf/", linkLabel: "Anavatos" },
         { title: "Tag 4", text: "Strandtag — wählen Sie mit der Seevorhersage den ruhigsten Strand." },
         { title: "Tag 5", text: "Tagesausflug nach Çeşme in der Türkei mit Sunrise Tours oder der Norden: Volissos und seine Strände." },
       ],
@@ -530,6 +536,7 @@ export const chiosIslandGuideDe: ChiosIslandGuide = {
 };
 
 export const chiosIslandGuideIt: ChiosIslandGuide = {
+  touristTypes: ["Famiglie", "Coppie", "Amanti del mare", "Appassionati di cultura e storia"],
   kicker: "Guida locale",
   title: "Chios raccontata da chi ci vive",
   intro:
@@ -594,7 +601,7 @@ export const chiosIslandGuideIt: ChiosIslandGuide = {
       items: [
         { title: "Giorno 1", text: "Passeggiata a Kambos, poi la città di Chios con il castello e il porto." },
         { title: "Giorno 2", text: "Il sud: Pyrgi, Mesta e un bagno a Mavra Volia." },
-        { title: "Giorno 3", text: "Chios centrale: Nea Moni, Anavatos e cena al tramonto ad Avgonyma." },
+        { title: "Giorno 3", text: "Chios centrale: Nea Moni, Anavatos e cena al tramonto ad Avgonyma.", href: "/it/villaggi-chios/villaggio-anavatos/", linkLabel: "Anavatos" },
         { title: "Giorno 4", text: "Giornata al mare — scegliete la spiaggia più calma con la previsione del mare." },
         { title: "Giorno 5", text: "Gita di un giorno a Çeşme, in Turchia, con Sunrise Tours, oppure il nord: Volissos e le sue spiagge." },
       ],
@@ -638,6 +645,7 @@ export const chiosIslandGuideIt: ChiosIslandGuide = {
 };
 
 export const chiosIslandGuideEs: ChiosIslandGuide = {
+  touristTypes: ["Familias", "Parejas", "Amantes de la playa", "Amantes de la cultura y la historia"],
   kicker: "Guía local",
   title: "Quíos contada por quienes vivimos aquí",
   intro:
@@ -702,7 +710,7 @@ export const chiosIslandGuideEs: ChiosIslandGuide = {
       items: [
         { title: "Día 1", text: "Paseo por Kambos y después la ciudad de Quíos, su castillo y el puerto." },
         { title: "Día 2", text: "El sur: Pyrgi, Mesta y un baño en Mavra Volia." },
-        { title: "Día 3", text: "El centro: Nea Moni, Anavatos y cena al atardecer en Avgonyma." },
+        { title: "Día 3", text: "El centro: Nea Moni, Anavatos y cena al atardecer en Avgonyma.", href: "/es/pueblos-chios/pueblo-anavatos/", linkLabel: "Anavatos" },
         { title: "Día 4", text: "Día de playa — elige la más tranquila con la previsión del mar." },
         { title: "Día 5", text: "Excursión de un día a Çeşme, en Turquía, con Sunrise Tours, o el norte: Volissos y sus playas." },
       ],
@@ -746,6 +754,7 @@ export const chiosIslandGuideEs: ChiosIslandGuide = {
 };
 
 export const chiosIslandGuideTr: ChiosIslandGuide = {
+  touristTypes: ["Aileler", "Çiftler", "Deniz severler", "Kültür ve tarih meraklıları"],
   kicker: "Yerel rehber",
   title: "Sakız Adası’nı burada yaşayanlardan dinleyin",
   intro:
@@ -810,7 +819,7 @@ export const chiosIslandGuideTr: ChiosIslandGuide = {
       items: [
         { title: "1. gün", text: "Kambos’ta yürüyüş, ardından Sakız şehri, kalesi ve limanı." },
         { title: "2. gün", text: "Güney: Pyrgi, Mesta ve Mavra Volia’da yüzme." },
-        { title: "3. gün", text: "Orta Sakız: Nea Moni, Anavatos ve Avgonyma’da gün batımında akşam yemeği." },
+        { title: "3. gün", text: "Orta Sakız: Nea Moni, Anavatos ve Avgonyma’da gün batımında akşam yemeği.", href: "/tr/sakiz-adasi-koyleri/anavatos-koyu/", linkLabel: "Anavatos" },
         { title: "4. gün", text: "Plaj günü — deniz tahminine bakarak en sakin plajı seçin." },
         { title: "5. gün", text: "Kuzey: Volissos ve plajları." },
       ],

@@ -9,9 +9,8 @@ const pageData = {
   ...chiosIslandPageEl,
   seo: {
     ...chiosIslandPageEl.seo,
-    title: "Τι να δω στη Χίο | Τα καλύτερα μέρη & εμπειρίες",
-    description:
-      "Ανακαλύψτε τι αξίζει να δείτε στη Χίο: παραλίες, μεσαιωνικά χωριά, μαστίχα, μουσεία και αυθεντικές εμπειρίες, με ιδέες για τις διαδρομές σας.",
+    title: chiosIslandPageEl.seo.title,
+    description: chiosIslandPageEl.seo.description,
   },
   hero: {
     ...chiosIslandPageEl.hero,

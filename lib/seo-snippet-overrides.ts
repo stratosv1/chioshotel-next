@@ -490,25 +490,25 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/es/chios-en-grecia/",
     {
-      title: "Guía de Quíos: playas secretas, pueblos medievales y masilla",
+      title: "Guía de Quíos: qué ver, cómo llegar y consejos locales",
       description:
-        "Calas turquesas, pueblos medievales pintados y la masilla que solo crece aquí: Quíos contada por locales de Kambos, con sus mejores consejos.",
+        "Quíos contada por locales de Kambos: cómo llegar, descuento en el ferry, dónde alojarse, cinco imprescindibles, 91 playas y un plan de 3 a 5 días.",
     },
   ],
   [
     "/fr/chios-en-grece/",
     {
-      title: "Guide de Chios : plages secrètes, villages médiévaux, mastic",
+      title: "Guide de Chios : que voir, comment venir et conseils locaux",
       description:
-        "Criques turquoise, villages médiévaux peints et le mastic qui ne pousse qu’ici : Chios racontée par des locaux de Kambos, avec leurs meilleurs conseils.",
+        "Chios par des locaux de Kambos : comment venir, réduction ferry, où loger, cinq incontournables, 91 plages et un programme de 3 à 5 jours.",
     },
   ],
   [
     "/de/chios-insel/",
     {
-      title: "Chios Reiseführer: versteckte Strände, Dörfer & Mastix",
+      title: "Chios Reiseführer: Highlights, Anreise & Insidertipps",
       description:
-        "Türkisblaue Buchten, bemalte mittelalterliche Dörfer und Mastix, der nur hier wächst: Chios mit den besten Insidertipps von Einheimischen aus Kambos.",
+        "Chios von Einheimischen aus Kambos: Anreise, Fährrabatt, beste Lage zum Wohnen, fünf Highlights, 91 Strände und ein Plan für 3 bis 5 Tage.",
     },
   ],
   [

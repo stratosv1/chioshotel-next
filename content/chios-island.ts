@@ -102,9 +102,9 @@ const whatsappHref = "https://wa.me/306944474226";
 export const chiosIslandPageEn: ChiosIslandPageData = {
   seo: {
     canonicalPath: "/chios-island/",
-    title: "Chios Island Guide | Beaches, Villages & Mastic Culture",
+    title: "Chios Island Guide: What to See, How to Get There & Tips",
     description:
-      "Explore Chios Island through its beaches, medieval villages, mastic culture and authentic local experiences. Plan your stay from Voulamandis House in Kambos.",
+      "Local guide to Chios: how to get here, the ferry discount, where to stay, five must-sees, 91 beaches and a 3–5 day plan, from our home in Kambos.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -169,7 +169,7 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
         description:
           "Explore Mesta, Pyrgi and other fortress villages of southern Chios, where stone alleys and traditional architecture preserve the island’s rich past.",
         image: villagesImage,
-        imageAlt: "Traditional village and coastal scenery in Chios",
+        imageAlt: "The harbour village of Lagada on the east coast of Chios",
         href: "/chios/chios-villages/",
         ctaLabel: "Explore villages",
         tags: ["Mesta", "Pyrgi", "Stone alleys"],
@@ -179,7 +179,7 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
         description:
           "Discover the museums of Chios and explore the island’s history, culture, maritime heritage, mastic tradition and local identity.",
         image: museumsImage,
-        imageAlt: "Museums of Chios and cultural heritage",
+        imageAlt: "The Byzantine Museum of Chios in the former Mecidiye Mosque",
         href: "/chios/chios-museums/",
         ctaLabel: "Explore museums",
         tags: ["Museums", "History", "Culture"],
@@ -247,9 +247,9 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
 export const chiosIslandPageEl: ChiosIslandPageData = {
   seo: {
     canonicalPath: "/el/ti-na-do-sti-xio/",
-    title: "Οδηγός Χίου | Παραλίες, Χωριά & Πολιτισμός της Μαστίχας",
+    title: "Τι να δω στη Χίο: Οδηγός ντόπιων & πρόγραμμα 3–5 ημερών",
     description:
-      "Ανακαλύψτε τη Χίο μέσα από τις παραλίες, τα μεσαιωνικά χωριά, τη μαστίχα και αυθεντικές τοπικές εμπειρίες, με βάση το Voulamandis House στον Κάμπο.",
+      "Οδηγός Χίου από ντόπιους: πώς θα έρθετε, έκπτωση στο πλοίο, πού να μείνετε, τα 5 «πρέπει», 91 παραλίες και πρόγραμμα 3–5 ημερών από τον Κάμπο.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -314,7 +314,7 @@ export const chiosIslandPageEl: ChiosIslandPageData = {
         description:
           "Εξερευνήστε τα Μεστά, το Πυργί και άλλα καστροχώρια της νότιας Χίου, όπου τα πέτρινα σοκάκια και η παραδοσιακή αρχιτεκτονική κρατούν ζωντανό το παρελθόν.",
         image: villagesImage,
-        imageAlt: "Παραδοσιακό χωριό και παραθαλάσσιο τοπίο στη Χίο",
+        imageAlt: "Το λιμανάκι της Λαγκάδας στην ανατολική ακτή της Χίου",
         href: "/el/xoria-xios/",
         ctaLabel: "Δείτε χωριά",
         tags: ["Μεστά", "Πυργί", "Πέτρινα σοκάκια"],
@@ -324,7 +324,7 @@ export const chiosIslandPageEl: ChiosIslandPageData = {
         description:
           "Ανακαλύψτε τα μουσεία της Χίου και γνωρίστε την ιστορία, τον πολιτισμό, τη ναυτική παράδοση, τη μαστίχα και την τοπική ταυτότητα.",
         image: museumsImage,
-        imageAlt: "Μουσεία της Χίου και πολιτιστική κληρονομιά",
+        imageAlt: "Το Βυζαντινό Μουσείο Χίου στο πρώην τέμενος Μετζιδιέ",
         href: "/el/mouseia-xios/",
         ctaLabel: "Δείτε μουσεία",
         tags: ["Μουσεία", "Ιστορία", "Πολιτισμός"],
@@ -392,9 +392,9 @@ export const chiosIslandPageEl: ChiosIslandPageData = {
 export const chiosIslandPageFr: ChiosIslandPageData = {
   seo: {
     canonicalPath: "/fr/chios-en-grece/",
-    title: "Guide de Chios | Plages, villages et culture du mastic",
+    title: "Guide de Chios : que voir, comment venir et conseils locaux",
     description:
-      "Explorez l’île de Chios à travers ses plages, ses villages médiévaux, la culture du mastic et des expériences locales authentiques depuis Voulamandis House à Kambos.",
+      "Chios par des locaux de Kambos : comment venir, réduction ferry, où loger, cinq incontournables, 91 plages et un programme de 3 à 5 jours.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -459,7 +459,7 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
         description:
           "Explorez Mesta, Pyrgi et d’autres villages fortifiés du sud de Chios, où les ruelles de pierre et l’architecture traditionnelle préservent le passé de l’île.",
         image: villagesImage,
-        imageAlt: "Village traditionnel et paysage côtier à Chios",
+        imageAlt: "Le village portuaire de Lagada, sur la côte est de Chios",
         href: "/fr/villages-de-chios/",
         ctaLabel: "Explorer les villages",
         tags: ["Mesta", "Pyrgi", "Ruelles de pierre"],
@@ -469,7 +469,7 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
         description:
           "Découvrez les musées de Chios et explorez l’histoire, la culture, le patrimoine maritime, la tradition du mastic et l’identité locale.",
         image: museumsImage,
-        imageAlt: "Musées de Chios et patrimoine culturel",
+        imageAlt: "Le musée byzantin de Chios dans l’ancienne mosquée Mecidiye",
         href: "/fr/musees-de-chios/",
         ctaLabel: "Voir les musées",
         tags: ["Musées", "Histoire", "Culture"],
@@ -506,9 +506,9 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
 export const chiosIslandPageDe: ChiosIslandPageData = {
   seo: {
     canonicalPath: "/de/chios-insel/",
-    title: "Chios Reiseführer | Strände, Dörfer und Mastixkultur",
+    title: "Chios Reiseführer: Highlights, Anreise & Insidertipps",
     description:
-      "Entdecken Sie Chios mit Stränden, mittelalterlichen Dörfern, Mastixkultur und authentischen lokalen Erlebnissen. Planen Sie Ihren Aufenthalt im Voulamandis House in Kambos.",
+      "Chios von Einheimischen aus Kambos: Anreise, Fährrabatt, beste Lage zum Wohnen, fünf Highlights, 91 Strände und ein Plan für 3 bis 5 Tage.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -573,7 +573,7 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
         description:
           "Erkunden Sie Mesta, Pyrgi und weitere Festungsdörfer im Süden von Chios, wo Steingassen und traditionelle Architektur die Geschichte der Insel bewahren.",
         image: villagesImage,
-        imageAlt: "Traditionelles Dorf und Küstenlandschaft auf Chios",
+        imageAlt: "Das Hafendorf Lagada an der Ostküste von Chios",
         href: "/de/doerfer-chios/",
         ctaLabel: "Dörfer entdecken",
         tags: ["Mesta", "Pyrgi", "Steingassen"],
@@ -583,7 +583,7 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
         description:
           "Entdecken Sie die Museen von Chios und erleben Sie Geschichte, Kultur, maritime Tradition, Mastix-Erbe und lokale Identität.",
         image: museumsImage,
-        imageAlt: "Museen von Chios und kulturelles Erbe",
+        imageAlt: "Das Byzantinische Museum von Chios in der ehemaligen Mecidiye-Moschee",
         href: "/de/museen-chios/",
         ctaLabel: "Museen ansehen",
         tags: ["Museen", "Geschichte", "Kultur"],
@@ -620,9 +620,9 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
 export const chiosIslandPageIt: ChiosIslandPageData = {
   seo: {
     canonicalPath: "/it/chios-lisola-in-grecia/",
-    title: "Guida di Chios | Spiagge, villaggi e cultura del mastice",
+    title: "Guida di Chios: cosa vedere, come arrivare e consigli locali",
     description:
-      "Scoprite l’isola di Chios attraverso spiagge, villaggi medievali, cultura del mastice ed esperienze locali autentiche, con Voulamandis House a Kambos come base.",
+      "Chios raccontata da chi vive a Kambos: come arrivare, sconto sul traghetto, dove alloggiare, cinque imperdibili, 91 spiagge e un piano di 3–5 giorni.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -687,7 +687,7 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
         description:
           "Esplorate Mesta, Pyrgi e altri villaggi fortificati del sud di Chios, dove vicoli in pietra e architettura tradizionale conservano il passato dell’isola.",
         image: villagesImage,
-        imageAlt: "Villaggio tradizionale e paesaggio costiero a Chios",
+        imageAlt: "Il villaggio portuale di Lagada sulla costa orientale di Chios",
         href: "/it/villaggi-chios/",
         ctaLabel: "Esplora villaggi",
         tags: ["Mesta", "Pyrgi", "Vicoli in pietra"],
@@ -697,7 +697,7 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
         description:
           "Scoprite i musei di Chios e approfondite storia, cultura, tradizione marittima, patrimonio del mastice e identità locale.",
         image: museumsImage,
-        imageAlt: "Musei di Chios e patrimonio culturale",
+        imageAlt: "Il Museo Bizantino di Chios nell’ex moschea Mecidiye",
         href: "/it/musei-chios/",
         ctaLabel: "Vedi musei",
         tags: ["Musei", "Storia", "Cultura"],
@@ -734,9 +734,9 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
 export const chiosIslandPageEs: ChiosIslandPageData = {
   seo: {
     canonicalPath: "/es/chios-en-grecia/",
-    title: "Guía de Quíos | Playas, pueblos y cultura de la masilla",
+    title: "Guía de Quíos: qué ver, cómo llegar y consejos locales",
     description:
-      "Explore la isla de Quíos a través de sus playas, pueblos medievales, cultura de la masilla y experiencias locales auténticas, con Voulamandis House en Kambos como base.",
+      "Quíos contada por locales de Kambos: cómo llegar, descuento en el ferry, dónde alojarse, cinco imprescindibles, 91 playas y un plan de 3 a 5 días.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -801,7 +801,7 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
         description:
           "Explore Mesta, Pyrgi y otros pueblos fortificados del sur de Quíos, donde los callejones de piedra y la arquitectura tradicional conservan el pasado de la isla.",
         image: villagesImage,
-        imageAlt: "Pueblo tradicional y paisaje costero en Quíos",
+        imageAlt: "El pueblo portuario de Lagada, en la costa este de Quíos",
         href: "/es/pueblos-chios/",
         ctaLabel: "Explorar pueblos",
         tags: ["Mesta", "Pyrgi", "Callejones de piedra"],
@@ -811,7 +811,7 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
         description:
           "Descubra los museos de Chios y explore la historia, la cultura, la tradición marítima, el legado de la masticha y la identidad local.",
         image: museumsImage,
-        imageAlt: "Museos de Chios y patrimonio cultural",
+        imageAlt: "El Museo Bizantino de Quíos en la antigua mezquita Mecidiye",
         href: "/es/museos-chios/",
         ctaLabel: "Ver museos",
         tags: ["Museos", "Historia", "Cultura"],
@@ -848,9 +848,9 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
 export const chiosIslandPageTr: ChiosIslandPageData = {
   seo: {
     canonicalPath: "/tr/sakiz-adasi/",
-    title: "Sakız Adası Rehberi | Plajlar, Köyler ve Mastik Kültürü",
+    title: "Sakız Adası Rehberi: Gezilecek Yerler, Ulaşım ve İpuçları",
     description:
-      "Sakız Adası’nı plajları, ortaçağ köyleri, mastik kültürü ve yerel deneyimleriyle keşfedin. Kambos’taki Voulamandis House’u konaklama üssünüz yapın.",
+      "Kambos’ta yaşayanlardan Sakız Adası: Çeşme’den ulaşım, nerede kalınır, beş vazgeçilmez, 91 plaj ve 3–5 günlük gezi planı.",
     ogImage: chiosIslandHeroImage,
   },
   hero: {
@@ -915,7 +915,7 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
         description:
           "Sakız’ın güneyindeki Mesta, Pyrgi ve diğer kale köylerini keşfedin; taş sokaklar ve geleneksel mimari adanın zengin geçmişini yaşatır.",
         image: villagesImage,
-        imageAlt: "Sakız Adası’nda geleneksel köy ve kıyı manzarası",
+        imageAlt: "Sakız Adası’nın doğu kıyısındaki liman köyü Lagada",
         href: "/tr/sakiz-adasi-koyleri/",
         ctaLabel: "Köyleri keşfet",
         tags: ["Mesta", "Pyrgi", "Taş sokaklar"],
@@ -925,7 +925,7 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
         description:
           "Sakız Adası müzelerini keşfedin; tarih, kültür, denizcilik mirası, mastik geleneği ve yerel kimlik hakkında daha fazla bilgi alın.",
         image: museumsImage,
-        imageAlt: "Sakız Adası müzeleri ve kültürel miras",
+        imageAlt: "Eski Mecidiye Camii’ndeki Sakız Bizans Müzesi",
         href: "/tr/sakiz-adasi-muzeleri/",
         ctaLabel: "Müzeleri gör",
         tags: ["Müzeler", "Tarih", "Kültür"],
