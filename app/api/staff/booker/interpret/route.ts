@@ -278,6 +278,47 @@ function normalizeGuestComposition(parsed: any, latestText: string) {
   return parsed;
 }
 
+function shiftYear(date: string, years: number) {
+  const [year, month, day] = date.split("-").map(Number);
+  // 29 Feb rolls to 28 Feb in a non-leap year.
+  const last = new Date(Date.UTC(year + years, month, 0)).getUTCDate();
+  return `${year + years}-${String(month).padStart(2, "0")}-${String(Math.min(day, last)).padStart(2, "0")}`;
+}
+
+// The model sometimes keeps the current year for a date like "18-20 Μάι" even when
+// that day has passed. Staff never book past stays, so with no year written,
+// move the stay to its next occurrence.
+function normalizeYearlessDates(parsed: any, latestText: string, hasImage: boolean) {
+  if (!parsed || typeof parsed !== "object" || !parsed.fields || typeof parsed.fields !== "object") return parsed;
+  if (parsed.intent === "arrivals_query" || hasImage) return parsed;
+  if (/\b(19|20)\d{2}\b|\b\d{1,2}([./-])\d{1,2}\2\d{2}\b(?![./-]\d)/.test(latestText)) return parsed;
+  const fields = parsed.fields as Record<string, unknown>;
+  const checkin = dateOnly(fields.checkin);
+  if (!checkin) return parsed;
+  const today = todayInAthensIso();
+  let years = 0;
+  while (shiftYear(checkin, years) < today && years < 2) years += 1;
+  if (!years) return parsed;
+  fields.checkin = shiftYear(checkin, years);
+  const checkout = dateOnly(fields.checkout);
+  if (checkout) fields.checkout = shiftYear(checkout, years);
+  if (typeof parsed.clarification === "string" && /(παρελθ|έτος|χρονι|year)/i.test(parsed.clarification)) parsed.clarification = null;
+  return parsed;
+}
+
+// Guest counts must come from words about guests, never from the digits of a date.
+function dropUnfoundedGuests(parsed: any, latestText: string, hasImage: boolean, currentQuestion: unknown) {
+  if (!parsed || typeof parsed !== "object" || !parsed.fields || typeof parsed.fields !== "object") return parsed;
+  if (parsed.intent === "arrivals_query" || hasImage) return parsed;
+  if (currentQuestion === "adults" || currentQuestion === "children") return parsed;
+  if (/(άτομ|ατόμ|ενήλ|ενηλ|παιδ|μωρ|ζευγ|guest|adult|child|kid|baby|infant|person|people|pax|couple|erwachs|kind|personne|adulte|enfant|ospit|adult|bambin|huésp|niñ|kişi|yetişkin|çocuk|για\s+\d\b|\bfor\s+\d\b)/i.test(latestText)) return parsed;
+  const fields = parsed.fields as Record<string, unknown>;
+  fields.totalGuests = null;
+  fields.adults = null;
+  fields.children = null;
+  return parsed;
+}
+
 function roomFromText(value: string) {
   const match = value.match(/(?:δωμάτι(?:ο|ου)|room|zimmer|chambre|camera|habitación|oda)\s*(?:no\.?\s*)?(10|[1-9])\b/i);
   if (!match) return null;
@@ -593,7 +634,18 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: "OpenAI returned no structured intake." }, { status: 502, headers: noStoreHeaders() });
       }
 
-      const parsed = normalizeRoomRequest(normalizeGuestComposition(JSON.parse(output), message), message);
+      const parsed = normalizeRoomRequest(
+        normalizeGuestComposition(
+          dropUnfoundedGuests(
+            normalizeYearlessDates(JSON.parse(output), message, Boolean(image)),
+            message,
+            Boolean(image),
+            currentDraft.currentQuestion,
+          ),
+          message,
+        ),
+        message,
+      );
 
       if (parsed?.intent === "arrivals_query") {
         const queryDate = dateOnly(parsed?.arrivalQueryDate);

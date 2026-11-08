@@ -712,6 +712,20 @@ export default function BookerApp() {
       }
     }
 
+    // A bare year ("2027") after the past-date warning fixes the year of the dates already given.
+    const bareYear = !image && /^(20\d{2})$/.exec(text);
+    if (bareYear && draft.checkin) {
+      const year = Number(bareYear[1]);
+      const nightsCount = draft.checkout ? nightsBetween(draft.checkin, draft.checkout) : null;
+      const checkin = `${year}${draft.checkin.slice(4)}`;
+      setComposer("");
+      await applyLocal(
+        nightsCount ? { checkin, checkout: addDays(checkin, nightsCount), nights: nightsCount } : { checkin },
+        text,
+      );
+      return;
+    }
+
     if (image) {
       push(user(`📎 Screenshot: ${image.name}`));
     } else {
