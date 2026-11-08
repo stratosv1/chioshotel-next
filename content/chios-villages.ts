@@ -96,8 +96,9 @@ const villageImages = {
     "/images/villages/lagada-chios-hd.webp",
   anavatos:
     "/images/villages/anavatos-chios-hd.webp",
+  // Temporary: nearby Anavatos until a photo of Avgonyma is available.
   avgonyma:
-    "/images/villages/avgonyma-chios-hd.webp",
+    "/images/villages/anavatos-chios-hd.webp",
 };
 
 export const chiosVillagesPageEn: ChiosVillagesPageData = {
@@ -263,7 +264,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
         "A medieval hill village of stone houses with a paved square, local tavernas and sunset views towards Psara.",
       image: villageImages.avgonyma,
       imageAlt:
-        "Stone houses of the medieval village of Avgonyma in central Chios",
+        "Anavatos, the medieval village 6 km from Avgonyma, in central Chios",
       href: "/chios/chios-villages/avgonyma-chios/",
       region: "Central Chios",
       mood: "Sunset & food",
@@ -512,7 +513,7 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
         "Μεσαιωνικό χωριό σε λόφο με πέτρινα σπίτια, λιθόστρωτη πλατεία, ταβέρνες και θέα στο ηλιοβασίλεμα προς τα Ψαρά.",
       image: villageImages.avgonyma,
       imageAlt:
-        "Πέτρινα σπίτια στο μεσαιωνικό χωριό Αυγώνυμα της κεντρικής Χίου",
+        "Ο Ανάβατος, 6 χλμ. από τα Αυγώνυμα, στην κεντρική Χίο",
       href: "/el/xoria-xios/avgonyma-xios/",
       region: "Κεντρική Χίος",
       mood: "Ηλιοβασίλεμα & φαγητό",
@@ -761,7 +762,7 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
         "Un village médiéval perché aux maisons de pierre, avec sa place pavée, ses tavernes et ses couchers de soleil vers Psara.",
       image: villageImages.avgonyma,
       imageAlt:
-        "Maisons en pierre du village médiéval d’Avgonyma, au centre de Chios",
+        "Anavatos, village médiéval à 6 km d’Avgonyma, au centre de Chios",
       href: "/fr/villages-de-chios/village-avgonyma/",
       region: "Centre de Chios",
       mood: "Coucher de soleil & cuisine",
@@ -974,7 +975,7 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
         "Ein mittelalterliches Bergdorf aus Stein mit gepflastertem Platz, Tavernen und Sonnenuntergängen mit Blick nach Psara.",
       image: villageImages.avgonyma,
       imageAlt:
-        "Steinhäuser im mittelalterlichen Dorf Avgonyma im Zentrum von Chios",
+        "Anavatos, das mittelalterliche Dorf 6 km von Avgonyma, im Zentrum von Chios",
       href: "/de/doerfer-chios/avgonyma-dorf/",
       region: "Zentral-Chios",
       mood: "Sonnenuntergang & Küche",
@@ -1187,7 +1188,7 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
         "Un borgo medievale in collina con case in pietra, piazza lastricata, taverne e tramonti verso Psara.",
       image: villageImages.avgonyma,
       imageAlt:
-        "Case in pietra del borgo medievale di Avgonyma, nel centro di Chios",
+        "Anavatos, il borgo medievale a 6 km da Avgonyma, nel centro di Chios",
       href: "/it/villaggi-chios/villaggio-avgonyma/",
       region: "Chios centrale",
       mood: "Tramonto e cucina",
@@ -1400,7 +1401,7 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
         "Un pueblo medieval en una colina, con casas de piedra, plaza empedrada, tabernas y atardeceres hacia Psara.",
       image: villageImages.avgonyma,
       imageAlt:
-        "Casas de piedra del pueblo medieval de Avgonyma, en el centro de Quíos",
+        "Anavatos, el pueblo medieval a 6 km de Avgonyma, en el centro de Quíos",
       href: "/es/pueblos-chios/pueblo-avgonyma/",
       region: "Centro de Quíos",
       mood: "Atardecer y comida",
@@ -1613,7 +1614,7 @@ export const chiosVillagesPageTr: ChiosVillagesPageData = {
         "Taş evleri, taş döşeli meydanı, tavernaları ve Psara’ya bakan gün batımıyla tepede bir Orta Çağ köyü.",
       image: villageImages.avgonyma,
       imageAlt:
-        "Orta Sakız’daki Orta Çağ köyü Avgonyma’nın taş evleri",
+        "Orta Sakız’da, Avgonyma’ya 6 km uzaklıktaki Orta Çağ köyü Anavatos",
       href: "/tr/sakiz-adasi-koyleri/avgonyma-koyu/",
       region: "Orta Sakız",
       mood: "Gün batımı ve yemek",

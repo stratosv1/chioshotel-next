@@ -9,7 +9,9 @@ import type { VillageDetailData } from "@/content/village-details";
 // content/trip-planner/villages.ts). Drive time from Kambos:
 // content/trip-planner/village-routing.ts. No restaurant names, prices or hours.
 
-export const AVGONYMA_IMAGE = "/images/villages/avgonyma-chios-hd.webp";
+// Temporary: no free photo of Avgonyma exists yet, so the page shows nearby
+// Anavatos (6 km) with an honest caption until the owner supplies one.
+export const AVGONYMA_IMAGE = "/images/villages/anavatos-chios-hd.webp";
 const IMAGE = AVGONYMA_IMAGE;
 
 const avgonymaEnBase: VillageDetailData = {
@@ -29,7 +31,7 @@ const avgonymaEnBase: VillageDetailData = {
     image: IMAGE,
     tags: ["#avgonyma", "#medieval_chios", "#sunset", "#local_food"],
   },
-  heroImageAlt: "Stone houses of the medieval village of Avgonyma in central Chios",
+  heroImageAlt: "Anavatos, the medieval village 6 km from Avgonyma, in central Chios",
   answerText:
     "Avgonyma is a small medieval village on a hill in central Chios, about 30 minutes by car from Kambos. Its stone houses, paved square and sunset views over the Aegean make it the natural last stop after Nea Moni and Anavatos, ideally with dinner in the village.",
   details: [
@@ -171,7 +173,7 @@ const avgonymaLocalizedBase: VillageDetailData[] = [
       image: IMAGE,
       tags: ["#αυγώνυμα", "#μεσαιωνική_χίος", "#ηλιοβασίλεμα", "#τοπικό_φαγητό"],
     },
-    heroImageAlt: "Πέτρινα σπίτια στο μεσαιωνικό χωριό Αυγώνυμα της κεντρικής Χίου",
+    heroImageAlt: "Ο Ανάβατος, 6 χλμ. από τα Αυγώνυμα, στην κεντρική Χίο",
     answerText:
       "Τα Αυγώνυμα είναι ένα μικρό μεσαιωνικό χωριό σε λόφο της κεντρικής Χίου, περίπου 30 λεπτά με το αυτοκίνητο από τον Κάμπο. Τα πέτρινα σπίτια, η λιθόστρωτη πλατεία και το ηλιοβασίλεμα πάνω από το Αιγαίο το κάνουν τον φυσικό τελευταίο σταθμό μετά τη Νέα Μονή και τον Ανάβατο, ιδανικά με φαγητό στο χωριό.",
     details: [
@@ -311,7 +313,7 @@ const avgonymaLocalizedBase: VillageDetailData[] = [
       image: IMAGE,
       tags: ["#avgonyma", "#chios_medievale", "#coucher_de_soleil", "#cuisine_locale"],
     },
-    heroImageAlt: "Maisons en pierre du village médiéval d’Avgonyma, au centre de Chios",
+    heroImageAlt: "Anavatos, village médiéval à 6 km d’Avgonyma, au centre de Chios",
     answerText:
       "Avgonyma est un petit village médiéval perché sur une colline du centre de Chios, à environ 30 minutes en voiture de Kambos. Ses maisons de pierre, sa place pavée et ses couchers de soleil sur l’Égée en font l’étape finale naturelle après Nea Moni et Anavatos, idéalement avec un dîner sur place.",
     details: [
@@ -451,7 +453,7 @@ const avgonymaLocalizedBase: VillageDetailData[] = [
       image: IMAGE,
       tags: ["#avgonyma", "#mittelalterliches_chios", "#sonnenuntergang", "#lokale_kueche"],
     },
-    heroImageAlt: "Steinhäuser im mittelalterlichen Dorf Avgonyma im Zentrum von Chios",
+    heroImageAlt: "Anavatos, das mittelalterliche Dorf 6 km von Avgonyma, im Zentrum von Chios",
     answerText:
       "Avgonyma ist ein kleines mittelalterliches Dorf auf einem Hügel im Zentrum von Chios, etwa 30 Autominuten von Kambos entfernt. Steinhäuser, ein gepflasterter Platz und Sonnenuntergänge über der Ägäis machen es zum natürlichen letzten Halt nach Nea Moni und Anavatos – am besten mit einem Abendessen im Dorf.",
     details: [
@@ -591,7 +593,7 @@ const avgonymaLocalizedBase: VillageDetailData[] = [
       image: IMAGE,
       tags: ["#avgonyma", "#chios_medievale", "#tramonto", "#cucina_locale"],
     },
-    heroImageAlt: "Case in pietra del borgo medievale di Avgonyma, nel centro di Chios",
+    heroImageAlt: "Anavatos, il borgo medievale a 6 km da Avgonyma, nel centro di Chios",
     answerText:
       "Avgonyma è un piccolo borgo medievale su una collina nel centro di Chios, a circa 30 minuti in auto da Kambos. Case in pietra, una piazza lastricata e tramonti sull’Egeo ne fanno la tappa finale naturale dopo Nea Moni e Anavatos, idealmente con cena in paese.",
     details: [
@@ -731,7 +733,7 @@ const avgonymaLocalizedBase: VillageDetailData[] = [
       image: IMAGE,
       tags: ["#avgonyma", "#quios_medieval", "#atardecer", "#comida_local"],
     },
-    heroImageAlt: "Casas de piedra del pueblo medieval de Avgonyma, en el centro de Quíos",
+    heroImageAlt: "Anavatos, el pueblo medieval a 6 km de Avgonyma, en el centro de Quíos",
     answerText:
       "Avgonyma es un pequeño pueblo medieval en una colina del centro de Quíos, a unos 30 minutos en coche de Kambos. Sus casas de piedra, su plaza empedrada y los atardeceres sobre el Egeo lo convierten en la última parada natural después de Nea Moni y Anavatos, idealmente con cena en el pueblo.",
     details: [
@@ -871,7 +873,7 @@ const avgonymaLocalizedBase: VillageDetailData[] = [
       image: IMAGE,
       tags: ["#avgonyma", "#orta_cag_sakiz", "#gun_batimi", "#yerel_yemek"],
     },
-    heroImageAlt: "Orta Sakız’daki Orta Çağ köyü Avgonyma’nın taş evleri",
+    heroImageAlt: "Orta Sakız’da, Avgonyma’ya 6 km uzaklıktaki Orta Çağ köyü Anavatos",
     answerText:
       "Avgonyma, orta Sakız’da bir tepenin üzerinde, Kambos’a arabayla yaklaşık 30 dakika uzaklıkta küçük bir Orta Çağ köyüdür. Taş evleri, taş döşeli meydanı ve Ege üzerindeki gün batımıyla Nea Moni ve Anavatos’tan sonra doğal son duraktır; en güzeli köyde akşam yemeğiyle.",
     details: [
@@ -1021,7 +1023,7 @@ export const avgonymaRelatedCard = {
   description: "A medieval stone village on a hill, with a paved square and Aegean sunsets.",
   href: "/chios/chios-villages/avgonyma-chios/",
   image: IMAGE,
-  imageAlt: "Stone houses of Avgonyma in central Chios",
+  imageAlt: "Anavatos, 6 km from Avgonyma, in central Chios",
   badge: "Sunset",
   size: "normal",
 } as const;
