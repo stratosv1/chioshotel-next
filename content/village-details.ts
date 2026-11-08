@@ -1,4 +1,5 @@
 import { applyVillageGuideOverlay } from "@/content/mesta-guide-i18n";
+import { anavatosEn, anavatosLocalized, anavatosRelatedCard } from "@/content/village-details-anavatos";
 
 export type VillageDetailData = {
   slug: string;
@@ -717,6 +718,7 @@ export const villageDetails: VillageDetailData[] = [
     relatedText:
       "Discover more sides of Chios, from seaside taverns and northern views to medieval villages and mastic culture.",
   },
+  anavatosEn,
 ];
 
 export const localizedVillageDetails: VillageDetailData[] = [
@@ -4059,7 +4061,8 @@ export const localizedVillageDetails: VillageDetailData[] = [
     },
     relatedTitle: "Sakız Adası’nın diğer köylerini keşfedin",
     relatedText: "Mastik köylerini, Orta Çağ sokaklarını, kuzey manzaralarını ve deniz kenarı köylerini keşfedin.",
-  }
+  },
+  ...anavatosLocalized,
 ];
 
 
@@ -4142,6 +4145,7 @@ export const relatedVillageCards = [
     badge: "Seaside",
     size: "wide",
   },
+  anavatosRelatedCard,
 ] as const;
 
 export function getVillageDetailBySlug(slug: string) {

@@ -17,6 +17,7 @@ const greekVillageForms: Record<string, { accusative: string; special: string }>
   "Βολισσός": { accusative: "τη Βολισσό", special: "ξεχωριστή" },
   "Αρμόλια": { accusative: "τα Αρμόλια", special: "ξεχωριστά" },
   "Λαγκάδα": { accusative: "τη Λαγκάδα", special: "ξεχωριστή" },
+  "Ανάβατος": { accusative: "τον Ανάβατο", special: "ξεχωριστό" },
 };
 
 function getGreekVillageForms(name: string) {
@@ -577,7 +578,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               →
             </div>
             <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-5 pr-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:grid md:grid-cols-2 md:overflow-visible md:pr-0 xl:grid-cols-3">
-              {relatedVillages.slice(0, 6).map((related) => (
+              {relatedVillages.slice(0, 8).map((related) => (
                 <a
                   className="group w-[84vw] max-w-[380px] flex-none snap-start overflow-hidden rounded-[1.5rem] bg-white shadow-lg shadow-stone-900/5 ring-1 ring-amber-900/10 transition hover:shadow-xl md:w-auto md:max-w-none md:rounded-[2rem]"
                   href={related.seo.canonicalPath}
