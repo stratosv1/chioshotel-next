@@ -53,10 +53,10 @@ html.vh-xmas .vh-ai-shell > [data-room-finder-feed] { position: relative; z-inde
 html.vh-xmas .vh-ai-shell [data-room-finder-feed] > div { padding-top: 60px; }
 @media (max-width: 767px) {
   .vh-ai-lights { height: 28px; }
-  html.vh-xmas .vh-ai-shell [data-room-finder-feed] > div { padding-top: 48px; }
+  html.vh-xmas .vh-ai-shell [data-room-finder-feed] > div { padding-top: 40px; }
 }
 
 .vh-open { overflow: visible !important; }
 h1 .vh-title-hat .vh-hat { bottom: .66em; width: .72em; height: .62em; }
 
-.vh-open .vh-title-hat .vh-hat { left: -.5em; bottom: .68em; width: 1.15em; height: 1em; transform: rotate(-14deg); }
+.vh-open .vh-title-hat .vh-hat { left: -.62em; bottom: .5em; width: 1em; height: .87em; transform: rotate(-18deg); }
