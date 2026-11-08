@@ -94,9 +94,9 @@ const germanPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/de/doerfer-chios/",
     {
-      title: "Chios Dörfer: Die 7 schönsten (mit Insider-Tipps)",
+      title: "Chios Dörfer: Die 9 schönsten (mit Insider-Tipps)",
       description:
-        "Vom bemalten Pyrgi über das Burgdorf Mesta bis zum Hafen von Lagada: die 7 schönsten Dörfer auf Chios – mit Routenideen und Tipps aus Kambos.",
+        "Vom bemalten Pyrgi über Mesta und Anavatos bis zum Hafen von Lagada: die 9 schönsten Dörfer auf Chios – mit Routenideen und Tipps aus Kambos.",
     },
   ],
   [

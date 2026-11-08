@@ -82,9 +82,9 @@ const turkishPageSeoCorrections = new Map<string, SeoCorrection>([
   [
     "/tr/sakiz-adasi-koyleri/",
     {
-      title: "Sakız Adası Köyleri: En Güzel 7 Köy (Yerel Rehber)",
+      title: "Sakız Adası Köyleri: En Güzel 9 Köy (Yerel Rehber)",
       description:
-        "Desenli Pyrgi'den Orta Çağ köyü Mesta'ya ve balık tavernalı Lagada'ya: Sakız Adası'nda mutlaka görülmesi gereken 7 köy, rotalar ve yerel ipuçları.",
+        "Desenli Pyrgi'den Mesta ve Anavatos'a, balık tavernalı Lagada'ya: Sakız Adası'nda mutlaka görülmesi gereken 9 köy, rotalar ve yerel ipuçları.",
     },
   ],
   [

@@ -18,6 +18,7 @@ const greekVillageForms: Record<string, { accusative: string; special: string }>
   "Αρμόλια": { accusative: "τα Αρμόλια", special: "ξεχωριστά" },
   "Λαγκάδα": { accusative: "τη Λαγκάδα", special: "ξεχωριστή" },
   "Ανάβατος": { accusative: "τον Ανάβατο", special: "ξεχωριστό" },
+  "Αυγώνυμα": { accusative: "τα Αυγώνυμα", special: "ξεχωριστά" },
 };
 
 function getGreekVillageForms(name: string) {

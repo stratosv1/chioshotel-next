@@ -75,7 +75,7 @@ export const villageCategoryAlternates = {
 
 const categoryVillageIds: Record<VillageCategoryKey, string[]> = {
   mastic: ["pyrgi", "mesta", "olympoi", "armolia", "vessa"],
-  medieval: ["pyrgi", "mesta", "vessa", "olympoi", "volissos"],
+  medieval: ["pyrgi", "mesta", "vessa", "olympoi", "volissos", "anavatos", "avgonyma"],
   seaside: ["lagada", "volissos"],
 };
 

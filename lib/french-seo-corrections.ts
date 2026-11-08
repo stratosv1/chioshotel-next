@@ -7,9 +7,9 @@ const frenchSeoCorrections: ReadonlyArray<
   [
     "/fr/villages-de-chios/",
     {
-      title: "Villages de Chios : les 7 plus beaux (guide local)",
+      title: "Villages de Chios : les 9 plus beaux (guide local)",
       description:
-        "De Pyrgi la peinte à Mesta la médiévale et au port de Lagada : les 7 villages incontournables de Chios, avec idées d'itinéraires et conseils locaux.",
+        "De Pyrgi la peinte et Mesta la médiévale à Anavatos et au port de Lagada : les 9 villages incontournables de Chios, avec conseils locaux.",
     },
   ],
   [

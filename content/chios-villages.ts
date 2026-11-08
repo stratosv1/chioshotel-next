@@ -94,6 +94,10 @@ const villageImages = {
     "/images/villages/unnamed-e1702830815478-hd.webp",
   lagada:
     "/images/villages/lagada-chios-hd.webp",
+  anavatos:
+    "/images/villages/anavatos-chios-hd.webp",
+  avgonyma:
+    "/images/villages/avgonyma-chios-hd.webp",
 };
 
 export const chiosVillagesPageEn: ChiosVillagesPageData = {
@@ -101,7 +105,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
     canonicalPath: "/chios/chios-villages/",
     title: "Chios Villages Guide | Voulamandis House",
     description:
-      "Explore beautiful villages in Chios, from Pyrgi and Mesta to Vessa, Olympoi, Volissos, Armolia and Lagada.",
+      "Explore beautiful villages in Chios, from Pyrgi and Mesta to Vessa, Olympoi, Volissos, Armolia, Lagada, Anavatos and Avgonyma.",
     ogImage: villageImages.volissos,
   },
   hero: {
@@ -236,6 +240,36 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
       badges: ["Harbor", "Fish taverns", "Seaside"],
       size: "wide",
     },
+    {
+      id: "anavatos",
+      name: "Anavatos",
+      title: "Anavatos: the Mystras of the Aegean",
+      description:
+        "An abandoned medieval village on a 450 m rock between two gorges, with stone houses, vaulted lanes and a dramatic history.",
+      image: villageImages.anavatos,
+      imageAlt:
+        "The abandoned medieval village of Anavatos on its rock in central Chios",
+      href: "/chios/chios-villages/anavatos-chios/",
+      region: "Central Chios",
+      mood: "History & views",
+      badges: ["Abandoned village", "Medieval", "History"],
+      size: "normal",
+    },
+    {
+      id: "avgonyma",
+      name: "Avgonyma",
+      title: "Avgonyma: stone lanes and Aegean sunsets",
+      description:
+        "A medieval hill village of stone houses with a paved square, local tavernas and sunset views towards Psara.",
+      image: villageImages.avgonyma,
+      imageAlt:
+        "Stone houses of the medieval village of Avgonyma in central Chios",
+      href: "/chios/chios-villages/avgonyma-chios/",
+      region: "Central Chios",
+      mood: "Sunset & food",
+      badges: ["Medieval", "Sunset", "Local food"],
+      size: "normal",
+    },
   ],
   planning: {
     kicker: "Local planning tips",
@@ -270,7 +304,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
       {
         question: "Which Chios villages are worth visiting?",
         answer:
-          "The seven classic choices are Pyrgi with its black-and-white painted facades, medieval Mesta, quiet Vessa, Olympoi, Volissos with its castle in the northwest, Armolia for pottery and seaside Lagada for fish taverns.",
+          "The nine classic choices are Pyrgi with its black-and-white painted facades, medieval Mesta, quiet Vessa, Olympoi, Volissos with its castle in the northwest, Armolia for pottery, seaside Lagada for fish taverns, and in central Chios the abandoned medieval village of Anavatos and Avgonyma for sunset.",
       },
       {
         question: "Which are the mastic villages of Chios?",
@@ -280,7 +314,7 @@ export const chiosVillagesPageEn: ChiosVillagesPageData = {
       {
         question: "Can I see the villages in one day?",
         answer:
-          "Not all of them. Plan by area: one day for the south (Pyrgi, Mesta, Olympoi, Vessa, with Armolia on the way), and a separate trip for Volissos in the northwest. Lagada is an easy half day northeast of Chios Town.",
+          "Not all of them. Plan by area: one day for the south (Pyrgi, Mesta, Olympoi, Vessa, with Armolia on the way), half a day for central Chios (Nea Moni, Anavatos and Avgonyma), and a separate trip for Volissos in the northwest. Lagada is an easy half day northeast of Chios Town.",
       },
       {
         question: "Do I need a car to visit the villages?",
@@ -320,7 +354,7 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
     canonicalPath: "/el/xoria-xios/",
     title: "Χωριά της Χίου | Voulamandis House",
     description:
-      "Ανακαλύψτε τα χωριά της Χίου: Πυργί, Μεστά, Βέσσα, Ολύμποι, Βολισσός, Αρμόλια και Λαγκάδα.",
+      "Ανακαλύψτε τα χωριά της Χίου: Πυργί, Μεστά, Βέσσα, Ολύμποι, Βολισσός, Αρμόλια, Λαγκάδα, Ανάβατος και Αυγώνυμα.",
     ogImage: villageImages.volissos,
   },
   hero: {
@@ -455,6 +489,36 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
       badges: ["Λιμάνι", "Ψαροταβέρνες", "Θάλασσα"],
       size: "wide",
     },
+    {
+      id: "anavatos",
+      name: "Ανάβατος",
+      title: "Ανάβατος: ο Μυστράς του Αιγαίου",
+      description:
+        "Εγκαταλελειμμένο μεσαιωνικό χωριό σε βράχο 450 μέτρων ανάμεσα σε δύο φαράγγια, με πέτρινα σπίτια, θολωτά σοκάκια και συγκλονιστική ιστορία.",
+      image: villageImages.anavatos,
+      imageAlt:
+        "Ο εγκαταλελειμμένος μεσαιωνικός Ανάβατος πάνω στον βράχο, στην κεντρική Χίο",
+      href: "/el/xoria-xios/anavatos-xios/",
+      region: "Κεντρική Χίος",
+      mood: "Ιστορία & θέα",
+      badges: ["Εγκαταλελειμμένο χωριό", "Μεσαιωνικό", "Ιστορία"],
+      size: "normal",
+    },
+    {
+      id: "avgonyma",
+      name: "Αυγώνυμα",
+      title: "Αυγώνυμα: πέτρινα σοκάκια και ηλιοβασιλέματα",
+      description:
+        "Μεσαιωνικό χωριό σε λόφο με πέτρινα σπίτια, λιθόστρωτη πλατεία, ταβέρνες και θέα στο ηλιοβασίλεμα προς τα Ψαρά.",
+      image: villageImages.avgonyma,
+      imageAlt:
+        "Πέτρινα σπίτια στο μεσαιωνικό χωριό Αυγώνυμα της κεντρικής Χίου",
+      href: "/el/xoria-xios/avgonyma-xios/",
+      region: "Κεντρική Χίος",
+      mood: "Ηλιοβασίλεμα & φαγητό",
+      badges: ["Μεσαιωνικό", "Ηλιοβασίλεμα", "Τοπικό φαγητό"],
+      size: "normal",
+    },
   ],
   planning: {
     kicker: "Τοπικές συμβουλές",
@@ -489,7 +553,7 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
       {
         question: "Ποια χωριά της Χίου αξίζει να επισκεφθώ;",
         answer:
-          "Οι επτά κλασικές επιλογές είναι το Πυργί με τα ασπρόμαυρα ξυστά, τα μεσαιωνικά Μεστά, η ήσυχη Βέσσα, οι Ολύμποι, η Βολισσός με το κάστρο στη βορειοδυτική Χίο, τα Αρμόλια για κεραμική και η παραθαλάσσια Λαγκάδα για ψαροταβέρνες.",
+          "Οι εννέα κλασικές επιλογές είναι το Πυργί με τα ασπρόμαυρα ξυστά, τα μεσαιωνικά Μεστά, η ήσυχη Βέσσα, οι Ολύμποι, η Βολισσός με το κάστρο στη βορειοδυτική Χίο, τα Αρμόλια για κεραμική, η παραθαλάσσια Λαγκάδα για ψαροταβέρνες και, στην κεντρική Χίο, ο εγκαταλελειμμένος μεσαιωνικός Ανάβατος και τα Αυγώνυμα για ηλιοβασίλεμα.",
       },
       {
         question: "Ποια είναι τα Μαστιχοχώρια της Χίου;",
@@ -499,7 +563,7 @@ export const chiosVillagesPageEl: ChiosVillagesPageData = {
       {
         question: "Μπορώ να δω τα χωριά σε μία μέρα;",
         answer:
-          "Όχι όλα. Οργανώστε τα ανά περιοχή: μία μέρα για τα νότια (Πυργί, Μεστά, Ολύμποι, Βέσσα, με στάση στα Αρμόλια), και ξεχωριστή εκδρομή για τη Βολισσό στη βορειοδυτική Χίο. Η Λαγκάδα, βορειοανατολικά της πόλης, είναι εύκολη μισή μέρα.",
+          "Όχι όλα. Οργανώστε τα ανά περιοχή: μία μέρα για τα νότια (Πυργί, Μεστά, Ολύμποι, Βέσσα, με στάση στα Αρμόλια), μισή μέρα για την κεντρική Χίο (Νέα Μονή, Ανάβατος, Αυγώνυμα) και ξεχωριστή εκδρομή για τη Βολισσό στη βορειοδυτική Χίο. Η Λαγκάδα, βορειοανατολικά της πόλης, είναι εύκολη μισή μέρα.",
       },
       {
         question: "Χρειάζομαι αυτοκίνητο για τα χωριά;",
@@ -539,7 +603,7 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
     canonicalPath: "/fr/villages-de-chios/",
     title: "Villages de Chios | Voulamandis House",
     description:
-      "Explorez les villages de Chios, de Pyrgi et Mesta à Vessa, Olympoi, Volissos, Armolia et Lagada.",
+      "Explorez les villages de Chios, de Pyrgi et Mesta à Vessa, Olympoi, Volissos, Armolia, Lagada, Anavatos et Avgonyma.",
     ogImage: villageImages.volissos,
   },
   hero: {
@@ -674,6 +738,36 @@ export const chiosVillagesPageFr: ChiosVillagesPageData = {
       badges: ["Port", "Tavernes de poisson", "Mer"],
       size: "wide",
     },
+    {
+      id: "anavatos",
+      name: "Anavatos",
+      title: "Anavatos : le Mystras de l’Égée",
+      description:
+        "Un village médiéval abandonné sur un rocher de 450 m entre deux gorges, avec ses maisons de pierre, ses ruelles voûtées et une histoire saisissante.",
+      image: villageImages.anavatos,
+      imageAlt:
+        "Le village médiéval abandonné d’Anavatos sur son rocher, au centre de Chios",
+      href: "/fr/villages-de-chios/village-anavatos/",
+      region: "Centre de Chios",
+      mood: "Histoire & vues",
+      badges: ["Village abandonné", "Médiéval", "Histoire"],
+      size: "normal",
+    },
+    {
+      id: "avgonyma",
+      name: "Avgonyma",
+      title: "Avgonyma : ruelles de pierre et couchers de soleil",
+      description:
+        "Un village médiéval perché aux maisons de pierre, avec sa place pavée, ses tavernes et ses couchers de soleil vers Psara.",
+      image: villageImages.avgonyma,
+      imageAlt:
+        "Maisons en pierre du village médiéval d’Avgonyma, au centre de Chios",
+      href: "/fr/villages-de-chios/village-avgonyma/",
+      region: "Centre de Chios",
+      mood: "Coucher de soleil & cuisine",
+      badges: ["Médiéval", "Coucher de soleil", "Cuisine locale"],
+      size: "normal",
+    },
   ],
   planning: {
     kicker: "Conseils locaux",
@@ -722,7 +816,7 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
     canonicalPath: "/de/doerfer-chios/",
     title: "Dörfer auf Chios | Voulamandis House",
     description:
-      "Entdecken Sie die Dörfer auf Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia und Lagada.",
+      "Entdecken Sie die Dörfer auf Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia, Lagada, Anavatos und Avgonyma.",
     ogImage: villageImages.volissos,
   },
   hero: {
@@ -857,6 +951,36 @@ export const chiosVillagesPageDe: ChiosVillagesPageData = {
       badges: ["Hafen", "Fischtavernen", "Küste"],
       size: "wide",
     },
+    {
+      id: "anavatos",
+      name: "Anavatos",
+      title: "Anavatos: das Mystras der Ägäis",
+      description:
+        "Ein verlassenes mittelalterliches Dorf auf einem 450 m hohen Felsen zwischen zwei Schluchten, mit Steinhäusern, überwölbten Gassen und bewegter Geschichte.",
+      image: villageImages.anavatos,
+      imageAlt:
+        "Das verlassene mittelalterliche Dorf Anavatos auf seinem Felsen im Zentrum von Chios",
+      href: "/de/doerfer-chios/anavatos-dorf/",
+      region: "Zentral-Chios",
+      mood: "Geschichte & Aussicht",
+      badges: ["Verlassenes Dorf", "Mittelalterlich", "Geschichte"],
+      size: "normal",
+    },
+    {
+      id: "avgonyma",
+      name: "Avgonyma",
+      title: "Avgonyma: Steingassen und Sonnenuntergänge",
+      description:
+        "Ein mittelalterliches Bergdorf aus Stein mit gepflastertem Platz, Tavernen und Sonnenuntergängen mit Blick nach Psara.",
+      image: villageImages.avgonyma,
+      imageAlt:
+        "Steinhäuser im mittelalterlichen Dorf Avgonyma im Zentrum von Chios",
+      href: "/de/doerfer-chios/avgonyma-dorf/",
+      region: "Zentral-Chios",
+      mood: "Sonnenuntergang & Küche",
+      badges: ["Mittelalterlich", "Sonnenuntergang", "Lokale Küche"],
+      size: "normal",
+    },
   ],
   planning: {
     kicker: "Lokale Planungstipps",
@@ -905,7 +1029,7 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
     canonicalPath: "/it/villaggi-chios/",
     title: "Villaggi di Chios | Voulamandis House",
     description:
-      "Scopri i villaggi di Chios, da Pyrgi e Mesta a Vessa, Olympoi, Volissos, Armolia e Lagada.",
+      "Scopri i villaggi di Chios, da Pyrgi e Mesta a Vessa, Olympoi, Volissos, Armolia, Lagada, Anavatos e Avgonyma.",
     ogImage: villageImages.volissos,
   },
   hero: {
@@ -1040,6 +1164,36 @@ export const chiosVillagesPageIt: ChiosVillagesPageData = {
       badges: ["Porto", "Taverne di pesce", "Mare"],
       size: "wide",
     },
+    {
+      id: "anavatos",
+      name: "Anavatos",
+      title: "Anavatos: il Mistrà dell’Egeo",
+      description:
+        "Un villaggio medievale abbandonato su una rupe di 450 m tra due gole, con case in pietra, vicoli a volta e una storia intensa.",
+      image: villageImages.anavatos,
+      imageAlt:
+        "Il villaggio medievale abbandonato di Anavatos sulla sua rupe, nel centro di Chios",
+      href: "/it/villaggi-chios/villaggio-anavatos/",
+      region: "Chios centrale",
+      mood: "Storia e viste",
+      badges: ["Villaggio abbandonato", "Medievale", "Storia"],
+      size: "normal",
+    },
+    {
+      id: "avgonyma",
+      name: "Avgonyma",
+      title: "Avgonyma: vicoli di pietra e tramonti",
+      description:
+        "Un borgo medievale in collina con case in pietra, piazza lastricata, taverne e tramonti verso Psara.",
+      image: villageImages.avgonyma,
+      imageAlt:
+        "Case in pietra del borgo medievale di Avgonyma, nel centro di Chios",
+      href: "/it/villaggi-chios/villaggio-avgonyma/",
+      region: "Chios centrale",
+      mood: "Tramonto e cucina",
+      badges: ["Medievale", "Tramonto", "Cucina locale"],
+      size: "normal",
+    },
   ],
   planning: {
     kicker: "Consigli locali",
@@ -1088,7 +1242,7 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
     canonicalPath: "/es/pueblos-chios/",
     title: "Pueblos de Chios | Voulamandis House",
     description:
-      "Explora los pueblos de Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia y Lagada.",
+      "Explora los pueblos de Chios: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia, Lagada, Anavatos y Avgonyma.",
     ogImage: villageImages.volissos,
   },
   hero: {
@@ -1223,6 +1377,36 @@ export const chiosVillagesPageEs: ChiosVillagesPageData = {
       badges: ["Puerto", "Tabernas de pescado", "Mar"],
       size: "wide",
     },
+    {
+      id: "anavatos",
+      name: "Anavatos",
+      title: "Anavatos: el Mistrá del Egeo",
+      description:
+        "Un pueblo medieval abandonado sobre una roca de 450 m entre dos gargantas, con casas de piedra, callejones abovedados y una historia impactante.",
+      image: villageImages.anavatos,
+      imageAlt:
+        "El pueblo medieval abandonado de Anavatos sobre su roca, en el centro de Quíos",
+      href: "/es/pueblos-chios/pueblo-anavatos/",
+      region: "Centro de Quíos",
+      mood: "Historia y vistas",
+      badges: ["Pueblo abandonado", "Medieval", "Historia"],
+      size: "normal",
+    },
+    {
+      id: "avgonyma",
+      name: "Avgonyma",
+      title: "Avgonyma: callejones de piedra y atardeceres",
+      description:
+        "Un pueblo medieval en una colina, con casas de piedra, plaza empedrada, tabernas y atardeceres hacia Psara.",
+      image: villageImages.avgonyma,
+      imageAlt:
+        "Casas de piedra del pueblo medieval de Avgonyma, en el centro de Quíos",
+      href: "/es/pueblos-chios/pueblo-avgonyma/",
+      region: "Centro de Quíos",
+      mood: "Atardecer y comida",
+      badges: ["Medieval", "Atardecer", "Comida local"],
+      size: "normal",
+    },
   ],
   planning: {
     kicker: "Consejos locales",
@@ -1271,7 +1455,7 @@ export const chiosVillagesPageTr: ChiosVillagesPageData = {
     canonicalPath: "/tr/sakiz-adasi-koyleri/",
     title: "Sakız Adası Köyleri | Voulamandis House",
     description:
-      "Sakız Adası köylerini keşfedin: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia ve Lagada.",
+      "Sakız Adası köylerini keşfedin: Pyrgi, Mesta, Vessa, Olympoi, Volissos, Armolia, Lagada, Anavatos ve Avgonyma.",
     ogImage: villageImages.volissos,
   },
   hero: {
@@ -1405,6 +1589,36 @@ export const chiosVillagesPageTr: ChiosVillagesPageData = {
       mood: "Deniz kenarı yemek",
       badges: ["Liman", "Balık tavernaları", "Sahil"],
       size: "wide",
+    },
+    {
+      id: "anavatos",
+      name: "Anavatos",
+      title: "Anavatos: Ege’nin Mistrası",
+      description:
+        "İki vadi arasında 450 m’lik bir kayanın üzerinde, taş evleri, kemerli sokakları ve çarpıcı tarihiyle terk edilmiş bir Orta Çağ köyü.",
+      image: villageImages.anavatos,
+      imageAlt:
+        "Orta Sakız’da kayasının üzerindeki terk edilmiş Orta Çağ köyü Anavatos",
+      href: "/tr/sakiz-adasi-koyleri/anavatos-koyu/",
+      region: "Orta Sakız",
+      mood: "Tarih ve manzara",
+      badges: ["Terk edilmiş köy", "Orta Çağ", "Tarih"],
+      size: "normal",
+    },
+    {
+      id: "avgonyma",
+      name: "Avgonyma",
+      title: "Avgonyma: taş sokaklar ve gün batımı",
+      description:
+        "Taş evleri, taş döşeli meydanı, tavernaları ve Psara’ya bakan gün batımıyla tepede bir Orta Çağ köyü.",
+      image: villageImages.avgonyma,
+      imageAlt:
+        "Orta Sakız’daki Orta Çağ köyü Avgonyma’nın taş evleri",
+      href: "/tr/sakiz-adasi-koyleri/avgonyma-koyu/",
+      region: "Orta Sakız",
+      mood: "Gün batımı ve yemek",
+      badges: ["Orta Çağ", "Gün batımı", "Yerel yemek"],
+      size: "normal",
     },
   ],
   planning: {

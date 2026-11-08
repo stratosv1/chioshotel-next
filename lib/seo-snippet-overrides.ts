@@ -12,17 +12,17 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
   [
     "/chios/chios-villages/",
     {
-      title: "Chios Villages: The 7 Most Beautiful (Local's Guide)",
+      title: "Chios Villages: The 9 Most Beautiful (Local's Guide)",
       description:
-        "From painted Pyrgi to medieval Mesta and seaside Lagada: the 7 Chios villages worth a day, with route ideas and tips from locals in Kambos.",
+        "From painted Pyrgi and medieval Mesta to abandoned Anavatos and seaside Lagada: the 9 Chios villages worth a day, with tips from locals in Kambos.",
     },
   ],
   [
     "/es/pueblos-chios/",
     {
-      title: "Pueblos de Quíos: los 7 más bonitos (guía local)",
+      title: "Pueblos de Quíos: los 9 más bonitos (guía local)",
       description:
-        "De la pintada Pyrgi a la medieval Mesta y el puerto de Lagada: los 7 pueblos imprescindibles de Quíos, con rutas y consejos de quienes viven en Kambos.",
+        "De la pintada Pyrgi y la medieval Mesta a Anavatos y el puerto de Lagada: los 9 pueblos imprescindibles de Quíos, con consejos de quienes viven en Kambos.",
     },
   ],
   [
