@@ -323,7 +323,7 @@ export async function BeachSeaConditionsHub({ language }: { language: SeaLanguag
   const calmest = rankedIds.slice(0, 3);
 
   return (
-    <section className="px-4 py-10 md:px-6 md:py-14" id="sea-today" aria-labelledby="sea-today-title">
+    <section data-freshness="ignore" className="px-4 py-10 md:px-6 md:py-14" id="sea-today" aria-labelledby="sea-today-title">
       <div className="mx-auto max-w-[1180px] rounded-[34px] border border-teal-900/10 bg-white p-5 shadow-xl shadow-black/5 md:p-10">
         <span className="text-xs font-black uppercase tracking-[0.16em] text-teal-800">{copy.hubKicker}</span>
         <h2
@@ -451,7 +451,7 @@ export async function BeachSeaConditionsDetail({
     directions.length ? directions.map((direction) => copy.directionLong[direction]).join(", ") : copy.none;
 
   return (
-    <section className="px-3 py-8 md:px-5 md:py-10" id="sea-today" aria-labelledby="sea-today-title">
+    <section data-freshness="ignore" className="px-3 py-8 md:px-5 md:py-10" id="sea-today" aria-labelledby="sea-today-title">
       <div className="mx-auto max-w-[1180px] rounded-[28px] bg-white p-5 shadow-xl shadow-black/5 ring-1 ring-cyan-900/10 md:rounded-[32px] md:p-8">
         <span className="text-[10px] font-black uppercase tracking-[0.16em] text-cyan-800 md:text-xs">{copy.beachKicker}</span>
         <h2 id="sea-today-title" className="mt-3 tracking-[-0.02em] text-[1.9rem] font-extrabold leading-tight text-slate-950 md:text-5xl">
@@ -532,7 +532,7 @@ export async function BeachSeaTodayBadge({
   if (!day || !condition) return null;
   const copy = seaCopyFor(language);
   return (
-    <span
+    <span data-freshness="ignore"
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-black ring-1 ${stateStyles[condition.state].chip}`}
     >
       <span className={`h-2 w-2 rounded-full ${stateStyles[condition.state].dot}`} aria-hidden="true" />
@@ -556,7 +556,7 @@ export async function BeachSeaHeroStrip({ language }: { language: SeaLanguage })
   const copy = seaCopyFor(language);
   const calmest = first.ranked.slice(0, 3).map((row) => beachName(row.beachId, language));
   return (
-    <a
+    <a data-freshness="ignore"
       className="mt-6 flex flex-col gap-2 rounded-2xl bg-white/95 px-4 py-3 text-[#102b2d] shadow-xl ring-1 ring-white/40 transition hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
       href="#sea-today"
     >
@@ -592,7 +592,7 @@ export async function BeachSeaShortlist({
   const best = ids.filter((id) => first.byId[id].score >= bestScore - 3).slice(0, 2);
 
   return (
-    <section className="px-4 py-12 md:px-6 md:py-16" id="sea-today" aria-labelledby="sea-today-title">
+    <section data-freshness="ignore" className="px-4 py-12 md:px-6 md:py-16" id="sea-today" aria-labelledby="sea-today-title">
       <div className="mx-auto max-w-[1100px] rounded-[32px] border border-cyan-100 bg-white p-5 shadow-[0_20px_44px_rgba(15,23,42,0.08)] md:p-10">
         <span className="text-xs font-black uppercase tracking-[0.16em] text-cyan-800">{copy.shortlistKicker}</span>
         <h2 id="sea-today-title" className="mt-3 text-3xl font-[950] leading-tight tracking-[-0.04em] text-slate-950 md:text-5xl">

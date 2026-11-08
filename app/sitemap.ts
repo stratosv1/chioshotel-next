@@ -20,6 +20,7 @@ import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
 import { routeMap } from "@/lib/url-map";
 import { absoluteUrl } from "@/lib/seo";
 import { getImageSitemapEntries } from "@/lib/image-sitemap";
+import { getContentLastModified } from "@/lib/content-freshness";
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
@@ -209,7 +210,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return withImages(deduplicateByCanonicalUrl([
+  return withContentDates(withImages(deduplicateByCanonicalUrl([
     ...accommodationLandingRoutes,
     ...romanticStayRoutes,
     ...kamposRoutes,
@@ -229,7 +230,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...karfasElintaBeachRoutes,
     ...villageDetailRoutes,
     ...museumDetailRoutes,
-  ]));
+  ])));
+}
+
+// <lastmod> comes from data/content-freshness.json (the day the page's visible
+// text last changed). Pages not yet recorded keep any hand-verified date.
+function withContentDates(entries: MetadataRoute.Sitemap): MetadataRoute.Sitemap {
+  return entries.map((entry) => {
+    const modified = getContentLastModified(entry.url);
+    return modified ? { ...entry, lastModified: modified } : entry;
+  });
 }
 
 // Page images live inside each page's own <url> entry (image:image), so every
