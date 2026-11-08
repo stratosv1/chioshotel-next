@@ -359,26 +359,28 @@ function Chip({ label, onClick, active = false, disabled = false }: { label: str
   );
 }
 
-function DatePick({ min, onPick }: { min: string; onPick: (date: string) => void }) {
-  const [value, setValue] = useState("");
+function DatePick({ min, onPick, label = "📅 Ημερολόγιο" }: { min: string; onPick: (date: string) => void; label?: string }) {
+  // Picking a date in the phone's calendar is the answer: no extra OK tap.
   return (
-    <div className="flex items-center gap-2">
+    <label className="relative inline-flex min-h-11 shrink-0 cursor-pointer items-center rounded-full border border-[#66714f] bg-[#66714f] px-4 text-sm font-bold text-white">
+      {label}
       <input
         type="date"
         aria-label="Ημερομηνία"
         min={min}
-        value={value}
-        onChange={(event) => setValue(event.target.value)}
-        className="min-h-11 rounded-full border border-[#ddd3c6] bg-white px-3 text-[16px] font-bold"
+        onChange={(event) => {
+          const value = event.target.value;
+          if (value && value >= min) onPick(value);
+        }}
+        className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
       />
-      <Chip label="OK" active disabled={!value || value < min} onClick={() => onPick(value)} />
-    </div>
+    </label>
   );
 }
 
 type DetailsValues = Pick<Draft, "firstName" | "lastName" | "email" | "phone" | "language" | "totalPrice" | "comments">;
 
-function DetailsForm({ draft, suggestedPrice, onSubmit }: { draft: Draft; suggestedPrice: number; onSubmit: (values: DetailsValues) => void }) {
+function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit }: { draft: Draft; suggestedPrice: number; summary: string; canBook: boolean; saving: boolean; onSubmit: (values: DetailsValues) => void }) {
   const [firstName, setFirstName] = useState(draft.firstName);
   const [lastName, setLastName] = useState(draft.lastName);
   const [email, setEmail] = useState(draft.email);
@@ -438,9 +440,11 @@ function DetailsForm({ draft, suggestedPrice, onSubmit }: { draft: Draft; sugges
         {parsePrice(price) !== suggestedPrice && <Chip label={`Προτεινόμενη ${money(suggestedPrice)}`} onClick={() => setPrice(String(suggestedPrice))} />}
       </div>
       <textarea aria-label="Σχόλια" placeholder="Σχόλια (π.χ. ώρα άφιξης)" rows={2} value={comments} onChange={(event) => setComments(event.target.value)} className={`${input} mt-3 resize-none py-2.5`} />
-      <button type="submit" disabled={!ready} className="mt-3 min-h-12 w-full rounded-2xl bg-[#66714f] px-5 font-black text-white disabled:bg-[#b8b2a9]">
-        Συνέχεια
+      <p className="mt-3 rounded-2xl bg-[#f8f5f0] px-3 py-2.5 text-sm font-bold text-[#4a443c]">{summary} · {parsedPrice !== null ? money(parsedPrice) : "—"}</p>
+      <button type="submit" disabled={!ready || !canBook || saving} className="mt-3 min-h-12 w-full rounded-2xl bg-[#66714f] px-5 font-black text-white disabled:bg-[#b8b2a9]">
+        {saving ? "Καταχώρηση…" : "Καταχώρηση στο Beds24"}
       </button>
+      {!canBook && <p className="mt-2 text-center text-xs font-semibold text-amber-700">Η σύνδεση με το Beds24 δεν είναι έτοιμη — η καταχώρηση είναι προσωρινά κλειστή.</p>}
     </form>
   );
 }
@@ -460,6 +464,7 @@ export default function BookerApp() {
   const [saving, setSaving] = useState(false);
   const [emailSkipped, setEmailSkipped] = useState(false);
   const [phoneSkipped, setPhoneSkipped] = useState(false);
+  const [withChildren, setWithChildren] = useState(false);
   const [capability, setCapability] = useState<Capability | null>(null);
   const [result, setResult] = useState<BookingResult | null>(null);
   const shellRef = useRef<HTMLElement>(null);
@@ -501,7 +506,7 @@ export default function BookerApp() {
       return;
     }
     setMode("collecting");
-    push(assistant(questionFor(field)));
+    push(assistant(field === "adults" && !withChildren ? "Πόσα άτομα;" : questionFor(field)));
   }
 
   // Chip / quick-input answers: update the draft locally, no OpenAI call.
@@ -522,7 +527,7 @@ export default function BookerApp() {
     push(user(`${values.firstName} ${values.lastName} · ${languageLabel(values.language)} · ${money(values.totalPrice ?? 0)}`));
     setAwaiting(null);
     setMode("review");
-    push(assistant("Έλεγξε τη σύνοψη και πάτησε «Καταχώρηση στο Beds24»."));
+    void createBooking(values);
   }
 
   useEffect(() => {
@@ -586,6 +591,7 @@ export default function BookerApp() {
     setComposer("");
     setEmailSkipped(false);
     setPhoneSkipped(false);
+    setWithChildren(false);
     setResult(null);
   }
 
@@ -707,7 +713,12 @@ export default function BookerApp() {
       const count = Number(text);
       if (awaiting === "adults" ? count >= 1 : count >= 0) {
         setComposer("");
-        await applyLocal(awaiting === "adults" ? { adults: count } : { children: count }, text);
+        await applyLocal(
+          awaiting === "adults"
+            ? (withChildren ? { adults: count } : { adults: count, children: 0 })
+            : { children: count },
+          text,
+        );
         return;
       }
     }
@@ -825,10 +836,12 @@ export default function BookerApp() {
     setMode("details");
   }
 
-  async function createBooking() {
-    if (!bookingReady || !selectedOffer || saving) return;
+  async function createBooking(values?: DetailsValues) {
+    const booking = values ? { ...draft, ...values } : draft;
+    const ready = values ? Boolean(capability?.apiReady && capability?.propertyReady && values.firstName && values.lastName && values.language && values.totalPrice !== null) : bookingReady;
+    if (!ready || !selectedOffer || saving) return;
     setSaving(true);
-    push(assistant("Κάνω έναν τελευταίο server-side έλεγχο διαθεσιμότητας και καταχωρώ την κράτηση στο Beds24…"));
+    push(assistant("Ελέγχω ξανά τη διαθεσιμότητα και καταχωρώ την κράτηση στο Beds24…"));
 
     let response: Response;
     try {
@@ -839,18 +852,18 @@ export default function BookerApp() {
         body: JSON.stringify({
           roomId: Number(selectedOffer.roomId),
           unitId: Number(selectedOffer.unitId),
-          arrival: draft.checkin,
-          departure: draft.checkout,
-          firstName: draft.firstName,
-          lastName: draft.lastName,
-          email: draft.email,
-          phone: draft.phone,
-          language: draft.language,
-          adults: draft.adults,
-          children: draft.children,
-          price: draft.totalPrice,
-          comments: draft.comments,
-          notes: draft.notes,
+          arrival: booking.checkin,
+          departure: booking.checkout,
+          firstName: booking.firstName,
+          lastName: booking.lastName,
+          email: booking.email,
+          phone: booking.phone,
+          language: booking.language,
+          adults: booking.adults,
+          children: booking.children,
+          price: booking.totalPrice,
+          comments: booking.comments,
+          notes: booking.notes,
         }),
       });
     } catch {
@@ -970,13 +983,18 @@ export default function BookerApp() {
             {mode === "collecting" && !busy && awaiting === "checkout" && draft.checkin && (
               <div className="msg ml-10 flex flex-wrap items-center gap-2">
                 {[1, 2, 3, 4, 5, 6, 7].map((count) => <Chip key={count} label={String(count)} onClick={() => pickNights(count)} />)}
-                <DatePick min={addDays(draft.checkin, 1)} onPick={(date) => void applyLocal({ checkout: date }, `Αναχώρηση ${prettyDate(date)}`)} />
+                <DatePick label="📅 Αναχώρηση" min={addDays(draft.checkin, 1)} onPick={(date) => void applyLocal({ checkout: date }, `Αναχώρηση ${prettyDate(date)}`)} />
               </div>
             )}
 
             {mode === "collecting" && !busy && awaiting === "adults" && (
               <div className="msg ml-10 flex flex-wrap gap-2">
-                {[1, 2, 3, 4, 5].map((count) => <Chip key={count} label={String(count)} onClick={() => void applyLocal({ adults: count }, `${count} ενήλ.`)} />)}
+                {withChildren
+                  ? [1, 2, 3, 4].map((count) => <Chip key={count} label={String(count)} onClick={() => void applyLocal({ adults: count }, `${count} ενήλ.`)} />)
+                  : [1, 2, 3, 4, 5].map((count) => <Chip key={count} label={String(count)} onClick={() => void applyLocal({ adults: count, children: 0 }, `${count} ${count === 1 ? "άτομο" : "άτομα"}`)} />)}
+                {!withChildren && (
+                  <Chip label="Με παιδιά" onClick={() => { setWithChildren(true); push(user("Με παιδιά"), assistant("Πόσοι ενήλικες;")); }} />
+                )}
               </div>
             )}
 
@@ -989,7 +1007,15 @@ export default function BookerApp() {
             )}
 
             {mode === "details" && selectedOffer && !busy && (
-              <DetailsForm key={detailsKey} draft={draft} suggestedPrice={selectedOffer.directTotal} onSubmit={submitDetails} />
+              <DetailsForm
+                key={detailsKey}
+                draft={draft}
+                suggestedPrice={selectedOffer.directTotal}
+                summary={`${prettyDate(draft.checkin)} → ${prettyDate(draft.checkout)} · ${nights} ${nights === 1 ? "νύχτα" : "νύχτες"} · ${totalGuests} ${totalGuests === 1 ? "άτομο" : "άτομα"} · ${selectedOffer.name}`}
+                canBook={Boolean(capability?.apiReady && capability?.propertyReady)}
+                saving={saving}
+                onSubmit={submitDetails}
+              />
             )}
 
             {mode === "review" && selectedOffer && (
