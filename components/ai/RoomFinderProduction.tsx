@@ -852,7 +852,7 @@ export function RoomFinderProduction({
             />
           </div>
           <div className="min-w-0 flex-1 pl-1">
-            <h1 className="truncate text-[15px] font-black leading-tight">Voulamandis House</h1>
+            <h1 className="truncate text-[18px] font-black leading-tight sm:text-[20px]">Voulamandis House</h1>
             <div className="mt-0.5 flex min-w-0 items-center gap-1.5 whitespace-nowrap text-[12px] text-[#746b60]">
               <span className="truncate font-semibold">AI Room Finder</span>
               <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#718b52]" />
