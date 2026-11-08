@@ -11,20 +11,22 @@ type MobileStickyContactProps = {
     label: string;
     href: string;
   };
+  /** Element id the bar waits to scroll past before appearing. */
+  heroId?: string;
 };
 
 type LiveRequestDetail = {
   href?: string;
 };
 
-export function MobileStickyContact({ call, chat }: MobileStickyContactProps) {
+export function MobileStickyContact({ call, chat, heroId = "home-hero" }: MobileStickyContactProps) {
   const [chatHref, setChatHref] = useState(chat.href);
   const [isPastHero, setIsPastHero] = useState(false);
   const [isLiveRequestVisible, setIsLiveRequestVisible] = useState(false);
   const isVisible = isPastHero && !isLiveRequestVisible;
 
   useEffect(() => {
-    const hero = document.getElementById("home-hero");
+    const hero = document.getElementById(heroId);
     const liveRequest = document.getElementById("vh-lastminute-title");
     if (!hero) {
       setIsPastHero(true);
@@ -50,7 +52,7 @@ export function MobileStickyContact({ call, chat }: MobileStickyContactProps) {
       heroObserver?.disconnect();
       liveRequestObserver?.disconnect();
     };
-  }, []);
+  }, [heroId]);
 
   useEffect(() => {
     function handleUpdate(event: Event) {

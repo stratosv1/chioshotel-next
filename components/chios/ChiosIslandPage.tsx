@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { roomFinderHrefForLanguage } from "@/lib/room-finder-cta-routing";
+import { MobileStickyContact } from "@/components/home/MobileStickyContact";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
 import type { ChiosIslandPageData } from "@/content/chios-island";
 
@@ -13,6 +13,7 @@ type ChiosIslandUiText = {
   highlightsAriaLabel: string;
   quizKicker: string;
   quickActionsAriaLabel: string;
+  call: string;
   whatsapp: string;
   bookNow: string;
 };
@@ -24,6 +25,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     highlightsAriaLabel: "Chios island highlights",
     quizKicker: "Chios quiz",
     quickActionsAriaLabel: "Quick actions",
+    call: "📞 CALL",
     whatsapp: "WhatsApp",
     bookNow: "Check availability",
   },
@@ -33,6 +35,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     highlightsAriaLabel: "Σημαντικά στοιχεία για τη Χίο",
     quizKicker: "Κουίζ για τη Χίο",
     quickActionsAriaLabel: "Γρήγορες ενέργειες",
+    call: "📞 ΚΛΗΣΗ",
     whatsapp: "WhatsApp",
     bookNow: "Έλεγχος διαθεσιμότητας",
   },
@@ -42,6 +45,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     highlightsAriaLabel: "Points forts de l’île de Chios",
     quizKicker: "Quiz sur Chios",
     quickActionsAriaLabel: "Actions rapides",
+    call: "📞 APPELER",
     whatsapp: "WhatsApp",
     bookNow: "Disponibilités",
   },
@@ -51,6 +55,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     highlightsAriaLabel: "Highlights der Insel Chios",
     quizKicker: "Chios-Quiz",
     quickActionsAriaLabel: "Schnellaktionen",
+    call: "📞 ANRUFEN",
     whatsapp: "WhatsApp",
     bookNow: "Verfügbarkeit",
   },
@@ -60,6 +65,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     highlightsAriaLabel: "Punti salienti dell’isola di Chios",
     quizKicker: "Quiz su Chios",
     quickActionsAriaLabel: "Azioni rapide",
+    call: "📞 CHIAMA",
     whatsapp: "WhatsApp",
     bookNow: "Disponibilità",
   },
@@ -69,6 +75,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     highlightsAriaLabel: "Aspectos destacados de la isla de Quíos",
     quizKicker: "Quiz sobre Quíos",
     quickActionsAriaLabel: "Acciones rápidas",
+    call: "📞 LLAMAR",
     whatsapp: "WhatsApp",
     bookNow: "Disponibilidad",
   },
@@ -78,6 +85,7 @@ const chiosIslandUiByLocale: Record<string, ChiosIslandUiText> = {
     highlightsAriaLabel: "Sakız Adası öne çıkanlar",
     quizKicker: "Sakız Adası testi",
     quickActionsAriaLabel: "Hızlı işlemler",
+    call: "📞 ARA",
     whatsapp: "WhatsApp",
     bookNow: "Müsaitlik",
   },
@@ -93,7 +101,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
 
   return (
     <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.18),transparent_34rem),linear-gradient(180deg,#fbf6ef_0%,#f4eadf_52%,#fbf6ef_100%)] pb-20 text-stone-800 md:pb-0">
-      <section className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="ci-hero-title">
+      <section id="ci-hero" className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="ci-hero-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
           <Image
             src={data.hero.image}
@@ -288,15 +296,12 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         </div>
       </section>
 
-      <div className="fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-40 grid grid-cols-2 gap-2 rounded-2xl border border-white/20 bg-stone-950/88 p-2 shadow-2xl shadow-stone-950/25 backdrop-blur md:hidden" aria-label={ui.quickActionsAriaLabel}>
-        <a className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#25d366] px-3 text-xs font-black uppercase tracking-[0.08em] text-white" href={data.sticky.whatsappHref}>
-          💬 {ui.whatsapp}
-        </a>
-
-        <a className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#a87842] px-3 text-xs font-black uppercase tracking-[0.08em] text-white" href={roomFinderHrefForLanguage(getChiosIslandLocale(data.seo.canonicalPath))}>
-          {ui.bookNow}
-        </a>
-      </div>
+      {/* Same mobile contact bar as the homepage, for a consistent site-wide look. */}
+      <MobileStickyContact
+        heroId="ci-hero"
+        call={{ label: ui.call, href: "tel:+306944764654" }}
+        chat={{ label: "💬 WhatsApp", href: data.sticky.whatsappHref }}
+      />
     </main>
   );
 }
