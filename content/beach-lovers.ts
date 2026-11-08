@@ -97,7 +97,7 @@ export const beachLoversPages: Record<LanguageCode, BeachLoversPageData> = {
       {
         name: "Mavra Volia",
         image: images.mavraVolia,
-        href: "/chios/chios-beaches/emporios-beach/",
+        href: "/chios/chios-beaches/mavra-volia-beach/",
         tag: "Volcanic beach",
         description:
           "Dark pebbles, deep waters and one of the most unforgettable landscapes in Chios.",

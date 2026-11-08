@@ -108,8 +108,8 @@ const legacyRedirects: Record<string, string> = {
   "/language/el/Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚-Ο‡Ξ―ΞΏΟ…/Ο€Ξ±ΟΞ±Ξ»Ξ―Ξ±-Ξ±Ξ³Ξ―Ξ±-Ξ΄ΟΞ½Ξ±ΞΌΞ·":
     "/el/paralies-xios/paralia-agia-dynami/",
 
-  "/chios/chios-beaches/avlonia-beach":
-    "/chios/chios-beaches/avlonia-beach2/",
+  "/chios/chios-beaches/avlonia-beach2":
+    "/chios/chios-beaches/avlonia-beach/",
   "/de/chios-insel/Ο€Ξ±ΟΞ±Ξ»Ξ―ΞµΟ‚-Ο‡Ξ―ΞΏΟ‚/avlonia-strand":
     "/de/straende-chios/avlonia-strand/",
 
@@ -129,9 +129,11 @@ const legacyRedirects: Record<string, string> = {
     "/el/paralies-xios/paralia-lefkathia/",
 
   "/chios/chios-beaches/mavra-volia":
-    "/chios/chios-beaches/emporios-beach/",
+    "/chios/chios-beaches/mavra-volia-beach/",
+  "/chios/chios-beaches/emporios-beach":
+    "/chios/chios-beaches/mavra-volia-beach/",
   "/chios/chios-beaches/mavra-volia-voulamandis-house-chios-hotels":
-    "/chios/chios-beaches/emporios-beach/",
+    "/chios/chios-beaches/mavra-volia-beach/",
 
   // Villages hubs
   "/language/el/Ο‡Ο‰ΟΞΉΞ±-Ο‡ΞΉΞΏΟ‚": "/el/xoria-xios/",
@@ -337,7 +339,7 @@ const legacyRedirects: Record<string, string> = {
     "/el/paralies-xios/paralia-avlonia/",
   "/chios-el/chios-beaches-el/mavra-volia-2":
     "/el/paralies-xios/paralia-mavra-volia/",
-  "/language/en/chios/mavra-volia": "/chios/chios-beaches/emporios-beach/",
+  "/language/en/chios/mavra-volia": "/chios/chios-beaches/mavra-volia-beach/",
   "/chios/chios-beaches/nagos-beach-voulamandis-house-chios-hotels":
     "/chios/chios-beaches/nagos-beach/",
   "/chios/chios-beaches/salagona-voulamandis-house-chios-hotels":
@@ -349,7 +351,7 @@ const legacyRedirects: Record<string, string> = {
   "/chios/chios-beaches/agia-fotini-voulamandis-house-chios-hotels":
     "/chios/chios-beaches/agia-fotia-beach/",
   "/chios/chios-beaches/avlonia-beach-voulamandis-house-chios-hotels":
-    "/chios/chios-beaches/avlonia-beach2/",
+    "/chios/chios-beaches/avlonia-beach/",
 
   // Final safe legacy redirects from last GSC sample - rooms / rates / contact
   "/chios-rooms/family-chios-apartments-voulamandis-house-chios-hotels":

@@ -309,13 +309,18 @@ const legacyRedirects = [
         "permanent":  true
     },
     {
-        "source":  "/chios/chios-beaches/avlonia-beach",
-        "destination":  "/chios/chios-beaches/avlonia-beach2/",
+        "source":  "/chios/chios-beaches/avlonia-beach2",
+        "destination":  "/chios/chios-beaches/avlonia-beach/",
         "permanent":  true
     },
     {
         "source":  "/chios/chios-beaches/mavra-volia",
-        "destination":  "/chios/chios-beaches/emporios-beach/",
+        "destination":  "/chios/chios-beaches/mavra-volia-beach/",
+        "permanent":  true
+    },
+    {
+        "source":  "/chios/chios-beaches/emporios-beach",
+        "destination":  "/chios/chios-beaches/mavra-volia-beach/",
         "permanent":  true
     },
     {

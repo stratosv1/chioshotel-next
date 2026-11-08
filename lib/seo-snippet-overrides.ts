@@ -74,7 +74,7 @@ export const seoSnippetOverrides = new Map<string, SeoSnippetOverride>([
     },
   ],
   [
-    "/chios/chios-beaches/emporios-beach/",
+    "/chios/chios-beaches/mavra-volia-beach/",
     {
       title: "Mavra Volia Beach Chios | Black Pebbles & Access",
       description:

@@ -94,7 +94,7 @@ const en: MestaOverlay = {
           "If you want a swim on the same route, Mavra Volia with its black pebbles is at the southern tip of the island, close to Pyrgi.",
         ],
         links: [
-          { label: "Mavra Volia beach", href: "/chios/chios-beaches/emporios-beach/" },
+          { label: "Mavra Volia beach", href: "/chios/chios-beaches/mavra-volia-beach/" },
           { label: "All Chios beaches", href: "/chios/chios-beaches/" },
         ],
       },

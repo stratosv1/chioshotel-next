@@ -503,7 +503,7 @@ function updateVillageContent(village: VillageDetailData): void {
       },
     ];
     village.highlights = {
-      title: "Was Olympoi besonders macht",
+      title: "Höhepunkte in Olympoi",
       items: [
         "Ruhige mittelalterliche Gassen",
         "Traditionelle Mastixdorf-Architektur",
@@ -561,7 +561,7 @@ function updateVillageContent(village: VillageDetailData): void {
       },
     ];
     village.highlights = {
-      title: "Was Lagada besonders macht",
+      title: "Höhepunkte in Lagada",
       items: [
         "Kleiner Hafen und Fischerboote",
         "Fischtavernen am Meer",

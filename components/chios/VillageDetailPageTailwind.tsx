@@ -7,15 +7,30 @@ type VillageDetailPageProps = {
   village: VillageDetailData;
 };
 
+// Greek village names need the right article, case and gender in headings
+// ("τη Βολισσό", "τους Ολύμπους"); unknown names fall back to the bare name.
+const greekVillageForms: Record<string, { accusative: string; special: string }> = {
+  "Πυργί": { accusative: "το Πυργί", special: "ξεχωριστό" },
+  "Μεστά": { accusative: "τα Μεστά", special: "ξεχωριστά" },
+  "Βέσσα": { accusative: "τη Βέσσα", special: "ξεχωριστή" },
+  "Ολύμποι": { accusative: "τους Ολύμπους", special: "ξεχωριστούς" },
+  "Βολισσός": { accusative: "τη Βολισσό", special: "ξεχωριστή" },
+  "Αρμόλια": { accusative: "τα Αρμόλια", special: "ξεχωριστά" },
+  "Λαγκάδα": { accusative: "τη Λαγκάδα", special: "ξεχωριστή" },
+};
+
+function getGreekVillageForms(name: string) {
+  return greekVillageForms[name] ?? { accusative: name, special: "ξεχωριστό" };
+}
+
 const villageUiCopy = {
   en: {
     tagsLabel: "Village tags",
     answerKicker: "Quick answer",
-    answerTitlePrefix: "Why visit",
+    answerTitle: (name: string) => `Why visit ${name}?`,
     detailsLabel: "Village details",
     storyKicker: "Village guide",
-    specialTitlePrefix: "What makes",
-    specialTitleSuffix: "special?",
+    specialTitle: (name: string) => `What makes ${name} special?`,
     routesKicker: "Route ideas",
     localTipLabel: "Voulamandis House local tip",
     relatedKicker: "Chios village guide",
@@ -28,11 +43,13 @@ const villageUiCopy = {
   el: {
     tagsLabel: "Χαρακτηριστικά χωριού",
     answerKicker: "Γρήγορη απάντηση",
-    answerTitlePrefix: "Γιατί να δείτε",
+    answerTitle: (name: string) => `Γιατί να δείτε ${getGreekVillageForms(name).accusative};`,
     detailsLabel: "Πληροφορίες χωριού",
     storyKicker: "Οδηγός χωριού",
-    specialTitlePrefix: "Τι κάνει",
-    specialTitleSuffix: "ξεχωριστό;",
+    specialTitle: (name: string) => {
+      const forms = getGreekVillageForms(name);
+      return `Τι κάνει ${forms.accusative} ${forms.special};`;
+    },
     routesKicker: "Ιδέες διαδρομής",
     localTipLabel: "Τοπική συμβουλή από το Voulamandis House",
     relatedKicker: "Οδηγός χωριών Χίου",
@@ -45,11 +62,10 @@ const villageUiCopy = {
   fr: {
     tagsLabel: "Caractéristiques du village",
     answerKicker: "Réponse rapide",
-    answerTitlePrefix: "Pourquoi visiter",
+    answerTitle: (name: string) => `Pourquoi visiter ${name}\u00a0?`,
     detailsLabel: "Détails du village",
     storyKicker: "Guide du village",
-    specialTitlePrefix: "Qu’est-ce qui rend",
-    specialTitleSuffix: "si spécial ?",
+    specialTitle: (name: string) => `Qu’est-ce qui rend ${name} si spécial\u00a0?`,
     routesKicker: "Idées d’itinéraire",
     localTipLabel: "Conseil local de Voulamandis House",
     relatedKicker: "Guide des villages de Chios",
@@ -62,11 +78,10 @@ const villageUiCopy = {
   de: {
     tagsLabel: "Dorfmerkmale",
     answerKicker: "Kurze Antwort",
-    answerTitlePrefix: "Warum besuchen",
+    answerTitle: (name: string) => `Warum ${name} besuchen?`,
     detailsLabel: "Dorfdetails",
     storyKicker: "Dorfführer",
-    specialTitlePrefix: "Was macht",
-    specialTitleSuffix: "besonders?",
+    specialTitle: (name: string) => `Was macht ${name} besonders?`,
     routesKicker: "Routenideen",
     localTipLabel: "Lokaler Tipp von Voulamandis House",
     relatedKicker: "Dorfführer für Chios",
@@ -79,11 +94,10 @@ const villageUiCopy = {
   it: {
     tagsLabel: "Caratteristiche del villaggio",
     answerKicker: "Risposta rapida",
-    answerTitlePrefix: "Perché visitare",
+    answerTitle: (name: string) => `Perché visitare ${name}?`,
     detailsLabel: "Dettagli del villaggio",
     storyKicker: "Guida del villaggio",
-    specialTitlePrefix: "Cosa rende",
-    specialTitleSuffix: "speciale?",
+    specialTitle: (name: string) => `Cosa rende ${name} speciale?`,
     routesKicker: "Idee di itinerario",
     localTipLabel: "Consiglio locale di Voulamandis House",
     relatedKicker: "Guida ai villaggi di Chios",
@@ -96,11 +110,10 @@ const villageUiCopy = {
   es: {
     tagsLabel: "Características del pueblo",
     answerKicker: "Respuesta rápida",
-    answerTitlePrefix: "Por qué visitar",
+    answerTitle: (name: string) => `¿Por qué visitar ${name}?`,
     detailsLabel: "Detalles del pueblo",
     storyKicker: "Guía del pueblo",
-    specialTitlePrefix: "Qué hace especial a",
-    specialTitleSuffix: "?",
+    specialTitle: (name: string) => `¿Qué hace especial a ${name}?`,
     routesKicker: "Ideas de ruta",
     localTipLabel: "Consejo local de Voulamandis House",
     relatedKicker: "Guía de pueblos de Chios",
@@ -113,11 +126,10 @@ const villageUiCopy = {
   tr: {
     tagsLabel: "Köy özellikleri",
     answerKicker: "Kısa cevap",
-    answerTitlePrefix: "Neden ziyaret etmeli",
+    answerTitle: (name: string) => `${name} neden görülmeli?`,
     detailsLabel: "Köy detayları",
     storyKicker: "Köy rehberi",
-    specialTitlePrefix: "Neden",
-    specialTitleSuffix: "özel?",
+    specialTitle: (name: string) => `${name} neden bu kadar özel?`,
     routesKicker: "Rota fikirleri",
     localTipLabel: "Voulamandis House yerel tavsiyesi",
     relatedKicker: "Sakız Adası köy rehberi",
@@ -229,7 +241,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
             {copy.answerKicker}
           </span>
           <h2 className="mt-3 tracking-[-0.02em] text-[2rem] font-extrabold leading-tight text-stone-900 md:text-5xl">
-            {village.answerTitle ?? `${copy.answerTitlePrefix} ${villageName}${language === "el" ? ";" : "?"}`}
+            {village.answerTitle ?? copy.answerTitle(villageName)}
           </h2>
           <p className="mt-4 text-sm font-semibold leading-7 text-[#4d4238] md:text-lg md:leading-8">
             {village.answerText ?? heroDescription}
@@ -343,7 +355,7 @@ export function VillageDetailPageTailwind({ village }: VillageDetailPageProps) {
               id="village-story-title"
               className="mt-4 text-3xl font-black leading-none tracking-[-0.05em] text-[#2f261f] md:text-5xl"
             >
-              {village.specialTitle ?? `${copy.specialTitlePrefix} ${villageName} ${copy.specialTitleSuffix}`}
+              {village.specialTitle ?? copy.specialTitle(villageName)}
             </h2>
             <div className="mt-6 space-y-5">
               {village.experience.paragraphs.map((paragraph) => (

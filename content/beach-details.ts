@@ -321,9 +321,9 @@ export const beachDetails: BeachDetailData[] = [
       "Starting from Voulamandis House, explore the hidden treasures of the island.",
   },
   {
-    slug: "avlonia-beach2",
+    slug: "avlonia-beach",
     seo: {
-      canonicalPath: "/chios/chios-beaches/avlonia-beach2/",
+      canonicalPath: "/chios/chios-beaches/avlonia-beach/",
       title: "Avlonia Beach Chios | Hidden Gem of Southern Chios",
       description:
         "Discover Avlonia Beach in southern Chios, an isolated bay near Pyrgi with turquoise waters, wild beauty, small pebbles and a seabed ideal for snorkeling.",
@@ -595,9 +595,9 @@ export const beachDetails: BeachDetailData[] = [
       "Starting from Voulamandis House, explore the hidden treasures of the island.",
   },
   {
-    slug: "emporios-beach",
+    slug: "mavra-volia-beach",
     seo: {
-      canonicalPath: "/chios/chios-beaches/emporios-beach/",
+      canonicalPath: "/chios/chios-beaches/mavra-volia-beach/",
       title: "Emporios Mavra Volia Beach Chios | Ultimate Volcanic Landscape",
       description:
         "Explore Emporios Mavra Volia Beach in southern Chios, the island’s iconic volcanic beach with black pebbles, three bays, deep cool waters and wild cliffs.",
@@ -5358,10 +5358,10 @@ export const localizedBeachDetails: BeachDetailData[] = [
 
 export const relatedBeachCards = [
   {
-    slug: "emporios-beach",
+    slug: "mavra-volia-beach",
     title: "Mavra Volia",
     description: "The most imposing beach in Chios with unique volcanic beauty.",
-    href: "/chios/chios-beaches/emporios-beach/",
+    href: "/chios/chios-beaches/mavra-volia-beach/",
     image:
       "/images/beaches/mavra-volia-beach-chios-hd.webp",
     imageAlt: "Mavra Volia beach in Chios with black volcanic pebbles",
@@ -5423,10 +5423,10 @@ export const relatedBeachCards = [
     size: "normal",
   },
   {
-    slug: "avlonia-beach2",
+    slug: "avlonia-beach",
     title: "Avlonia",
     description: "A wild isolated bay with an impressive seabed.",
-    href: "/chios/chios-beaches/avlonia-beach2/",
+    href: "/chios/chios-beaches/avlonia-beach/",
     image:
       "/images/beaches/avlonia-1024x768.webp",
     imageAlt: "Avlonia beach in southern Chios",

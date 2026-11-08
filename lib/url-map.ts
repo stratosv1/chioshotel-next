@@ -1378,7 +1378,7 @@ export const routeMap: readonly RouteRecord[] = [
   },
 
   {
-    path: "/chios/chios-beaches/avlonia-beach2/",
+    path: "/chios/chios-beaches/avlonia-beach/",
     language: "en",
     contentType: "chios-detail",
     category: "beaches",
@@ -1804,7 +1804,7 @@ export const routeMap: readonly RouteRecord[] = [
   },
 
   {
-    path: "/chios/chios-beaches/emporios-beach/",
+    path: "/chios/chios-beaches/mavra-volia-beach/",
     language: "en",
     contentType: "chios-detail",
     category: "beaches",

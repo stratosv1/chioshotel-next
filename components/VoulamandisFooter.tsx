@@ -83,7 +83,7 @@ const agiaDynamiBeachPaths: Record<LanguageCode, string> = {
 };
 
 const mavraVoliaBeachPaths: Record<LanguageCode, string> = {
-  en: "/chios/chios-beaches/emporios-beach/",
+  en: "/chios/chios-beaches/mavra-volia-beach/",
   el: "/el/paralies-xios/paralia-mavra-volia/",
   fr: "/fr/plages-de-chios/plage-mavra-volia/",
   de: "/de/straende-chios/mavra-volia-strand/",

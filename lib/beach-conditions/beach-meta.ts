@@ -84,8 +84,8 @@ export function exposureFor(id: string): BeachMarineExposureMeta | null {
 
 const englishSlugAliases: Record<string, string> = {
   "agia-dynami-beach-chios": "agia-dynami",
-  "emporios-beach": "mavra-volia",
-  "avlonia-beach2": "avlonia",
+  "mavra-volia-beach": "mavra-volia",
+  "avlonia-beach": "avlonia",
 };
 
 const idsByLength = [...forecastBeachIds].sort((a, b) => b.length - a.length);
