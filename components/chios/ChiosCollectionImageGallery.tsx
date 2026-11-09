@@ -88,7 +88,9 @@ export function ChiosCollectionImageGallery({
             />
             {item.title ? (
               <span
-                className={`absolute bottom-2 left-2 max-w-[calc(100%-1rem)] truncate rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-md ring-1 backdrop-blur-sm sm:bottom-3 sm:left-3 sm:max-w-[calc(100%-1.5rem)] sm:text-[11px] ${labelClass}`}
+                // Small tiles are too small for a label on phones: show it only
+                // on the large tile there, on every tile from sm up.
+                className={`absolute bottom-2 left-2 max-w-[calc(100%-1rem)] truncate rounded-full px-2.5 py-1 text-[10px] font-bold text-white shadow-md ring-1 backdrop-blur-sm sm:bottom-3 sm:left-3 sm:inline-block sm:max-w-[calc(100%-1.5rem)] sm:text-[11px] ${index === 0 ? "" : "hidden"} ${labelClass}`}
               >
                 {item.title}
               </span>

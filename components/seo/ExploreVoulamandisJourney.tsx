@@ -158,15 +158,19 @@ export function ExploreVoulamandisJourney({ language, pathname }: Props) {
           <span className="text-xs font-black uppercase tracking-[0.16em] text-[#e7c98d]">{copy.kicker}</span>
           <h2 id="seo-journey-title" className="mt-4 max-w-[760px] text-3xl font-black leading-tight tracking-[-0.045em] text-white md:text-5xl">{copy.title}</h2>
           <p className="mt-5 max-w-[720px] text-base leading-8 text-white/80 md:text-lg">{copy.text}</p>
-          <div className="mt-7 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-            <a onClick={() => trackJourney("hotels_guide", pathname, language)} href={routes.hotelsGuide} className="inline-flex min-h-12 items-center justify-center rounded-full border border-amber-200/35 bg-amber-100/10 px-5 py-3 text-center text-sm font-black !text-amber-100 transition hover:bg-amber-100 hover:!text-[#263127]">{copy.hotelsGuide}</a>
-            <a onClick={() => trackJourney("romantic", pathname, language)} href={routes.romantic} className="inline-flex min-h-12 items-center justify-center rounded-full border border-[#e7c98d]/45 bg-[#e7c98d]/10 px-5 py-3 text-center text-sm font-black !text-[#f5dfb1] transition hover:bg-[#e7c98d] hover:!text-[#263127]">{copy.romantic}</a>
-            <a onClick={() => trackJourney("house", pathname, language)} href={routes.home} className="inline-flex min-h-12 items-center justify-center rounded-full border border-white/25 px-5 py-3 text-center text-sm font-black !text-white transition hover:bg-white/10">{copy.house}</a>
-            <a onClick={() => trackJourney("rooms", pathname, language)} href={routes.rooms} className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 py-3 text-center text-sm font-black !text-[#263127] shadow-lg transition hover:-translate-y-0.5">{copy.rooms}</a>
-            <a onClick={() => trackJourney("rates", pathname, language)} href={routes.rates} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8b36a] px-5 py-3 text-center text-sm font-black !text-[#201a10] shadow-lg transition hover:-translate-y-0.5">{copy.rates}</a>
+          {/* Two booking buttons; the other routes are quiet text links, so
+              the block doesn't read as a stack of five buttons. */}
+          <div className="mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
+            <a onClick={() => trackJourney("rates", pathname, language)} href={routes.rates} className="inline-flex min-h-12 items-center justify-center rounded-full bg-[#d8b36a] px-5 py-3 text-center text-sm font-black !text-[#201a10] shadow-lg transition hover:-translate-y-0.5 sm:px-7">{copy.rates}</a>
+            <a onClick={() => trackJourney("rooms", pathname, language)} href={routes.rooms} className="inline-flex min-h-12 items-center justify-center rounded-full bg-white px-5 py-3 text-center text-sm font-black !text-[#263127] shadow-lg transition hover:-translate-y-0.5 sm:px-7">{copy.rooms}</a>
           </div>
+          <ul className="m-0 mt-6 flex list-none flex-col gap-1 border-t border-white/15 p-0 pt-5 sm:flex-row sm:flex-wrap sm:gap-x-6 sm:gap-y-2">
+            <li><a onClick={() => trackJourney("hotels_guide", pathname, language)} href={routes.hotelsGuide} className="inline-flex min-h-10 items-center text-sm font-bold !text-[#f5dfb1] underline-offset-4 hover:underline">{copy.hotelsGuide} →</a></li>
+            <li><a onClick={() => trackJourney("romantic", pathname, language)} href={routes.romantic} className="inline-flex min-h-10 items-center text-sm font-bold !text-[#f5dfb1] underline-offset-4 hover:underline">{copy.romantic} →</a></li>
+            <li><a onClick={() => trackJourney("house", pathname, language)} href={routes.home} className="inline-flex min-h-10 items-center text-sm font-bold !text-[#f5dfb1] underline-offset-4 hover:underline">{copy.house} →</a></li>
+          </ul>
         </div>
-        <div className="relative min-h-[280px] md:min-h-full">
+        <div className="relative h-[190px] md:h-auto md:min-h-full">
           <Image src="/images/beaches/voulamandis-house-courtyard-chios.webp" alt={IMAGE_ALT[language]} fill sizes="(min-width: 768px) 42vw, 100vw" className="object-cover" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#263127]/65 via-transparent to-transparent md:bg-gradient-to-r md:from-[#263127]/35 md:via-transparent md:to-transparent" />
         </div>
