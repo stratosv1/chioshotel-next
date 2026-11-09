@@ -66,17 +66,32 @@ function ItemGrid({ items }: { items: ChiosIslandGuideItem[] }) {
   return (
     <div className="mt-5 grid gap-3">
       {normal.length ? (
-        <ul className={`m-0 grid list-none gap-3 p-0 ${threeAcross ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
+        <ul className={`m-0 grid list-none p-0 md:gap-3 ${threeAcross ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
           {normal.map((item, index) => {
             const lastOdd = !threeAcross && normal.length % 2 === 1 && index === normal.length - 1;
             return (
+              // Mobile: compact rows with a divider; desktop: boxes.
               <li
-                className={`rounded-[20px] bg-[#fff7ee] px-5 py-4 ring-1 ring-amber-800/10 ${lastOdd ? "md:col-span-2" : ""}`}
+                className={`border-b border-amber-800/10 py-3 last:border-b-0 md:rounded-[20px] md:border-b-0 md:bg-[#fff7ee] md:px-5 md:py-4 md:ring-1 md:ring-amber-800/10 ${lastOdd ? "md:col-span-2" : ""}`}
                 key={item.title}
               >
-                <strong className="block text-base font-black leading-7 text-stone-800">{item.title}</strong>
-                <span className="mt-1 block text-[15px] leading-7 text-stone-600">{item.text}</span>
-                <ItemLink item={item} />
+                {item.href ? (
+                  <a className="group flex items-center justify-between gap-3 md:block" href={item.href}>
+                    <span className="block">
+                      <strong className="block text-base font-black leading-6 text-stone-800 md:leading-7">{item.title}</strong>
+                      <span className="mt-0.5 block text-[14px] leading-6 text-stone-600 md:mt-1 md:text-[15px] md:leading-7">{item.text}</span>
+                    </span>
+                    <span aria-hidden="true" className="shrink-0 text-xl font-black text-amber-900 md:hidden">→</span>
+                    <span className="mt-2 hidden text-[12px] font-black uppercase tracking-[0.1em] text-amber-900 underline-offset-4 group-hover:underline md:inline-flex">
+                      {item.linkLabel ?? item.title} →
+                    </span>
+                  </a>
+                ) : (
+                  <>
+                    <strong className="block text-base font-black leading-6 text-stone-800 md:leading-7">{item.title}</strong>
+                    <span className="mt-0.5 block text-[14px] leading-6 text-stone-600 md:mt-1 md:text-[15px] md:leading-7">{item.text}</span>
+                  </>
+                )}
               </li>
             );
           })}

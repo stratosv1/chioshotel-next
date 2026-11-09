@@ -101,7 +101,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
   const ui = chiosIslandUiByLocale[getChiosIslandLocale(data.seo.canonicalPath)];
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.18),transparent_34rem),linear-gradient(180deg,#fbf6ef_0%,#f4eadf_52%,#fbf6ef_100%)] pb-20 text-stone-800 md:pb-0">
+    <main className="min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_top_left,rgba(168,120,66,.18),transparent_34rem),linear-gradient(180deg,#fbf6ef_0%,#f4eadf_52%,#fbf6ef_100%)] text-stone-800">
       <section id="ci-hero" className="relative flex min-h-[640px] items-end overflow-hidden text-white max-md:min-h-[76svh]" aria-labelledby="ci-hero-title">
         <div className="absolute inset-0 z-0" aria-hidden="true">
           <Image
@@ -256,7 +256,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         </section>
       ) : null}
 
-      <section className="py-8 md:py-12" aria-labelledby="ci-quiz-title">
+      <section className="pt-8 pb-0 md:py-12" aria-labelledby="ci-quiz-title">
         <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
           <article className="rounded-[2rem] bg-gradient-to-br from-stone-900 to-stone-700 p-[clamp(30px,5vw,56px)] text-white shadow-2xl shadow-stone-900/15">
             <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-white before:h-px before:w-8 before:bg-current before:opacity-75">
