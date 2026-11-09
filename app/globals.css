@@ -4,10 +4,11 @@
 @source not "../app/mixalis";
 @source not "../components/mixalis";
 
-/* Reserve room under the footer only on pages that show the mobile sticky
- * call/WhatsApp bar (homepage), instead of leaving a blank strip everywhere. */
+/* Reserve room under the footer only on pages that show a fixed mobile bottom
+ * bar (call/WhatsApp, availability, agent selection), so the bar never covers
+ * the end of the footer, instead of leaving a blank strip everywhere. */
 @media (max-width: 47.999rem) {
-  body:has([data-mobile-sticky-contact]) .vh-site-footer {
+  body:has([data-mobile-sticky-contact], [data-mobile-bottom-bar]) .vh-site-footer {
     padding-bottom: calc(6rem + env(safe-area-inset-bottom));
   }
 }

@@ -616,7 +616,7 @@ export function AgentRoomsGuide({ language, copy, rooms, commonAmenities, extras
         </div>
       </section>
 
-      <div className={`fixed inset-x-0 bottom-0 z-40 border-t border-[#d7ccbf] bg-[#f7f2ec]/95 shadow-[0_-8px_26px_rgba(67,54,42,0.11)] backdrop-blur-lg transition ${selected.length ? "translate-y-0" : "pointer-events-none invisible translate-y-full"}`}>
+      <div data-mobile-bottom-bar={selected.length ? "" : undefined} className={`fixed inset-x-0 bottom-0 z-40 border-t border-[#d7ccbf] bg-[#f7f2ec]/95 shadow-[0_-8px_26px_rgba(67,54,42,0.11)] backdrop-blur-lg transition ${selected.length ? "translate-y-0" : "pointer-events-none invisible translate-y-full"}`}>
         <div className="mx-auto flex max-w-[1500px] flex-col gap-3 px-4 py-3 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
           <div className="min-w-0">
             <p className="text-sm font-bold text-[#433930]">{selected.length} {copy.labels.selectedRooms} · {totalGuests} {copy.labels.totalGuests}</p>

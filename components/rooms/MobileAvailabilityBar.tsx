@@ -71,6 +71,7 @@ export function MobileAvailabilityBar({
 
   return (
     <div
+      data-mobile-bottom-bar=""
       aria-hidden={!isVisible}
       inert={!isVisible}
       className={`fixed inset-x-0 bottom-0 z-40 border-t border-amber-900/10 bg-[#fffaf3]/95 px-3 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-12px_30px_rgba(47,38,31,0.12)] backdrop-blur transition duration-300 md:hidden ${
