@@ -18,6 +18,8 @@ export type ChiosIslandGuideItem = {
   text: string;
   href?: string;
   linkLabel?: string;
+  /** Rendered as a highlighted tip box. */
+  highlight?: boolean;
 };
 
 export type ChiosIslandGuideSection = {
@@ -68,6 +70,7 @@ export const chiosIslandGuideEn: ChiosIslandGuide = {
         },
         {
           title: "Don't miss the ferry discount",
+          highlight: true,
           text:
             "The most common mistake our guests make: they do not ask for the summer ferry discount. In recent summers (for example 13 June–30 September 2025) Blue Star Ferries has offered 30% off for stays of four nights or more on Chios, with a certificate from your accommodation. We issue that certificate for our guests. Confirm the current year's terms with the ferry company or a travel agency.",
         },
@@ -205,6 +208,7 @@ export const chiosIslandGuideEl: ChiosIslandGuide = {
         },
         {
           title: "Μη χάσετε την έκπτωση στο πλοίο",
+          highlight: true,
           text:
             "Το πιο συχνό λάθος των επισκεπτών: δεν ζητούν την καλοκαιρινή έκπτωση. Τα τελευταία καλοκαίρια (π.χ. 13 Ιουνίου–30 Σεπτεμβρίου 2025) η Blue Star Ferries δίνει έκπτωση 30% για διαμονή τουλάχιστον τεσσάρων διανυκτερεύσεων στη Χίο, με βεβαίωση από το κατάλυμα. Εμείς εκδίδουμε τη βεβαίωση για τους επισκέπτες μας. Επιβεβαιώστε τους όρους της χρονιάς στην ακτοπλοϊκή εταιρεία ή σε ταξιδιωτικό γραφείο.",
         },
@@ -333,6 +337,7 @@ export const chiosIslandGuideFr: ChiosIslandGuide = {
         { title: "Depuis la Turquie", text: "Des ferries relient Çeşme à la ville de Chios en une courte traversée. Vérifiez le document de voyage dont vous avez besoin." },
         {
           title: "Ne manquez pas la réduction ferry",
+          highlight: true,
           text:
             "L’erreur la plus fréquente de nos hôtes : ne pas demander la réduction d’été. Ces derniers étés (par exemple du 13 juin au 30 septembre 2025), Blue Star Ferries a proposé 30 % de réduction pour un séjour d’au moins quatre nuits à Chios, avec une attestation de votre hébergement. Nous délivrons cette attestation à nos hôtes. Vérifiez les conditions de l’année auprès de la compagnie ou d’une agence de voyages.",
         },
@@ -442,6 +447,7 @@ export const chiosIslandGuideDe: ChiosIslandGuide = {
         { title: "Aus der Türkei", text: "Von Çeşme fahren Fähren in kurzer Überfahrt nach Chios-Stadt. Prüfen Sie vorher, welches Reisedokument Sie benötigen." },
         {
           title: "Fährrabatt nicht verpassen",
+          highlight: true,
           text:
             "Der häufigste Fehler unserer Gäste: Sie fragen nicht nach dem Sommerrabatt. In den letzten Sommern (zum Beispiel 13. Juni bis 30. September 2025) bot Blue Star Ferries 30 % Rabatt bei einem Aufenthalt von mindestens vier Nächten auf Chios, mit einer Bestätigung Ihrer Unterkunft. Diese Bestätigung stellen wir unseren Gästen aus. Prüfen Sie die Bedingungen des laufenden Jahres bei der Reederei oder einem Reisebüro.",
         },
@@ -551,6 +557,7 @@ export const chiosIslandGuideIt: ChiosIslandGuide = {
         { title: "Dalla Turchia", text: "Da Çeşme partono traghetti per la città di Chios, con una breve traversata. Verificate quale documento di viaggio vi serve." },
         {
           title: "Non perdete lo sconto sul traghetto",
+          highlight: true,
           text:
             "L’errore più comune dei nostri ospiti: non chiedono lo sconto estivo. Nelle ultime estati (per esempio dal 13 giugno al 30 settembre 2025) Blue Star Ferries ha offerto il 30% di sconto per soggiorni di almeno quattro notti a Chios, con un certificato della struttura. Noi lo rilasciamo ai nostri ospiti. Verificate le condizioni dell’anno con la compagnia o un’agenzia di viaggi.",
         },
@@ -660,6 +667,7 @@ export const chiosIslandGuideEs: ChiosIslandGuide = {
         { title: "Desde Turquía", text: "Desde Çeşme salen ferris hacia la ciudad de Quíos en una travesía corta. Comprueba qué documento de viaje necesitas." },
         {
           title: "No te pierdas el descuento en el ferry",
+          highlight: true,
           text:
             "El error más habitual de nuestros huéspedes: no pedir el descuento de verano. En los últimos veranos (por ejemplo, del 13 de junio al 30 de septiembre de 2025) Blue Star Ferries ha ofrecido un 30% de descuento para estancias de al menos cuatro noches en Quíos, con un certificado del alojamiento. Nosotros lo emitimos para nuestros huéspedes. Confirma las condiciones del año con la naviera o una agencia de viajes.",
         },
@@ -769,6 +777,7 @@ export const chiosIslandGuideTr: ChiosIslandGuide = {
         { title: "Pire’den feribotla", text: "Blue Star Ferries, Pire’yi Sakız limanına bağlar. Adayı kendi temponuzda gezmek isterseniz aracınızla gelin." },
         {
           title: "Pire feribot indirimini kaçırmayın",
+          highlight: true,
           text:
             "Pire’den gelenlerin en sık yaptığı hata: yaz indirimini istememek. Son yazlarda (örneğin 13 Haziran–30 Eylül 2025) Blue Star Ferries, Sakız’da en az dört gecelik konaklamalar için konaklama belgesiyle %30 indirim sundu. Bu belgeyi misafirlerimiz için biz düzenliyoruz. Yılın güncel koşullarını feribot şirketinden veya bir seyahat acentesinden teyit edin.",
         },

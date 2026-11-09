@@ -50,6 +50,9 @@ export type ChiosIslandPageData = {
       href: string;
       ctaLabel: string;
       tags: string[];
+      /** Card photo, so the cards don't repeat the gallery photos. */
+      cardImage?: string;
+      cardImageAlt?: string;
     }[];
   };
   quiz: {
@@ -92,7 +95,7 @@ const agiaDynamiImage =
   "/images/chios-guide/sakiz-agia-dynami.jpg";
 
 const villagesImage =
-  "/images/villages/lagada-chios-hd.webp";
+  "/images/villages/olympoi-chios-hd.webp";
 
 const museumsImage =
   "/images/museums/375px-Chios_Byzantine_Museum_Mecidiye_Mosque_Chios_Greece-hd.webp";
@@ -169,7 +172,7 @@ export const chiosIslandPageEn: ChiosIslandPageData = {
         description:
           "Explore Mesta, Pyrgi and other fortress villages of southern Chios, where stone alleys and traditional architecture preserve the island’s rich past.",
         image: villagesImage,
-        imageAlt: "The harbour village of Lagada on the east coast of Chios",
+        imageAlt: "Aerial view of the medieval village of Olympoi in southern Chios",
         href: "/chios/chios-villages/",
         ctaLabel: "Explore villages",
         tags: ["Mesta", "Pyrgi", "Stone alleys"],
@@ -314,7 +317,7 @@ export const chiosIslandPageEl: ChiosIslandPageData = {
         description:
           "Εξερευνήστε τα Μεστά, το Πυργί και άλλα καστροχώρια της νότιας Χίου, όπου τα πέτρινα σοκάκια και η παραδοσιακή αρχιτεκτονική κρατούν ζωντανό το παρελθόν.",
         image: villagesImage,
-        imageAlt: "Το λιμανάκι της Λαγκάδας στην ανατολική ακτή της Χίου",
+        imageAlt: "Το μεσαιωνικό χωριό Ολύμποι στη νότια Χίο από ψηλά",
         href: "/el/xoria-xios/",
         ctaLabel: "Δείτε χωριά",
         tags: ["Μεστά", "Πυργί", "Πέτρινα σοκάκια"],
@@ -459,7 +462,7 @@ export const chiosIslandPageFr: ChiosIslandPageData = {
         description:
           "Explorez Mesta, Pyrgi et d’autres villages fortifiés du sud de Chios, où les ruelles de pierre et l’architecture traditionnelle préservent le passé de l’île.",
         image: villagesImage,
-        imageAlt: "Le village portuaire de Lagada, sur la côte est de Chios",
+        imageAlt: "Vue aérienne du village médiéval d’Olympi, au sud de Chios",
         href: "/fr/villages-de-chios/",
         ctaLabel: "Explorer les villages",
         tags: ["Mesta", "Pyrgi", "Ruelles de pierre"],
@@ -573,7 +576,7 @@ export const chiosIslandPageDe: ChiosIslandPageData = {
         description:
           "Erkunden Sie Mesta, Pyrgi und weitere Festungsdörfer im Süden von Chios, wo Steingassen und traditionelle Architektur die Geschichte der Insel bewahren.",
         image: villagesImage,
-        imageAlt: "Das Hafendorf Lagada an der Ostküste von Chios",
+        imageAlt: "Luftbild des mittelalterlichen Dorfes Olympi im Süden von Chios",
         href: "/de/doerfer-chios/",
         ctaLabel: "Dörfer entdecken",
         tags: ["Mesta", "Pyrgi", "Steingassen"],
@@ -687,7 +690,7 @@ export const chiosIslandPageIt: ChiosIslandPageData = {
         description:
           "Esplorate Mesta, Pyrgi e altri villaggi fortificati del sud di Chios, dove vicoli in pietra e architettura tradizionale conservano il passato dell’isola.",
         image: villagesImage,
-        imageAlt: "Il villaggio portuale di Lagada sulla costa orientale di Chios",
+        imageAlt: "Veduta aerea del villaggio medievale di Olympi, nel sud di Chios",
         href: "/it/villaggi-chios/",
         ctaLabel: "Esplora villaggi",
         tags: ["Mesta", "Pyrgi", "Vicoli in pietra"],
@@ -801,7 +804,7 @@ export const chiosIslandPageEs: ChiosIslandPageData = {
         description:
           "Explore Mesta, Pyrgi y otros pueblos fortificados del sur de Quíos, donde los callejones de piedra y la arquitectura tradicional conservan el pasado de la isla.",
         image: villagesImage,
-        imageAlt: "El pueblo portuario de Lagada, en la costa este de Quíos",
+        imageAlt: "Vista aérea del pueblo medieval de Olympi, en el sur de Quíos",
         href: "/es/pueblos-chios/",
         ctaLabel: "Explorar pueblos",
         tags: ["Mesta", "Pyrgi", "Callejones de piedra"],
@@ -915,7 +918,7 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
         description:
           "Sakız’ın güneyindeki Mesta, Pyrgi ve diğer kale köylerini keşfedin; taş sokaklar ve geleneksel mimari adanın zengin geçmişini yaşatır.",
         image: villagesImage,
-        imageAlt: "Sakız Adası’nın doğu kıyısındaki liman köyü Lagada",
+        imageAlt: "Sakız Adası’nın güneyindeki Orta Çağ köyü Olympi’nin havadan görünümü",
         href: "/tr/sakiz-adasi-koyleri/",
         ctaLabel: "Köyleri keşfet",
         tags: ["Mesta", "Pyrgi", "Taş sokaklar"],
@@ -959,6 +962,29 @@ export const chiosIslandPageTr: ChiosIslandPageData = {
   },
 };
 
+// Card photos differ from the gallery photos above them.
+const cardPhotos: Record<string, [string, string, string]> = {
+  en: ["Black volcanic pebbles at Mavra Volia beach near Emporios, Chios", "Stone vaulted alley in the medieval village of Mesta, Chios", "The Chios Mastic Museum among the mastic groves of southern Chios"],
+  el: ["Τα μαύρα ηφαιστειακά βότσαλα στα Μαύρα Βόλια, κοντά στον Εμπορειό", "Πέτρινο καμαρωτό σοκάκι στο μεσαιωνικό χωριό Μεστά", "Το Μουσείο Μαστίχας Χίου ανάμεσα στους μαστιχόκηπους της νότιας Χίου"],
+  fr: ["Galets volcaniques noirs à la plage de Mavra Volia, près d’Emporios", "Ruelle voûtée en pierre dans le village médiéval de Mesta", "Le musée du mastic de Chios parmi les lentisques du sud de l’île"],
+  de: ["Schwarze Vulkankiesel am Strand Mavra Volia bei Emporios", "Gewölbte Steingasse im mittelalterlichen Dorf Mesta", "Das Mastixmuseum von Chios zwischen den Mastixhainen im Süden"],
+  it: ["Ciottoli vulcanici neri sulla spiaggia di Mavra Volia, vicino a Emporios", "Vicolo in pietra a volta nel villaggio medievale di Mesta", "Il Museo del Mastice di Chios tra i lentischi del sud dell’isola"],
+  es: ["Guijarros volcánicos negros en la playa de Mavra Volia, cerca de Emporios", "Callejón abovedado de piedra en el pueblo medieval de Mesta", "El Museo de la Mastiha de Quíos entre los lentiscos del sur"],
+  tr: ["Emporios yakınındaki Mavra Volia plajında siyah volkanik çakıllar", "Orta Çağ köyü Mesta’da kemerli taş sokak", "Güney Sakız’ın mastik bahçeleri arasındaki Sakız Mastik Müzesi"],
+};
+const cardImages = [
+  "/images/beaches/mavra-volia-beach-chios-hd.webp",
+  "/images/villages/mesta-chios-hd.webp",
+  "/images/museums/mousio.mastic-hd.webp",
+];
+
+function attachCardPhotos(page: ChiosIslandPageData, language: string) {
+  page.experiences.items.forEach((item, index) => {
+    item.cardImage = cardImages[index];
+    item.cardImageAlt = cardPhotos[language][index];
+  });
+}
+
 // Attach the local guide: its FAQs join the page FAQ (and the FAQPage schema),
 // and the "what should I see" answer is replaced with the local top five.
 function attachGuide(page: ChiosIslandPageData, guide: ChiosIslandGuide) {
@@ -980,6 +1006,14 @@ attachGuide(chiosIslandPageDe, chiosIslandGuideDe);
 attachGuide(chiosIslandPageIt, chiosIslandGuideIt);
 attachGuide(chiosIslandPageEs, chiosIslandGuideEs);
 attachGuide(chiosIslandPageTr, chiosIslandGuideTr);
+
+attachCardPhotos(chiosIslandPageEn, "en");
+attachCardPhotos(chiosIslandPageEl, "el");
+attachCardPhotos(chiosIslandPageFr, "fr");
+attachCardPhotos(chiosIslandPageDe, "de");
+attachCardPhotos(chiosIslandPageIt, "it");
+attachCardPhotos(chiosIslandPageEs, "es");
+attachCardPhotos(chiosIslandPageTr, "tr");
 
 export function getLocalizedChiosIslandPageByPath(
   path: string,

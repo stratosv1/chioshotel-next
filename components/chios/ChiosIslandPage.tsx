@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { MobileStickyContact } from "@/components/home/MobileStickyContact";
 import { ChiosCollectionImageGallery } from "@/components/chios/ChiosCollectionImageGallery";
+import { ChiosIslandGuideSection } from "@/components/chios/ChiosIslandGuide";
 import type { ChiosIslandPageData } from "@/content/chios-island";
 
 type ChiosIslandPageProps = {
@@ -154,7 +155,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         }))}
       />
 
-      <section className="py-16 md:py-20" aria-labelledby="ci-intro-title">
+      <section className="py-10 md:py-14" aria-labelledby="ci-intro-title">
         <div className="mx-auto grid w-[min(1180px,calc(100%-40px))] items-start gap-8 max-md:w-[calc(100%-24px)] lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,.65fr)]">
           <article className="rounded-[1.875rem] border border-amber-800/15 bg-white/90 p-[clamp(28px,4vw,40px)] shadow-xl shadow-stone-900/5">
             <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
@@ -180,7 +181,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         </div>
       </section>
 
-      <section className="py-16 md:py-20" id="discover" aria-labelledby="ci-experiences-title">
+      <section className="py-10 md:py-14" id="discover" aria-labelledby="ci-experiences-title">
         <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
           <header className="mx-auto mb-9 max-w-[820px] text-center">
             <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
@@ -195,10 +196,10 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
           <div className="grid gap-5 lg:grid-cols-3">
             {data.experiences.items.map((item, index) => (
               <article className="group overflow-hidden rounded-[1.875rem] border border-amber-800/15 bg-white/90 shadow-xl shadow-stone-900/5 transition hover:-translate-y-1 hover:shadow-2xl hover:shadow-stone-900/10" key={item.title}>
-                <div className="relative h-[260px] overflow-hidden bg-stone-200">
+                <div className="relative h-[220px] overflow-hidden bg-stone-200">
                   <Image
-                    src={item.image}
-                    alt={item.imageAlt}
+                    src={item.cardImage ?? item.image}
+                    alt={item.cardImageAlt ?? item.imageAlt}
                     fill
                     sizes="(max-width: 1023px) 100vw, 33vw"
                     className="object-cover transition duration-700 group-hover:scale-105"
@@ -206,12 +207,6 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
                 </div>
 
                 <div className="p-6">
-                  <div className="mb-4 flex flex-wrap gap-2">
-                    {item.tags.map((tag) => (
-                      <span className="inline-flex min-h-7 items-center rounded-full border border-amber-800/15 bg-[#fff7ee] px-3 text-[9px] font-black uppercase tracking-[0.09em] text-amber-900" key={tag}>{tag}</span>
-                    ))}
-                  </div>
-
                   <h3 className="m-0 text-[28px] font-black leading-none tracking-[-0.04em] text-stone-800">{item.title}</h3>
                   <p className="mt-4 text-[15px] leading-7 text-stone-600">{item.description}</p>
 
@@ -226,57 +221,15 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
       </section>
 
       {data.guide ? (
-        <section className="py-12 md:py-16" id="guide" aria-labelledby="ci-guide-title">
-          <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
-            <header className="mx-auto mb-9 max-w-[820px] text-center">
-              <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
-                {data.guide.kicker}
-              </span>
-              <h2 id="ci-guide-title" className="m-0 text-[clamp(32px,4.6vw,58px)] font-black leading-none tracking-[-0.055em] text-stone-800">
-                {data.guide.title}
-              </h2>
-              <p className="mx-auto mt-5 max-w-[760px] text-base leading-8 text-stone-600">{data.guide.intro}</p>
-            </header>
-
-            <div className="grid gap-5">
-              {data.guide.sections.map((section) => (
-                <article
-                  className="rounded-[1.875rem] border border-amber-800/15 bg-white/90 p-[clamp(22px,4vw,40px)] shadow-xl shadow-stone-900/5"
-                  id={`guide-${section.id}`}
-                  key={section.id}
-                >
-                  <h3 className="m-0 text-[clamp(24px,3vw,34px)] font-black leading-tight tracking-[-0.04em] text-stone-800">
-                    {section.title}
-                  </h3>
-                  {section.paragraphs?.map((paragraph) => (
-                    <p className="mt-4 text-[15px] leading-8 text-stone-600 md:text-base" key={paragraph}>
-                      {paragraph}
-                    </p>
-                  ))}
-                  {section.items?.length ? (
-                    <ul className="m-0 mt-5 grid list-none gap-3 p-0 md:grid-cols-2">
-                      {section.items.map((item) => (
-                        <li className="rounded-[22px] bg-[#fff7ee] px-5 py-4 ring-1 ring-amber-800/10" key={item.title}>
-                          <strong className="block text-base font-black leading-7 text-stone-800">{item.title}</strong>
-                          <span className="mt-1 block text-[15px] leading-7 text-stone-600">{item.text}</span>
-                          {item.href ? (
-                            <a className="mt-2 inline-flex text-[12px] font-black uppercase tracking-[0.1em] text-amber-900 underline-offset-4 hover:underline" href={item.href}>
-                              {item.linkLabel ?? item.title} →
-                            </a>
-                          ) : null}
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
+        <ChiosIslandGuideSection
+          guide={data.guide}
+          primaryCta={data.stay.primaryCta}
+          secondaryCta={data.stay.secondaryCta}
+        />
       ) : null}
 
       {data.faq ? (
-        <section className="py-12 md:py-16" aria-labelledby="ci-faq-title">
+        <section className="py-8 md:py-12" aria-labelledby="ci-faq-title">
           <div className="mx-auto w-[min(1180px,calc(100%-40px))] rounded-[2rem] border border-amber-800/15 bg-white/90 p-[clamp(24px,4vw,40px)] shadow-xl shadow-stone-900/5 max-md:w-[calc(100%-24px)]">
             <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
               {data.faq.kicker}
@@ -303,7 +256,7 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         </section>
       ) : null}
 
-      <section className="py-12 md:py-16" aria-labelledby="ci-quiz-title">
+      <section className="py-8 md:py-12" aria-labelledby="ci-quiz-title">
         <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
           <article className="rounded-[2rem] bg-gradient-to-br from-stone-900 to-stone-700 p-[clamp(30px,5vw,56px)] text-white shadow-2xl shadow-stone-900/15">
             <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-white before:h-px before:w-8 before:bg-current before:opacity-75">
@@ -321,29 +274,32 @@ export function ChiosIslandPage({ data }: ChiosIslandPageProps) {
         </div>
       </section>
 
+      {/* With the guide, its "book direct" band replaces this block. */}
+      {data.guide ? null : (
       <section className="py-12 md:py-16" aria-labelledby="ci-stay-title">
-        <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
-          <article className="rounded-[2rem] border border-amber-800/15 bg-white/90 p-[clamp(30px,5vw,48px)] shadow-xl shadow-stone-900/5">
-            <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
-              {data.stay.kicker}
-            </span>
-            <h2 id="ci-stay-title" className="m-0 text-[clamp(32px,4.6vw,58px)] font-black leading-none tracking-[-0.055em] text-stone-800">
-              {data.stay.title}
-            </h2>
-            <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600">{data.stay.text}</p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-gradient-to-br from-[#a87842] to-[#8e6607] px-7 text-[12px] font-black uppercase tracking-[0.1em] text-white" href={data.stay.primaryCta.href}>
-                {data.stay.primaryCta.label}
-              </a>
-
-              <a className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-amber-800/20 bg-[#fff7ee] px-7 text-[12px] font-black uppercase tracking-[0.1em] text-amber-900" href={data.stay.secondaryCta.href}>
-                {data.stay.secondaryCta.label}
-              </a>
-            </div>
-          </article>
-        </div>
-      </section>
+          <div className="mx-auto w-[min(1180px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
+            <article className="rounded-[2rem] border border-amber-800/15 bg-white/90 p-[clamp(30px,5vw,48px)] shadow-xl shadow-stone-900/5">
+              <span className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.16em] text-amber-900 before:h-px before:w-8 before:bg-current before:opacity-75">
+                {data.stay.kicker}
+              </span>
+              <h2 id="ci-stay-title" className="m-0 text-[clamp(32px,4.6vw,58px)] font-black leading-none tracking-[-0.055em] text-stone-800">
+                {data.stay.title}
+              </h2>
+              <p className="mt-5 max-w-[760px] text-base leading-8 text-stone-600">{data.stay.text}</p>
+  
+              <div className="mt-8 flex flex-wrap gap-3">
+                <a className="inline-flex min-h-[54px] items-center justify-center rounded-full bg-gradient-to-br from-[#a87842] to-[#8e6607] px-7 text-[12px] font-black uppercase tracking-[0.1em] text-white" href={data.stay.primaryCta.href}>
+                  {data.stay.primaryCta.label}
+                </a>
+  
+                <a className="inline-flex min-h-[54px] items-center justify-center rounded-full border border-amber-800/20 bg-[#fff7ee] px-7 text-[12px] font-black uppercase tracking-[0.1em] text-amber-900" href={data.stay.secondaryCta.href}>
+                  {data.stay.secondaryCta.label}
+                </a>
+              </div>
+            </article>
+          </div>
+        </section>
+      )}
 
       {/* Same mobile contact bar as the homepage, for a consistent site-wide look. */}
       <MobileStickyContact
