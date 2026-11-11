@@ -293,6 +293,25 @@ function shiftIso(iso: string, days: number) {
 const NO_DATES_WORDS = /^\s*(?:i\s+)?(?:don[’']?t|do not|dont)\s+know(?:\s+yet)?\b|\bnot\s+sure\s+(?:yet|about\s+(?:the\s+)?dates)\b|\bno\s+dates?\s+yet\b|\b(?:flexible|undecided)\b|δεν\s+(?:το\s+)?ξέρω|δεν\s+έχω\s+(?:ακόμα\s+)?(?:αποφασίσει|ημερομηνίες)|ακόμα\s+δεν\s+ξέρω|weiß\s+(?:ich\s+)?(?:noch\s+)?nicht|je\s+ne\s+sais\s+pas|non\s+(?:lo\s+)?so|no\s+(?:lo\s+)?sé|bilmiyorum/iu;
 const ROOM_OVERVIEW_WORDS = /\b(?:what|which)\s+(?:kind\s+of\s+|types?\s+of\s+)?rooms?\b(?![^?]*\d{1,2}[\/.]\d{1,2})|\bgenerally\s+available\b|\binfo(?:rmation)?\s+(?:about|on)\s+(?:the\s+)?rooms\b|τι\s+δωμάτια|τα\s+δωμάτια\s*;|πληροφορίες\s+για\s+τα\s+δωμάτια|τι\s+ξέρεις\s+για\s+τα\s+δωμάτια|welche\s+zimmer|quelles?\s+chambres|quali\s+camere|qué\s+habitaciones|hangi\s+odalar/iu;
 
+// Ref 9/10: questions the Room Finder answers with the four room types.
+const ROOM_COUNT_OR_LOOK_WORDS = /πόσα\s+δωμάτια\s+(?:έχει|έχετε|εχει|εχετε)|ποσα\s+δωματια\s+(?:εχει|εχετε)|θέλω\s+να\s+δω\s+(?:και\s+)?τα\s+δωμάτια|θελω\s+να\s+δω\s+(?:και\s+)?τα\s+δωματια|φωτογραφ|φοτογραφ|\bhow\s+many\s+rooms\s+(?:do\s+you|does\s+it)\s+have|\b(?:photos?|pictures?|pics)\b|wie\s+viele\s+zimmer\s+(?:haben|hat)|\bfotos?\b|\bbilder\b|combien\s+de\s+chambres|quante\s+camere\s+(?:avete|ha)|cuántas\s+habitaciones\s+(?:tienen|tiene)|kaç\s+oda(?:nız)?\s+var|fotoğraf/iu;
+const ROOM_PRICE_WORDS = /(τιμ[ήηέε]|κοστ[ίι]ζ|πόσο\s+(?:κάνει|έχει|πάει)|ποσο\s+(?:κανει|εχει|παει)|\bprices?\b|\bcosts?\b|how\s+much|\brates?\b|preis|kostet|\bprix\b|co[uû]te|prezz|\bcosta\b|precio|cuesta|fiyat|ücret|ne\s+kadar)/iu;
+const BREAKFAST_WORDS = /(πρωιν|breakfast|frühstück|fruhstuck|petit[- ]d[ée]jeuner|colazione|desayuno|kahvalt)/iu;
+
+/** "How many rooms do you have?", "I want to see the rooms", "photos". */
+export function asksRoomOverview(text: string) {
+  return ROOM_COUNT_OR_LOOK_WORDS.test(text) || ROOM_OVERVIEW_WORDS.test(text);
+}
+
+/** A room/stay price question (not about breakfast). */
+export function asksRoomPrice(text: string) {
+  return ROOM_PRICE_WORDS.test(text) && !BREAKFAST_WORDS.test(text);
+}
+
+export function mentionsBreakfast(text: string) {
+  return BREAKFAST_WORDS.test(text);
+}
+
 export function fallbackRoomFinderCommand(
   message: string,
   context: RoomFinderConversationContext = {},
@@ -380,9 +399,10 @@ export function fallbackRoomFinderCommand(
     }
   }
 
-  const asksOverview = !actions.some(action => action.checkin || action.checkout)
-    && (NO_DATES_WORDS.test(text) || ROOM_OVERVIEW_WORDS.test(text));
+  const hasDates = actions.some(action => action.checkin || action.checkout);
+  const asksOverview = !hasDates && (NO_DATES_WORDS.test(text) || asksRoomOverview(text));
   if (asksOverview) actions.push({ type: "browse_rooms" });
+  else if (asksRoomPrice(text)) actions.push({ type: "request_live_availability" });
 
   const normalized = uniqueActions(actions);
   if (!normalized.length) return null;

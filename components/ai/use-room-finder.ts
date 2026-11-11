@@ -51,8 +51,20 @@ import { detectRoomInfoRequest, noSuchRoomMessage, roomInfoMessage } from "./roo
 import { avoidRepeatedQuestion, type PromptType } from "./room-finder-repeat-guard";
 import { mentionsEveryRoomAmenity, preferenceAckMessage } from "./room-finder-preference-ack";
 import { formatPickedDate } from "./room-finder-date-pick";
+import { asksRoomOverview, asksRoomPrice, mentionsBreakfast } from "@/lib/ai-assistant/room-finder-fallback";
+import { mentionsEarlyMorningArrival, nightBefore } from "@/lib/ai-assistant/early-arrival";
+import { earlyArrivalMessage } from "./room-finder-early-arrival";
 
 export type { FinderStep } from "./room-finder-booking-flow";
+
+// Property-knowledge entries that describe rooms; the four room types answer
+// general room questions instead (ref 10).
+const ROOM_DESCRIPTION_KNOWLEDGE = new Set([
+  "first-floor-rooms",
+  "ground-floor-rooms",
+  "apartments-8-10",
+  "common-amenities",
+]);
 
 const wait = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
 const rid = () => `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -1384,13 +1396,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   }
 
   // No dates yet: answer with the four room types, never with availability.
-  async function showRoomTypes(askDates: boolean) {
+  async function showRoomTypes(askDates: boolean, priceQuestion = false) {
     const cards = await loadRoomTypes(language);
     add(
       "assistant",
       roomTypesMessage(language, {
         askDates,
         hasPrices: cards.some(card => typeof card.price === "number"),
+        prices: priceQuestion
+          ? Object.fromEntries(cards.map(card => [card.categoryId, card.price]))
+          : undefined,
       }),
       "room_types",
     );
@@ -1434,15 +1449,50 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   }
 
   async function applyCommand(command: RoomFinderCommand, guestText = "") {
-    const knowledgeActions = command.actions.filter(action =>
-      action.type === "answer_property_question" && typeof action.answer === "string" && action.answer.trim(),
+    const hasIncomingDates = command.actions.some(action => action.checkin || action.checkout);
+    const datesKnown = Boolean(flow.draft.checkin) || hasIncomingDates;
+    // Ref 9: a room price question without dates gets the indicative "from"
+    // prices per room type, never the breakfast price.
+    const priceWithoutDates = !datesKnown && (
+      asksRoomPrice(guestText)
+      || command.actions.some(action => action.type === "request_live_availability")
     );
+    // Ref 10: "how many rooms do you have?", "I want to see the rooms",
+    // "photos" get the room types, not one floor's description.
+    const roomOverview = !hasIncomingDates && asksRoomOverview(guestText);
+    const staysElsewhere = command.actions.some(action =>
+      action.type === "set_stay_destination" && action.destinationKind === "other",
+    );
+
+    const knowledgeActions = command.actions.filter(action => {
+      const isKnowledgeAnswer = action.type === "answer_property_question"
+        && typeof action.answer === "string"
+        && Boolean(action.answer.trim());
+      if (!isKnowledgeAnswer) return false;
+      // Never answer a stay somewhere else with Voulamandis House room facts.
+      if (staysElsewhere) return false;
+      const ids = action.knowledgeIds || [];
+      // The breakfast price is only for breakfast questions.
+      if (ids.includes("breakfast") && !mentionsBreakfast(guestText)) return false;
+      // The room-types answer replaces one-floor / amenity descriptions.
+      if ((priceWithoutDates || roomOverview) && ids.length && ids.every(id => ROOM_DESCRIPTION_KNOWLEDGE.has(id))) {
+        return false;
+      }
+      return true;
+    });
     for (const action of knowledgeActions) add("assistant", action.answer!.trim());
 
     const executableActions = command.actions.filter(action =>
       action.type !== "answer_property_question"
       && !(knowledgeActions.length > 0 && action.type === "no_change"),
     );
+    if (priceWithoutDates || roomOverview) {
+      // Make sure the room-types answer runs even when the AI only returned
+      // a (dropped) knowledge answer.
+      if (!executableActions.some(action => action.type === "browse_rooms")) {
+        executableActions.push({ type: "browse_rooms" });
+      }
+    }
     if (!executableActions.length) return;
 
     const executableCommand = { ...command, actions: executableActions };
@@ -1510,7 +1560,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const browseRooms = executableActions.some(action => action.type === "browse_rooms")
       || Boolean(roomInfoAction);
     if (roomInfoAction) await showRoomInfo(Number(roomInfoAction.roomNumber));
-    else if (browseRooms) await showRoomTypes(!flow.draft.checkin);
+    else if (browseRooms) await showRoomTypes(!flow.draft.checkin, priceWithoutDates);
 
     const resolution = resolveAssistantTurn(flow, executableCommand);
     const commandSetTotalGuests = executableActions.some(action => action.totalGuests != null);
@@ -1518,6 +1568,25 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     if (resolution.outcome.kind === "restart") {
       reset();
       return;
+    }
+
+    // Ref 13: an early-morning arrival ("ξημερώματα Τρίτης 08/09") needs the
+    // room from the night before; ask instead of booking the wrong night.
+    const incomingCheckin = executableActions.map(action => action.checkin).find(Boolean);
+    if (
+      incomingCheckin
+      && resolution.state.draft.checkin === incomingCheckin
+      && mentionsEarlyMorningArrival(guestText)
+    ) {
+      const night = nightBefore(incomingCheckin);
+      if (night && night >= todayInAthensIso()) {
+        const draft = { ...resolution.state.draft, groups: [...resolution.state.draft.groups], checkin: "" };
+        if (draft.statedNights) draft.checkout = "";
+        clearSearchSelectionState();
+        dispatchFlow({ type: "commit_turn", state: { step: "checkin", draft } });
+        add("assistant", earlyArrivalMessage(language, incomingCheckin, night));
+        return;
+      }
     }
 
     if (resolution.changed) clearSearchSelectionState();

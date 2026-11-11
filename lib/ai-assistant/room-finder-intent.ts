@@ -133,6 +133,9 @@ CORE RULES
 - You may return a property/live-data action together with booking facts from the same message. Never copy prose from the knowledge entries into query or any other field.
 - NO DATES YET / ROOM OVERVIEW: when the customer says they do not know their dates yet, are undecided or flexible without giving a date (“don't know”, “δεν ξέρω ακόμα”, “not sure yet”, “noch nicht”), or asks in general which rooms or room types the property has (“what rooms do you have?”, “which rooms are generally available?”, “τι δωμάτια έχετε;”, “πληροφορίες για τα δωμάτια”), return browse_rooms. Do this in every step, including currentStep=checkin. Never return no_change for these messages and never return request_live_availability for them while no check-in date is known. Also return any clear booking facts or preferences from the same message (e.g. set_preferences for a kitchen).
 - ONE ROOM'S DETAILS: “details for room 3”, “λεπτομέρειες για το δωμάτιο 5”, “room 11 pictures and facilities”, “what is apartment 8 like?” => room_info(roomNumber). Rooms are numbered 1-10; for a number above 10 return browse_rooms instead. room_info is for information; set_room_interest is for wanting/choosing the room. Do not return both for a pure information question.
+- ROOM PRICE: “Τιμή?”, “Πόσο κοστίζει το δωμάτιο ανά διανυκτέρευση;”, “how much per night?” ask for the ROOM price. Return request_live_availability (plus any date facts). Never answer them with the breakfast knowledge entry: breakfast is only for messages that mention breakfast.
+- GENERAL ROOM OVERVIEW: “Πόσα δωμάτια έχει;”, “how many rooms do you have?”, “θέλω να δω τα δωμάτια”, “θέλω φωτογραφίες” => browse_rooms. Do not answer them with one floor's description (first-floor-rooms, ground-floor-rooms, apartments-8-10) or with common-amenities.
+- A message about staying somewhere other than Kampos (destinationKind=other) never gets answer_property_question.
 - A general availability question WITH an exact date (“which rooms are available on 10/10?”) is request_live_availability plus the date facts, not browse_rooms.
 - Missing information is NOT ambiguity. Do not ask a clarification merely because another booking field is absent; return the facts you understood and let the application ask the next missing field.
 - If part of a message is clear and another attempted fact is ambiguous, return the clear fact actions plus exactly one specific ask_clarification action.
@@ -281,6 +284,15 @@ REFERENCE EXAMPLES
 
 23) Context currentStep=guests. Customer: “μπορείς να μου δώσεις λεπτομέρειες για το δωμάτιο 5”.
 => room_info(roomNumber=5). Do not change the guest count.
+
+24) “Τιμή?” or “Ποσο κοστιζει το δωματιο ανά διανυκτερευση” with no dates in context.
+=> request_live_availability only. Not answer_property_question(breakfast).
+
+25) “Πόσα δωμάτια έχει ?”
+=> browse_rooms. Not common-amenities.
+
+26) “θελω φοτογραφιεσ”
+=> browse_rooms.
 
 SCHEMA RULES
 - For irrelevant nullable fields return null.

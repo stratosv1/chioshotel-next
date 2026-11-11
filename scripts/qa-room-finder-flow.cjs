@@ -55,6 +55,7 @@ const legacyFlowPath = path.join(root, "components/ai/AiRoomFinderFlow.tsx");
 const interpretRoutePath = path.join(root, "app/api/ai-assistant/interpret/route.ts");
 const roomInfoIntentPath = path.join(root, "lib/ai-assistant/room-info-intent.ts");
 const repeatGuardPath = path.join(root, "components/ai/room-finder-repeat-guard.ts");
+const earlyArrivalPath = path.join(root, "lib/ai-assistant/early-arrival.ts");
 const salesIntelligencePath = path.join(root, "components/ai/room-finder-sales-intelligence.ts");
 const preferenceAckPath = path.join(root, "components/ai/room-finder-preference-ack.ts");
 
@@ -80,6 +81,7 @@ const { feasibleOffersForGroup, hasDistinctOfferPlan, roomOfferKey } = offerPlan
 const { fallbackRoomFinderCommand } = fallback;
 const { detectRoomInfoRequest } = executeCommonJs(transpile(roomInfoIntentPath));
 const { avoidRepeatedQuestion } = executeCommonJs(transpile(repeatGuardPath));
+const { mentionsEarlyMorningArrival, nightBefore } = executeCommonJs(transpile(earlyArrivalPath));
 const salesIntelligence = executeCommonJs(transpile(salesIntelligencePath));
 const { preferenceAckMessage, mentionsEveryRoomAmenity } = executeCommonJs(transpile(preferenceAckPath), id => {
   if (id === "./room-finder-sales-intelligence") return salesIntelligence;
@@ -744,8 +746,44 @@ function testCalendarButton() {
   assert(pickedOut.outcome.kind === "prompt" && pickedOut.outcome.field === "rooms", "a picked check-out did not move on to rooms");
 }
 
+// Refs 9, 10, 13 from the second audit (real guest messages).
+function testSecondAuditScenarios() {
+  const { asksRoomPrice, asksRoomOverview, mentionsBreakfast } = fallback;
+
+  // 9: room price without dates → room types with "from" prices, never breakfast.
+  for (const message of ["Τιμή?", "Ποσο κοστιζει το δωματιο ανά διανυκτερευση", "Πόσα κοστίζει ένα δωμάτιο ;", "how much per night?"]) {
+    assert(asksRoomPrice(message), `"${message}" was not recognised as a room price question`);
+    const parsed = fallbackRoomFinderCommand(message, { language: "el", currentStep: "checkin" });
+    assert(parsed?.actions.some(action => action.type === "request_live_availability"), `"${message}" did not ask for live prices in the fallback`);
+  }
+  assert(!asksRoomPrice("Έχει πρωινό; Πόσο κοστίζει;"), "a breakfast price question was treated as a room price question");
+  assert(mentionsBreakfast("Πρωινό ?"), "breakfast was not recognised");
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(/ids\.includes\("breakfast"\) && !mentionsBreakfast\(guestText\)/.test(hook), "the breakfast answer can still reach a room price question");
+  assert(/showRoomTypes\(!flow\.draft\.checkin, priceWithoutDates\)/.test(hook), "price questions without dates do not show the from-prices");
+
+  // 10: general room questions → the 4 room types, not one floor's description.
+  for (const message of ["Πόσα δωμάτια έχει ?", "θελω να δω και τα δωματια και να μου πεισ", "θελω φοτογραφιεσ", "How many rooms do you have?"]) {
+    assert(asksRoomOverview(message), `"${message}" was not answered with the room types`);
+  }
+  assert(!asksRoomOverview("2 δωμάτια για 4 άτομα"), "a booking request was treated as a room overview");
+  assert(/if \(staysElsewhere\) return false/.test(hook), "a stay elsewhere can still get Voulamandis House room facts");
+
+  // 13: early-morning arrival asks about the night before.
+  for (const message of ["Ξημερώματα Τρίτης 08/09/2026", "arriving 8/9 at 3:30", "we land at 5am on the 8th", "Ankunft 04:15 am 8.9."]) {
+    assert(mentionsEarlyMorningArrival(message), `"${message}" was not recognised as an early-morning arrival`);
+  }
+  for (const message of ["Άφιξη 11/9/26 22:30 το βράδυ", "08/09 2 nights", "10.10 για 2 βράδια", "arrive at 14:00"]) {
+    assert(!mentionsEarlyMorningArrival(message), `"${message}" was wrongly treated as an early-morning arrival`);
+  }
+  assert(nightBefore("2027-09-08") === "2027-09-07", "the night before was not computed");
+  assert(nightBefore("2027-03-01") === "2027-02-28", "the night before did not cross the month");
+  assert(/mentionsEarlyMorningArrival\(guestText\)[\s\S]{0,500}earlyArrivalMessage/.test(hook), "the chat does not ask about early-morning arrivals");
+}
+
 function main() {
   testStrictDates();
+  testSecondAuditScenarios();
   testCalendarButton();
   testPreferencesAreConfirmed();
   testNeverTheSameQuestionTwice();

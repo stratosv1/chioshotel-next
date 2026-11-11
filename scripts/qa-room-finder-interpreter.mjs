@@ -340,6 +340,28 @@ async function roomInfoRegression() {
   return { durationMs };
 }
 
+// Refs 9/10: price without dates is a live-price request, never breakfast;
+// "how many rooms" / "photos" show the room types.
+async function priceAndOverviewRegression() {
+  let durationMs = 0;
+  for (const message of ["Τιμή?", "Ποσο κοστιζει το δωματιο ανά διανυκτερευση"]) {
+    const result = await interpret(message, { language: "el", currentStep: "checkin" });
+    durationMs += result.durationMs;
+    const types = result.command.actions.map((action) => action.type);
+    assert(types.includes("request_live_availability"), `"${message}" was not a live price request: ${types.join(", ")}`);
+    assert(
+      !result.command.actions.some((action) => (action.knowledgeIds || []).includes("breakfast")),
+      `"${message}" was answered with the breakfast price`,
+    );
+  }
+  for (const message of ["Πόσα δωμάτια έχει ?", "θελω φοτογραφιεσ"]) {
+    const result = await interpret(message, { language: "el", currentStep: "checkin" });
+    durationMs += result.durationMs;
+    assert(result.command.actions.some((action) => action.type === "browse_rooms"), `"${message}" did not show the room types`);
+  }
+  return { durationMs };
+}
+
 async function main() {
   const languages = ["el", "en", "de", "fr", "it", "es", "tr"];
   console.log(`Room Finder AI contract QA target: ${BASE_URL}`);
@@ -386,6 +408,9 @@ async function main() {
 
   const roomInfo = await roomInfoRegression();
   console.log(`✓ one-room questions answer from the room catalog (${roomInfo.durationMs}ms)`);
+
+  const priceOverview = await priceAndOverviewRegression();
+  console.log(`✓ price without dates and room overview questions (${priceOverview.durationMs}ms)`);
 
   const noDates = await noDatesRoomOverviewRegression();
   console.log(`✓ no-dates / room-overview messages show the room types (${noDates.durationMs}ms)`);
