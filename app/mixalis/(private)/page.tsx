@@ -65,6 +65,18 @@ const SUBJECTS: Subject[] = [
         ],
       },
       {
+        title: "Έργο, Ενέργεια και Ισχύς",
+        subtitle: "12 βασικοί τύποι, διαδραστικό εργαστήριο με κίνηση, 8 λυμένες ασκήσεις και 7 ερωτήσεις τεστ.",
+        href: "/mixalis/ergo",
+        study: "ergo",
+        links: [
+          { label: "Τυπολόγιο", href: "/mixalis/ergo#typoi" },
+          { label: "Εργαστήριο", href: "/mixalis/ergo#ergastirio" },
+          { label: "Λυμένες ασκήσεις", href: "/mixalis/ergo#askiseis" },
+          { label: "Τεστ", href: "/mixalis/ergo#test" },
+        ],
+      },
+      {
         title: "Ορμή και κρούσεις",
         subtitle: "Θεωρία, τυπολόγιο με κινούμενα σχέδια και οι φωτοτυπίες του Τριπολίτη λυμένες.",
         href: "/mixalis/ormi",
