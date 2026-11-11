@@ -1,3 +1,6 @@
+import { unstable_cache } from "next/cache";
+import { neon } from "@neondatabase/serverless";
+import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
 import type { HomePageData } from "@/content/home";
 import {
   homePageDe,
@@ -125,4 +128,56 @@ export function buildRoomTypeCards(
 
 export async function getRoomTypeCards(language: RoomFinderAssistantLanguage) {
   return buildRoomTypeCards(language, await getCategoryFromPrices());
+}
+
+/** Direct-booking discounts by stay length (percent), from Booking Core. */
+export type DirectDiscounts = {
+  nights1to2: number;
+  nights3to4: number;
+  nights5to6: number;
+  nights7plus: number;
+};
+
+async function loadDirectDiscounts(): Promise<DirectDiscounts> {
+  const databaseUrl = process.env.DATABASE_URL;
+  if (!databaseUrl) throw new Error("DATABASE_URL is missing");
+  const sql = neon(databaseUrl);
+  const rows = (await sql`
+    select setting_key, numeric_value
+    from booking_core.settings
+    where setting_key in (
+      'direct_discount_percent',
+      'los_total_discount_1_2_nights',
+      'los_total_discount_3_4_nights',
+      'los_total_discount_5_6_nights',
+      'los_total_discount_7_plus_nights'
+    )
+  `) as Array<{ setting_key: string; numeric_value: number | string | null }>;
+  const values = new Map(rows.map(row => [row.setting_key, Number(row.numeric_value)]));
+  const base = values.get("direct_discount_percent");
+  const pick = (key: string) => {
+    const value = values.get(key) ?? base;
+    if (typeof value !== "number" || !Number.isFinite(value)) throw new Error(`Missing ${key}`);
+    return Math.round(value);
+  };
+  return {
+    nights1to2: pick("los_total_discount_1_2_nights"),
+    nights3to4: pick("los_total_discount_3_4_nights"),
+    nights5to6: pick("los_total_discount_5_6_nights"),
+    nights7plus: pick("los_total_discount_7_plus_nights"),
+  };
+}
+
+const cachedDirectDiscounts = unstable_cache(loadDirectDiscounts, ["room-finder-direct-discounts-v1"], {
+  revalidate: 6 * 60 * 60,
+  tags: [BOOKING_CORE_DEALS_CACHE_TAG],
+});
+
+export async function getDirectDiscounts(): Promise<DirectDiscounts | null> {
+  try {
+    return await cachedDirectDiscounts();
+  } catch (error) {
+    console.error("Room Finder could not load direct-booking discounts", error);
+    return null;
+  }
 }

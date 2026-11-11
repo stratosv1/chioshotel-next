@@ -45,7 +45,14 @@ export type BookingTurnOutcome =
   | { kind: "restart" }
   | { kind: "destination_mismatch"; destination: string }
   | { kind: "invalid_checkout" }
-  | { kind: "clarification"; query: string; step: FinderStep; lead?: boolean }
+  | {
+      kind: "clarification";
+      query: string;
+      step: FinderStep;
+      lead?: boolean;
+      /** Ref 15: the same stay one year later, offered for a past date. */
+      suggestion?: { checkin: string; checkout: string };
+    }
   | { kind: "capacity"; guests: number; minimumRooms: number }
   | { kind: "prompt"; field: ClarificationStep; guestRoom?: number }
   | { kind: "ready" }
@@ -89,6 +96,38 @@ const GROUP_LIMIT_MESSAGE: Record<RoomFinderCommand["language"], (guests: number
   es: guests => `Para ${guests} personas nuestra recepción prepara una propuesta personal, ya que la búsqueda automática cubre hasta 15 personas en 3 habitaciones. Dejen sus datos abajo o llámennos y les responderemos en breve.`,
   tr: guests => `${guests} kişi için resepsiyonumuz size özel bir teklif hazırlar; otomatik arama 3 odada en fazla 15 kişiyi kapsar. Bilgilerinizi aşağıya bırakın veya bizi arayın, kısa sürede dönüş yapalım.`,
 };
+
+// Ref 15: a past check-in that is clearly a wrong year ("10/05/2026" typed in
+// November 2026) is offered one year later; the guest confirms with "yes".
+const PAST_CHECKIN_NEXT_YEAR: Record<RoomFinderCommand["language"], (past: string, next: string) => string> = {
+  el: (past, next) => `Η ${past} έχει ήδη περάσει. Μήπως εννοείτε ${next}; Γράψτε «ναι» ή μια άλλη ημερομηνία.`,
+  en: (past, next) => `${past} has already passed. Did you mean ${next}? Reply “yes” or write another date.`,
+  de: (past, next) => `Der ${past} liegt bereits in der Vergangenheit. Meinten Sie den ${next}? Antworten Sie „ja“ oder nennen Sie ein anderes Datum.`,
+  fr: (past, next) => `Le ${past} est déjà passé. Vouliez-vous dire le ${next} ? Répondez « oui » ou indiquez une autre date.`,
+  it: (past, next) => `Il ${past} è già passato. Intendevate il ${next}? Rispondete «sì» o scrivete un’altra data.`,
+  es: (past, next) => `El ${past} ya ha pasado. ¿Querían decir el ${next}? Respondan «sí» o escriban otra fecha.`,
+  tr: (past, next) => `${past} tarihi geçti. ${next} mı demek istediniz? “evet” yazın veya başka bir tarih yazın.`,
+};
+
+function shiftIsoYear(iso: string, years: number) {
+  if (!isStrictIsoDate(iso)) return "";
+  const shifted = `${Number(iso.slice(0, 4)) + years}${iso.slice(4)}`;
+  return isStrictIsoDate(shifted) ? shifted : "";
+}
+
+function dayMonthYear(iso: string) {
+  return `${Number(iso.slice(8, 10))}/${Number(iso.slice(5, 7))}/${iso.slice(0, 4)}`;
+}
+
+/** The same stay one year later when that is a plausible upcoming stay. */
+function nextYearStay(checkin: string, checkout: string) {
+  const nextCheckin = shiftIsoYear(checkin, 1);
+  const today = todayInAthensIso();
+  if (!nextCheckin || nextCheckin < today) return null;
+  if (daysBetweenIsoDates(today, nextCheckin) > 450) return null;
+  const nextCheckout = checkout ? shiftIsoYear(checkout, 1) : "";
+  return { checkin: nextCheckin, checkout: nextCheckout && nextCheckout > nextCheckin ? nextCheckout : "" };
+}
 
 // A check-in before today (e.g. "yesterday") is asked again.
 const PAST_CHECKIN_MESSAGE: Record<RoomFinderCommand["language"], string> = {
@@ -625,6 +664,8 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
   }
 
   if (draft.checkin && draft.checkin < todayInAthensIso()) {
+    const suggestion = nextYearStay(draft.checkin, draft.checkout);
+    const pastCheckin = draft.checkin;
     // The stated length ("for 2 nights") is kept for the corrected arrival.
     draft.checkin = "";
     draft.checkout = "";
@@ -632,8 +673,14 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
       state: { step: "checkin", draft },
       outcome: {
         kind: "clarification",
-        query: PAST_CHECKIN_MESSAGE[command.language] || PAST_CHECKIN_MESSAGE.en,
+        query: suggestion
+          ? (PAST_CHECKIN_NEXT_YEAR[command.language] || PAST_CHECKIN_NEXT_YEAR.en)(
+            dayMonthYear(pastCheckin),
+            dayMonthYear(suggestion.checkin),
+          )
+          : PAST_CHECKIN_MESSAGE[command.language] || PAST_CHECKIN_MESSAGE.en,
         step: "checkin",
+        ...(suggestion ? { suggestion } : {}),
       },
       changed: true,
     };

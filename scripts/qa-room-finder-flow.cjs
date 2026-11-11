@@ -57,6 +57,7 @@ const roomInfoIntentPath = path.join(root, "lib/ai-assistant/room-info-intent.ts
 const repeatGuardPath = path.join(root, "components/ai/room-finder-repeat-guard.ts");
 const earlyArrivalPath = path.join(root, "lib/ai-assistant/early-arrival.ts");
 const arrivalTimePath = path.join(root, "lib/ai-assistant/arrival-time.ts");
+const supportIntentPath = path.join(root, "lib/ai-assistant/support-intent.ts");
 const salesIntelligencePath = path.join(root, "components/ai/room-finder-sales-intelligence.ts");
 const preferenceAckPath = path.join(root, "components/ai/room-finder-preference-ack.ts");
 
@@ -84,6 +85,7 @@ const { detectRoomInfoRequest } = executeCommonJs(transpile(roomInfoIntentPath))
 const { avoidRepeatedQuestion } = executeCommonJs(transpile(repeatGuardPath));
 const { mentionsEarlyMorningArrival, nightBefore } = executeCommonJs(transpile(earlyArrivalPath));
 const { extractArrivalTime } = executeCommonJs(transpile(arrivalTimePath));
+const { detectSupportIntent } = executeCommonJs(transpile(supportIntentPath));
 const salesIntelligence = executeCommonJs(transpile(salesIntelligencePath));
 const { preferenceAckMessage, mentionsEveryRoomAmenity } = executeCommonJs(transpile(preferenceAckPath), id => {
   if (id === "./room-finder-sales-intelligence") return salesIntelligence;
@@ -808,8 +810,67 @@ function testArrivalTimeReachesReception() {
   assert((production.match(/finder\.arrivalTime \?/g) || []).length >= 2, "the arrival time is missing from one of the two reception requests");
 }
 
+// Ref 18: an existing booking / a person / a better price is never a new search.
+function testSupportRequestsAreNotSearches() {
+  const cases = [
+    ["Έχω ήδη κράτηση και θέλω να αλλάξω ημερομηνίες", "existing_booking"],
+    ["θέλω να ακυρώσω την κράτησή μου", "existing_booking"],
+    ["I have a booking for June, can we add a night?", "existing_booking"],
+    ["Ich möchte meine Buchung stornieren", "existing_booking"],
+    ["θέλω να μιλήσω με κάποιον", "human"],
+    ["Can I speak to a real person?", "human"],
+    ["μπορείτε να μου κάνετε καλύτερη τιμή;", "better_price"],
+    ["any discount?", "better_price"],
+  ];
+  for (const [message, intent] of cases) {
+    assert(detectSupportIntent(message) === intent, `"${message}" was not recognised as ${intent}`);
+  }
+  for (const message of [
+    "Ποια είναι η πολιτική ακύρωσης;",
+    "Is there free cancellation?",
+    "10/6 για 2 βράδια, έχετε έκπτωση;",
+    "Θέλω δωμάτιο για 2 άτομα",
+    "Details for room 3",
+  ]) {
+    assert(detectSupportIntent(message) === null, `"${message}" was wrongly taken out of the booking flow`);
+  }
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(/const supportIntent = detectSupportIntent\(value\)/.test(hook), "support requests are not checked before the AI");
+  assert(/supportIntent === "better_price" \? "normal" : "contact"/.test(hook), "existing booking / person do not show the call and WhatsApp buttons");
+}
+
+// Ref 15: a past date with the wrong year is offered one year later.
+function testWrongYearIsOfferedNextYear() {
+  const today = new Date();
+  const lastYear = today.getUTCFullYear() - 1;
+  // A date about two months from now, typed with last year's year.
+  const soon = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() + 2, 10));
+  const mm = String(soon.getUTCMonth() + 1).padStart(2, "0");
+  const typedYear = soon.getUTCFullYear() - 1;
+  const past = `${typedYear}-${mm}-10`;
+  const result = resolveAssistantTurn(createInitialBookingFlowState(), command([
+    { type: "set_stay_dates", checkin: past, checkout: `${typedYear}-${mm}-12` },
+  ]));
+  assert(result.outcome.kind === "clarification", "a past date was not questioned");
+  assert(result.outcome.suggestion?.checkin === `${soon.getUTCFullYear()}-${mm}-10`, "the next-year check-in was not suggested");
+  assert(result.outcome.suggestion?.checkout === `${soon.getUTCFullYear()}-${mm}-12`, "the next-year check-out was not suggested");
+  assert(/ναι/.test(result.outcome.query), "the guest was not asked to confirm with yes");
+
+  // Yesterday is not a wrong year: no suggestion a year away.
+  const y = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const yesterday = resolveAssistantTurn(createInitialBookingFlowState(), command([{ type: "set_stay_dates", checkin: y }]));
+  assert(yesterday.outcome.kind === "clarification", "yesterday was accepted");
+  assert(!yesterday.outcome.suggestion || yesterday.outcome.suggestion.checkin > y, "yesterday got a wrong suggestion");
+  void lastYear;
+
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(/pendingYearFix && current === "checkin"[\s\S]{0,200}YES_WORDS\.test\(value\)/.test(hook), "yes does not apply the suggested year");
+}
+
 function main() {
   testStrictDates();
+  testSupportRequestsAreNotSearches();
+  testWrongYearIsOfferedNextYear();
   testArrivalTimeReachesReception();
   testSecondAuditScenarios();
   testCalendarButton();

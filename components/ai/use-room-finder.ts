@@ -56,8 +56,13 @@ import { mentionsEarlyMorningArrival, nightBefore } from "@/lib/ai-assistant/ear
 import { earlyArrivalMessage } from "./room-finder-early-arrival";
 import { extractArrivalTime } from "@/lib/ai-assistant/arrival-time";
 import { arrivalTimeMessage } from "./room-finder-arrival-time";
+import { detectSupportIntent } from "@/lib/ai-assistant/support-intent";
+import { fetchDirectDiscounts, supportMessage } from "./room-finder-support";
 
 export type { FinderStep } from "./room-finder-booking-flow";
+
+// Ref 15: confirming the suggested year.
+const YES_WORDS = /^\s*(?:ναι|ναί|ναι\s+αυτό|σωστά|σωστα|ακριβώς|ακριβως|ok|οκ|οκει|οκέι|yes|yeah|yep|correct|exactly|ja|genau|richtig|oui|exactement|sì|si|esatto|sí|exacto|evet|doğru|aynen)\s*[.!👍]*\s*$/iu;
 
 // Property-knowledge entries that describe rooms; the four room types answer
 // general room questions instead (ref 10).
@@ -594,6 +599,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [preferences, setPreferences] = useState<RoomFinderPreference[]>([]);
   // Ref 12: the arrival time the guest mentioned ("HH:MM"), sent to reception.
   const [arrivalTime, setArrivalTime] = useState("");
+  // Ref 15: a past date offered one year later, applied when the guest says yes.
+  const [pendingYearFix, setPendingYearFix] = useState<{ checkin: string; checkout: string } | null>(null);
   // The four room types shown when the guest has no dates yet (homepage cards).
   const [roomTypes, setRoomTypes] = useState<{ language: RoomFinderLanguage; cards: RoomTypeCard[] } | null>(null);
   const [preferredRoomNumber, setPreferredRoomNumber] = useState<number | null>(null);
@@ -804,6 +811,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setInput("");
     setPreferences([]);
     setArrivalTime("");
+    setPendingYearFix(null);
     setPreferredRoomNumber(null);
     clearSearchSelectionState();
     setFailedSearch(null);
@@ -1618,6 +1626,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     if (resolution.outcome.kind === "clarification") {
+      setPendingYearFix(resolution.outcome.suggestion || null);
       add("assistant", resolution.outcome.query, resolution.outcome.lead ? "lead" : "normal");
       return;
     }
@@ -1780,6 +1789,50 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         await chooseGuests(number, value);
         return;
       }
+    }
+
+    // Ref 15: "yes" to "Did you mean 10/5/2027?" applies the suggested year.
+    if (pendingYearFix && current === "checkin") {
+      const fix = pendingYearFix;
+      setPendingYearFix(null);
+      if (YES_WORDS.test(value)) {
+        if (!await beginUserTurn(value, "date", "👍")) return;
+        try {
+          await applyCommand({
+            language,
+            replyMode: "execute",
+            actions: [{
+              type: "set_stay_dates",
+              checkin: fix.checkin,
+              ...(fix.checkout ? { checkout: fix.checkout } : {}),
+            }],
+          });
+        } finally {
+          endUserTurn();
+        }
+        return;
+      }
+    }
+
+    // Ref 18: an existing booking, a request for a person or for a better
+    // price is never a new availability search.
+    const supportIntent = detectSupportIntent(value);
+    if (supportIntent) {
+      if (!await beginUserTurn(value, "normal", "👍")) return;
+      try {
+        const discounts = supportIntent === "better_price" ? await fetchDirectDiscounts(language) : null;
+        add(
+          "assistant",
+          supportMessage(language, supportIntent, discounts, Boolean(checkin && checkout)),
+          supportIntent === "better_price" ? "normal" : "contact",
+          supportIntent === "existing_booking"
+            ? `${supportMessage(language, supportIntent, null, false)}\n\n[staff] Ο επισκέπτης αναφέρει υπάρχουσα κράτηση.`
+            : undefined,
+        );
+      } finally {
+        endUserTurn();
+      }
+      return;
     }
 
     // A question about one room is answered straight from the room catalog,

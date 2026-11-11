@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getRoomTypeCards } from "@/lib/ai-assistant/room-type-cards";
+import { getDirectDiscounts, getRoomTypeCards } from "@/lib/ai-assistant/room-type-cards";
 import type { RoomFinderAssistantLanguage } from "@/lib/ai-assistant/room-finder-types";
 
 export const runtime = "nodejs";
@@ -16,9 +16,9 @@ export async function GET(request: NextRequest) {
     : "en";
 
   try {
-    const roomTypes = await getRoomTypeCards(language);
+    const [roomTypes, discounts] = await Promise.all([getRoomTypeCards(language), getDirectDiscounts()]);
     return NextResponse.json(
-      { ok: true, language, roomTypes },
+      { ok: true, language, roomTypes, discounts },
       { headers: { "Cache-Control": "public, s-maxage=600, stale-while-revalidate=3600" } },
     );
   } catch (error) {

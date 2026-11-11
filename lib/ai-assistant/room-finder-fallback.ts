@@ -329,8 +329,11 @@ export function fallbackRoomFinderCommand(
 
   const today = todayInAthensIso();
   const parsedDates = extractDates(text, today);
-  // A rescue parser must never reinterpret a partly past range as a different future stay.
-  const dates = parsedDates.some(date => date.value < today) ? [] : parsedDates;
+  // A rescue parser must never reinterpret a partly past range as a different
+  // future stay. A fully past stay is kept: the booking flow then says it has
+  // passed and offers the same dates next year (ref 15).
+  const pastCount = parsedDates.filter(date => date.value < today).length;
+  const dates = pastCount > 0 && pastCount < parsedDates.length ? [] : parsedDates;
   const actions: RoomFinderAction[] = [];
 
   const stayDestination = extractStayDestination(text, context);
