@@ -17,6 +17,7 @@ import { RoomTypeCards } from "./room-finder-room-types";
 import { RoomInfoCard } from "./room-finder-room-info";
 import { DatePickReply } from "./room-finder-date-pick";
 import { arrivalTimeLabel } from "./room-finder-arrival-time";
+import { childrenLabel } from "./room-finder-guest-notes";
 import { RoomFinderWatchCard } from "./room-finder-watch-card";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
@@ -662,6 +663,7 @@ export function RoomFinderProduction({
       stayRange(finder.checkin, finder.checkout, language),
       ...(finder.arrivalTime ? [`${arrivalTimeLabel(language)}: ${finder.arrivalTime}`] : []),
       copy.guestLabel(finder.guestTotal),
+      ...(finder.childrenNote ? [`${childrenLabel(language)}: ${finder.childrenNote}`] : []),
       ...finder.choices.flatMap(choice => [
         `${choice.offer.name}: ${money(choice.offer.directTotal, language)}`,
         ...splitStayLines(choice.offer),
@@ -1020,6 +1022,7 @@ export function RoomFinderProduction({
                       stay,
                       finder.arrivalTime ? `${arrivalTimeLabel(language)}: ${finder.arrivalTime}` : "",
                       guestSummary,
+                      finder.childrenNote ? `${childrenLabel(language)}: ${finder.childrenNote}` : "",
                       roomSummary,
                     ].filter(Boolean)}
                     guestMessages={guestMessages}

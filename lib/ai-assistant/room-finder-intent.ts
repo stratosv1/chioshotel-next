@@ -295,6 +295,9 @@ REFERENCE EXAMPLES
 26) “θελω φοτογραφιεσ”
 => browse_rooms.
 
+27) Context has dates 10/9–12/9. Customer: “Όχι 11/9 με 13/9. 2 άτομα”.
+=> set_stay_dates(checkin=11/9, checkout=13/9), set_guest_count(totalGuests=2). A leading “no” followed by new values is a correction: apply the new values, no clarification.
+
 SCHEMA RULES
 - For irrelevant nullable fields return null.
 - destination and destinationKind are populated only for set_stay_destination; otherwise return null.

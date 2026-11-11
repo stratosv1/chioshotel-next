@@ -58,6 +58,9 @@ import { extractArrivalTime } from "@/lib/ai-assistant/arrival-time";
 import { arrivalTimeMessage } from "./room-finder-arrival-time";
 import { detectSupportIntent } from "@/lib/ai-assistant/support-intent";
 import { fetchDirectDiscounts, supportMessage } from "./room-finder-support";
+import { extractChildren, type ChildrenInfo } from "@/lib/ai-assistant/children";
+import { detectSmallTalk, stripCorrectionNo } from "@/lib/ai-assistant/small-talk";
+import { childrenMessage, childrenSummary, smallTalkMessage } from "./room-finder-guest-notes";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -599,6 +602,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [preferences, setPreferences] = useState<RoomFinderPreference[]>([]);
   // Ref 12: the arrival time the guest mentioned ("HH:MM"), sent to reception.
   const [arrivalTime, setArrivalTime] = useState("");
+  // Ref 14: children and their ages, sent to reception.
+  const [children, setChildren] = useState<ChildrenInfo | null>(null);
   // Ref 15: a past date offered one year later, applied when the guest says yes.
   const [pendingYearFix, setPendingYearFix] = useState<{ checkin: string; checkout: string } | null>(null);
   // The four room types shown when the guest has no dates yet (homepage cards).
@@ -811,6 +816,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setInput("");
     setPreferences([]);
     setArrivalTime("");
+    setChildren(null);
     setPendingYearFix(null);
     setPreferredRoomNumber(null);
     clearSearchSelectionState();
@@ -1548,6 +1554,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       add("assistant", arrivalAck, "normal", `${arrivalAck}\n\n[staff] Ώρα άφιξης: ${statedArrivalTime}`);
     }
 
+    // Ref 14: confirm children (ages, cot rule) and keep them for reception.
+    const statedChildren = extractChildren(guestText);
+    const childrenAck = statedChildren && JSON.stringify(statedChildren) !== JSON.stringify(children)
+      ? childrenMessage(language, statedChildren)
+      : "";
+    if (childrenAck && statedChildren) {
+      setChildren(statedChildren);
+      add("assistant", childrenAck, "normal", `${childrenAck}\n\n[staff] Παιδιά: ${childrenSummary("el", statedChildren) || "ναι"}`);
+    }
+
     const roomInterestAction = [...executableActions]
       .reverse()
       .find(action =>
@@ -1660,7 +1676,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         );
         return;
       }
-      if (roomInterestNumber || preferenceAck || arrivalAck) return;
+      if (roomInterestNumber || preferenceAck || arrivalAck || childrenAck) return;
       add("assistant", preferenceAction ? PREFERENCE_APPLIED[language] : NO_BOOKING_CHANGE[language]);
       return;
     }
@@ -1791,6 +1807,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       }
     }
 
+    // Ref 16: thanks / greeting / goodbye get a natural reply.
+    const smallTalk = detectSmallTalk(value);
+    if (smallTalk) {
+      if (!await beginUserTurn(value, "normal", smallTalk === "thanks" ? "❤️" : "👍")) return;
+      try {
+        add("assistant", smallTalkMessage(language, smallTalk));
+        if (smallTalk === "greeting") {
+          if (current === "checkin" && !checkin) add("assistant", tone.invalidDate);
+          else repromptCurrentStep();
+        }
+      } finally {
+        endUserTurn();
+      }
+      return;
+    }
+
     // Ref 15: "yes" to "Did you mean 10/5/2027?" applies the suggested year.
     if (pendingYearFix && current === "checkin") {
       const fix = pendingYearFix;
@@ -1849,7 +1881,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       return;
     }
 
-    const promise = interpret(value, current);
+    // Ref 17: "Όχι 11/9 με 13/9. 2 άτομα" is a correction, not a question.
+    const promise = interpret(stripCorrectionNo(value), current);
     const kind: MessageKind = current === "checkin" || current === "checkout"
       ? "date"
       : current === "rooms"
@@ -2109,6 +2142,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],
     arrivalTime,
+    childrenNote: children ? childrenSummary(language, children) : "",
     roomTypes: roomTypes?.language === language ? roomTypes.cards : [],
     loadRoomTypes,
   };

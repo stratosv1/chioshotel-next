@@ -58,6 +58,8 @@ const repeatGuardPath = path.join(root, "components/ai/room-finder-repeat-guard.
 const earlyArrivalPath = path.join(root, "lib/ai-assistant/early-arrival.ts");
 const arrivalTimePath = path.join(root, "lib/ai-assistant/arrival-time.ts");
 const supportIntentPath = path.join(root, "lib/ai-assistant/support-intent.ts");
+const childrenPath = path.join(root, "lib/ai-assistant/children.ts");
+const smallTalkPath = path.join(root, "lib/ai-assistant/small-talk.ts");
 const salesIntelligencePath = path.join(root, "components/ai/room-finder-sales-intelligence.ts");
 const preferenceAckPath = path.join(root, "components/ai/room-finder-preference-ack.ts");
 
@@ -86,6 +88,8 @@ const { avoidRepeatedQuestion } = executeCommonJs(transpile(repeatGuardPath));
 const { mentionsEarlyMorningArrival, nightBefore } = executeCommonJs(transpile(earlyArrivalPath));
 const { extractArrivalTime } = executeCommonJs(transpile(arrivalTimePath));
 const { detectSupportIntent } = executeCommonJs(transpile(supportIntentPath));
+const { extractChildren } = executeCommonJs(transpile(childrenPath));
+const { detectSmallTalk, stripCorrectionNo } = executeCommonJs(transpile(smallTalkPath));
 const salesIntelligence = executeCommonJs(transpile(salesIntelligencePath));
 const { preferenceAckMessage, mentionsEveryRoomAmenity } = executeCommonJs(transpile(preferenceAckPath), id => {
   if (id === "./room-finder-sales-intelligence") return salesIntelligence;
@@ -867,8 +871,43 @@ function testWrongYearIsOfferedNextYear() {
   assert(/pendingYearFix && current === "checkin"[\s\S]{0,200}YES_WORDS\.test\(value\)/.test(hook), "yes does not apply the suggested year");
 }
 
+// Refs 14, 16, 17 (real guest messages where available).
+function testChildrenThanksAndCorrections() {
+  // 14: children and ages reach reception; the cot rule for babies.
+  const family = extractChildren("1 δωματιο για 4 ατομα, 2 ενηλικες κ 2 παιδια ηλικίας 4 κ 6 ετων");
+  assert(family && family.count === 2 && family.ages.join(",") === "4,6", "the real 6/11 family message lost the children's ages");
+  const baby = extractChildren("we are 2 adults with a baby of 10 months");
+  assert(baby?.infant, "a baby was not recognised for the cot rule");
+  assert(extractChildren("2 Erwachsene, 1 Kind (5)")?.ages.join(",") === "5", "German child age was not read");
+  for (const message of ["10/10 για 2 βράδια", "οικογενειακό διαμέρισμα", "2 adults 1 room"]) {
+    assert(extractChildren(message) === null, `"${message}" was wrongly read as children`);
+  }
+  const hook = fs.readFileSync(hookPath, "utf8");
+  const production = fs.readFileSync(productionPath, "utf8");
+  assert(/\[staff\] Παιδιά:/.test(hook), "children are not marked for staff in the conversation");
+  assert((production.match(/finder\.childrenNote \?/g) || []).length >= 2, "children are missing from a reception request");
+
+  // 16: thanks / greeting / goodbye get a natural reply, not "nothing changed".
+  assert(detectSmallTalk("ευχαριστώ πολύ") === "thanks", "the real 4/9 'ευχαριστώ πολύ' was not recognised");
+  assert(detectSmallTalk("Thank you!") === "thanks", "thank you was not recognised");
+  assert(detectSmallTalk("Καλησπέρα σας") === "greeting", "a Greek greeting was not recognised");
+  assert(detectSmallTalk("Hallo") === "greeting", "the real 21/8 'Hallo' was not recognised");
+  assert(detectSmallTalk("αντίο") === "goodbye", "goodbye was not recognised");
+  assert(detectSmallTalk("ευχαριστώ, θέλω 2 δωμάτια") === null, "a booking message was swallowed as thanks");
+  assert(detectSmallTalk("Καλησπέρα, θέλω δωμάτιο 10/10") === null, "a booking message was swallowed as a greeting");
+  assert(/const smallTalk = detectSmallTalk\(value\)/.test(hook), "small talk is not handled before the AI");
+
+  // 17: "Όχι 11/9 με 13/9. 2 άτομα" (real 3/9) is a correction.
+  assert(stripCorrectionNo("Όχι 11/9 με 13/9. 2 άτομα") === "11/9 με 13/9. 2 άτομα", "the real 3/9 correction was not cleaned");
+  assert(stripCorrectionNo("no, 10/6 to 13/6") === "10/6 to 13/6", "an English correction was not cleaned");
+  assert(stripCorrectionNo("όχι 13/9, 14/9") === "όχι 13/9, 14/9", "an ambiguous edit was changed");
+  assert(stripCorrectionNo("όχι, 3 άτομα") === "όχι, 3 άτομα", "a non-range correction was changed");
+  assert(/interpret\(stripCorrectionNo\(value\), current\)/.test(hook), "corrections do not reach the interpreter cleaned");
+}
+
 function main() {
   testStrictDates();
+  testChildrenThanksAndCorrections();
   testSupportRequestsAreNotSearches();
   testWrongYearIsOfferedNextYear();
   testArrivalTimeReachesReception();
