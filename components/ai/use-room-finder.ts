@@ -49,6 +49,7 @@ import type { RoomChoice } from "./room-finder-selected-card";
 import { fetchRoomTypes, roomTypesMessage, type RoomTypeCard } from "./room-finder-room-types";
 import { detectRoomInfoRequest, noSuchRoomMessage, roomInfoMessage } from "./room-finder-room-info";
 import { avoidRepeatedQuestion, type PromptType } from "./room-finder-repeat-guard";
+import { mentionsEveryRoomAmenity, preferenceAckMessage } from "./room-finder-preference-ack";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -1431,7 +1432,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function applyCommand(command: RoomFinderCommand) {
+  async function applyCommand(command: RoomFinderCommand, guestText = "") {
     const knowledgeActions = command.actions.filter(action =>
       action.type === "answer_property_question" && typeof action.answer === "string" && action.answer.trim(),
     );
@@ -1462,6 +1463,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       .reverse()
       .find(action => action.type === "set_preferences");
     if (preferenceAction) setPreferences(preferenceAction.preferences || []);
+
+    // Ref 3: confirm a stated preference (and "every room has a private
+    // bathroom…") before the next booking question.
+    const preferenceAck = preferenceAckMessage(
+      language,
+      preferences,
+      preferenceAction ? preferenceAction.preferences || [] : preferences,
+      knowledgeActions.length === 0 && mentionsEveryRoomAmenity(guestText),
+    );
+    if (preferenceAck) add("assistant", preferenceAck);
 
     const roomInterestAction = [...executableActions]
       .reverse()
@@ -1555,7 +1566,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         );
         return;
       }
-      if (roomInterestNumber) return;
+      if (roomInterestNumber || preferenceAck) return;
       add("assistant", preferenceAction ? PREFERENCE_APPLIED[language] : NO_BOOKING_CHANGE[language]);
       return;
     }
@@ -1729,7 +1740,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     try {
-      await applyCommand(result.command);
+      await applyCommand(result.command, value);
     } catch (error) {
       // A bug while applying an understood command is not an interpreter
       // failure: log it separately so it can be found and fixed.

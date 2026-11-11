@@ -55,6 +55,8 @@ const legacyFlowPath = path.join(root, "components/ai/AiRoomFinderFlow.tsx");
 const interpretRoutePath = path.join(root, "app/api/ai-assistant/interpret/route.ts");
 const roomInfoIntentPath = path.join(root, "lib/ai-assistant/room-info-intent.ts");
 const repeatGuardPath = path.join(root, "components/ai/room-finder-repeat-guard.ts");
+const salesIntelligencePath = path.join(root, "components/ai/room-finder-sales-intelligence.ts");
+const preferenceAckPath = path.join(root, "components/ai/room-finder-preference-ack.ts");
 
 const dateUtils = executeCommonJs(transpile(datePath));
 const flow = executeCommonJs(transpile(flowPath), id => {
@@ -78,6 +80,11 @@ const { feasibleOffersForGroup, hasDistinctOfferPlan, roomOfferKey } = offerPlan
 const { fallbackRoomFinderCommand } = fallback;
 const { detectRoomInfoRequest } = executeCommonJs(transpile(roomInfoIntentPath));
 const { avoidRepeatedQuestion } = executeCommonJs(transpile(repeatGuardPath));
+const salesIntelligence = executeCommonJs(transpile(salesIntelligencePath));
+const { preferenceAckMessage, mentionsEveryRoomAmenity } = executeCommonJs(transpile(preferenceAckPath), id => {
+  if (id === "./room-finder-sales-intelligence") return salesIntelligence;
+  return require(id);
+});
 
 function command(actions, replyMode = "execute") {
   return { language: "el", replyMode, actions };
@@ -697,8 +704,30 @@ function testNeverTheSameQuestionTwice() {
   assert(/avoidRepeatedQuestion\(current, content, promptType, language\)/.test(hook), "the chat does not use the repeat guard");
 }
 
+// Ref 3: a stated preference is confirmed with the rooms that have it, and
+// "bathroom" gets the every-room answer (real session 28/10).
+function testPreferencesAreConfirmed() {
+  const kitchen = preferenceAckMessage("en", [], ["kitchen"], true);
+  assert(/Noted: kitchen/.test(kitchen), "the kitchen preference was not confirmed");
+  assert(/rooms 3, 4, 8, 9, 10/.test(kitchen), "the kitchen confirmation did not list rooms 3, 4, 8, 9, 10");
+  assert(/private bathroom/.test(kitchen), "the bathroom question was not answered");
+  assert(!/available\b(?! for your dates)/i.test(kitchen.replace("If they are available for your dates", "")), "the confirmation claimed availability");
+
+  const stairs = preferenceAckMessage("el", ["kitchen"], ["kitchen", "no_stairs"], false);
+  assert(/Σημείωσα: χωρίς σκάλες/.test(stairs) && /5, 6, 7/.test(stairs), "only the new Greek preference should be confirmed with rooms 5, 6, 7");
+  assert(!/κουζίνα/.test(stairs), "an already confirmed preference was confirmed again");
+
+  assert(preferenceAckMessage("en", ["kitchen"], ["kitchen"], false) === "", "an unchanged preference was confirmed again");
+  assert(mentionsEveryRoomAmenity("With bathroom and kitchen"), "bathroom was not recognised");
+  assert(!mentionsEveryRoomAmenity("With kitchen"), "kitchen alone was treated as an every-room amenity");
+
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(/applyCommand\(result\.command, value\)/.test(hook), "the guest text does not reach the preference confirmation");
+}
+
 function main() {
   testStrictDates();
+  testPreferencesAreConfirmed();
   testNeverTheSameQuestionTwice();
   testPerRoomGuestAnswerNeverLoops();
   testRoomInfoQuestions();

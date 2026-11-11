@@ -236,6 +236,19 @@ const ANSWER_COPY: Record<RoomFinderLanguage, {
   },
 };
 
+/** Short label of a room preference in the guest's language. */
+export function traitLabel(language: RoomFinderLanguage, trait: RoomFinderPreference) {
+  return (TRAIT_LABELS[language] || TRAIT_LABELS.en)[trait];
+}
+
+/** Rooms (1–10) that have this trait, from the owner-confirmed room facts. */
+export function roomsWithTrait(trait: RoomFinderPreference) {
+  return Object.keys(ROOM_TRAITS)
+    .map(Number)
+    .filter(roomNumber => ROOM_TRAITS[roomNumber].includes(trait))
+    .sort((left, right) => left - right);
+}
+
 export function roomTraits(roomNumber: number) {
   return ROOM_TRAITS[roomNumber] || [];
 }
