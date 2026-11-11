@@ -985,6 +985,20 @@ function testDetailsGivenEarlyAreConfirmed() {
   assert(hook.includes("const noted = notedDetails(language, step, flow.draft, resolution.state.draft);"), "prompts do not confirm early details");
 }
 
+// No availability: change dates/guests first, then one contact card whose
+// form opens on request and carries the cancellation alert (no second form).
+function testNoAvailabilityIsOneShortCard() {
+  const production = fs.readFileSync(productionPath, "utf8");
+  const lead = fs.readFileSync(path.join(root, "components/ai/room-finder-lead-card.tsx"), "utf8");
+  assert(!production.includes("RoomFinderWatchCard"), "no-availability still shows a separate alert form");
+  assert(production.includes("resultActions(Boolean(finder.checkin && finder.checkout), false)"), "no-availability repeats New search");
+  assert(production.includes('collapsed={Boolean(finder.unavailableSearch) && finder.step === "unavailable"}'), "no-availability opens the reception form unasked");
+  assert(production.includes('watch={finder.step === "unavailable" ? finder.unavailableSearch : null}'), "the cancellation alert is no longer offered");
+  assert(lead.includes('data-room-finder-lead-open="true"') && lead.includes('data-room-finder-lead-watch="true"'), "lead card lacks open button or alert option");
+  assert(lead.includes("/api/ai-room-finder/availability-watch/"), "the alert option does not register the alert");
+  assert(lead.includes("watchMissingEmail"), "the alert can be requested without an email");
+}
+
 function main() {
   testStrictDates();
   testChildrenThanksAndCorrections();
@@ -1018,6 +1032,7 @@ function main() {
   testConversationSurvivesReload();
   testNewSearchCanBeUndone();
   testDetailsGivenEarlyAreConfirmed();
+  testNoAvailabilityIsOneShortCard();
   console.log("Room Finder deterministic flow QA passed.");
 }
 

@@ -1,8 +1,9 @@
 "use client";
 
-import { MessageCircle, Phone } from "lucide-react";
+import { BellRing, MessageCircle, Phone } from "lucide-react";
 import { useId, useState } from "react";
 import { trackLead } from "@/lib/analytics/lead";
+import { getRoomFinderSessionId } from "./room-finder-chat-ui";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 
 // Shown under assistant messages that end the automated flow (no
@@ -135,6 +136,58 @@ const LEAD_COPY: Record<RoomFinderLanguage, LeadCopy> = {
   },
 };
 
+// When nothing is available the form opens on request, and the cancellation
+// alert is a checkbox in it, so the guest sees one short card, not two forms.
+const LEAD_EXTRA: Record<RoomFinderLanguage, {
+  open: string;
+  watch: string;
+  watchNeedsEmail: string;
+  watchSent: string;
+}> = {
+  el: {
+    open: "Να σας απαντήσει η reception",
+    watch: "Ειδοποιήστε με με email αν ελευθερωθούν αυτές οι ημερομηνίες",
+    watchNeedsEmail: "Για την ειδοποίηση χρειάζεται email.",
+    watchSent: "Θα σας στείλουμε email αν ελευθερωθούν οι ημερομηνίες σας.",
+  },
+  en: {
+    open: "Have reception reply to me",
+    watch: "Email me if these dates become available",
+    watchNeedsEmail: "The alert needs an email address.",
+    watchSent: "We’ll email you if your dates become available.",
+  },
+  de: {
+    open: "Antwort von der Rezeption",
+    watch: "Per E-Mail benachrichtigen, wenn diese Daten frei werden",
+    watchNeedsEmail: "Für die Benachrichtigung wird eine E-Mail-Adresse benötigt.",
+    watchSent: "Wir schreiben Ihnen, sobald Ihre Daten frei werden.",
+  },
+  fr: {
+    open: "Être recontacté par la réception",
+    watch: "Me prévenir par e-mail si ces dates se libèrent",
+    watchNeedsEmail: "L’alerte nécessite une adresse e-mail.",
+    watchSent: "Nous vous écrirons si vos dates se libèrent.",
+  },
+  it: {
+    open: "Fatevi rispondere dalla reception",
+    watch: "Avvisatemi via email se queste date si liberano",
+    watchNeedsEmail: "Per l’avviso serve un indirizzo email.",
+    watchSent: "Vi scriveremo se le vostre date si liberano.",
+  },
+  es: {
+    open: "Que me responda la recepción",
+    watch: "Avisarme por correo si estas fechas quedan libres",
+    watchNeedsEmail: "Para el aviso se necesita un correo electrónico.",
+    watchSent: "Le escribiremos si sus fechas quedan libres.",
+  },
+  tr: {
+    open: "Resepsiyon bana dönsün",
+    watch: "Bu tarihler müsait olursa bana e-posta gönderin",
+    watchNeedsEmail: "Bildirim için e-posta adresi gerekir.",
+    watchSent: "Tarihleriniz müsait olursa size e-posta göndereceğiz.",
+  },
+};
+
 export type LeadStatus = "idle" | "sending" | "sent" | "error";
 
 type LeadCardProps = {
@@ -153,6 +206,10 @@ type LeadCardProps = {
   onWhatsApp: () => void;
   /** Only the latest lead message shows the form; older ones keep the buttons. */
   showForm: boolean;
+  /** The form stays behind a button until the guest asks for it. */
+  collapsed?: boolean;
+  /** No availability: offer the cancellation alert for these dates in the form. */
+  watch?: { checkin: string; checkout: string; groups: number[] } | null;
 };
 
 const INPUT_CLASS = "h-12 w-full min-w-0 rounded-2xl border border-[#d8cec1] bg-white px-3.5 text-[16px]";
@@ -170,16 +227,48 @@ export function RoomFinderLeadCard({
   onStatusChange,
   onWhatsApp,
   showForm,
+  collapsed = false,
+  watch = null,
 }: LeadCardProps) {
   const copy = LEAD_COPY[language];
+  const extra = LEAD_EXTRA[language];
   const id = useId();
+  const [open, setOpen] = useState(!collapsed);
+  const [watchWanted, setWatchWanted] = useState(false);
+  const [watchSaved, setWatchSaved] = useState(false);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [note, setNote] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const hasContact = Boolean(phone.trim() || email.trim());
-  const canSend = Boolean(name.trim() && hasContact && privacyAccepted && status !== "sending");
+  const watchMissingEmail = Boolean(watch && watchWanted && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim()));
+  const canSend = Boolean(name.trim() && hasContact && privacyAccepted && !watchMissingEmail && status !== "sending");
+
+  async function saveWatch(privacyAcceptedAt: string) {
+    if (!watch || !watchWanted) return;
+    try {
+      const response = await fetch("/api/ai-room-finder/availability-watch/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          firstName: name.trim().split(/\s+/)[0]?.slice(0, 60) || undefined,
+          language,
+          checkin: watch.checkin,
+          checkout: watch.checkout,
+          groups: watch.groups,
+          privacyAccepted: true,
+          privacyAcceptedAt,
+          sessionId: getRoomFinderSessionId(),
+        }),
+      });
+      const payload = await response.json().catch(() => null);
+      setWatchSaved(Boolean(response.ok && payload?.ok));
+    } catch {
+      setWatchSaved(false);
+    }
+  }
 
   async function send() {
     if (!canSend) return;
@@ -192,6 +281,7 @@ export function RoomFinderLeadCard({
       ...(bookingFacts.length ? ["Στοιχεία αναζήτησης:", ...bookingFacts.map(fact => `• ${fact}`), ""] : []),
       ...(guestMessages.length ? ["Τι έγραψε ο επισκέπτης:", ...guestMessages.map(message => `• ${message}`), ""] : []),
       ...(note.trim() ? [`Σημείωση επισκέπτη: ${note.trim()}`, ""] : []),
+      ...(watch && watchWanted ? ["Ζήτησε ειδοποίηση με email αν ελευθερωθούν οι ημερομηνίες.", ""] : []),
       `Όνομα: ${name.trim()}`,
       `Τηλέφωνο: ${phone.trim() || "—"}`,
       `Email: ${email.trim() || "—"}`,
@@ -217,6 +307,7 @@ export function RoomFinderLeadCard({
         }),
       });
       if (!response.ok) throw new Error(`Lead send failed: ${response.status}`);
+      await saveWatch(privacyAcceptedAt);
       onStatusChange("sent");
       trackLead("ai_room_finder_contact", { lead_channel: "email" });
     } catch (error) {
@@ -250,10 +341,26 @@ export function RoomFinderLeadCard({
       </div>
 
       {showForm && status === "sent" && (
-        <p role="status" className="mx-3 mb-3 rounded-2xl bg-[#eef4e7] p-3 text-[14px] font-bold text-[#5f7448]">{copy.sent}</p>
+        <p role="status" className="mx-3 mb-3 rounded-2xl bg-[#eef4e7] p-3 text-[14px] font-bold text-[#5f7448]">
+          {copy.sent}
+          {watchSaved && <span className="mt-1 flex items-start gap-1.5 font-semibold"><BellRing className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />{extra.watchSent}</span>}
+        </p>
       )}
 
-      {showForm && status !== "sent" && (
+      {showForm && status !== "sent" && !open && (
+        <div className="px-3 pb-3">
+          <button
+            type="button"
+            data-room-finder-lead-open="true"
+            onClick={() => setOpen(true)}
+            className="min-h-12 w-full rounded-2xl border border-[#d8cec1] bg-[#fcfaf7] px-4 text-[15px] font-bold text-[#4a4339] transition hover:bg-[#fffaf4] active:scale-[.98]"
+          >
+            {extra.open}
+          </button>
+        </div>
+      )}
+
+      {showForm && status !== "sent" && open && (
         <form
           className="border-t border-[#eee6db] bg-[#fcfaf7] px-4 pb-4 pt-3.5"
           onSubmit={event => {
@@ -323,6 +430,26 @@ export function RoomFinderLeadCard({
                 className="w-full min-w-0 resize-none rounded-2xl border border-[#d8cec1] bg-white px-3.5 py-3 text-[16px] leading-6"
               />
             </div>
+            {watch && (
+              <div className="px-1 pt-1 text-[13px] leading-[18px] text-[#625b52]">
+                <label className="flex cursor-pointer items-start gap-3">
+                  <input
+                    type="checkbox"
+                    data-room-finder-lead-watch="true"
+                    checked={watchWanted}
+                    onChange={event => setWatchWanted(event.target.checked)}
+                    className="mt-0.5 h-5 w-5 shrink-0 accent-[#c66a34]"
+                  />
+                  <span className="flex items-start gap-1.5">
+                    <BellRing className="mt-px h-4 w-4 shrink-0 text-[#c66a34]" aria-hidden="true" />
+                    {extra.watch}
+                  </span>
+                </label>
+                {watchMissingEmail && (
+                  <p className="mt-1 pl-8 text-[12px] font-semibold text-[#8a6a4e]">{extra.watchNeedsEmail}</p>
+                )}
+              </div>
+            )}
             <div className="flex items-start gap-3 px-1 pt-1 text-[13px] leading-[18px] text-[#625b52]">
               <input
                 id={`${id}-privacy`}

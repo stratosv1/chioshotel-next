@@ -18,7 +18,6 @@ import { RoomInfoCard } from "./room-finder-room-info";
 import { DatePickReply } from "./room-finder-date-pick";
 import { arrivalTimeLabel } from "./room-finder-arrival-time";
 import { childrenLabel } from "./room-finder-guest-notes";
-import { RoomFinderWatchCard } from "./room-finder-watch-card";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
 import { RoomFinderLeadCard, type LeadStatus } from "./room-finder-lead-card";
@@ -812,9 +811,11 @@ export function RoomFinderProduction({
     && (finder.step === "selecting" || finder.step === "unavailable" || (finder.step === "complete" && sendStatus !== "sent"))
     && Boolean(finder.checkin && finder.checkout);
   const RESULT_ACTION_CLASS = "flex min-h-[52px] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl border border-[#e1d8cc] bg-white px-1.5 py-2 text-center text-[12.5px] font-bold leading-tight text-[#4a4339] shadow-sm transition hover:bg-[#fffaf4] active:scale-[.97] disabled:opacity-45";
-  const resultActions = (showChanges: boolean) => (
+  // `withRestart: false` when nothing was available: "New search" is in the
+  // header (with Undo), so the no-availability answer stays short.
+  const resultActions = (showChanges: boolean, withRestart = true) => (
     <div data-room-finder-result-actions="true" className="msg ml-10 mt-2">
-      <div className={showChanges ? "grid grid-cols-3 gap-2" : "flex"}>
+      <div className={showChanges ? (withRestart ? "grid grid-cols-3 gap-2" : "grid grid-cols-2 gap-2") : "flex"}>
         {showChanges && (
           <>
             <button
@@ -839,15 +840,17 @@ export function RoomFinderProduction({
             </button>
           </>
         )}
-        <button
-          type="button"
-          disabled={resultActionsDisabled}
-          onClick={startNewSearch}
-          className={showChanges ? RESULT_ACTION_CLASS : `${RESULT_ACTION_CLASS} !flex-row gap-2 px-4`}
-        >
-          <RotateCcw className="h-[18px] w-[18px] text-[#8a6a4e]" aria-hidden="true" />
-          <span>{finder.resultActions.restart}</span>
-        </button>
+        {(withRestart || !showChanges) && (
+          <button
+            type="button"
+            disabled={resultActionsDisabled}
+            onClick={startNewSearch}
+            className={showChanges ? RESULT_ACTION_CLASS : `${RESULT_ACTION_CLASS} !flex-row gap-2 px-4`}
+          >
+            <RotateCcw className="h-[18px] w-[18px] text-[#8a6a4e]" aria-hidden="true" />
+            <span>{finder.resultActions.restart}</span>
+          </button>
+        )}
       </div>
       {showChanges && <p className="mt-1.5 px-1 text-[12px] leading-4 text-[#8a8176]">{finder.resultActions.hint}</p>}
     </div>
@@ -1092,23 +1095,9 @@ export function RoomFinderProduction({
                 )}
                 {message.kind === "lead"
                   && message.id === latestLeadMessageId
-                  && finder.unavailableSearch && (
-                  <RoomFinderWatchCard
-                    key={`${finder.unavailableSearch.checkin}:${finder.unavailableSearch.checkout}:${finder.unavailableSearch.groups.join(",")}`}
-                    language={language}
-                    checkin={finder.unavailableSearch.checkin}
-                    checkout={finder.unavailableSearch.checkout}
-                    groups={finder.unavailableSearch.groups}
-                    privacyShort={breakdownCopy.privacyShort}
-                    privacyMore={breakdownCopy.privacyMore}
-                    privacyNotice={contactCopy.privacyNotice}
-                  />
-                )}
-                {message.kind === "lead"
-                  && message.id === latestLeadMessageId
                   && finder.step === "unavailable"
                   && !finder.typing
-                  && resultActions(Boolean(finder.checkin && finder.checkout))}
+                  && resultActions(Boolean(finder.checkin && finder.checkout), false)}
                 {message.kind === "lead" && (
                   <RoomFinderLeadCard
                     language={language}
@@ -1129,6 +1118,8 @@ export function RoomFinderProduction({
                     onStatusChange={setLeadStatus}
                     onWhatsApp={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
                     showForm={message.id === latestLeadMessageId}
+                    collapsed={Boolean(finder.unavailableSearch) && finder.step === "unavailable"}
+                    watch={finder.step === "unavailable" ? finder.unavailableSearch : null}
                   />
                 )}
                 {message.kind === "contact" && (
