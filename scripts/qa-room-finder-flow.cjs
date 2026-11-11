@@ -56,6 +56,7 @@ const interpretRoutePath = path.join(root, "app/api/ai-assistant/interpret/route
 const roomInfoIntentPath = path.join(root, "lib/ai-assistant/room-info-intent.ts");
 const repeatGuardPath = path.join(root, "components/ai/room-finder-repeat-guard.ts");
 const earlyArrivalPath = path.join(root, "lib/ai-assistant/early-arrival.ts");
+const arrivalTimePath = path.join(root, "lib/ai-assistant/arrival-time.ts");
 const salesIntelligencePath = path.join(root, "components/ai/room-finder-sales-intelligence.ts");
 const preferenceAckPath = path.join(root, "components/ai/room-finder-preference-ack.ts");
 
@@ -82,6 +83,7 @@ const { fallbackRoomFinderCommand } = fallback;
 const { detectRoomInfoRequest } = executeCommonJs(transpile(roomInfoIntentPath));
 const { avoidRepeatedQuestion } = executeCommonJs(transpile(repeatGuardPath));
 const { mentionsEarlyMorningArrival, nightBefore } = executeCommonJs(transpile(earlyArrivalPath));
+const { extractArrivalTime } = executeCommonJs(transpile(arrivalTimePath));
 const salesIntelligence = executeCommonJs(transpile(salesIntelligencePath));
 const { preferenceAckMessage, mentionsEveryRoomAmenity } = executeCommonJs(transpile(preferenceAckPath), id => {
   if (id === "./room-finder-sales-intelligence") return salesIntelligence;
@@ -781,8 +783,34 @@ function testSecondAuditScenarios() {
   assert(/mentionsEarlyMorningArrival\(guestText\)[\s\S]{0,500}earlyArrivalMessage/.test(hook), "the chat does not ask about early-morning arrivals");
 }
 
+// Ref 12: the arrival time the guest mentions reaches reception.
+function testArrivalTimeReachesReception() {
+  const cases = [
+    ["Άφιξη 11/9/26 22:30 το βράδυ και αναχώρηση 13/9/26 το πρωί.", "22:30"],
+    ["φτάνουμε στις 10 το βράδυ", "22:00"],
+    ["we land at 10pm", "22:00"],
+    ["η πτήση μας φτάνει 18.45", "18:45"],
+    ["Ankunft um 17 Uhr", "17:00"],
+    ["arrivée vers 20h30", "20:30"],
+    ["llegamos a las 3 de la tarde", "15:00"],
+    ["9 μ.μ.", "21:00"],
+  ];
+  for (const [message, time] of cases) {
+    assert(extractArrivalTime(message) === time, `"${message}" did not give arrival time ${time}`);
+  }
+  for (const message of ["10/10 για 2 βράδια", "11.9 με 13.9", "2 nights 1 room 2 guests", "Ξημερώματα Τρίτης 08/09/2026", "15 με 22.9.26"]) {
+    assert(extractArrivalTime(message) === "", `"${message}" was wrongly read as an arrival time`);
+  }
+  const hook = fs.readFileSync(hookPath, "utf8");
+  const production = fs.readFileSync(productionPath, "utf8");
+  assert(/\[staff\] Ώρα άφιξης: \$\{statedArrivalTime\}/.test(hook), "the arrival time is not marked for staff in the conversation");
+  assert(/arrivalTimeLabel\(language\)\}: \$\{finder\.arrivalTime\}/.test(production), "the arrival time is not in the request sent to reception");
+  assert((production.match(/finder\.arrivalTime \?/g) || []).length >= 2, "the arrival time is missing from one of the two reception requests");
+}
+
 function main() {
   testStrictDates();
+  testArrivalTimeReachesReception();
   testSecondAuditScenarios();
   testCalendarButton();
   testPreferencesAreConfirmed();

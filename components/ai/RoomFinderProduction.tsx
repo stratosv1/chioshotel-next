@@ -16,6 +16,7 @@ import { addDaysToIsoDate, todayInAthensIso } from "@/lib/ai-assistant/room-find
 import { RoomTypeCards } from "./room-finder-room-types";
 import { RoomInfoCard } from "./room-finder-room-info";
 import { DatePickReply } from "./room-finder-date-pick";
+import { arrivalTimeLabel } from "./room-finder-arrival-time";
 import { RoomFinderWatchCard } from "./room-finder-watch-card";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
@@ -659,6 +660,7 @@ export function RoomFinderProduction({
     const roomTotal = finder.choices.reduce((sum, choice) => sum + choice.offer.directTotal, 0);
     const summary = [
       stayRange(finder.checkin, finder.checkout, language),
+      ...(finder.arrivalTime ? [`${arrivalTimeLabel(language)}: ${finder.arrivalTime}`] : []),
       copy.guestLabel(finder.guestTotal),
       ...finder.choices.flatMap(choice => [
         `${choice.offer.name}: ${money(choice.offer.directTotal, language)}`,
@@ -1014,7 +1016,12 @@ export function RoomFinderProduction({
                     privacyShort={breakdownCopy.privacyShort}
                     privacyMore={breakdownCopy.privacyMore}
                     privacyNotice={contactCopy.privacyNotice}
-                    bookingFacts={[stay, guestSummary, roomSummary].filter(Boolean)}
+                    bookingFacts={[
+                      stay,
+                      finder.arrivalTime ? `${arrivalTimeLabel(language)}: ${finder.arrivalTime}` : "",
+                      guestSummary,
+                      roomSummary,
+                    ].filter(Boolean)}
                     guestMessages={guestMessages}
                     reason={message.content}
                     status={leadStatus}

@@ -54,6 +54,8 @@ import { formatPickedDate } from "./room-finder-date-pick";
 import { asksRoomOverview, asksRoomPrice, mentionsBreakfast } from "@/lib/ai-assistant/room-finder-fallback";
 import { mentionsEarlyMorningArrival, nightBefore } from "@/lib/ai-assistant/early-arrival";
 import { earlyArrivalMessage } from "./room-finder-early-arrival";
+import { extractArrivalTime } from "@/lib/ai-assistant/arrival-time";
+import { arrivalTimeMessage } from "./room-finder-arrival-time";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -590,6 +592,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [activeGroup, setActiveGroup] = useState(0);
   const [choices, setChoices] = useState<RoomChoice[]>([]);
   const [preferences, setPreferences] = useState<RoomFinderPreference[]>([]);
+  // Ref 12: the arrival time the guest mentioned ("HH:MM"), sent to reception.
+  const [arrivalTime, setArrivalTime] = useState("");
   // The four room types shown when the guest has no dates yet (homepage cards).
   const [roomTypes, setRoomTypes] = useState<{ language: RoomFinderLanguage; cards: RoomTypeCard[] } | null>(null);
   const [preferredRoomNumber, setPreferredRoomNumber] = useState<number | null>(null);
@@ -799,6 +803,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
     setInput("");
     setPreferences([]);
+    setArrivalTime("");
     setPreferredRoomNumber(null);
     clearSearchSelectionState();
     setFailedSearch(null);
@@ -1525,6 +1530,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     );
     if (preferenceAck) add("assistant", preferenceAck);
 
+    // Ref 12: confirm the arrival time and keep it for reception.
+    const statedArrivalTime = extractArrivalTime(guestText);
+    const arrivalAck = statedArrivalTime && statedArrivalTime !== arrivalTime
+      ? arrivalTimeMessage(language, statedArrivalTime)
+      : "";
+    if (arrivalAck) {
+      setArrivalTime(statedArrivalTime);
+      add("assistant", arrivalAck, "normal", `${arrivalAck}\n\n[staff] Ώρα άφιξης: ${statedArrivalTime}`);
+    }
+
     const roomInterestAction = [...executableActions]
       .reverse()
       .find(action =>
@@ -1636,7 +1651,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         );
         return;
       }
-      if (roomInterestNumber || preferenceAck) return;
+      if (roomInterestNumber || preferenceAck || arrivalAck) return;
       add("assistant", preferenceAction ? PREFERENCE_APPLIED[language] : NO_BOOKING_CHANGE[language]);
       return;
     }
@@ -2040,6 +2055,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],
+    arrivalTime,
     roomTypes: roomTypes?.language === language ? roomTypes.cards : [],
     loadRoomTypes,
   };
