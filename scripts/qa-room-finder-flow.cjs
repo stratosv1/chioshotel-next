@@ -613,8 +613,46 @@ function testRoomInfoQuestions() {
   }
 }
 
+// Ref 4: "How many guests in room 2?" → "2" must fill room 2, even when the
+// interpreter reads the bare number as a booking total (real sessions 31/8, 4/10).
+function testPerRoomGuestAnswerNeverLoops() {
+  const state = {
+    step: "guests",
+    draft: fullDraft({ roomCount: 2, totalGuests: null, groups: [2] }),
+  };
+  const asTotal = resolveAssistantTurn(state, command([{ type: "set_guest_count", totalGuests: 2 }]));
+  assert(asTotal.state.draft.groups[1] === 2, "room 2 answer read as a total was not assigned to room 2");
+  assert(asTotal.outcome.kind === "ready", "per-room answer read as a total asked the same question again");
+
+  const firstRoom = resolveAssistantTurn(
+    { step: "guests", draft: fullDraft({ roomCount: 2, totalGuests: null, groups: [] }) },
+    command([{ type: "set_guest_count", totalGuests: 1 }]),
+  );
+  assert(firstRoom.state.draft.groups[0] === 1, "room 1 answer read as a total was not assigned to room 1");
+  assert(
+    firstRoom.outcome.kind === "prompt" && firstRoom.outcome.guestRoom === 2,
+    "after room 1 the flow did not move on to room 2",
+  );
+
+  // A real total that covers the remaining room is still a total.
+  const realTotal = resolveAssistantTurn(state, command([{ type: "set_guest_count", totalGuests: 5 }]));
+  assert(realTotal.state.draft.totalGuests === 5, "a real booking total was not kept as the total");
+
+  // Typed bare numbers at the rooms/guests steps never reach the AI.
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(
+    /current === "guests" && number >= 1 && number <= 5[\s\S]{0,80}chooseGuests\(number, value\)/.test(hook),
+    "typed guest numbers are not handled like the guest buttons",
+  );
+  assert(
+    /current === "rooms" && number >= 1 && number <= 3[\s\S]{0,80}chooseRooms\(number, value\)/.test(hook),
+    "typed room numbers are not handled like the room buttons",
+  );
+}
+
 function main() {
   testStrictDates();
+  testPerRoomGuestAnswerNeverLoops();
   testRoomInfoQuestions();
   testNoDatesFallbackShowsRoomTypes();
   testDestinationMismatchPreservesBookingFacts();

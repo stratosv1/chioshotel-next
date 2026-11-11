@@ -1641,6 +1641,22 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       return;
     }
 
+    // A bare number answering the rooms or guests question works exactly like
+    // tapping the matching button: no AI interpreter, so it can never be
+    // misread (e.g. "2" for room 2 taken as the booking total and asked again).
+    const bareNumber = value.match(/^\s*(\d{1,2})\s*\.?\s*$/);
+    if (bareNumber) {
+      const number = Number(bareNumber[1]);
+      if (current === "rooms" && number >= 1 && number <= 3) {
+        await chooseRooms(number, value);
+        return;
+      }
+      if (current === "guests" && number >= 1 && number <= 5) {
+        await chooseGuests(number, value);
+        return;
+      }
+    }
+
     // A question about one room is answered straight from the room catalog,
     // without waiting for the AI interpreter.
     const roomInfoRequest = detectRoomInfoRequest(value);
@@ -1697,8 +1713,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function chooseRooms(roomCountValue: number) {
-    if (!await beginUserTurn(copy.roomLabel(roomCountValue), "room", "❤️")) return;
+  // `typed` keeps the guest's own words when they typed the number.
+  async function chooseRooms(roomCountValue: number, typed?: string) {
+    if (!await beginUserTurn(typed || copy.roomLabel(roomCountValue), "room", "❤️")) return;
 
     try {
       const nextFlow = bookingFlowReducer(flow, {
@@ -1728,8 +1745,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
-  async function chooseGuests(guests: number) {
-    if (!await beginUserTurn(copy.guestLabel(guests), "guest", "👍")) return;
+  async function chooseGuests(guests: number, typed?: string) {
+    if (!await beginUserTurn(typed || copy.guestLabel(guests), "guest", "👍")) return;
 
     try {
       const nextFlow = bookingFlowReducer(flow, { type: "choose_guests", guests });

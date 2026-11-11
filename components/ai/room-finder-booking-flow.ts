@@ -524,9 +524,33 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
     draft.roomCount = incomingRoomCount;
   }
 
-  const incomingTotalGuests = [...command.actions]
+  let incomingTotalGuests = [...command.actions]
     .reverse()
     .find(action => action.totalGuests != null)?.totalGuests;
+
+  // While asking for one room's guests, a "total" too small to cover the
+  // rooms still without guests can only be that room's count (e.g. room 1
+  // has 2 guests and the answer for room 2 is "2"). Without this the same
+  // per-room question was asked again.
+  const askedRoom = current.step === "guests" ? nextMissingGuestRoom(draft) : null;
+  if (
+    askedRoom
+    && draft.roomCount
+    && draft.roomCount > 1
+    && incomingTotalGuests != null
+    && validRoomGuests(incomingTotalGuests)
+    && !command.actions.some(action => action.guestRoom != null || action.guests != null)
+  ) {
+    let roomsWithoutGuests = 0;
+    for (let index = 0; index < draft.roomCount; index += 1) {
+      if (!validRoomGuests(draft.groups[index] || 0)) roomsWithoutGuests += 1;
+    }
+    if (incomingTotalGuests < assignedGuestTotal(draft.groups) + roomsWithoutGuests) {
+      while (draft.groups.length < askedRoom) draft.groups.push(0);
+      draft.groups[askedRoom - 1] = incomingTotalGuests;
+      incomingTotalGuests = undefined;
+    }
+  }
 
   if (
     incomingTotalGuests != null &&
