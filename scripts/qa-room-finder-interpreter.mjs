@@ -15,6 +15,7 @@ const ALLOWED_ACTIONS = new Set([
   "answer_property_question",
   "request_live_availability",
   "browse_rooms",
+  "room_info",
   "no_change",
 ]);
 
@@ -319,6 +320,26 @@ async function noDatesRoomOverviewRegression() {
   return { durationMs: durationMs + withDate.durationMs };
 }
 
+// Ref 2: free-text questions about one room reach room_info, not a booking change.
+async function roomInfoRegression() {
+  const cases = [
+    ["en", "Can you tell me what room 3 is like?", "checkin", 3],
+    ["el", "Πες μου για το διαμέρισμα 9, έχει κουζίνα;", "guests", 9],
+  ];
+  let durationMs = 0;
+  for (const [language, message, currentStep, roomNumber] of cases) {
+    const result = await interpret(message, { language, currentStep, currentRoom: currentStep === "guests" ? 1 : undefined });
+    durationMs += result.durationMs;
+    const info = result.command.actions.find((action) => action.type === "room_info");
+    assert(info?.roomNumber === roomNumber, `${language} "${message}" did not return room_info(${roomNumber})`);
+    assert(
+      !result.command.actions.some((action) => action.type === "set_guest_count" || action.type === "set_room_count"),
+      `${language} "${message}" changed a booking count`,
+    );
+  }
+  return { durationMs };
+}
+
 async function main() {
   const languages = ["el", "en", "de", "fr", "it", "es", "tr"];
   console.log(`Room Finder AI contract QA target: ${BASE_URL}`);
@@ -362,6 +383,9 @@ async function main() {
 
   const roomInterest = await specificRoomInterestRegression();
   console.log(`✓ specific Room 8 interest routes to executable selection (${roomInterest.durationMs}ms)`);
+
+  const roomInfo = await roomInfoRegression();
+  console.log(`✓ one-room questions answer from the room catalog (${roomInfo.durationMs}ms)`);
 
   const noDates = await noDatesRoomOverviewRegression();
   console.log(`✓ no-dates / room-overview messages show the room types (${noDates.durationMs}ms)`);

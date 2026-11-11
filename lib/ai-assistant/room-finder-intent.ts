@@ -25,6 +25,7 @@ const ACTION_TYPES = [
   "answer_property_question",
   "request_live_availability",
   "browse_rooms",
+  "room_info",
   "no_change",
 ] as const;
 
@@ -115,6 +116,7 @@ You may return only these actions:
 - acknowledge_contact: the customer says they will call, message, write to or otherwise contact the property/reception, now or later.
 - answer_property_question: a question about Voulamandis House whose answer is present in verifiedPropertyKnowledge. Select only the exact supporting knowledgeIds; never write or invent the answer yourself.
 - request_live_availability: the customer asks about current room availability or a room/stay price. The application, not you, will collect missing booking facts and query live inventory.
+- room_info: the customer asks for details, photos, facilities or a description of one numbered room or apartment (roomNumber). The application answers from the owner-confirmed room catalog with the room's photos, then continues the booking.
 - browse_rooms: the customer has no dates yet or wants an overview of the room types before giving dates. The application then presents the four Voulamandis House room types (never as available rooms) and invites the customer to give dates later.
 - no_change: no supported booking fact, supported room preference or contact intention was supplied in the latest message.
 
@@ -130,6 +132,7 @@ CORE RULES
 - verifiedPropertyKnowledge is the only allowed source for static Voulamandis House answers. Return 1-3 exact IDs that directly support the answer. If no entry supports the question, return answer_property_question with an empty knowledgeIds array so the application can state that the answer is not verified.
 - You may return a property/live-data action together with booking facts from the same message. Never copy prose from the knowledge entries into query or any other field.
 - NO DATES YET / ROOM OVERVIEW: when the customer says they do not know their dates yet, are undecided or flexible without giving a date (“don't know”, “δεν ξέρω ακόμα”, “not sure yet”, “noch nicht”), or asks in general which rooms or room types the property has (“what rooms do you have?”, “which rooms are generally available?”, “τι δωμάτια έχετε;”, “πληροφορίες για τα δωμάτια”), return browse_rooms. Do this in every step, including currentStep=checkin. Never return no_change for these messages and never return request_live_availability for them while no check-in date is known. Also return any clear booking facts or preferences from the same message (e.g. set_preferences for a kitchen).
+- ONE ROOM'S DETAILS: “details for room 3”, “λεπτομέρειες για το δωμάτιο 5”, “room 11 pictures and facilities”, “what is apartment 8 like?” => room_info(roomNumber). Rooms are numbered 1-10; for a number above 10 return browse_rooms instead. room_info is for information; set_room_interest is for wanting/choosing the room. Do not return both for a pure information question.
 - A general availability question WITH an exact date (“which rooms are available on 10/10?”) is request_live_availability plus the date facts, not browse_rooms.
 - Missing information is NOT ambiguity. Do not ask a clarification merely because another booking field is absent; return the facts you understood and let the application ask the next missing field.
 - If part of a message is clear and another attempted fact is ambiguous, return the clear fact actions plus exactly one specific ask_clarification action.
@@ -273,10 +276,16 @@ REFERENCE EXAMPLES
 21) “Θέλω πληροφορίες για τα δωμάτια”.
 => browse_rooms.
 
+22) “Details for room 3”.
+=> room_info(roomNumber=3). Not set_room_interest, not answer_property_question.
+
+23) Context currentStep=guests. Customer: “μπορείς να μου δώσεις λεπτομέρειες για το δωμάτιο 5”.
+=> room_info(roomNumber=5). Do not change the guest count.
+
 SCHEMA RULES
 - For irrelevant nullable fields return null.
 - destination and destinationKind are populated only for set_stay_destination; otherwise return null.
-- roomNumber is populated only for set_room_interest; otherwise return null.
+- roomNumber is populated only for set_room_interest and room_info; otherwise return null.
 - preferences is [] when unused.
 - query is an empty string when unused.
 - missingFields is [] when unused.
@@ -319,10 +328,10 @@ function cleanAction(raw: any): RoomFinderAction {
   if (raw?.checkin) action.checkin = raw.checkin;
   if (raw?.checkout) action.checkout = raw.checkout;
   if (raw?.nights != null) action.nights = Number(raw.nights);
-  if (type !== "set_room_interest" && raw?.roomCount != null) {
+  if (type !== "set_room_interest" && type !== "room_info" && raw?.roomCount != null) {
     action.roomCount = Number(raw.roomCount);
   }
-  if (type === "set_room_interest" && raw?.roomNumber != null) {
+  if ((type === "set_room_interest" || type === "room_info") && raw?.roomNumber != null) {
     const roomNumber = Number(raw.roomNumber);
     if (Number.isInteger(roomNumber) && roomNumber >= 1 && roomNumber <= 10) {
       action.roomNumber = roomNumber;

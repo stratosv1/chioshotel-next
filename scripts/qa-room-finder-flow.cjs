@@ -53,6 +53,7 @@ const carouselPath = path.join(root, "components/ai/room-finder-carousel.tsx");
 const flowHelpersPath = path.join(root, "components/ai/room-finder-flow-helpers.ts");
 const legacyFlowPath = path.join(root, "components/ai/AiRoomFinderFlow.tsx");
 const interpretRoutePath = path.join(root, "app/api/ai-assistant/interpret/route.ts");
+const roomInfoIntentPath = path.join(root, "lib/ai-assistant/room-info-intent.ts");
 
 const dateUtils = executeCommonJs(transpile(datePath));
 const flow = executeCommonJs(transpile(flowPath), id => {
@@ -74,6 +75,7 @@ const {
 } = flow;
 const { feasibleOffersForGroup, hasDistinctOfferPlan, roomOfferKey } = offerPlan;
 const { fallbackRoomFinderCommand } = fallback;
+const { detectRoomInfoRequest } = executeCommonJs(transpile(roomInfoIntentPath));
 
 function command(actions, replyMode = "execute") {
   return { language: "el", replyMode, actions };
@@ -583,8 +585,37 @@ function testNoDatesFallbackShowsRoomTypes() {
   assert(result.state.step === "checkin", "room types moved the flow away from check-in");
 }
 
+// Ref 2: questions about one room are answered from the room catalog at any
+// step; booking messages that mention a room still go to the interpreter.
+function testRoomInfoQuestions() {
+  const rooms = [
+    ["Details for room 3", 3],
+    ["μπορείς να μου δώσεις λεπτομέρεις για το δωμάτιο 5", 5],
+    ["room #11 pictures and facilities", 11],
+    ["i eant to view room #11 pictures and facilities", 11],
+    ["Φωτογραφίες από το διαμέρισμα 8;", 8],
+    ["What does apartment 10 look like?", 10],
+    ["Zeig mir Bilder von Zimmer 4", 4],
+  ];
+  for (const [message, roomNumber] of rooms) {
+    const request = detectRoomInfoRequest(message);
+    assert(request?.roomNumber === roomNumber, `"${message}" was not answered as room ${roomNumber}`);
+  }
+  assert(detectRoomInfoRequest("room #11 pictures").exists === false, "room 11 was treated as a real room");
+  for (const message of [
+    "Θέλω το δωμάτιο 8",
+    "Ενδιαφέρομαι για το δωμάτιο 8",
+    "room 5 for 2 people 10/10 photos",
+    "2 rooms",
+    "Θέλω πληροφορίες για τα δωμάτια",
+  ]) {
+    assert(detectRoomInfoRequest(message) === null, `"${message}" was wrongly answered as room info`);
+  }
+}
+
 function main() {
   testStrictDates();
+  testRoomInfoQuestions();
   testNoDatesFallbackShowsRoomTypes();
   testDestinationMismatchPreservesBookingFacts();
   testRoomInterestContinuesMissingFieldFlow();

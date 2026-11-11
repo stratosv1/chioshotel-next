@@ -4,7 +4,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { ROOM_FINDER_COPY, type RoomFinderLanguage } from "./room-finder-copy";
 
 export type Reaction = "👍" | "❤️";
-export type MessageKind = "date" | "room" | "guest" | "normal" | "contact" | "lead" | "offers" | "room_types";
+export type MessageKind = "date" | "room" | "guest" | "normal" | "contact" | "lead" | "offers" | "room_types" | "room_info";
 export type ChatItem = {
   id: string;
   role: "assistant" | "user";
@@ -12,6 +12,8 @@ export type ChatItem = {
   staffContent?: string;
   kind?: MessageKind;
   reaction?: Reaction;
+  /** The room a "room_info" answer is about. */
+  roomNumber?: number;
 };
 
 const CHAT_STORAGE_NOTICE: Record<RoomFinderLanguage, string> = {

@@ -47,6 +47,7 @@ import { setRoomFinderTrackingFacts, type ChatItem, type MessageKind, type React
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
 import { fetchRoomTypes, roomTypesMessage, type RoomTypeCard } from "./room-finder-room-types";
+import { detectRoomInfoRequest, noSuchRoomMessage, roomInfoMessage } from "./room-finder-room-info";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -1364,6 +1365,43 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     );
   }
 
+  // "Details for room 3": the room's facts and photos from the owner-confirmed
+  // catalog. The room is remembered so a later live search shows it first.
+  async function showRoomInfo(roomNumber: number) {
+    if (!Number.isInteger(roomNumber) || roomNumber < 1 || roomNumber > 10) {
+      add("assistant", noSuchRoomMessage(language, roomNumber));
+      await showRoomTypes(!flow.draft.checkin);
+      return;
+    }
+    setPreferredRoomNumber(roomNumber);
+    const askDates = !flow.draft.checkin;
+    setMessages(current => [...current, {
+      id: rid(),
+      role: "assistant",
+      content: roomInfoMessage(language, roomNumber, askDates),
+      kind: "room_info",
+      roomNumber,
+    }]);
+  }
+
+  // After an information answer, ask again for what the booking still needs
+  // (check-in is already asked inside the answer itself).
+  function repromptCurrentStep() {
+    switch (flow.step) {
+      case "checkout":
+        add("assistant", tone.checkout);
+        return;
+      case "rooms":
+        add("assistant", roomsPrompt(flow.draft));
+        return;
+      case "guests":
+        add("assistant", guestsPrompt(flow.draft, nextMissingGuestRoom(flow.draft) || 1));
+        return;
+      default:
+        return;
+    }
+  }
+
   async function applyCommand(command: RoomFinderCommand) {
     const knowledgeActions = command.actions.filter(action =>
       action.type === "answer_property_question" && typeof action.answer === "string" && action.answer.trim(),
@@ -1427,8 +1465,11 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     // "Don't know" / "which rooms do you have?": show the room types first.
     // The room-types answer already asks for the arrival day, so the check-in
     // question is not repeated after it.
-    const browseRooms = executableActions.some(action => action.type === "browse_rooms");
-    if (browseRooms) await showRoomTypes(!flow.draft.checkin);
+    const roomInfoAction = executableActions.find(action => action.type === "room_info");
+    const browseRooms = executableActions.some(action => action.type === "browse_rooms")
+      || Boolean(roomInfoAction);
+    if (roomInfoAction) await showRoomInfo(Number(roomInfoAction.roomNumber));
+    else if (browseRooms) await showRoomTypes(!flow.draft.checkin);
 
     const resolution = resolveAssistantTurn(flow, executableCommand);
     const commandSetTotalGuests = executableActions.some(action => action.totalGuests != null);
@@ -1597,6 +1638,20 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       if (!await beginUserTurn(value, "normal", "👍")) return;
       add("assistant", questionAnswer);
       endUserTurn();
+      return;
+    }
+
+    // A question about one room is answered straight from the room catalog,
+    // without waiting for the AI interpreter.
+    const roomInfoRequest = detectRoomInfoRequest(value);
+    if (roomInfoRequest) {
+      if (!await beginUserTurn(value, "normal", "👍")) return;
+      try {
+        await showRoomInfo(roomInfoRequest.roomNumber);
+        repromptCurrentStep();
+      } finally {
+        endUserTurn();
+      }
       return;
     }
 

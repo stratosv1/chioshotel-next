@@ -123,6 +123,24 @@ const ROOM_NUMBERS: Record<RoomCategoryId, number[]> = {
   "family-apartments": [8, 9, 10],
 };
 
+/** Owner's room-type name for a category, in the guest's language. */
+export function roomTypeName(language: RoomFinderLanguage, categoryId: RoomCategoryId) {
+  return (COPY[language] || COPY.en).names[categoryId];
+}
+
+/** The rooms of a category, e.g. "1, 3, 4". */
+export function roomTypeRooms(categoryId: RoomCategoryId) {
+  return ROOM_NUMBERS[categoryId].join(", ");
+}
+
+/** Room type of a room number (1–10), or null for a number that is not a room. */
+export function roomTypeOf(roomNumber: number): RoomCategoryId | null {
+  for (const categoryId of Object.keys(ROOM_NUMBERS) as RoomCategoryId[]) {
+    if (ROOM_NUMBERS[categoryId].includes(roomNumber)) return categoryId;
+  }
+  return null;
+}
+
 const ORDER: RoomCategoryId[] = ["economy-double", "first-floor", "ground-floor", "family-apartments"];
 
 /** The chat text. `askDates` is left out when the guest already gave dates. */

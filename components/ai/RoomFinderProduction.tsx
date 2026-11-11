@@ -13,6 +13,7 @@ import {
 import { ChatMessage, IconReplies } from "./room-finder-chat-ui";
 import { RoomCarousel, type RoomOffer } from "./room-finder-carousel";
 import { RoomTypeCards } from "./room-finder-room-types";
+import { RoomInfoCard } from "./room-finder-room-info";
 import { RoomFinderWatchCard } from "./room-finder-watch-card";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
@@ -967,6 +968,9 @@ export function RoomFinderProduction({
                 {message.kind === "room_types" && (
                   <RoomTypeCards roomTypes={finder.roomTypes} language={language} />
                 )}
+                {message.kind === "room_info" && message.roomNumber ? (
+                  <RoomInfoCard language={language} roomNumber={message.roomNumber} />
+                ) : null}
                 {message.kind === "lead"
                   && message.id === latestLeadMessageId
                   && finder.canRetryAvailability

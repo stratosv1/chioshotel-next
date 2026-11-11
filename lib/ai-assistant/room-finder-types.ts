@@ -36,6 +36,7 @@ export type RoomFinderActionType =
   | "answer_property_question"
   | "request_live_availability"
   | "browse_rooms"
+  | "room_info"
   | "no_change";
 
 export type RoomFinderAction = {
