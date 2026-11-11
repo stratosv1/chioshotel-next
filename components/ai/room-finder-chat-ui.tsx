@@ -93,6 +93,16 @@ function AssistantAvatar() {
 
 let roomFinderSessionId = "";
 let roomFinderHasUserMessage = false;
+// Messages already sent to the staff inbox (id → reaction), so a remount or a
+// restored conversation (ref 19) does not send them again.
+const trackedRoomFinderMessages = new Map<string, string>();
+
+/** Ref 19: a restored conversation keeps its staff-inbox session. */
+export function restoreRoomFinderTracking(sessionId: string, messages: readonly ChatItem[]) {
+  if (sessionId) roomFinderSessionId = sessionId;
+  if (messages.some(message => message.role === "user")) roomFinderHasUserMessage = true;
+  for (const message of messages) trackedRoomFinderMessages.set(message.id, message.reaction || "");
+}
 
 // Booking facts sent with every tracked message so the staff inbox shows the
 // dates, party and stage of each conversation, not only its messages.
@@ -140,8 +150,10 @@ function welcomeLanguage(content: string): RoomFinderLanguage | null {
 function trackRoomFinderMessage(message: ChatItem) {
   if (typeof window === "undefined") return;
 
+  if (trackedRoomFinderMessages.get(message.id) === (message.reaction || "")) return;
   if (message.role === "user") roomFinderHasUserMessage = true;
   if (message.role === "assistant" && !roomFinderHasUserMessage) return;
+  trackedRoomFinderMessages.set(message.id, message.reaction || "");
 
   const payload = JSON.stringify({
     sessionId: getRoomFinderSessionId(),

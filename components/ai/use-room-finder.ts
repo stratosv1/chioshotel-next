@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
+import { FormEvent, useEffect, useLayoutEffect, useMemo, useReducer, useRef, useState } from "react";
 import { roomCatalogForLanguage, localizeRoomOffer } from "@/lib/ai-assistant/room-card-catalog";
 import {
   encodeRoomFinderOfferSnapshot,
@@ -20,6 +20,7 @@ import {
   nightsBetween,
   resolveAssistantTurn,
   type BookingDraft,
+  type BookingFlowState,
   type FinderStep,
 } from "./room-finder-booking-flow";
 import {
@@ -43,7 +44,15 @@ import {
   type StayExtensionSuggestion,
 } from "./room-finder-long-stay";
 import { daysBetweenIsoDates, todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
-import { setRoomFinderTrackingFacts, type ChatItem, type MessageKind, type Reaction } from "./room-finder-chat-ui";
+import {
+  getRoomFinderSessionId,
+  restoreRoomFinderTracking,
+  setRoomFinderTrackingFacts,
+  type ChatItem,
+  type MessageKind,
+  type Reaction,
+} from "./room-finder-chat-ui";
+import { clearRoomFinderSnapshot, loadRoomFinderSnapshot, saveRoomFinderSnapshot } from "./room-finder-persist";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
 import { fetchRoomTypes, roomTypesMessage, type RoomTypeCard } from "./room-finder-room-types";
@@ -61,6 +70,7 @@ import { fetchDirectDiscounts, supportMessage } from "./room-finder-support";
 import { extractChildren, type ChildrenInfo } from "@/lib/ai-assistant/children";
 import { detectSmallTalk, stripCorrectionNo } from "@/lib/ai-assistant/small-talk";
 import { childrenMessage, childrenSummary, smallTalkMessage } from "./room-finder-guest-notes";
+import { notedDetails, withNotedDetails } from "./room-finder-noted";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -588,6 +598,25 @@ function sortOffersForPreferences(
   });
 }
 
+export type RoomFinderConversationState = {
+  flow: BookingFlowState;
+  messages: ChatItem[];
+  offers: RoomOffer[][];
+  activeGroup: number;
+  choices: RoomChoice[];
+  preferences: RoomFinderPreference[];
+  arrivalTime: string;
+  children: ChildrenInfo | null;
+  pendingYearFix: { checkin: string; checkout: string } | null;
+  preferredRoomNumber: number | null;
+  breakfast: boolean;
+  failedSearch: { draft: BookingDraft; roomInterest: number | null } | null;
+  unavailableSearch: BookingDraft | null;
+  focusRooms: number[];
+  stayExtension: StayExtensionSuggestion | null;
+  heldResults: { content: string; staffContent: string; nights: number } | null;
+};
+
 export function useRoomFinder(language: RoomFinderLanguage) {
   const copy = ROOM_FINDER_COPY[language];
   const tone = ROOM_FINDER_TONE[language];
@@ -633,6 +662,83 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   // Internal note attached to the next assistant message in the staff inbox
   // only (never shown to the guest), e.g. why a turn used the fallback.
   const pendingStaffNote = useRef<string | null>(null);
+
+  // Ref 19: everything needed to show the same conversation after a reload.
+  const conversationState: RoomFinderConversationState = {
+    flow,
+    messages,
+    offers,
+    activeGroup,
+    choices,
+    preferences,
+    arrivalTime,
+    children,
+    pendingYearFix,
+    preferredRoomNumber,
+    breakfast,
+    failedSearch,
+    unavailableSearch,
+    focusRooms,
+    stayExtension,
+    heldResults,
+  };
+
+  useEffect(() => {
+    // Saved between turns only; a conversation the guest has not written in
+    // yet is not worth keeping.
+    if (typing || !messages.some(message => message.role === "user")) return;
+    saveRoomFinderSnapshot({ language, sessionId: getRoomFinderSessionId(), state: conversationState });
+  }, [flow, messages, offers, activeGroup, choices, preferences, arrivalTime, children, pendingYearFix,
+    preferredRoomNumber, breakfast, failedSearch, unavailableSearch, focusRooms, stayExtension, heldResults,
+    typing, language]);
+
+  function applyConversationState(state: RoomFinderConversationState) {
+    turnLocked.current = false;
+    languageRef.current = language;
+    dispatchFlow({ type: "commit_turn", state: state.flow });
+    setMessages(state.messages);
+    setOffers(state.offers || []);
+    setActiveGroup(state.activeGroup || 0);
+    setChoices(state.choices || []);
+    setPreferences(state.preferences || []);
+    setArrivalTime(state.arrivalTime || "");
+    setChildren(state.children || null);
+    setPendingYearFix(state.pendingYearFix || null);
+    setPreferredRoomNumber(state.preferredRoomNumber ?? null);
+    setBreakfast(Boolean(state.breakfast));
+    setFailedSearch(state.failedSearch || null);
+    setUnavailableSearch(state.unavailableSearch || null);
+    setFocusRooms(state.focusRooms || []);
+    setStayExtension(state.stayExtension || null);
+    setHeldResults(state.heldResults || null);
+    setSelectingOfferKey(null);
+    setTyping(false);
+  }
+
+  /** Brings back the conversation saved in this tab (same language only). */
+  function restoreSaved() {
+    const saved = loadRoomFinderSnapshot<RoomFinderConversationState>();
+    const state = saved?.state;
+    if (!saved || saved.language !== language || !Array.isArray(state?.messages) || !state?.flow?.draft) return false;
+    if (!state.messages.some(message => message.role === "user")) return false;
+    restoreRoomFinderTracking(saved.sessionId, state.messages);
+    applyConversationState(state);
+    return true;
+  }
+
+  /** The conversation as it is now, for "Undo" after a new search (ref 20). */
+  function takeSnapshot(): RoomFinderConversationState | null {
+    return messages.some(message => message.role === "user") ? conversationState : null;
+  }
+
+  function restoreSnapshot(state: RoomFinderConversationState) {
+    applyConversationState(state);
+  }
+
+  /** "New search": the saved conversation is forgotten too. */
+  function forgetSaved() {
+    clearRoomFinderSnapshot();
+  }
 
   const { step, draft } = flow;
   const {
@@ -1698,18 +1804,20 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       return;
     }
 
+    // Ref 21: details given ahead of the question are confirmed first.
+    const noted = notedDetails(language, step, flow.draft, resolution.state.draft);
     switch (resolution.outcome.field) {
       case "checkin":
-        if (!browseRooms) add("assistant", tone.invalidDate);
+        if (!browseRooms) add("assistant", withNotedDetails(noted, tone.invalidDate));
         return;
       case "checkout":
-        add("assistant", tone.checkout);
+        add("assistant", withNotedDetails(noted, tone.checkout));
         return;
       case "rooms":
-        add("assistant", roomsPrompt(resolution.state.draft));
+        add("assistant", withNotedDetails(noted, roomsPrompt(resolution.state.draft)));
         return;
       case "guests":
-        add("assistant", guestsPrompt(resolution.state.draft, resolution.outcome.guestRoom || 1));
+        add("assistant", withNotedDetails(noted, guestsPrompt(resolution.state.draft, resolution.outcome.guestRoom || 1)));
     }
   }
 
@@ -2145,5 +2253,9 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     childrenNote: children ? childrenSummary(language, children) : "",
     roomTypes: roomTypes?.language === language ? roomTypes.cards : [],
     loadRoomTypes,
+    restoreSaved,
+    takeSnapshot,
+    restoreSnapshot,
+    forgetSaved,
   };
 }

@@ -23,7 +23,7 @@ import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
 import { RoomFinderLeadCard, type LeadStatus } from "./room-finder-lead-card";
 import { TypingIndicator } from "./room-finder-typing-indicator";
-import { useRoomFinder } from "./use-room-finder";
+import { useRoomFinder, type RoomFinderConversationState } from "./use-room-finder";
 import { ROOM_FINDER_HREFS } from "@/lib/room-finder-cta-routing";
 
 const WHATSAPP_NUMBER = "306944474226";
@@ -40,6 +40,18 @@ const CALL_LABEL: Record<RoomFinderLanguage, string> = {
   es: "Llamar",
   tr: "Ara",
 };
+
+// Ref 20: "New search" can be undone for a few seconds.
+const NEW_SEARCH_UNDO: Record<RoomFinderLanguage, { cleared: string; undo: string }> = {
+  el: { cleared: "Ξεκίνησε νέα αναζήτηση.", undo: "Αναίρεση" },
+  en: { cleared: "New search started.", undo: "Undo" },
+  de: { cleared: "Neue Suche gestartet.", undo: "Rückgängig" },
+  fr: { cleared: "Nouvelle recherche lancée.", undo: "Annuler" },
+  it: { cleared: "Nuova ricerca avviata.", undo: "Annulla" },
+  es: { cleared: "Nueva búsqueda iniciada.", undo: "Deshacer" },
+  tr: { cleared: "Yeni arama başlatıldı.", undo: "Geri al" },
+};
+const NEW_SEARCH_UNDO_MS = 8_000;
 
 const CHAT_UI_LABELS: Record<RoomFinderLanguage, { home: string; latest: string; typing: string }> = {
   el: { home: "Επιστροφή στην αρχική", latest: "Μετάβαση στο τελευταίο μήνυμα", typing: "Γράφει…" },
@@ -354,8 +366,18 @@ export function RoomFinderProduction({
     if (detected !== language) setLanguage(detected);
   }, []);
 
+  // Ref 19: on the first load the conversation saved in this tab comes back
+  // (e.g. after the phone reloaded the page on returning from WhatsApp). A
+  // link from a room page (?room=N / ?rooms=…) starts a fresh conversation.
+  const restoredLanguage = useRef<string | null>(null);
   useEffect(() => {
     document.documentElement.lang = language;
+    if (restoredLanguage.current === null) {
+      const fromRoomLink = Boolean(pendingRoomFocus.current || pendingCategoryFocus.current);
+      restoredLanguage.current = !fromRoomLink && finder.restoreSaved() ? language : "";
+    }
+    if (restoredLanguage.current === language) return;
+    restoredLanguage.current = "";
     finder.reset();
     setDetail(null);
     setContact({ firstName: "", lastName: "", phone: "", email: "" });
@@ -754,8 +776,31 @@ export function RoomFinderProduction({
     || (!!lastAssistantMessageId && hiddenQuickReplyPromptId === lastAssistantMessageId);
   // Results, "no availability" and the summary are never a dead end: the guest
   // can change dates, change the party or start again from right there.
+  const [undoSnapshot, setUndoSnapshot] = useState<RoomFinderConversationState | null>(null);
+  useEffect(() => {
+    if (!undoSnapshot) return;
+    const timer = window.setTimeout(() => setUndoSnapshot(null), NEW_SEARCH_UNDO_MS);
+    return () => window.clearTimeout(timer);
+  }, [undoSnapshot]);
+  // Anything the guest does next closes the "Undo".
+  const undoMessageCount = useRef(0);
+  useEffect(() => {
+    if (undoSnapshot && finder.messages.length > undoMessageCount.current) setUndoSnapshot(null);
+  }, [finder.messages.length]);
+
+  function undoNewSearch() {
+    if (!undoSnapshot) return;
+    finder.restoreSnapshot(undoSnapshot);
+    setUndoSnapshot(null);
+  }
+
   function startNewSearch() {
+    if (finder.typing || finder.step === "searching") return;
+    const snapshot = finder.takeSnapshot();
+    finder.forgetSaved();
     finder.reset();
+    undoMessageCount.current = 1;
+    setUndoSnapshot(snapshot);
     setDetail(null);
     setSendStatus("idle");
     setHiddenQuickReplyPromptId(null);
@@ -1410,7 +1455,23 @@ export function RoomFinderProduction({
       </div>
 
       <form onSubmit={submitComposer} className="room-finder-composer relative shrink-0 border-t border-[#e2d9cd] bg-[#fbf8f3]/95 shadow-[0_-8px_24px_rgba(70,55,35,.04)]">
-        {hasUnseenMessages && (
+        {undoSnapshot && (
+          <div
+            role="status"
+            data-room-finder-undo="true"
+            className="msg absolute inset-x-3 -top-16 z-10 mx-auto flex max-w-md items-center justify-between gap-3 rounded-2xl bg-[#3f382f] px-4 py-2.5 text-sm text-white shadow-[0_8px_24px_rgba(40,30,20,.25)]"
+          >
+            <span className="min-w-0">{NEW_SEARCH_UNDO[language].cleared}</span>
+            <button
+              type="button"
+              onClick={undoNewSearch}
+              className="min-h-10 shrink-0 rounded-full px-3 font-bold text-[#ffd9b8] underline-offset-2 hover:underline"
+            >
+              {NEW_SEARCH_UNDO[language].undo}
+            </button>
+          </div>
+        )}
+        {hasUnseenMessages && !undoSnapshot && (
           <button
             type="button"
             onClick={jumpToLatest}

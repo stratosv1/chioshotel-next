@@ -62,6 +62,8 @@ const childrenPath = path.join(root, "lib/ai-assistant/children.ts");
 const smallTalkPath = path.join(root, "lib/ai-assistant/small-talk.ts");
 const salesIntelligencePath = path.join(root, "components/ai/room-finder-sales-intelligence.ts");
 const preferenceAckPath = path.join(root, "components/ai/room-finder-preference-ack.ts");
+const persistPath = path.join(root, "components/ai/room-finder-persist.ts");
+const notedPath = path.join(root, "components/ai/room-finder-noted.ts");
 
 const dateUtils = executeCommonJs(transpile(datePath));
 const flow = executeCommonJs(transpile(flowPath), id => {
@@ -913,6 +915,76 @@ function testChildrenThanksAndCorrections() {
   assert(/interpret\(stripCorrectionNo\(value\), current\)/.test(hook), "corrections do not reach the interpreter cleaned");
 }
 
+// Ref 19: the conversation is saved per tab and comes back after a reload.
+function testConversationSurvivesReload() {
+  const persist = executeCommonJs(transpile(persistPath));
+  const memory = new Map();
+  const store = {
+    getItem: key => (memory.has(key) ? memory.get(key) : null),
+    setItem: (key, value) => memory.set(key, String(value)),
+    removeItem: key => memory.delete(key),
+  };
+  const state = { flow: { step: "rooms", draft: {} }, messages: [{ id: "u1", role: "user", content: "15/6" }] };
+  persist.saveRoomFinderSnapshot({ language: "el", sessionId: "rf-1", state }, store, 1_000);
+  const loaded = persist.loadRoomFinderSnapshot(store, 2_000);
+  assert(loaded && loaded.language === "el" && loaded.sessionId === "rf-1", "saved conversation is not restored");
+  assert(loaded.state.messages[0].content === "15/6", "restored conversation lost its messages");
+  assert(
+    persist.loadRoomFinderSnapshot(store, 1_000 + persist.ROOM_FINDER_SNAPSHOT_MAX_AGE_MS + 1) === null,
+    "a conversation older than 24 hours is restored",
+  );
+  assert(!memory.size, "an expired conversation is not removed");
+  memory.set(persist.ROOM_FINDER_SNAPSHOT_KEY, "{broken");
+  assert(persist.loadRoomFinderSnapshot(store, 2_000) === null, "broken saved data breaks the chat");
+  persist.clearRoomFinderSnapshot(store);
+  assert(persist.loadRoomFinderSnapshot(null) === null, "missing storage breaks the chat");
+
+  const hook = fs.readFileSync(hookPath, "utf8");
+  const production = fs.readFileSync(productionPath, "utf8");
+  const chatUi = fs.readFileSync(path.join(root, "components/ai/room-finder-chat-ui.tsx"), "utf8");
+  assert(hook.includes("if (typing || !messages.some(message => message.role === \"user\")) return;"), "the conversation is saved mid-turn or before the guest wrote");
+  assert(hook.includes("saved.language !== language"), "a conversation is restored in another language");
+  assert(production.includes("finder.restoreSaved()"), "the page does not restore the saved conversation");
+  assert(production.includes("pendingRoomFocus.current || pendingCategoryFocus.current"), "a room-page link does not start a fresh conversation");
+  assert(chatUi.includes("restoreRoomFinderTracking"), "a restored conversation starts a new staff-inbox session");
+  assert(chatUi.includes("trackedRoomFinderMessages.get(message.id)"), "restored messages are sent to the staff inbox again");
+}
+
+// Ref 20: "New search" wipes nothing for good: it can be undone.
+function testNewSearchCanBeUndone() {
+  const production = fs.readFileSync(productionPath, "utf8");
+  assert(production.includes("const snapshot = finder.takeSnapshot();"), "new search does not keep the conversation for undo");
+  assert(production.includes("finder.forgetSaved();"), "new search leaves the old conversation to come back on reload");
+  assert(production.includes('data-room-finder-undo="true"'), "new search has no undo");
+  assert(production.includes("finder.restoreSnapshot(undoSnapshot)"), "undo does not bring the conversation back");
+}
+
+// Ref 21: a detail given ahead of the question is confirmed, not ignored.
+function testDetailsGivenEarlyAreConfirmed() {
+  const { notedDetails, withNotedDetails } = executeCommonJs(transpile(notedPath));
+  const none = { totalGuests: null, roomCount: null };
+  assert(
+    notedDetails("el", "rooms", none, { totalGuests: 2, roomCount: null }) === "Σημείωσα 2 άτομα.",
+    "guests given while rooms are asked are not confirmed",
+  );
+  assert(notedDetails("el", "guests", none, { totalGuests: 2, roomCount: null }) === "", "the answered question is confirmed twice");
+  assert(notedDetails("el", "rooms", none, { totalGuests: null, roomCount: 1 }) === "", "the rooms answer is confirmed twice");
+  assert(
+    notedDetails("en", "checkout", none, { totalGuests: 1, roomCount: 1 }) === "Noted: 1 guest and 1 room.",
+    "early guests and rooms are not confirmed together",
+  );
+  assert(
+    notedDetails("el", "rooms", { totalGuests: 2, roomCount: null }, { totalGuests: 2, roomCount: null }) === "",
+    "an unchanged detail is confirmed again",
+  );
+  for (const language of ["el", "en", "de", "fr", "it", "es", "tr"]) {
+    assert(notedDetails(language, "rooms", none, { totalGuests: 3, roomCount: null }).includes("3"), `${language} note misses the number`);
+  }
+  assert(withNotedDetails("", "Q?") === "Q?" && withNotedDetails("N.", "Q?") === "N.\n\nQ?", "note is not put before the question");
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(hook.includes("const noted = notedDetails(language, step, flow.draft, resolution.state.draft);"), "prompts do not confirm early details");
+}
+
 function main() {
   testStrictDates();
   testChildrenThanksAndCorrections();
@@ -943,6 +1015,9 @@ function main() {
   testThreeRoomLiveShape();
   testStaffOfferSnapshotRoundTrip();
   testResultsUxCleanup();
+  testConversationSurvivesReload();
+  testNewSearchCanBeUndone();
+  testDetailsGivenEarlyAreConfirmed();
   console.log("Room Finder deterministic flow QA passed.");
 }
 
