@@ -558,6 +558,14 @@ function testResultsUxCleanup() {
     "available room cards can disappear while the selecting-state update settles",
   );
   assert(production.includes("{roomResultsVisible && ("), "room cards are not guarded by the resilient results state");
+  assert(
+    production.includes("{message.id === resultsAnchorMessageId && roomResults}"),
+    "room cards are not rendered under the latest results message, so later messages appear above them",
+  );
+  assert(
+    production.includes("conversationAfterResults"),
+    "the feed does not follow the conversation down after the guest writes below the results",
+  );
   assert(production.includes('data-room-selection-context="true"'), "multi-room results are missing the prominent room selection context");
   assert(production.includes("selectionGuests={multiRoomSelectionVisible ? finder.groups[finder.activeGroup]"), "room cards do not receive the active choice guest context");
   assert(production.includes("[finder.activeGroup, finder.step, finder.visibleOffers.length, finder.extensionPending]"), "each room transition no longer returns the user to the active selection context");

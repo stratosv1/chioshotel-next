@@ -441,7 +441,12 @@ export function RoomFinderProduction({
 
     // While the "one more night" offer is open the results are held back, so
     // the feed keeps following the conversation down to the offer buttons.
-    if (finder.step === "searching" || (finder.step === "selecting" && finder.visibleOffers.length > 0 && !finder.extensionPending)) {
+    // Once the guest writes again after the results, the conversation
+    // continues below the cards, so the feed follows it down again.
+    const resultsAnchorIndex = finder.messages.map(message => message.kind).lastIndexOf("offers");
+    const conversationAfterResults = resultsAnchorIndex >= 0 && resultsAnchorIndex < finder.messages.length - 1;
+    if (!conversationAfterResults
+      && (finder.step === "searching" || (finder.step === "selecting" && finder.visibleOffers.length > 0 && !finder.extensionPending))) {
       return;
     }
 
@@ -733,6 +738,11 @@ export function RoomFinderProduction({
     .filter(message => message.role === "user")
     .slice(-6)
     .map(message => message.content.slice(0, 600));
+  // The room cards sit right under the latest results message, so anything
+  // the guest writes afterwards continues below them, like any chat.
+  const resultsAnchorMessageId = [...finder.messages]
+    .reverse()
+    .find(message => message.kind === "offers")?.id;
   const lastAssistantMessageId = [...finder.messages]
     .reverse()
     .find(message => message.role === "assistant")?.id;
@@ -805,6 +815,48 @@ export function RoomFinderProduction({
   const multiRoomSelectionVisible = roomResultsVisible
     && finder.roomCount > 1
     && !finder.visibleOffers.some(offer => Boolean(offer.recoveryType));
+
+  const roomResults = (
+    <>
+      {roomResultsVisible && (
+        <div ref={resultsRef} data-room-results-start="true" className="space-y-3.5 scroll-mt-2">
+          {multiRoomSelectionVisible && (
+            <RoomSelectionContext
+              key={`room-selection-${activeRoomNumber}`}
+              currentRoom={activeRoomNumber}
+              totalRooms={finder.roomCount}
+              guests={finder.groups[finder.activeGroup] || 0}
+              groups={finder.groups}
+              choices={finder.choices}
+              language={language}
+              copy={copy}
+            />
+          )}
+          <RoomCarousel
+            offers={finder.visibleOffers}
+            copy={copy}
+            language={language}
+            money={money}
+            selectingOfferKey={finder.selectingOfferKey}
+            selectionGuests={multiRoomSelectionVisible ? finder.groups[finder.activeGroup] || undefined : undefined}
+            onDetails={openRoomDetail}
+            onSelect={offer => void finder.selectOffer(offer)}
+          />
+          {finder.step === "selecting" && resultActions(true)}
+          <section className="msg ml-10 flex flex-col items-stretch gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm min-[420px]:flex-row min-[420px]:items-center">
+            <p className="min-w-0 flex-1 text-sm font-semibold leading-5">{copy.whatsappHelp}</p>
+            <button
+              type="button"
+              onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
+              className="min-h-11 w-full shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white min-[420px]:w-auto"
+            >
+              💬 {copy.whatsapp}
+            </button>
+          </section>
+        </div>
+      )}
+    </>
+  );
 
   return (
     <main
@@ -974,6 +1026,7 @@ export function RoomFinderProduction({
                 {message.kind === "room_types" && (
                   <RoomTypeCards roomTypes={finder.roomTypes} language={language} />
                 )}
+                {message.id === resultsAnchorMessageId && roomResults}
                 {message.kind === "room_info" && message.roomNumber ? (
                   <RoomInfoCard language={language} roomNumber={message.roomNumber} />
                 ) : null}
@@ -1136,43 +1189,7 @@ export function RoomFinderProduction({
               </div>
             )}
 
-            {roomResultsVisible && (
-              <div ref={resultsRef} data-room-results-start="true" className="space-y-3.5 scroll-mt-2">
-                {multiRoomSelectionVisible && (
-                  <RoomSelectionContext
-                    key={`room-selection-${activeRoomNumber}`}
-                    currentRoom={activeRoomNumber}
-                    totalRooms={finder.roomCount}
-                    guests={finder.groups[finder.activeGroup] || 0}
-                    groups={finder.groups}
-                    choices={finder.choices}
-                    language={language}
-                    copy={copy}
-                  />
-                )}
-                <RoomCarousel
-                  offers={finder.visibleOffers}
-                  copy={copy}
-                  language={language}
-                  money={money}
-                  selectingOfferKey={finder.selectingOfferKey}
-                  selectionGuests={multiRoomSelectionVisible ? finder.groups[finder.activeGroup] || undefined : undefined}
-                  onDetails={openRoomDetail}
-                  onSelect={offer => void finder.selectOffer(offer)}
-                />
-                {finder.step === "selecting" && resultActions(true)}
-                <section className="msg ml-10 flex flex-col items-stretch gap-3 rounded-[20px] border border-[#dfd6ca] bg-white px-4 py-3 shadow-sm min-[420px]:flex-row min-[420px]:items-center">
-                  <p className="min-w-0 flex-1 text-sm font-semibold leading-5">{copy.whatsappHelp}</p>
-                  <button
-                    type="button"
-                    onClick={() => openWhatsApp(whatsappContext(copy.whatsappHelp))}
-                    className="min-h-11 w-full shrink-0 rounded-full bg-[#287d4f] px-4 py-2.5 text-sm font-bold text-white min-[420px]:w-auto"
-                  >
-                    💬 {copy.whatsapp}
-                  </button>
-                </section>
-              </div>
-            )}
+            {!resultsAnchorMessageId && roomResults}
 
             {finder.step === "breakfast" && (
               <>
