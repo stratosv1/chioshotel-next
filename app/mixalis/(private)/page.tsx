@@ -82,7 +82,7 @@ const SUBJECTS: Subject[] = [
         href: "/mixalis/ormi",
         study: "ormi",
         links: [
-          { label: "Θεωρία", href: "/mixalis/ormi#theoria" },
+          { label: "Θεωρία (μάθημα με κίνηση)", href: "/mixalis/ormi#mathima" },
           { label: "Ασκήσεις Τριπολίτη (λυμένες)", href: "/mixalis/ormi#askiseis" },
         ],
         pdf: "/mixalis/ormi-typologio-A4.pdf",

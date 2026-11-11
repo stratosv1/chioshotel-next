@@ -196,7 +196,7 @@ export function OrmiLawTrainer() {
         <p className="text-xs font-bold uppercase tracking-[0.14em] text-[#1f6f5c]">Πριν επιλέξεις τύπο</p>
         <h2 className="mt-2 text-2xl font-bold text-[#1c2433] sm:text-3xl">ΑΔΟ ή μεταβολή ορμής; Μάθε να αποφασίζεις</h2>
         <p className="mt-3 max-w-4xl text-[15px] leading-7 text-[#3d4452]">
-          Αυτό είναι εξάσκηση πάνω στο αναλυτικό μάθημα 2.5 που βρίσκεται στις 38 διαφάνειες πιο πάνω.
+          Αυτό είναι εξάσκηση πάνω στο αναλυτικό μάθημα 2.5 που βρίσκεται στις 41 διαφάνειες πιο πάνω.
           Δεν αρκεί να δεις αν υπάρχουν δύο σώματα ή αν δίνεται χρόνος. Πρώτα ορίζεις
           <b> σύστημα, χρονικό διάστημα και εξωτερικές δυνάμεις/ωθήσεις</b>.
         </p>
@@ -343,7 +343,6 @@ export function OrmiLawTrainer() {
 
       <div className="flex flex-wrap gap-3 text-sm">
         <a href="#mathima" className="font-bold text-[#1f6f5c] underline underline-offset-2">Ξαναδιάβασε το αναλυτικό μάθημα 2.5 ↑</a>
-        <a href="#theoria" className="font-bold text-[#1f6f5c] underline underline-offset-2">Θεωρία και εργαστήρια ↑</a>
       </div>
       <StudyMark lesson="ormi" id="epilogi-nomou" title="ΑΔΟ ή μεταβολή ορμής — τεστ επιλογής" path="/mixalis/ormi" />
     </section>
