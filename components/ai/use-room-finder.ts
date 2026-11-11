@@ -46,6 +46,7 @@ import { daysBetweenIsoDates, todayInAthensIso } from "@/lib/ai-assistant/room-f
 import { setRoomFinderTrackingFacts, type ChatItem, type MessageKind, type Reaction } from "./room-finder-chat-ui";
 import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
+import { fetchRoomTypes, roomTypesMessage, type RoomTypeCard } from "./room-finder-room-types";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -573,6 +574,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const [activeGroup, setActiveGroup] = useState(0);
   const [choices, setChoices] = useState<RoomChoice[]>([]);
   const [preferences, setPreferences] = useState<RoomFinderPreference[]>([]);
+  // The four room types shown when the guest has no dates yet (homepage cards).
+  const [roomTypes, setRoomTypes] = useState<{ language: RoomFinderLanguage; cards: RoomTypeCard[] } | null>(null);
   const [preferredRoomNumber, setPreferredRoomNumber] = useState<number | null>(null);
   const [breakfast, setBreakfast] = useState(false);
   const [typing, setTyping] = useState(false);
@@ -1341,6 +1344,26 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
+  async function loadRoomTypes(forLanguage: RoomFinderLanguage) {
+    if (roomTypes?.language === forLanguage && roomTypes.cards.length) return roomTypes.cards;
+    const cards = await fetchRoomTypes(forLanguage);
+    if (cards.length) setRoomTypes({ language: forLanguage, cards });
+    return cards;
+  }
+
+  // No dates yet: answer with the four room types, never with availability.
+  async function showRoomTypes(askDates: boolean) {
+    const cards = await loadRoomTypes(language);
+    add(
+      "assistant",
+      roomTypesMessage(language, {
+        askDates,
+        hasPrices: cards.some(card => typeof card.price === "number"),
+      }),
+      "room_types",
+    );
+  }
+
   async function applyCommand(command: RoomFinderCommand) {
     const knowledgeActions = command.actions.filter(action =>
       action.type === "answer_property_question" && typeof action.answer === "string" && action.answer.trim(),
@@ -1401,6 +1424,12 @@ export function useRoomFinder(language: RoomFinderLanguage) {
       add("assistant", ROOM_INTEREST_SAVED[language](roomInterestNumber));
     }
 
+    // "Don't know" / "which rooms do you have?": show the room types first.
+    // The room-types answer already asks for the arrival day, so the check-in
+    // question is not repeated after it.
+    const browseRooms = executableActions.some(action => action.type === "browse_rooms");
+    if (browseRooms) await showRoomTypes(!flow.draft.checkin);
+
     const resolution = resolveAssistantTurn(flow, executableCommand);
     const commandSetTotalGuests = executableActions.some(action => action.totalGuests != null);
 
@@ -1433,6 +1462,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
 
     if (resolution.outcome.kind === "unchanged") {
+      if (browseRooms) return;
       // "Try again", "ok", or the same details again after a failed live
       // check: rerun that search instead of answering "nothing changed".
       if (failedSearch && step === "unavailable") {
@@ -1479,7 +1509,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     switch (resolution.outcome.field) {
       case "checkin":
-        add("assistant", tone.invalidDate);
+        if (!browseRooms) add("assistant", tone.invalidDate);
         return;
       case "checkout":
         add("assistant", tone.checkout);
@@ -1808,5 +1838,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     unavailableSearch: step === "unavailable" ? unavailableSearch : null,
     canRetryAvailability: Boolean(failedSearch) && step === "unavailable",
     retryLabel: RETRY_SEARCH_LABEL[language],
+    roomTypes: roomTypes?.language === language ? roomTypes.cards : [],
+    loadRoomTypes,
   };
 }

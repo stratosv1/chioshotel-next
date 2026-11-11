@@ -24,6 +24,7 @@ const ACTION_TYPES = [
   "acknowledge_contact",
   "answer_property_question",
   "request_live_availability",
+  "browse_rooms",
   "no_change",
 ] as const;
 
@@ -114,6 +115,7 @@ You may return only these actions:
 - acknowledge_contact: the customer says they will call, message, write to or otherwise contact the property/reception, now or later.
 - answer_property_question: a question about Voulamandis House whose answer is present in verifiedPropertyKnowledge. Select only the exact supporting knowledgeIds; never write or invent the answer yourself.
 - request_live_availability: the customer asks about current room availability or a room/stay price. The application, not you, will collect missing booking facts and query live inventory.
+- browse_rooms: the customer has no dates yet or wants an overview of the room types before giving dates. The application then presents the four Voulamandis House room types (never as available rooms) and invites the customer to give dates later.
 - no_change: no supported booking fact, supported room preference or contact intention was supplied in the latest message.
 
 CORE RULES
@@ -127,6 +129,8 @@ CORE RULES
 - Treat current availability and room/stay prices as live data. Use request_live_availability for them and never answer them from static property knowledge. Breakfast price and other explicitly stated fixed property policies may use verified knowledge.
 - verifiedPropertyKnowledge is the only allowed source for static Voulamandis House answers. Return 1-3 exact IDs that directly support the answer. If no entry supports the question, return answer_property_question with an empty knowledgeIds array so the application can state that the answer is not verified.
 - You may return a property/live-data action together with booking facts from the same message. Never copy prose from the knowledge entries into query or any other field.
+- NO DATES YET / ROOM OVERVIEW: when the customer says they do not know their dates yet, are undecided or flexible without giving a date (“don't know”, “δεν ξέρω ακόμα”, “not sure yet”, “noch nicht”), or asks in general which rooms or room types the property has (“what rooms do you have?”, “which rooms are generally available?”, “τι δωμάτια έχετε;”, “πληροφορίες για τα δωμάτια”), return browse_rooms. Do this in every step, including currentStep=checkin. Never return no_change for these messages and never return request_live_availability for them while no check-in date is known. Also return any clear booking facts or preferences from the same message (e.g. set_preferences for a kitchen).
+- A general availability question WITH an exact date (“which rooms are available on 10/10?”) is request_live_availability plus the date facts, not browse_rooms.
 - Missing information is NOT ambiguity. Do not ask a clarification merely because another booking field is absent; return the facts you understood and let the application ask the next missing field.
 - If part of a message is clear and another attempted fact is ambiguous, return the clear fact actions plus exactly one specific ask_clarification action.
 - Clarification must identify the exact ambiguity and, when useful, include one short valid example.
@@ -259,6 +263,15 @@ REFERENCE EXAMPLES
 
 18) “Είμαστε παρέα 7-8 άτομα, για το Πάσχα, 7 διανυκτερεύσεις, πιθανώς 3 ή 4 δωμάτια.”
 => set_guest_count(totalGuests=8), set_stay_dates(nights=7), ask_clarification(missingFields=[checkin]) naming the Orthodox Easter Sunday date and asking for the arrival day, with one example. No roomCount.
+
+19) Context currentStep=checkin. Customer: “Don’t know”.
+=> browse_rooms. Do not return no_change.
+
+20) Context currentStep=checkin. Customer: “Which rooms are generally available? With bathroom and kitchen”.
+=> browse_rooms, set_preferences(preferences=[kitchen]). No request_live_availability without a date.
+
+21) “Θέλω πληροφορίες για τα δωμάτια”.
+=> browse_rooms.
 
 SCHEMA RULES
 - For irrelevant nullable fields return null.

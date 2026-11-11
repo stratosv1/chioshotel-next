@@ -14,6 +14,7 @@ const ALLOWED_ACTIONS = new Set([
   "acknowledge_contact",
   "answer_property_question",
   "request_live_availability",
+  "browse_rooms",
   "no_change",
 ]);
 
@@ -292,6 +293,32 @@ async function specificRoomInterestRegression() {
   return { durationMs: result.durationMs };
 }
 
+// Real guest messages that used to repeat the check-in question (ref 1).
+async function noDatesRoomOverviewRegression() {
+  const cases = [
+    ["en", "Don’t know"],
+    ["en", "Which rooms are generally available? With bathroom and kitchen"],
+    ["el", "Θέλω πληροφορίες για τα δωμάτια"],
+    ["el", "τι ξέρεις για τα δωμάτια ?"],
+    ["el", "Δεν ξέρω ακόμα ημερομηνίες"],
+    ["de", "Ich weiß noch nicht, wann wir kommen"],
+  ];
+  let durationMs = 0;
+  for (const [language, message] of cases) {
+    const result = await interpret(message, { language, currentStep: "checkin" });
+    durationMs += result.durationMs;
+    const types = result.command.actions.map((action) => action.type);
+    assert(types.includes("browse_rooms"), `${language} "${message}" did not return browse_rooms: ${types.join(", ")}`);
+    assert(!types.includes("request_live_availability"), `${language} "${message}" asked for live availability without dates`);
+  }
+  const withDate = await interpret("Which rooms are available on 10/10?", { language: "en", currentStep: "checkin" });
+  assert(
+    !withDate.command.actions.some((action) => action.type === "browse_rooms"),
+    "a dated availability question was routed to the room overview",
+  );
+  return { durationMs: durationMs + withDate.durationMs };
+}
+
 async function main() {
   const languages = ["el", "en", "de", "fr", "it", "es", "tr"];
   console.log(`Room Finder AI contract QA target: ${BASE_URL}`);
@@ -335,6 +362,9 @@ async function main() {
 
   const roomInterest = await specificRoomInterestRegression();
   console.log(`✓ specific Room 8 interest routes to executable selection (${roomInterest.durationMs}ms)`);
+
+  const noDates = await noDatesRoomOverviewRegression();
+  console.log(`✓ no-dates / room-overview messages show the room types (${noDates.durationMs}ms)`);
 }
 
 main().catch((error) => {

@@ -12,6 +12,7 @@ import {
 } from "./room-finder-copy";
 import { ChatMessage, IconReplies } from "./room-finder-chat-ui";
 import { RoomCarousel, type RoomOffer } from "./room-finder-carousel";
+import { RoomTypeCards } from "./room-finder-room-types";
 import { RoomFinderWatchCard } from "./room-finder-watch-card";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
@@ -317,6 +318,13 @@ export function RoomFinderProduction({
   // Rooms of a category page's "Check availability" button (?rooms=1,3,4).
   const pendingCategoryFocus = useRef<number[] | null>(null);
   const pendingAutoLanguageMessage = useRef<string | null>(null);
+
+  // Room-type cards already in the chat follow a language switch.
+  const showsRoomTypes = finder.messages.some(message => message.kind === "room_types");
+  const roomTypesLoaded = finder.roomTypes.length > 0;
+  useEffect(() => {
+    if (showsRoomTypes && !roomTypesLoaded) void finder.loadRoomTypes(language);
+  },[showsRoomTypes, roomTypesLoaded, language]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -956,6 +964,9 @@ export function RoomFinderProduction({
             {finder.messages.map(message => (
               <div key={message.id}>
                 <ChatMessage message={message} />
+                {message.kind === "room_types" && (
+                  <RoomTypeCards roomTypes={finder.roomTypes} language={language} />
+                )}
                 {message.kind === "lead"
                   && message.id === latestLeadMessageId
                   && finder.canRetryAvailability

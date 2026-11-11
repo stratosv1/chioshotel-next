@@ -288,6 +288,11 @@ function shiftIso(iso: string, days: number) {
   return date.toISOString().slice(0, 10);
 }
 
+// No dates yet, or a general question about the room types: show the four
+// room types instead of asking for the check-in again.
+const NO_DATES_WORDS = /^\s*(?:i\s+)?(?:don[’']?t|do not|dont)\s+know(?:\s+yet)?\b|\bnot\s+sure\s+(?:yet|about\s+(?:the\s+)?dates)\b|\bno\s+dates?\s+yet\b|\b(?:flexible|undecided)\b|δεν\s+(?:το\s+)?ξέρω|δεν\s+έχω\s+(?:ακόμα\s+)?(?:αποφασίσει|ημερομηνίες)|ακόμα\s+δεν\s+ξέρω|weiß\s+(?:ich\s+)?(?:noch\s+)?nicht|je\s+ne\s+sais\s+pas|non\s+(?:lo\s+)?so|no\s+(?:lo\s+)?sé|bilmiyorum/iu;
+const ROOM_OVERVIEW_WORDS = /\b(?:what|which)\s+(?:kind\s+of\s+|types?\s+of\s+)?rooms?\b(?![^?]*\d{1,2}[\/.]\d{1,2})|\bgenerally\s+available\b|\binfo(?:rmation)?\s+(?:about|on)\s+(?:the\s+)?rooms\b|τι\s+δωμάτια|τα\s+δωμάτια\s*;|πληροφορίες\s+για\s+τα\s+δωμάτια|τι\s+ξέρεις\s+για\s+τα\s+δωμάτια|welche\s+zimmer|quelles?\s+chambres|quali\s+camere|qué\s+habitaciones|hangi\s+odalar/iu;
+
 export function fallbackRoomFinderCommand(
   message: string,
   context: RoomFinderConversationContext = {},
@@ -374,6 +379,10 @@ export function fallbackRoomFinderCommand(
       });
     }
   }
+
+  const asksOverview = !actions.some(action => action.checkin || action.checkout)
+    && (NO_DATES_WORDS.test(text) || ROOM_OVERVIEW_WORDS.test(text));
+  if (asksOverview) actions.push({ type: "browse_rooms" });
 
   const normalized = uniqueActions(actions);
   if (!normalized.length) return null;

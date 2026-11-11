@@ -551,8 +551,41 @@ function testResultsUxCleanup() {
   assert(production.includes('event.key === "Escape"'), "room details dialog cannot be dismissed with Escape");
 }
 
+// Ref 1: "don't know" and general room questions show the room types even
+// when the AI interpreter is down; a dated question never does.
+function testNoDatesFallbackShowsRoomTypes() {
+  const cases = [
+    ["en", "Don’t know"],
+    ["en", "dont know yet"],
+    ["en", "Which rooms are generally available? With bathroom and kitchen"],
+    ["el", "Θέλω πληροφορίες για τα δωμάτια"],
+    ["el", "τι ξέρεις για τα δωμάτια ?"],
+    ["el", "δεν ξέρω ακόμα"],
+    ["de", "Ich weiß noch nicht"],
+  ];
+  for (const [language, message] of cases) {
+    const interpreted = fallbackRoomFinderCommand(message, { language, currentStep: "checkin" });
+    assert(
+      interpreted?.actions.some(action => action.type === "browse_rooms"),
+      `${language} "${message}" did not show the room types`,
+    );
+  }
+  const dated = fallbackRoomFinderCommand("which rooms do you have on 10/10", { language: "en", currentStep: "checkin" });
+  assert(
+    !dated?.actions.some(action => action.type === "browse_rooms"),
+    "a dated question was routed to the room types",
+  );
+
+  // The room types never change the booking draft or skip a step.
+  const state = createInitialBookingFlowState();
+  const result = resolveAssistantTurn(state, command([{ type: "browse_rooms" }]));
+  assert(result.changed === false, "room types changed the booking draft");
+  assert(result.state.step === "checkin", "room types moved the flow away from check-in");
+}
+
 function main() {
   testStrictDates();
+  testNoDatesFallbackShowsRoomTypes();
   testDestinationMismatchPreservesBookingFacts();
   testRoomInterestContinuesMissingFieldFlow();
   testFullOneTurnBooking();
