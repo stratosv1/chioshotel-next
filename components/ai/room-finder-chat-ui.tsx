@@ -14,6 +14,10 @@ export type ChatItem = {
   reaction?: Reaction;
   /** The room a "room_info" answer is about. */
   roomNumber?: number;
+  /** Repeat guard: the question as the flow first wanted to ask it. */
+  promptKey?: string;
+  /** Repeat guard: how many times in a row it was asked again. */
+  repeat?: number;
 };
 
 const CHAT_STORAGE_NOTICE: Record<RoomFinderLanguage, string> = {

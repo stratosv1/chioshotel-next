@@ -48,6 +48,7 @@ import type { RoomOffer } from "./room-finder-carousel";
 import type { RoomChoice } from "./room-finder-selected-card";
 import { fetchRoomTypes, roomTypesMessage, type RoomTypeCard } from "./room-finder-room-types";
 import { detectRoomInfoRequest, noSuchRoomMessage, roomInfoMessage } from "./room-finder-room-info";
+import { avoidRepeatedQuestion, type PromptType } from "./room-finder-repeat-guard";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -670,8 +671,36 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         : `${base}${note}`;
       pendingStaffNote.current = null;
     }
-    setMessages(current => [...current, { id: rid(), role, content, kind, staffContent: trackedContent }]);
+    const promptType = role === "assistant" && kind === "normal" ? repeatablePromptType(content) : null;
+    setMessages(current => {
+      // Ref 6: never ask the same question twice in a row.
+      const rephrased = promptType ? avoidRepeatedQuestion(current, content, promptType, language) : null;
+      if (!rephrased) return [...current, { id: rid(), role, content, kind, staffContent: trackedContent }];
+      return [...current, {
+        id: rid(),
+        role,
+        content: rephrased.content,
+        kind: rephrased.withContact ? "contact" : kind,
+        staffContent: trackedContent,
+        ...rephrased.info,
+      }];
+    });
   };
+
+  // The booking questions (and the "nothing changed" reply) the repeat guard
+  // may rephrase. Answers, results and offers are never touched.
+  function repeatablePromptType(content: string): PromptType | null {
+    const text = content.trim();
+    if (text === tone.invalidDate.trim()) return "checkin";
+    if (text === tone.checkout.trim()) return "checkout";
+    if (text === tone.rooms.trim() || text.endsWith(tone.rooms.trim())) return "rooms";
+    if (text === GUESTS_SINGLE_ROOM[language].trim()) return "guests";
+    for (let room = 1; room <= 3; room += 1) {
+      if (text === tone.guests(room).trim()) return "guests";
+    }
+    if (text === NO_BOOKING_CHANGE[language].trim()) return "other";
+    return null;
+  }
 
   const rewindConversation = (...promptContents: string[]) =>
     setMessages(current => rewindToAssistantPrompt(current, promptContents));

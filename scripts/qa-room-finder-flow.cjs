@@ -54,6 +54,7 @@ const flowHelpersPath = path.join(root, "components/ai/room-finder-flow-helpers.
 const legacyFlowPath = path.join(root, "components/ai/AiRoomFinderFlow.tsx");
 const interpretRoutePath = path.join(root, "app/api/ai-assistant/interpret/route.ts");
 const roomInfoIntentPath = path.join(root, "lib/ai-assistant/room-info-intent.ts");
+const repeatGuardPath = path.join(root, "components/ai/room-finder-repeat-guard.ts");
 
 const dateUtils = executeCommonJs(transpile(datePath));
 const flow = executeCommonJs(transpile(flowPath), id => {
@@ -76,6 +77,7 @@ const {
 const { feasibleOffersForGroup, hasDistinctOfferPlan, roomOfferKey } = offerPlan;
 const { fallbackRoomFinderCommand } = fallback;
 const { detectRoomInfoRequest } = executeCommonJs(transpile(roomInfoIntentPath));
+const { avoidRepeatedQuestion } = executeCommonJs(transpile(repeatGuardPath));
 
 function command(actions, replyMode = "execute") {
   return { language: "el", replyMode, actions };
@@ -650,8 +652,54 @@ function testPerRoomGuestAnswerNeverLoops() {
   );
 }
 
+// Ref 6: the same question is never sent twice in a row; the third time the
+// guest also gets the call/WhatsApp buttons.
+function testNeverTheSameQuestionTwice() {
+  const ask = "When would you like to check in?";
+  const welcome = `Welcome to Voulamandis House 👋 ${ask}`;
+  const history = [
+    { role: "assistant", content: welcome },
+    { role: "user", content: "hmm" },
+  ];
+  const first = avoidRepeatedQuestion(history, ask, "checkin", "en");
+  assert(first && first.content !== ask, "the check-in question was repeated after the welcome");
+  assert(!first.withContact, "the first rephrase already pushed the guest to reception");
+
+  history.push({ role: "assistant", content: first.content, ...first.info }, { role: "user", content: "?" });
+  const second = avoidRepeatedQuestion(history, ask, "checkin", "en");
+  assert(second && second.withContact, "the third identical question did not offer call/WhatsApp");
+  assert(second.content !== first.content || second.withContact, "the rephrase did not change");
+
+  // Keep going: every message differs from the one right before it.
+  let previousContent = second.content;
+  history.push({ role: "assistant", content: second.content, ...second.info }, { role: "user", content: "." });
+  for (let round = 0; round < 4; round += 1) {
+    const next = avoidRepeatedQuestion(history, ask, "checkin", "en");
+    assert(next && next.content !== previousContent, `repeat ${round + 3} sent the same message twice in a row`);
+    history.push({ role: "assistant", content: next.content, ...next.info }, { role: "user", content: "." });
+    previousContent = next.content;
+  }
+
+  const greek = avoidRepeatedQuestion(
+    [{ role: "assistant", content: "Πόσα δωμάτια χρειάζεστε;" }, { role: "user", content: "xx" }],
+    "Πόσα δωμάτια χρειάζεστε;",
+    "rooms",
+    "el",
+  );
+  assert(greek && /1–3/.test(greek.content), "the Greek rooms question was not rephrased with the buttons hint");
+
+  assert(
+    avoidRepeatedQuestion([{ role: "assistant", content: "How many guests will stay in room 1?" }], "How many guests will stay in room 2?", "guests", "en") === null,
+    "a different question was treated as a repeat",
+  );
+
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(/avoidRepeatedQuestion\(current, content, promptType, language\)/.test(hook), "the chat does not use the repeat guard");
+}
+
 function main() {
   testStrictDates();
+  testNeverTheSameQuestionTwice();
   testPerRoomGuestAnswerNeverLoops();
   testRoomInfoQuestions();
   testNoDatesFallbackShowsRoomTypes();
