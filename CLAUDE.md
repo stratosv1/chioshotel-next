@@ -64,7 +64,7 @@ Because `npm.cmd run build` runs patch scripts that rewrite source files as a si
 A self-contained conversational room-finder feature, deliberately isolated from the build-patch pipeline (see above):
 
 - UI/logic: `components/ai/*` (chat UI, carousel, booking flow, intent/date parsing, copy, tone)
-- Server logic/knowledge base: `lib/ai-assistant/*` (knowledge base, room catalog, sales-concierge logic, conversation store, live-offer presentation)
+- Server logic/knowledge base: `lib/ai-assistant/*` (knowledge base, room catalog, conversation store, live-offer presentation)
 - API routes: `app/api/ai-assistant/*`, `app/api/ai-room-finder/*`
 - Pages: `app/ai-assistant/page.tsx` (public), `app/staff/ai-room-finder/*` (staff inbox)
 - Design/rollout background: `docs/ai-assistant-upgrade-plan.md`, `docs/ai-upgrade-step-1.md`, `docs/ai-preview-branch-note.md` (preview work belongs on a dedicated branch, not production).
