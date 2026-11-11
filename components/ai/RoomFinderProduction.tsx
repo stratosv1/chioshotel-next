@@ -12,8 +12,10 @@ import {
 } from "./room-finder-copy";
 import { ChatMessage, IconReplies } from "./room-finder-chat-ui";
 import { RoomCarousel, type RoomOffer } from "./room-finder-carousel";
+import { addDaysToIsoDate, todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
 import { RoomTypeCards } from "./room-finder-room-types";
 import { RoomInfoCard } from "./room-finder-room-info";
+import { DatePickReply } from "./room-finder-date-pick";
 import { RoomFinderWatchCard } from "./room-finder-watch-card";
 import { stayRange } from "./room-finder-format";
 import { SelectedRoomCard } from "./room-finder-selected-card";
@@ -1067,6 +1069,20 @@ export function RoomFinderProduction({
             ))}
             {finder.typing && <TypingIndicator label={CHAT_UI_LABELS[language].typing} />}
 
+            {(finder.step === "checkin" || (finder.step === "checkout" && finder.checkin))
+              && !quickRepliesHidden
+              && !finder.typing && (
+              <DatePickReply
+                key={finder.step}
+                field={finder.step === "checkout" ? "checkout" : "checkin"}
+                language={language}
+                min={finder.step === "checkout" ? addDaysToIsoDate(finder.checkin, 1) || todayInAthensIso() : todayInAthensIso()}
+                onPick={iso => {
+                  if (lastAssistantMessageId) setHiddenQuickReplyPromptId(lastAssistantMessageId);
+                  void finder.chooseDate(iso);
+                }}
+              />
+            )}
             {finder.step === "rooms" && !quickRepliesHidden && (
               <IconReplies
                 values={[1, 2, 3]}

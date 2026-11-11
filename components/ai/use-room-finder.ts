@@ -50,6 +50,7 @@ import { fetchRoomTypes, roomTypesMessage, type RoomTypeCard } from "./room-find
 import { detectRoomInfoRequest, noSuchRoomMessage, roomInfoMessage } from "./room-finder-room-info";
 import { avoidRepeatedQuestion, type PromptType } from "./room-finder-repeat-guard";
 import { mentionsEveryRoomAmenity, preferenceAckMessage } from "./room-finder-preference-ack";
+import { formatPickedDate } from "./room-finder-date-pick";
 
 export type { FinderStep } from "./room-finder-booking-flow";
 
@@ -1806,6 +1807,25 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     }
   }
 
+  // Ref 5: a date picked from the calendar button goes through the same
+  // booking flow as a typed date, without the AI interpreter.
+  async function chooseDate(iso: string) {
+    const field = step === "checkout" ? "checkout" : "checkin";
+    if (!await beginUserTurn(formatPickedDate(language, iso), "date", "👍")) return;
+    try {
+      await applyCommand({
+        language,
+        replyMode: "execute",
+        actions: [{ type: "set_stay_dates", [field]: iso }],
+      });
+    } catch (error) {
+      console.error("Room Finder could not apply the picked date", error);
+      add("assistant", INTERPRETER_UNAVAILABLE[language], "lead");
+    } finally {
+      endUserTurn();
+    }
+  }
+
   async function commitOfferSelection(offer: RoomOffer) {
     const key = roomOfferKey(offer);
     if (offer.alternativeCheckin && offer.alternativeCheckout) {
@@ -1934,6 +1954,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     submit,
     chooseRooms,
     chooseGuests,
+    chooseDate,
     selectOffer,
     chooseBreakfast,
     retryAvailability,

@@ -725,8 +725,28 @@ function testPreferencesAreConfirmed() {
   assert(/applyCommand\(result\.command, value\)/.test(hook), "the guest text does not reach the preference confirmation");
 }
 
+// Ref 5: a calendar button under the check-in / check-out question; the
+// picked date uses the same flow as a typed date, never the AI.
+function testCalendarButton() {
+  const production = fs.readFileSync(productionPath, "utf8");
+  const hook = fs.readFileSync(hookPath, "utf8");
+  const picker = fs.readFileSync(path.join(root, "components/ai/room-finder-date-pick.tsx"), "utf8");
+  assert(/<DatePickReply[\s\S]{0,900}finder\.chooseDate\(iso\)/.test(production), "the calendar button is not shown in the chat");
+  assert(/finder\.step === "checkin" \|\| \(finder\.step === "checkout" && finder\.checkin\)/.test(production), "the calendar button is not limited to the date questions");
+  assert(/addDaysToIsoDate\(finder\.checkin, 1\)/.test(production), "check-out can be picked on or before check-in");
+  assert(/type: "set_stay_dates", \[field\]: iso/.test(hook), "a picked date does not use the normal booking flow");
+  assert(/type="date"/.test(picker) && /showPicker/.test(picker), "the calendar button does not open the native date picker");
+
+  // The picked dates flow through the deterministic booking flow.
+  const picked = resolveAssistantTurn(createInitialBookingFlowState(), command([{ type: "set_stay_dates", checkin: "2030-06-10" }]));
+  assert(picked.outcome.kind === "prompt" && picked.outcome.field === "checkout", "a picked check-in did not move on to check-out");
+  const pickedOut = resolveAssistantTurn(picked.state, command([{ type: "set_stay_dates", checkout: "2030-06-13" }]));
+  assert(pickedOut.outcome.kind === "prompt" && pickedOut.outcome.field === "rooms", "a picked check-out did not move on to rooms");
+}
+
 function main() {
   testStrictDates();
+  testCalendarButton();
   testPreferencesAreConfirmed();
   testNeverTheSameQuestionTwice();
   testPerRoomGuestAnswerNeverLoops();
