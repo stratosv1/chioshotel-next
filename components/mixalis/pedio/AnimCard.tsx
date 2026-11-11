@@ -35,6 +35,10 @@ const LEGEND = {
   F: { color: EC.F, label: "δύναμη" },
   E: { color: EC.E, label: "ένταση πεδίου" },
   U: { color: EC.U, label: "δυναμικό / ενέργεια" },
+  K: { color: "#e08a1e", label: "κινητική ενέργεια" },
+  Ug: { color: "#1f9d55", label: "δυναμική ενέργεια" },
+  Q: { color: "#b04a3c", label: "θερμότητα / απώλειες" },
+  W: { color: "#6b3fa0", label: "έργο" },
 } as const;
 
 const EPS = 0.001;

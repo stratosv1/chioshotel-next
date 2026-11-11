@@ -14,7 +14,8 @@ export const EC = {
   g: "#b04a3c",
 };
 
-export type ELegend = "v" | "F" | "E" | "U";
+/** "K", "Ug", "Q", "W" are used by the work–energy lesson (/mixalis/ergo). */
+export type ELegend = "v" | "F" | "E" | "U" | "K" | "Ug" | "Q" | "W";
 
 export type ECase = {
   n: number;

@@ -16,11 +16,11 @@ const MODES: { key: Mode; label: string }[] = [
 const quiz = [
   { q: "Δύναμη F = 20 N μετατοπίζει σώμα κατά 3 m με γωνία 60°. Πόσο είναι το έργο της;", a: ["60 J", "30 J", "0 J", "−30 J"], ok: 1, why: "W = F·s·συν60° = 20·3·0,5 = 30 J." },
   { q: "Ένα σώμα διπλασιάζει την ταχύτητά του. Η κινητική του ενέργεια…", a: ["διπλασιάζεται", "τετραπλασιάζεται", "υποδιπλασιάζεται", "μένει σταθερή"], ok: 1, why: "Κ = ½mυ². Όταν υ → 2υ, η κινητική γίνεται 4Κ." },
-  { q: "Σώμα κινείται οριζόντια προς τα δεξιά με τριβή ολίσθησης. Το έργο της τριβής είναι…", a: ["θετικό", "μηδέν", "αρνητικό", "πάντα ίσο με το βάρος"], ok: 2, why: "Η τριβή είναι αντίθετη της μετατόπισης: WΤ = −Τ·s." },
+  { q: "Σώμα κινείται οριζόντια προς τα δεξιά με τριβή ολίσθησης. Το έργο της τριβής είναι…", a: ["θετικό", "μηδέν", "αρνητικό", "πάντα ίσο με το βάρος"], ok: 2, why: "Η τριβή είναι αντίθετη της μετατόπισης: το έργο της είναι −Τ·s." },
   { q: "Σε ελεύθερη πτώση χωρίς αντίσταση αέρα, ποιο μέγεθος μένει σταθερό;", a: ["Η κινητική", "Η βαρυτική δυναμική", "Το άθροισμα Κ + U", "Η ταχύτητα"], ok: 2, why: "Η βαρυτική δυναμική μετατρέπεται σε κινητική: Κ + U = σταθερό." },
   { q: "Στο διάγραμμα δύναμης–θέσης F–x, το προσημασμένο εμβαδόν δίνει…", a: ["ορμή", "έργο", "ισχύ", "επιτάχυνση"], ok: 1, why: "Το εμβαδόν κάτω από F–x δίνει έργο (J). Στο F–t δίνει ώθηση (N·s)." },
   { q: "Γερανός παράγει ωφέλιμο έργο 800 J σε 4 s. Ποια είναι η μέση ωφέλιμη ισχύς;", a: ["200 W", "3200 W", "0,005 W", "800 W"], ok: 0, why: "P = W/Δt = 800/4 = 200 W." },
-  { q: "Κινητήρας παίρνει 1000 J και αποδίδει 750 J χρήσιμη ενέργεια. Ποια είναι η απόδοση;", a: ["25%", "75%", "100%", "133%"], ok: 1, why: "η = Eωφ/Eεισ = 750/1000 = 0,75 = 75%." },
+  { q: "Κινητήρας παίρνει 1000 J και αποδίδει 750 J χρήσιμη ενέργεια. Ποια είναι η απόδοση;", a: ["25%", "75%", "100%", "133%"], ok: 1, why: "η = ωφέλιμη / εισερχόμενη = 750/1000 = 0,75 = 75%." },
 ];
 
 export function ErgoLab() {
@@ -31,6 +31,7 @@ export function ErgoLab() {
   const [distance, setDistance] = useState(4);
   const [angle, setAngle] = useState(60);
   const [mass, setMass] = useState(2);
+  const [loadMass, setLoadMass] = useState(100);
   const [height, setHeight] = useState(10);
   const [springK, setSpringK] = useState(200);
   const [springX, setSpringX] = useState(0.2);
@@ -45,7 +46,7 @@ export function ErgoLab() {
   const kinetic = mass * G * (height - currentHeight);
   const total = mass * G * height;
   const elastic = 0.5 * springK * springX * springX;
-  const useful = mass * G * height;
+  const useful = loadMass * G * height;
   const powerOut = useful / seconds;
   const powerIn = powerOut / (efficiency / 100);
   const springPoints = Array.from({ length: 24 }, (_, i) => {
@@ -96,10 +97,10 @@ export function ErgoLab() {
               <rect x={95 + 23 * (9 + springX * 15)} y="112" width="85" height="76" rx="8" fill="#e2b982" stroke="#7f5c37" strokeWidth="3"/>
               <Arrow x1={125 + 23 * (9 + springX * 15)} y1={100} x2={220 + 23 * (9 + springX * 15)} y2={100} color="#1f6fd1"/>
               <Arrow x1={125 + 23 * (9 + springX * 15)} y1={204} x2={70 + 23 * (9 + springX * 15)} y2={204} color="#c0392b"/>
-              <text x="50" y="32" fontSize="22" fontWeight="bold" fill="#2c2825">Fελ = −kx</text>
+              <text x="50" y="32" fontSize="22" fontWeight="bold" fill="#2c2825">F<tspan baselineShift="sub" fontSize="70%">ελ</tspan> = −kx</text>
               <text x="340" y="45" fontSize="20" fill="#1f6fd1">x = {fmt(springX)} m</text>
-              <text x="340" y="75" fontSize="20" fill="#c0392b">|Fελ| = {fmt(springK * springX)} N</text>
-              <text x="340" y="245" fontSize="25" fontWeight="bold" fill="#23764d">Uελ = {fmt(elastic)} J</text>
+              <text x="340" y="75" fontSize="20" fill="#c0392b">|F<tspan baselineShift="sub" fontSize="70%">ελ</tspan>| = {fmt(springK * springX)} N</text>
+              <text x="340" y="245" fontSize="25" fontWeight="bold" fill="#23764d">U<tspan baselineShift="sub" fontSize="70%">ελ</tspan> = {fmt(elastic)} J</text>
             </>}
             {mode === "power" && <>
               <line x1="65" x2="610" y1="248" y2="248" stroke="#a99a8b" strokeWidth="5"/>
@@ -110,9 +111,9 @@ export function ErgoLab() {
               <rect x="350" y={196 - 126 * progress} width="80" height="51" fill="#d7a96f" rx="5" stroke="#7f5c37" strokeWidth="3"/>
               <Arrow x1={450} y1={200} x2={450} y2={80} color="#23764d" />
               <text x="490" y="110" fill="#23764d" fontSize="20">h = {fmt(height)} m</text>
-              <text x="470" y="55" fill="#2c2825" fontSize="20">m = {fmt(mass)} kg</text>
+              <text x="470" y="55" fill="#2c2825" fontSize="20">m = {fmt(loadMass)} kg</text>
               <text x="490" y="165" fill="#2c2825" fontSize="20">Δt = {fmt(seconds)} s</text>
-              <text x="480" y="204" fill="#2c2825" fontSize="22" fontWeight="bold">Pωφ = {fmt(powerOut)} W</text>
+              <text x="480" y="204" fill="#2c2825" fontSize="22" fontWeight="bold">P<tspan baselineShift="sub" fontSize="70%">ωφ</tspan> = {fmt(powerOut)} W</text>
             </>}
           </svg>
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-[#e9e0d5] pt-3">
@@ -131,7 +132,7 @@ export function ErgoLab() {
             <Slider label="Γωνία θ" value={angle} min={0} max={180} step={15} onChange={setAngle} display={angle + "°"}/>
             <div className="grid grid-cols-2 gap-2">
               <Stat label="Έργο δύναμης" value={fmt(work)} unit="J" color={work < 0 ? "#b43f32" : "#2e8b57"}/>
-              <Stat label="Συνιστώσα Fx" value={fmt(parallel)} unit="N"/>
+              <Stat label="Συνιστώσα F·συνθ" value={fmt(parallel)} unit="N"/>
             </div>
             <p className="text-sm leading-6 text-[#5c534c]">W = F·s·συνθ. {Math.abs(work) < 0.001 ? "Η δύναμη είναι κάθετη στη μετατόπιση: έργο μηδέν." : work > 0 ? "Θετικό έργο: η δύναμη μεταφέρει ενέργεια στο σώμα." : "Αρνητικό έργο: η δύναμη αφαιρεί ενέργεια από το σώμα."}</p>
           </>}
@@ -149,10 +150,10 @@ export function ErgoLab() {
             <Slider label="Σταθερά ελατηρίου k" value={springK} min={50} max={500} step={50} onChange={setSpringK} display={fmt(springK) + " N/m"}/>
             <Slider label="Επιμήκυνση x" value={springX} min={0} max={0.5} step={0.05} onChange={setSpringX} display={fmt(springX) + " m"}/>
             <Stat label="Αποθηκευμένη ενέργεια" value={fmt(elastic)} unit="J" color="#23764d"/>
-            <p className="text-sm leading-6 text-[#5c534c]">Uελ = ½kx². Η δύναμη επαναφοράς έχει αντίθετη φορά από τη μετατόπιση: Fελ = −kx.</p>
+            <p className="text-sm leading-6 text-[#5c534c]">U<sub>ελ</sub> = ½kx². Η δύναμη επαναφοράς έχει αντίθετη φορά από τη μετατόπιση: F<sub>ελ</sub> = −kx.</p>
           </>}
           {mode === "power" && <>
-            <Slider label="Μάζα φορτίου m" value={mass} min={1} max={10} step={1} onChange={setMass} display={fmt(mass) + " kg"}/>
+            <Slider label="Μάζα φορτίου m" value={loadMass} min={10} max={500} step={10} onChange={setLoadMass} display={fmt(loadMass) + " kg"}/>
             <Slider label="Ύψος h" value={height} min={2} max={20} step={1} onChange={setHeight} display={fmt(height) + " m"}/>
             <Slider label="Χρόνος Δt" value={seconds} min={2} max={40} step={2} onChange={setSeconds} display={fmt(seconds) + " s"}/>
             <Slider label="Απόδοση η" value={efficiency} min={40} max={100} step={5} onChange={setEfficiency} display={fmt(efficiency) + "%"}/>
@@ -160,7 +161,7 @@ export function ErgoLab() {
               <Stat label="Ωφέλιμη ισχύς" value={fmt(powerOut)} unit="W" color="#23764d"/>
               <Stat label="Ισχύς εισόδου" value={fmt(powerIn)} unit="W" color="#b07427"/>
             </div>
-            <p className="text-sm leading-6 text-[#5c534c]">Wωφ = mgh = {fmt(useful)} J. Pωφ = Wωφ/Δt. Για η = {efficiency}%, η ισχύς εισόδου είναι Pεισ = Pωφ/η. Υποθέτουμε σταθερή ή μέση ισχύ σε όλη την ανύψωση.</p>
+            <p className="text-sm leading-6 text-[#5c534c]">W<sub>ωφ</sub> = mgh = {fmt(useful)} J. P<sub>ωφ</sub> = W<sub>ωφ</sub>/Δt. Για η = {efficiency}%, η ισχύς εισόδου είναι P<sub>εισ</sub> = P<sub>ωφ</sub>/η. Υποθέτουμε σταθερή ή μέση ισχύ σε όλη την ανύψωση.</p>
           </>}
         </div>
       </div>

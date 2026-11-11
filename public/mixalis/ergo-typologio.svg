@@ -1,0 +1,695 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 1218" width="1212" height="1218" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
+<rect width="1212" height="1218" fill="#fbfaf7"/>
+<text x="606.0" y="52.0" font-size="38" fill="#14306b" text-anchor="middle" font-weight="bold">ΕΡΓΟ – ΕΝΕΡΓΕΙΑ – ΙΣΧΥΣ · ΤΥΠΟΛΟΓΙΟ</text>
+<text x="606.0" y="84.0" font-size="18" fill="#1e5fb4" text-anchor="middle" font-weight="bold">20 περιπτώσεις • σχολικό βιβλίο και τα 20 διαγράμματα • Φυσική Β΄ Λυκείου</text>
+<text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Βήματα: σχήμα με δυνάμεις → έργο κάθε δύναμης (W = F·s·συνθ) → ΘΜΚΕ ή ΑΔΜΕ → ισχύς P = W/Δt</text>
+<rect x="14.0" y="112.0" width="1184.0" height="250.0" fill="#eaf2fd" stroke="#1e5fb4" stroke-width="1.5" rx="10"/>
+<rect x="14.0" y="112.0" width="1184.0" height="30.0" fill="#1e5fb4" rx="10"/>
+<rect x="14.0" y="132.0" width="1184.0" height="10.0" fill="#1e5fb4"/>
+<text x="26.0" y="133.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">1. ΕΡΓΟ ΔΥΝΑΜΗΣ</text>
+<rect x="17.0" y="146.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="32.0" cy="161.0" r="10" fill="#1e5fb4"/>
+<text x="32.0" y="165.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">1</text>
+<text x="47.0" y="166.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Έργο σταθερής δύναμης</text>
+<line x1="31.0" y1="258.0" x2="229.0" y2="258.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="37.0" y1="259.0" x2="32.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="47.0" y1="259.0" x2="42.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="57.0" y1="259.0" x2="52.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="67.0" y1="259.0" x2="62.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="77.0" y1="259.0" x2="72.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="87.0" y1="259.0" x2="82.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="97.0" y1="259.0" x2="92.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="107.0" y1="259.0" x2="102.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="117.0" y1="259.0" x2="112.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="127.0" y1="259.0" x2="122.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="137.0" y1="259.0" x2="132.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="147.0" y1="259.0" x2="142.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="157.0" y1="259.0" x2="152.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="167.0" y1="259.0" x2="162.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="177.0" y1="259.0" x2="172.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="187.0" y1="259.0" x2="182.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="197.0" y1="259.0" x2="192.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="207.0" y1="259.0" x2="202.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="217.0" y1="259.0" x2="212.0" y2="264.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="57.0" y="234.0" width="34.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="74.0" y="250.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<rect x="157.0" y="234.0" width="34.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="174.0" y="250.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="91.0" y1="246.0" x2="122.0" y2="246.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="131.0,246.0 122.0,250.5 122.0,241.5" fill="#d9342b"/>
+<text x="111.0" y="237.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<line x1="191.0" y1="246.0" x2="214.0" y2="246.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="223.0,246.0 214.0,250.5 214.0,241.5" fill="#d9342b"/>
+<text x="207.0" y="237.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<line x1="74.0" y1="270.0" x2="74.0" y2="278.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="174.0" y1="270.0" x2="174.0" y2="278.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="74.0" y1="274.0" x2="165.0" y2="274.0" stroke="#5b6577" stroke-width="1" stroke-linecap="round"/>
+<polygon points="174.0,274.0 165.0,278.5 165.0,269.5" fill="#5b6577"/>
+<text x="124.0" y="287.0" font-size="10.5" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">s</text>
+<text x="130.0" y="304.0" font-size="14" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">W = F·s</text>
+<text x="130.0" y="322.0" font-size="12" fill="#1e5fb4" text-anchor="middle" font-weight="bold">1 J = 1 N·m</text>
+<text x="130.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Η F έχει τη φορά της μετατόπισης.</text>
+<rect x="255.0" y="146.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="270.0" cy="161.0" r="10" fill="#1e5fb4"/>
+<text x="270.0" y="165.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">2</text>
+<text x="285.0" y="166.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πλάγια δύναμη</text>
+<line x1="269.0" y1="262.0" x2="467.0" y2="262.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="275.0" y1="263.0" x2="270.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="285.0" y1="263.0" x2="280.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="295.0" y1="263.0" x2="290.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="305.0" y1="263.0" x2="300.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="315.0" y1="263.0" x2="310.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="325.0" y1="263.0" x2="320.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="335.0" y1="263.0" x2="330.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="345.0" y1="263.0" x2="340.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="355.0" y1="263.0" x2="350.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="365.0" y1="263.0" x2="360.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="375.0" y1="263.0" x2="370.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="385.0" y1="263.0" x2="380.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="395.0" y1="263.0" x2="390.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="405.0" y1="263.0" x2="400.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="415.0" y1="263.0" x2="410.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="425.0" y1="263.0" x2="420.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="435.0" y1="263.0" x2="430.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="445.0" y1="263.0" x2="440.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="455.0" y1="263.0" x2="450.0" y2="268.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="301.0" y="238.0" width="34.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="318.0" y="254.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="335.0" y1="250.0" x2="394.8" y2="208.1" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="402.2,203.0 397.4,211.8 392.2,204.4" fill="#d9342b"/>
+<text x="408.2" y="201.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<line x1="335.0" y1="250.0" x2="393.2" y2="250.0" stroke="#d9342b" stroke-width="1.8" stroke-linecap="round" stroke-dasharray="4 3"/>
+<polygon points="402.2,250.0 393.2,254.5 393.2,245.5" fill="#d9342b"/>
+<line x1="402.2" y1="250.0" x2="402.2" y2="203.0" stroke="#9aa3b2" stroke-width="0.9" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="374.6" y="263.0" font-size="10.5" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F·συνθ</text>
+<path d="M 359.0 250.0 A 24 24 0 0 0 354.7 236.2" fill="none" stroke="#5b6577" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="366.0" y="244.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">θ</text>
+<line x1="405.0" y1="202.0" x2="448.0" y2="202.0" stroke="#5b6577" stroke-width="1.4" stroke-linecap="round"/>
+<polygon points="457.0,202.0 448.0,206.5 448.0,197.5" fill="#5b6577"/>
+<text x="431.0" y="195.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">s</text>
+<text x="368.0" y="304.0" font-size="14" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">W = F·s·συνθ</text>
+<text x="368.0" y="322.0" font-size="11.5" fill="#1e5fb4" text-anchor="middle" font-weight="bold">θ: γωνία F και s</text>
+<text x="368.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Έργο κάνει μόνο η συνιστώσα κατά την s.</text>
+<rect x="493.0" y="146.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="508.0" cy="161.0" r="10" fill="#1e5fb4"/>
+<text x="508.0" y="165.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">3</text>
+<text x="523.0" y="166.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πρόσημο του έργου</text>
+<text x="507.0" y="202.0" font-size="10.5" fill="#1c2433" text-anchor="start" font-weight="bold">θ &lt; 90°</text>
+<rect x="585.0" y="190.0" width="18.0" height="16.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<line x1="594.0" y1="198.0" x2="608.7" y2="189.5" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="616.5,185.0 611.0,193.4 606.5,185.6" fill="#d9342b"/>
+<line x1="627.0" y1="199.0" x2="644.0" y2="199.0" stroke="#5b6577" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="653.0,199.0 644.0,203.5 644.0,194.5" fill="#5b6577"/>
+<text x="640.0" y="193.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">s</text>
+<text x="693.0" y="202.0" font-size="11.5" fill="#1f9d55" text-anchor="middle" font-weight="bold">W &gt; 0</text>
+<text x="507.0" y="234.0" font-size="10.5" fill="#1c2433" text-anchor="start" font-weight="bold">θ = 90°</text>
+<rect x="585.0" y="222.0" width="18.0" height="16.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<line x1="594.0" y1="230.0" x2="594.0" y2="213.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="594.0,204.0 598.5,213.0 589.5,213.0" fill="#d9342b"/>
+<line x1="627.0" y1="231.0" x2="644.0" y2="231.0" stroke="#5b6577" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="653.0,231.0 644.0,235.5 644.0,226.5" fill="#5b6577"/>
+<text x="640.0" y="225.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">s</text>
+<text x="693.0" y="234.0" font-size="11.5" fill="#5b6577" text-anchor="middle" font-weight="bold">W = 0</text>
+<text x="507.0" y="266.0" font-size="10.5" fill="#1c2433" text-anchor="start" font-weight="bold">θ &gt; 90°</text>
+<rect x="585.0" y="254.0" width="18.0" height="16.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<line x1="594.0" y1="262.0" x2="579.3" y2="253.5" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="571.5,249.0 581.5,249.6 577.0,257.4" fill="#d9342b"/>
+<line x1="627.0" y1="263.0" x2="644.0" y2="263.0" stroke="#5b6577" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="653.0,263.0 644.0,267.5 644.0,258.5" fill="#5b6577"/>
+<text x="640.0" y="257.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">s</text>
+<text x="693.0" y="266.0" font-size="11.5" fill="#d9342b" text-anchor="middle" font-weight="bold">W &lt; 0</text>
+<text x="606.0" y="304.0" font-size="13" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">θ = 180°: W = −F·s</text>
+<text x="606.0" y="322.0" font-size="12" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">θ = 90°: W = 0</text>
+<text x="606.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Τριβή: αρνητικό · κάθετη N: μηδέν.</text>
+<rect x="731.0" y="146.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="746.0" cy="161.0" r="10" fill="#1e5fb4"/>
+<text x="746.0" y="165.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">4</text>
+<text x="761.0" y="166.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Έργο του βάρους</text>
+<line x1="745.0" y1="266.0" x2="943.0" y2="266.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="751.0" y1="267.0" x2="746.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="761.0" y1="267.0" x2="756.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="771.0" y1="267.0" x2="766.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="781.0" y1="267.0" x2="776.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="791.0" y1="267.0" x2="786.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="801.0" y1="267.0" x2="796.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="811.0" y1="267.0" x2="806.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="821.0" y1="267.0" x2="816.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="831.0" y1="267.0" x2="826.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="841.0" y1="267.0" x2="836.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="851.0" y1="267.0" x2="846.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="861.0" y1="267.0" x2="856.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="871.0" y1="267.0" x2="866.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="881.0" y1="267.0" x2="876.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="891.0" y1="267.0" x2="886.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="901.0" y1="267.0" x2="896.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="911.0" y1="267.0" x2="906.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="921.0" y1="267.0" x2="916.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="931.0" y1="267.0" x2="926.0" y2="272.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="773.0" y1="190.0" x2="881.0" y2="264.0" stroke="#1f6fd1" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="5 3"/>
+<path d="M 773.0 190.0 C 783.0 260.0, 801.0 194.0, 881.0 264.0" fill="none" stroke="#1f6fd1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="773.0" cy="190.0" r="4" fill="#1c2433"/>
+<circle cx="881.0" cy="264.0" r="4" fill="#1c2433"/>
+<text x="764.0" y="184.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold">A</text>
+<text x="890.0" y="258.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold">B</text>
+<line x1="921.0" y1="190.0" x2="921.0" y2="264.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="916.0" y1="190.0" x2="926.0" y2="190.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="916.0" y1="264.0" x2="926.0" y2="264.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<text x="932.0" y="231.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">h</text>
+<line x1="897.0" y1="192.0" x2="897.0" y2="213.0" stroke="#d9342b" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="897.0,222.0 892.5,213.0 901.5,213.0" fill="#d9342b"/>
+<text x="883.0" y="211.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
+<text x="844.0" y="304.0" font-size="12.5" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="3.8" font-size="8.8">B</tspan><tspan dy="-3.8">​</tspan> = +m·g·h (κάθοδος)</text>
+<text x="844.0" y="322.0" font-size="12.5" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="3.8" font-size="8.8">B</tspan><tspan dy="-3.8">​</tspan> = −m·g·h (άνοδος)</text>
+<text x="844.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Ίδιο για κάθε δρόμο από A σε B.</text>
+<rect x="969.0" y="146.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="984.0" cy="161.0" r="10" fill="#1e5fb4"/>
+<text x="984.0" y="165.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">5</text>
+<text x="999.0" y="166.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Έργο της τριβής</text>
+<line x1="983.0" y1="256.0" x2="1181.0" y2="256.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="989.0" y1="257.0" x2="984.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="999.0" y1="257.0" x2="994.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1009.0" y1="257.0" x2="1004.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1019.0" y1="257.0" x2="1014.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1029.0" y1="257.0" x2="1024.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1039.0" y1="257.0" x2="1034.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1049.0" y1="257.0" x2="1044.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1059.0" y1="257.0" x2="1054.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1069.0" y1="257.0" x2="1064.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1079.0" y1="257.0" x2="1074.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1089.0" y1="257.0" x2="1084.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1099.0" y1="257.0" x2="1094.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1109.0" y1="257.0" x2="1104.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1119.0" y1="257.0" x2="1114.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1129.0" y1="257.0" x2="1124.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1139.0" y1="257.0" x2="1134.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1149.0" y1="257.0" x2="1144.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1159.0" y1="257.0" x2="1154.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1169.0" y1="257.0" x2="1164.0" y2="262.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="1055.0" y="230.0" width="40.0" height="26.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="1075.0" y="247.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="1075.0" y1="230.0" x2="1075.0" y2="209.0" stroke="#1f9d55" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="1075.0,200.0 1079.5,209.0 1070.5,209.0" fill="#1f9d55"/>
+<text x="1086.0" y="219.0" font-size="11" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">N</text>
+<line x1="1075.0" y1="256.0" x2="1075.0" y2="277.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="1075.0,286.0 1070.5,277.0 1079.5,277.0" fill="#d9342b"/>
+<text x="1089.0" y="284.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
+<line x1="1055.0" y1="252.0" x2="1024.0" y2="252.0" stroke="#b04a3c" stroke-width="2.8" stroke-linecap="round"/>
+<polygon points="1015.0,252.0 1024.0,247.5 1024.0,256.5" fill="#b04a3c"/>
+<text x="1035.0" y="245.0" font-size="11" fill="#b04a3c" text-anchor="middle" font-weight="bold" font-style="italic">T</text>
+<line x1="1095.0" y1="243.0" x2="1126.0" y2="243.0" stroke="#d9342b" stroke-width="2.8" stroke-linecap="round"/>
+<polygon points="1135.0,243.0 1126.0,247.5 1126.0,238.5" fill="#d9342b"/>
+<text x="1115.0" y="235.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<line x1="1119.0" y1="192.0" x2="1158.0" y2="192.0" stroke="#1f6fd1" stroke-width="1.6" stroke-linecap="round"/>
+<polygon points="1167.0,192.0 1158.0,196.5 1158.0,187.5" fill="#1f6fd1"/>
+<text x="1143.0" y="185.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<text x="1082.0" y="304.0" font-size="13.5" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">T = μ·N</text>
+<text x="1082.0" y="322.0" font-size="13.5" fill="#1e5fb4" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="4.0" font-size="9.4">T</tspan><tspan dy="-4.0">​</tspan> = −T·s</text>
+<text x="1082.0" y="350.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Οριζόντιο δάπεδο, F οριζόντια: N = mg.</text>
+<rect x="14.0" y="368.0" width="1184.0" height="250.0" fill="#e6f6f8" stroke="#0f7d8c" stroke-width="1.5" rx="10"/>
+<rect x="14.0" y="368.0" width="1184.0" height="30.0" fill="#0f7d8c" rx="10"/>
+<rect x="14.0" y="388.0" width="1184.0" height="10.0" fill="#0f7d8c"/>
+<text x="26.0" y="389.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">2. ΕΝΕΡΓΕΙΑ</text>
+<rect x="17.0" y="402.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="32.0" cy="417.0" r="10" fill="#0f7d8c"/>
+<text x="32.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">6</text>
+<text x="47.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κινητική ενέργεια</text>
+<line x1="31.0" y1="516.0" x2="137.0" y2="516.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="37.0" y1="517.0" x2="32.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="47.0" y1="517.0" x2="42.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="57.0" y1="517.0" x2="52.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="67.0" y1="517.0" x2="62.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="77.0" y1="517.0" x2="72.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="87.0" y1="517.0" x2="82.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="97.0" y1="517.0" x2="92.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="107.0" y1="517.0" x2="102.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="117.0" y1="517.0" x2="112.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="127.0" y1="517.0" x2="122.0" y2="522.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="45.0" y="490.0" width="40.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="65.0" y="506.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<circle cx="55.0" cy="516.0" r="3.5" fill="#4a5568"/>
+<circle cx="75.0" cy="516.0" r="3.5" fill="#4a5568"/>
+<line x1="89.0" y1="500.0" x2="118.0" y2="500.0" stroke="#1f6fd1" stroke-width="2.8" stroke-linecap="round"/>
+<polygon points="127.0,500.0 118.0,504.5 118.0,495.5" fill="#1f6fd1"/>
+<text x="108.0" y="492.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<rect x="153.0" y="502.0" width="22.0" height="18.0" fill="#e08a1e" opacity="0.85"/>
+<text x="164.0" y="531.0" font-size="10" fill="#e08a1e" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<text x="164.0" y="498.0" font-size="9.5" fill="#e08a1e" text-anchor="middle" font-weight="bold">K</text>
+<rect x="193.0" y="448.0" width="22.0" height="72.0" fill="#e08a1e" opacity="0.85"/>
+<text x="204.0" y="531.0" font-size="10" fill="#e08a1e" text-anchor="middle" font-weight="bold" font-style="italic">2υ</text>
+<text x="204.0" y="444.0" font-size="9.5" fill="#e08a1e" text-anchor="middle" font-weight="bold">4K</text>
+<text x="130.0" y="560.0" font-size="14" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">K = ½·m·υ<tspan dy="-5.6" font-size="9.8">2</tspan><tspan dy="5.6">​</tspan></text>
+<text x="130.0" y="578.0" font-size="11.5" fill="#0f7d8c" text-anchor="middle" font-weight="bold">πάντα K ≥ 0 (J)</text>
+<text x="130.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Διπλάσια υ ⇒ τετραπλάσια K.</text>
+<rect x="255.0" y="402.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="270.0" cy="417.0" r="10" fill="#0f7d8c"/>
+<text x="270.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">7</text>
+<text x="285.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Βαρυτική δυναμική</text>
+<line x1="269.0" y1="522.0" x2="467.0" y2="522.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="275.0" y1="523.0" x2="270.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="285.0" y1="523.0" x2="280.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="295.0" y1="523.0" x2="290.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="305.0" y1="523.0" x2="300.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="315.0" y1="523.0" x2="310.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="325.0" y1="523.0" x2="320.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="335.0" y1="523.0" x2="330.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="345.0" y1="523.0" x2="340.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="355.0" y1="523.0" x2="350.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="365.0" y1="523.0" x2="360.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="375.0" y1="523.0" x2="370.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="385.0" y1="523.0" x2="380.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="395.0" y1="523.0" x2="390.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="405.0" y1="523.0" x2="400.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="415.0" y1="523.0" x2="410.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="425.0" y1="523.0" x2="420.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="435.0" y1="523.0" x2="430.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="445.0" y1="523.0" x2="440.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="455.0" y1="523.0" x2="450.0" y2="528.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="269.0" y1="522.0" x2="395.0" y2="522.0" stroke="#1f9d55" stroke-width="1" stroke-linecap="round" stroke-dasharray="5 3"/>
+<text x="285.0" y="516.0" font-size="9.5" fill="#1f9d55" text-anchor="start" font-weight="bold">U = 0</text>
+<rect x="309.0" y="464.0" width="40.0" height="6.0" fill="#8a8f99"/>
+<line x1="329.0" y1="470.0" x2="329.0" y2="522.0" stroke="#8a8f99" stroke-width="3" stroke-linecap="round"/>
+<circle cx="329.0" cy="454.0" r="10" fill="#f4a261" stroke="#4a5568" stroke-width="1"/>
+<text x="329.0" y="458.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="371.0" y1="454.0" x2="371.0" y2="522.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="366.0" y1="454.0" x2="376.0" y2="454.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<text x="381.0" y="492.0" font-size="11" fill="#5b6577" text-anchor="start" font-weight="bold" font-style="italic">h</text>
+<rect x="425.0" y="454.0" width="22.0" height="66.0" fill="#1f9d55" opacity="0.85"/>
+<text x="436.0" y="531.0" font-size="10" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">U</text>
+<text x="436.0" y="450.0" font-size="9.5" fill="#1f9d55" text-anchor="middle" font-weight="bold">mgh</text>
+<text x="368.0" y="560.0" font-size="14" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">U = m·g·h</text>
+<text x="368.0" y="578.0" font-size="12.5" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="3.8" font-size="8.8">B</tspan><tspan dy="-3.8">​</tspan> = −ΔU</text>
+<text x="368.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Το επίπεδο U = 0 το διαλέγουμε εμείς.</text>
+<rect x="493.0" y="402.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="508.0" cy="417.0" r="10" fill="#0f7d8c"/>
+<text x="508.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">8</text>
+<text x="523.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μεταβλητή δύναμη</text>
+<line x1="533.0" y1="526.0" x2="684.0" y2="526.0" stroke="#1c2433" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="693.0,526.0 684.0,530.5 684.0,521.5" fill="#1c2433"/>
+<line x1="533.0" y1="526.0" x2="533.0" y2="455.0" stroke="#1c2433" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="533.0,446.0 537.5,455.0 528.5,455.0" fill="#1c2433"/>
+<text x="691.0" y="539.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">x</text>
+<text x="531.0" y="442.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<polygon points="533.0,526.0 653.0,464.0 653.0,526.0" fill="#9dc7e5" opacity="0.85"/>
+<line x1="533.0" y1="526.0" x2="653.0" y2="464.0" stroke="#1f6fd1" stroke-width="2" stroke-linecap="round"/>
+<line x1="653.0" y1="464.0" x2="653.0" y2="526.0" stroke="#1f6fd1" stroke-width="0.9" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="613.0" y="510.0" font-size="14" fill="#244d72" text-anchor="middle" font-weight="bold" font-style="italic">W</text>
+<text x="653.0" y="538.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">x<tspan dy="3.0" font-size="7.0">1</tspan><tspan dy="-3.0">​</tspan></text>
+<text x="606.0" y="560.0" font-size="13" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">W = εμβαδόν (F–x)</text>
+<text x="606.0" y="578.0" font-size="12" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">τρίγωνο: W = ½·x<tspan dy="3.6" font-size="8.4">1</tspan><tspan dy="-3.6">​</tspan>·F<tspan dy="3.6" font-size="8.4">1</tspan><tspan dy="-3.6">​</tspan></text>
+<text x="606.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Κάτω από τον άξονα x: αρνητικό έργο.</text>
+<rect x="731.0" y="402.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="746.0" cy="417.0" r="10" fill="#0f7d8c"/>
+<text x="746.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">9</text>
+<text x="761.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ελατήριο</text>
+<rect x="747.0" y="446.0" width="8.0" height="74.0" fill="#9c8c7d"/>
+<line x1="747.0" y1="520.0" x2="943.0" y2="520.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="753.0" y1="521.0" x2="748.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="763.0" y1="521.0" x2="758.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="773.0" y1="521.0" x2="768.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="783.0" y1="521.0" x2="778.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="793.0" y1="521.0" x2="788.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="803.0" y1="521.0" x2="798.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="813.0" y1="521.0" x2="808.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="823.0" y1="521.0" x2="818.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="833.0" y1="521.0" x2="828.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="843.0" y1="521.0" x2="838.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="853.0" y1="521.0" x2="848.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="863.0" y1="521.0" x2="858.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="873.0" y1="521.0" x2="868.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="883.0" y1="521.0" x2="878.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="893.0" y1="521.0" x2="888.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="903.0" y1="521.0" x2="898.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="913.0" y1="521.0" x2="908.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="923.0" y1="521.0" x2="918.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="933.0" y1="521.0" x2="928.0" y2="526.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="851.0" y1="442.0" x2="851.0" y2="526.0" stroke="#9aa3b2" stroke-width="0.9" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="851.0" y="438.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="bold">x = 0</text>
+<path d="M 755.0 502.0 L 762.1 509.0 L 769.2 495.0 L 776.3 509.0 L 783.4 495.0 L 790.6 509.0 L 797.7 495.0 L 804.8 509.0 L 811.9 495.0 L 819.0 509.0 L 826.1 495.0 L 833.2 509.0 L 840.3 495.0 L 847.4 509.0 L 854.6 495.0 L 861.7 509.0 L 868.8 495.0 L 875.9 509.0 L 883.0 502.0" fill="none" stroke="#1f6fd1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="883.0" y="490.0" width="30.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="898.0" y="506.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="851.0" y1="450.0" x2="851.0" y2="458.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="883.0" y1="450.0" x2="883.0" y2="458.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="851.0" y1="454.0" x2="874.0" y2="454.0" stroke="#5b6577" stroke-width="1" stroke-linecap="round"/>
+<polygon points="883.0,454.0 874.0,458.5 874.0,449.5" fill="#5b6577"/>
+<text x="867.0" y="467.0" font-size="10.5" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">x</text>
+<line x1="898.0" y1="484.0" x2="867.0" y2="484.0" stroke="#d9342b" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="858.0,484.0 867.0,479.5 867.0,488.5" fill="#d9342b"/>
+<text x="853.0" y="488.0" font-size="10.5" fill="#d9342b" text-anchor="end" font-weight="bold" font-style="italic">F<tspan dy="3.1" font-size="7.3">ελ</tspan><tspan dy="-3.1">​</tspan></text>
+<text x="844.0" y="560.0" font-size="13" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">F<tspan dy="3.9" font-size="9.1">ελ</tspan><tspan dy="-3.9">​</tspan> = −k·x</text>
+<text x="844.0" y="578.0" font-size="13" fill="#0f7d8c" text-anchor="middle" font-weight="bold" font-style="italic">U<tspan dy="3.9" font-size="9.1">ελ</tspan><tspan dy="-3.9">​</tspan> = ½·k·x<tspan dy="-5.2" font-size="9.1">2</tspan><tspan dy="5.2">​</tspan></text>
+<text x="844.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Διπλάσια x ⇒ τετραπλάσια U<tspan dy="3.0" font-size="7.0">ελ</tspan><tspan dy="-3.0">​</tspan>.</text>
+<rect x="969.0" y="402.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="984.0" cy="417.0" r="10" fill="#0f7d8c"/>
+<text x="984.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">10</text>
+<text x="999.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Διάγραμμα F–x ή F–t;</text>
+<line x1="991.0" y1="522.0" x2="1060.0" y2="522.0" stroke="#1c2433" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="1069.0,522.0 1060.0,526.5 1060.0,517.5" fill="#1c2433"/>
+<line x1="991.0" y1="522.0" x2="991.0" y2="457.0" stroke="#1c2433" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="991.0,448.0 995.5,457.0 986.5,457.0" fill="#1c2433"/>
+<text x="1067.0" y="535.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">x</text>
+<text x="989.0" y="444.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<rect x="991.0" y="476.0" width="58.0" height="46.0" fill="#9dc7e5" opacity="0.85"/>
+<line x1="991.0" y1="476.0" x2="1049.0" y2="476.0" stroke="#1f6fd1" stroke-width="2" stroke-linecap="round"/>
+<text x="1020.0" y="504.0" font-size="11" fill="#244d72" text-anchor="middle" font-weight="bold">W (J)</text>
+<line x1="1091.0" y1="522.0" x2="1160.0" y2="522.0" stroke="#1c2433" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="1169.0,522.0 1160.0,526.5 1160.0,517.5" fill="#1c2433"/>
+<line x1="1091.0" y1="522.0" x2="1091.0" y2="457.0" stroke="#1c2433" stroke-width="1.2" stroke-linecap="round"/>
+<polygon points="1091.0,448.0 1095.5,457.0 1086.5,457.0" fill="#1c2433"/>
+<text x="1167.0" y="535.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">t</text>
+<text x="1089.0" y="444.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<rect x="1091.0" y="476.0" width="58.0" height="46.0" fill="#eed0a1" opacity="0.9"/>
+<line x1="1091.0" y1="476.0" x2="1149.0" y2="476.0" stroke="#a46b29" stroke-width="2" stroke-linecap="round"/>
+<text x="1120.0" y="504.0" font-size="10.5" fill="#805522" text-anchor="middle" font-weight="bold">Δp (N·s)</text>
+<text x="1082.0" y="560.0" font-size="12.5" fill="#0f7d8c" text-anchor="middle" font-weight="bold">F–x: εμβαδόν = έργο</text>
+<text x="1082.0" y="578.0" font-size="12.5" fill="#0f7d8c" text-anchor="middle" font-weight="bold">F–t: εμβαδόν = ώθηση</text>
+<text x="1082.0" y="606.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Κοίτα πρώτα τι έχει ο οριζόντιος άξονας.</text>
+<rect x="14.0" y="624.0" width="1184.0" height="250.0" fill="#f3edfa" stroke="#6b3fa0" stroke-width="1.5" rx="10"/>
+<rect x="14.0" y="624.0" width="1184.0" height="30.0" fill="#6b3fa0" rx="10"/>
+<rect x="14.0" y="644.0" width="1184.0" height="10.0" fill="#6b3fa0"/>
+<text x="26.0" y="645.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">3. ΘΜΚΕ – ΑΔΜΕ – ΑΠΩΛΕΙΕΣ</text>
+<rect x="17.0" y="658.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="32.0" cy="673.0" r="10" fill="#6b3fa0"/>
+<text x="32.0" y="677.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">11</text>
+<text x="47.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">ΘΜΚΕ</text>
+<line x1="31.0" y1="770.0" x2="229.0" y2="770.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="37.0" y1="771.0" x2="32.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="47.0" y1="771.0" x2="42.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="57.0" y1="771.0" x2="52.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="67.0" y1="771.0" x2="62.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="77.0" y1="771.0" x2="72.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="87.0" y1="771.0" x2="82.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="97.0" y1="771.0" x2="92.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="107.0" y1="771.0" x2="102.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="117.0" y1="771.0" x2="112.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="127.0" y1="771.0" x2="122.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="137.0" y1="771.0" x2="132.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="147.0" y1="771.0" x2="142.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="157.0" y1="771.0" x2="152.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="167.0" y1="771.0" x2="162.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="177.0" y1="771.0" x2="172.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="187.0" y1="771.0" x2="182.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="197.0" y1="771.0" x2="192.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="207.0" y1="771.0" x2="202.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="217.0" y1="771.0" x2="212.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="43.0" y="746.0" width="30.0" height="24.0" fill="#d6e4f5" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="58.0" y="762.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<rect x="167.0" y="746.0" width="30.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="182.0" y="762.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="58.0" y1="738.0" x2="71.0" y2="738.0" stroke="#1f6fd1" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="80.0,738.0 71.0,742.5 71.0,733.5" fill="#1f6fd1"/>
+<text x="75.0" y="731.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan dy="3.0" font-size="7.0">αρχ</tspan><tspan dy="-3.0">​</tspan></text>
+<line x1="182.0" y1="738.0" x2="217.0" y2="738.0" stroke="#1f6fd1" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="226.0,738.0 217.0,742.5 217.0,733.5" fill="#1f6fd1"/>
+<text x="204.0" y="731.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan dy="3.0" font-size="7.0">τελ</tspan><tspan dy="-3.0">​</tspan></text>
+<line x1="58.0" y1="782.0" x2="58.0" y2="790.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="182.0" y1="782.0" x2="182.0" y2="790.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="58.0" y1="786.0" x2="173.0" y2="786.0" stroke="#5b6577" stroke-width="1" stroke-linecap="round"/>
+<polygon points="182.0,786.0 173.0,790.5 173.0,781.5" fill="#5b6577"/>
+<text x="120.0" y="799.0" font-size="10.5" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">s</text>
+<text x="120.0" y="718.0" font-size="10.5" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="3.1" font-size="7.3">1</tspan><tspan dy="-3.1">​</tspan> + W<tspan dy="3.1" font-size="7.3">2</tspan><tspan dy="-3.1">​</tspan> + … = ΣW</text>
+<text x="130.0" y="816.0" font-size="13.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">ΣW = K<tspan dy="4.0" font-size="9.4">τελ</tspan><tspan dy="-4.0">​</tspan> − K<tspan dy="4.0" font-size="9.4">αρχ</tspan><tspan dy="-4.0">​</tspan></text>
+<text x="130.0" y="834.0" font-size="12.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">ΣW = ΔK</text>
+<text x="130.0" y="862.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Βάλε τα έργα ΟΛΩΝ των δυνάμεων.</text>
+<rect x="255.0" y="658.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="270.0" cy="673.0" r="10" fill="#6b3fa0"/>
+<text x="270.0" y="677.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">12</text>
+<text x="285.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μηχανική ενέργεια</text>
+<line x1="269.0" y1="780.0" x2="375.0" y2="780.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="275.0" y1="781.0" x2="270.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="285.0" y1="781.0" x2="280.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="295.0" y1="781.0" x2="290.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="305.0" y1="781.0" x2="300.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="315.0" y1="781.0" x2="310.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="325.0" y1="781.0" x2="320.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="335.0" y1="781.0" x2="330.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="345.0" y1="781.0" x2="340.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="355.0" y1="781.0" x2="350.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="365.0" y1="781.0" x2="360.0" y2="786.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<path d="M 279.0 708.0 Q 325.0 708.0 355.0 780.0" fill="none" stroke="#9aa3b2" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="4 3"/>
+<circle cx="305.0" cy="712.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1"/>
+<line x1="315.0" y1="712.0" x2="334.2" y2="716.1" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/>
+<polygon points="343.0,718.0 333.3,720.5 335.1,711.7" fill="#1f6fd1"/>
+<text x="329.0" y="707.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<line x1="285.0" y1="712.0" x2="285.0" y2="780.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<text x="277.0" y="750.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">h</text>
+<rect x="405.0" y="734.0" width="30.0" height="46.0" fill="#1f9d55" opacity="0.85"/>
+<rect x="405.0" y="714.0" width="30.0" height="20.0" fill="#e08a1e" opacity="0.85"/>
+<text x="420.0" y="761.0" font-size="11" fill="#ffffff" text-anchor="middle" font-weight="bold" font-style="italic">U</text>
+<text x="420.0" y="728.0" font-size="11" fill="#ffffff" text-anchor="middle" font-weight="bold" font-style="italic">K</text>
+<text x="420.0" y="708.0" font-size="10.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan dy="3.1" font-size="7.3">μηχ</tspan><tspan dy="-3.1">​</tspan></text>
+<text x="368.0" y="816.0" font-size="14" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan dy="4.2" font-size="9.8">μηχ</tspan><tspan dy="-4.2">​</tspan> = K + U</text>
+<text x="368.0" y="834.0" font-size="11.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">με ελατήριο: + U<tspan dy="3.4" font-size="8.0">ελ</tspan><tspan dy="-3.4">​</tspan></text>
+<text x="368.0" y="862.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Άθροισμα κινητικής και δυναμικών.</text>
+<rect x="493.0" y="658.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="508.0" cy="673.0" r="10" fill="#6b3fa0"/>
+<text x="508.0" y="677.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">13</text>
+<text x="523.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">ΑΔΜΕ – ελεύθερη πτώση</text>
+<line x1="507.0" y1="782.0" x2="613.0" y2="782.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="513.0" y1="783.0" x2="508.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="523.0" y1="783.0" x2="518.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="533.0" y1="783.0" x2="528.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="543.0" y1="783.0" x2="538.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="553.0" y1="783.0" x2="548.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="563.0" y1="783.0" x2="558.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="573.0" y1="783.0" x2="568.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="583.0" y1="783.0" x2="578.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="593.0" y1="783.0" x2="588.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="603.0" y1="783.0" x2="598.0" y2="788.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<circle cx="543.0" cy="702.0" r="8" fill="#f4a261" stroke="#4a5568" stroke-width="1"/>
+<line x1="543.0" y1="712.0" x2="543.0" y2="764.0" stroke="#9aa3b2" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 4"/>
+<circle cx="543.0" cy="772.0" r="8" fill="#f4a261" stroke="#4a5568" stroke-width="1"/>
+<line x1="555.0" y1="762.0" x2="555.0" y2="771.0" stroke="#1f6fd1" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="555.0,780.0 550.5,771.0 559.5,771.0" fill="#1f6fd1"/>
+<text x="565.0" y="774.0" font-size="11" fill="#1f6fd1" text-anchor="start" font-weight="bold" font-style="italic">υ</text>
+<text x="523.0" y="738.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">h</text>
+<rect x="619.0" y="720.0" width="20.0" height="60.0" fill="#1f9d55" opacity="0.85"/>
+<rect x="619.0" y="720.0" width="20.0" height="0.0" fill="#e08a1e" opacity="0.85"/>
+<text x="629.0" y="791.0" font-size="8.5" fill="#5b6577" text-anchor="middle" font-weight="normal">πάνω</text>
+<rect x="649.0" y="750.0" width="20.0" height="30.0" fill="#1f9d55" opacity="0.85"/>
+<rect x="649.0" y="720.0" width="20.0" height="30.0" fill="#e08a1e" opacity="0.85"/>
+<text x="659.0" y="791.0" font-size="8.5" fill="#5b6577" text-anchor="middle" font-weight="normal">μέση</text>
+<rect x="679.0" y="780.0" width="20.0" height="0.0" fill="#1f9d55" opacity="0.85"/>
+<rect x="679.0" y="720.0" width="20.0" height="60.0" fill="#e08a1e" opacity="0.85"/>
+<text x="689.0" y="791.0" font-size="8.5" fill="#5b6577" text-anchor="middle" font-weight="normal">κάτω</text>
+<text x="606.0" y="816.0" font-size="11.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">K<tspan dy="3.4" font-size="8.0">αρχ</tspan><tspan dy="-3.4">​</tspan> + U<tspan dy="3.4" font-size="8.0">αρχ</tspan><tspan dy="-3.4">​</tspan> = K<tspan dy="3.4" font-size="8.0">τελ</tspan><tspan dy="-3.4">​</tspan> + U<tspan dy="3.4" font-size="8.0">τελ</tspan><tspan dy="-3.4">​</tspan></text>
+<text x="606.0" y="836.0" font-size="12.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">πτώση: υ = √(2·g·h)</text>
+<text x="606.0" y="862.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="normal">Ισχύει όταν έργο κάνουν μόνο βάρος/ελατήριο.</text>
+<rect x="731.0" y="658.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="746.0" cy="673.0" r="10" fill="#6b3fa0"/>
+<text x="746.0" y="677.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">14</text>
+<text x="761.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Συντηρητικές δυνάμεις</text>
+<path d="M 757.0 750.0 Q 804.0 686.0 851.0 750.0" fill="none" stroke="#1f6fd1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 757.0 750.0 C 787.0 790.0, 811.0 730.0, 851.0 750.0" fill="none" stroke="#1f6fd1" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="5 3"/>
+<circle cx="757.0" cy="750.0" r="3.5" fill="#1c2433"/>
+<circle cx="851.0" cy="750.0" r="3.5" fill="#1c2433"/>
+<text x="749.0" y="754.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold">A</text>
+<text x="859.0" y="754.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold">B</text>
+<text x="804.0" y="706.0" font-size="10.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="3.1" font-size="7.3">1</tspan><tspan dy="-3.1">​</tspan> = W<tspan dy="3.1" font-size="7.3">2</tspan><tspan dy="-3.1">​</tspan></text>
+<path d="M 933.0 738.0 A 24 24 0 1 1 932.9 736.0" fill="none" stroke="#1f9d55" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<polygon points="933.0,732.0 928.0,740.0 938.0,740.0" fill="#1f9d55"/>
+<text x="909.0" y="742.0" font-size="10" fill="#1f9d55" text-anchor="middle" font-weight="bold">W = 0</text>
+<text x="909.0" y="778.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="normal">κλειστή</text>
+<text x="844.0" y="816.0" font-size="11.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold">Συντηρητική: W ανεξάρτητο</text>
+<text x="844.0" y="834.0" font-size="11" fill="#6b3fa0" text-anchor="middle" font-weight="bold">της διαδρομής (βάρος, ελατήριο)</text>
+<text x="844.0" y="862.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Τριβή: μη συντηρητική, W εξαρτάται.</text>
+<rect x="969.0" y="658.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="984.0" cy="673.0" r="10" fill="#6b3fa0"/>
+<text x="984.0" y="677.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">15</text>
+<text x="999.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Απώλειες με τριβή</text>
+<line x1="983.0" y1="770.0" x2="1089.0" y2="770.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="989.0" y1="771.0" x2="984.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="999.0" y1="771.0" x2="994.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1009.0" y1="771.0" x2="1004.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1019.0" y1="771.0" x2="1014.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1029.0" y1="771.0" x2="1024.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1039.0" y1="771.0" x2="1034.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1049.0" y1="771.0" x2="1044.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1059.0" y1="771.0" x2="1054.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1069.0" y1="771.0" x2="1064.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1079.0" y1="771.0" x2="1074.0" y2="776.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="1015.0" y="746.0" width="30.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="1030.0" y="762.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="1015.0" y1="764.0" x2="996.0" y2="764.0" stroke="#b04a3c" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="987.0,764.0 996.0,759.5 996.0,768.5" fill="#b04a3c"/>
+<text x="1001.0" y="757.0" font-size="11" fill="#b04a3c" text-anchor="middle" font-weight="bold" font-style="italic">T</text>
+<line x1="1049.0" y1="736.0" x2="1074.0" y2="736.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/>
+<polygon points="1083.0,736.0 1074.0,740.5 1074.0,731.5" fill="#1f6fd1"/>
+<text x="1066.0" y="729.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<path d="M 1023.0 742.0 q 3 -5 0 -10 q -3 -5 0 -10" fill="none" stroke="#b04a3c" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1031.0 742.0 q 3 -5 0 -10 q -3 -5 0 -10" fill="none" stroke="#b04a3c" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1039.0 742.0 q 3 -5 0 -10 q -3 -5 0 -10" fill="none" stroke="#b04a3c" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1109.0" y="716.0" width="24.0" height="64.0" fill="#7a5bb4" opacity="0.85"/>
+<text x="1121.0" y="791.0" font-size="9.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan dy="2.9" font-size="6.6">αρχ</tspan><tspan dy="-2.9">​</tspan></text>
+<rect x="1147.0" y="738.0" width="24.0" height="42.0" fill="#7a5bb4" opacity="0.85"/>
+<rect x="1147.0" y="716.0" width="24.0" height="22.0" fill="#b04a3c" opacity="0.8"/>
+<text x="1159.0" y="731.0" font-size="10.5" fill="#ffffff" text-anchor="middle" font-weight="bold" font-style="italic">Q</text>
+<text x="1159.0" y="791.0" font-size="9.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan dy="2.9" font-size="6.6">τελ</tspan><tspan dy="-2.9">​</tspan></text>
+<text x="1082.0" y="816.0" font-size="13" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="3.9" font-size="9.1">T</tspan><tspan dy="-3.9">​</tspan> = E<tspan dy="3.9" font-size="9.1">τελ</tspan><tspan dy="-3.9">​</tspan> − E<tspan dy="3.9" font-size="9.1">αρχ</tspan><tspan dy="-3.9">​</tspan></text>
+<text x="1082.0" y="834.0" font-size="12.5" fill="#6b3fa0" text-anchor="middle" font-weight="bold" font-style="italic">Q = |W<tspan dy="3.8" font-size="8.8">T</tspan><tspan dy="-3.8">​</tspan>| = T·s</text>
+<text x="1082.0" y="862.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Η E<tspan dy="3.0" font-size="7.0">μηχ</tspan><tspan dy="-3.0">​</tspan> μειώνεται, η ολική διατηρείται.</text>
+<rect x="14.0" y="880.0" width="1184.0" height="250.0" fill="#ebf6ec" stroke="#2e7d32" stroke-width="1.5" rx="10"/>
+<rect x="14.0" y="880.0" width="1184.0" height="30.0" fill="#2e7d32" rx="10"/>
+<rect x="14.0" y="900.0" width="1184.0" height="10.0" fill="#2e7d32"/>
+<text x="26.0" y="901.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">4. ΙΣΧΥΣ – ΑΠΟΔΟΣΗ</text>
+<rect x="17.0" y="914.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="32.0" cy="929.0" r="10" fill="#2e7d32"/>
+<text x="32.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">16</text>
+<text x="47.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μέση ισχύς</text>
+<line x1="31.0" y1="1036.0" x2="229.0" y2="1036.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="37.0" y1="1037.0" x2="32.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="47.0" y1="1037.0" x2="42.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="57.0" y1="1037.0" x2="52.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="67.0" y1="1037.0" x2="62.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="77.0" y1="1037.0" x2="72.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="87.0" y1="1037.0" x2="82.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="97.0" y1="1037.0" x2="92.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="107.0" y1="1037.0" x2="102.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="117.0" y1="1037.0" x2="112.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="127.0" y1="1037.0" x2="122.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="137.0" y1="1037.0" x2="132.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="147.0" y1="1037.0" x2="142.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="157.0" y1="1037.0" x2="152.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="167.0" y1="1037.0" x2="162.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="177.0" y1="1037.0" x2="172.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="187.0" y1="1037.0" x2="182.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="197.0" y1="1037.0" x2="192.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="207.0" y1="1037.0" x2="202.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="217.0" y1="1037.0" x2="212.0" y2="1042.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="39.0" y="962.0" width="6.0" height="74.0" fill="#846b58"/>
+<rect x="39.0" y="962.0" width="50.0" height="5.0" fill="#846b58"/>
+<circle cx="89.0" cy="966.0" r="4.5" fill="#e7d7c6" stroke="#846b58" stroke-width="1.4"/>
+<line x1="89.0" y1="970.0" x2="89.0" y2="980.0" stroke="#7a7068" stroke-width="1.2" stroke-linecap="round"/>
+<rect x="77.0" y="980.0" width="24.0" height="18.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="89.0" y="993.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<text x="83.0" y="958.0" font-size="10" fill="#d9342b" text-anchor="middle" font-weight="bold">Δt = 2 s</text>
+<rect x="137.0" y="962.0" width="6.0" height="74.0" fill="#846b58"/>
+<rect x="137.0" y="962.0" width="50.0" height="5.0" fill="#846b58"/>
+<circle cx="187.0" cy="966.0" r="4.5" fill="#e7d7c6" stroke="#846b58" stroke-width="1.4"/>
+<line x1="187.0" y1="970.0" x2="187.0" y2="980.0" stroke="#7a7068" stroke-width="1.2" stroke-linecap="round"/>
+<rect x="175.0" y="980.0" width="24.0" height="18.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="187.0" y="993.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<text x="181.0" y="958.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold">Δt = 4 s</text>
+<text x="77.0" y="1026.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">2P</text>
+<text x="175.0" y="1026.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">P</text>
+<text x="130.0" y="1072.0" font-size="14" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">P<tspan dy="4.2" font-size="9.8">μ</tspan><tspan dy="-4.2">​</tspan> = W/Δt</text>
+<text x="130.0" y="1090.0" font-size="12" fill="#2e7d32" text-anchor="middle" font-weight="bold">1 W = 1 J/s</text>
+<text x="130.0" y="1118.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Ίδιο έργο σε μισό χρόνο ⇒ διπλάσια ισχύς.</text>
+<rect x="255.0" y="914.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="270.0" cy="929.0" r="10" fill="#2e7d32"/>
+<text x="270.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">17</text>
+<text x="285.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Στιγμιαία ισχύς</text>
+<line x1="269.0" y1="1030.0" x2="467.0" y2="1030.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="275.0" y1="1031.0" x2="270.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="285.0" y1="1031.0" x2="280.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="295.0" y1="1031.0" x2="290.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="305.0" y1="1031.0" x2="300.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="315.0" y1="1031.0" x2="310.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="325.0" y1="1031.0" x2="320.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="335.0" y1="1031.0" x2="330.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="345.0" y1="1031.0" x2="340.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="355.0" y1="1031.0" x2="350.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="365.0" y1="1031.0" x2="360.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="375.0" y1="1031.0" x2="370.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="385.0" y1="1031.0" x2="380.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="395.0" y1="1031.0" x2="390.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="405.0" y1="1031.0" x2="400.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="415.0" y1="1031.0" x2="410.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="425.0" y1="1031.0" x2="420.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="435.0" y1="1031.0" x2="430.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="445.0" y1="1031.0" x2="440.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="455.0" y1="1031.0" x2="450.0" y2="1036.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<path d="M 305.0 1022.0 L 305.0 1006.0 L 327.0 1006.0 L 339.0 994.0 L 371.0 994.0 L 383.0 1006.0 L 395.0 1008.0 L 395.0 1022.0 Z" fill="#9fc3ef" stroke="#4a5568" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="325.0" cy="1023.0" r="7" fill="#2b3545"/>
+<circle cx="377.0" cy="1023.0" r="7" fill="#2b3545"/>
+<line x1="395.0" y1="1014.0" x2="432.0" y2="1014.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="441.0,1014.0 432.0,1018.5 432.0,1009.5" fill="#d9342b"/>
+<text x="418.0" y="1006.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<line x1="351.0" y1="978.0" x2="392.0" y2="978.0" stroke="#1f6fd1" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="401.0,978.0 392.0,982.5 392.0,973.5" fill="#1f6fd1"/>
+<text x="376.0" y="971.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<text x="368.0" y="1072.0" font-size="14" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">P = F·υ</text>
+<text x="368.0" y="1090.0" font-size="11.5" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">πλάγια F: P = F·υ·συνθ</text>
+<text x="368.0" y="1118.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Ισχύς τη στιγμή που η ταχύτητα είναι υ.</text>
+<rect x="493.0" y="914.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="508.0" cy="929.0" r="10" fill="#2e7d32"/>
+<text x="508.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">18</text>
+<text x="523.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Βαθμός απόδοσης</text>
+<polygon points="511.0,964.0 589.0,964.0 589.0,1004.0 511.0,1004.0" fill="#c9b3e6" opacity="0.9"/>
+<text x="545.0" y="988.0" font-size="11.5" fill="#4b2c7a" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan dy="3.4" font-size="8.0">εισ</tspan><tspan dy="-3.4">​</tspan></text>
+<polygon points="589.0,964.0 689.0,964.0 701.0,978.0 689.0,992.0 589.0,992.0" fill="#8fd1a6" opacity="0.95"/>
+<text x="643.0" y="981.0" font-size="11.5" fill="#1d6b3c" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan dy="3.4" font-size="8.0">ωφ</tspan><tspan dy="-3.4">​</tspan></text>
+<path d="M 589.0 992.0 L 603.0 992.0 Q 623.0 994.0 625.0 1024.0 L 631.0 1024.0 L 617.0 1040.0 L 603.0 1024.0 L 609.0 1024.0 Q 607.0 1006.0 589.0 1004.0 Z" fill="#f1b3a8" stroke="#b04a3c" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="653.0" y="1032.0" font-size="10" fill="#b04a3c" text-anchor="middle" font-weight="bold">απώλειες</text>
+<text x="606.0" y="1072.0" font-size="12" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">η = E<tspan dy="3.6" font-size="8.4">ωφ</tspan><tspan dy="-3.6">​</tspan>/E<tspan dy="3.6" font-size="8.4">εισ</tspan><tspan dy="-3.6">​</tspan> = P<tspan dy="3.6" font-size="8.4">ωφ</tspan><tspan dy="-3.6">​</tspan>/P<tspan dy="3.6" font-size="8.4">εισ</tspan><tspan dy="-3.6">​</tspan></text>
+<text x="606.0" y="1090.0" font-size="11.5" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">E<tspan dy="3.4" font-size="8.0">εισ</tspan><tspan dy="-3.4">​</tspan> = E<tspan dy="3.4" font-size="8.0">ωφ</tspan><tspan dy="-3.4">​</tspan> + απώλειες</text>
+<text x="606.0" y="1118.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Πάντα η &lt; 1, δηλαδή κάτω από 100%.</text>
+<rect x="731.0" y="914.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="746.0" cy="929.0" r="10" fill="#2e7d32"/>
+<text x="746.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">19</text>
+<text x="761.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ανύψωση με γερανό</text>
+<line x1="745.0" y1="1038.0" x2="943.0" y2="1038.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="751.0" y1="1039.0" x2="746.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="761.0" y1="1039.0" x2="756.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="771.0" y1="1039.0" x2="766.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="781.0" y1="1039.0" x2="776.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="791.0" y1="1039.0" x2="786.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="801.0" y1="1039.0" x2="796.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="811.0" y1="1039.0" x2="806.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="821.0" y1="1039.0" x2="816.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="831.0" y1="1039.0" x2="826.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="841.0" y1="1039.0" x2="836.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="851.0" y1="1039.0" x2="846.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="861.0" y1="1039.0" x2="856.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="871.0" y1="1039.0" x2="866.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="881.0" y1="1039.0" x2="876.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="891.0" y1="1039.0" x2="886.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="901.0" y1="1039.0" x2="896.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="911.0" y1="1039.0" x2="906.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="921.0" y1="1039.0" x2="916.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="931.0" y1="1039.0" x2="926.0" y2="1044.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="771.0" y="948.0" width="8.0" height="90.0" fill="#846b58"/>
+<rect x="771.0" y="948.0" width="90.0" height="6.0" fill="#846b58"/>
+<circle cx="859.0" cy="952.0" r="5" fill="#e7d7c6" stroke="#846b58" stroke-width="1.4"/>
+<line x1="859.0" y1="957.0" x2="859.0" y2="980.0" stroke="#7a7068" stroke-width="1.2" stroke-linecap="round"/>
+<rect x="845.0" y="980.0" width="28.0" height="22.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1" rx="3"/>
+<text x="859.0" y="995.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="845.0" y1="1016.0" x2="873.0" y2="1016.0" stroke="#9aa3b2" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<line x1="885.0" y1="1014.0" x2="885.0" y2="989.0" stroke="#1f6fd1" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="885.0,980.0 889.5,989.0 880.5,989.0" fill="#1f6fd1"/>
+<text x="894.0" y="997.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<line x1="833.0" y1="982.0" x2="833.0" y2="965.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="833.0,956.0 837.5,965.0 828.5,965.0" fill="#d9342b"/>
+<text x="824.0" y="969.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F</text>
+<line x1="833.0" y1="1002.0" x2="833.0" y2="1019.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="833.0,1028.0 828.5,1019.0 837.5,1019.0" fill="#d9342b"/>
+<text x="819.0" y="1026.0" font-size="10.5" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
+<line x1="921.0" y1="980.0" x2="921.0" y2="1038.0" stroke="#5b6577" stroke-width="0.9" stroke-linecap="round"/>
+<text x="929.0" y="1012.0" font-size="11" fill="#5b6577" text-anchor="start" font-weight="bold" font-style="italic">h</text>
+<text x="844.0" y="1072.0" font-size="13" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">W<tspan dy="3.9" font-size="9.1">ωφ</tspan><tspan dy="-3.9">​</tspan> = m·g·h</text>
+<text x="844.0" y="1090.0" font-size="12" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">P = m·g·h/Δt = m·g·υ</text>
+<text x="844.0" y="1118.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">Σταθερή υ ⇒ F = mg.</text>
+<rect x="969.0" y="914.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="984.0" cy="929.0" r="10" fill="#2e7d32"/>
+<text x="984.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">20</text>
+<text x="999.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ηλεκτρική ενέργεια</text>
+<circle cx="1031.0" cy="986.0" r="20" fill="#fff4c2" stroke="#c9a227" stroke-width="1.4"/>
+<path d="M 1024.0 992.0 q 3 -10 7 0 q 4 -10 7 0" fill="none" stroke="#c9a227" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="1022.0" y="1005.0" width="18.0" height="12.0" fill="#9aa3b2" stroke="#4a5568" stroke-width="1" rx="2"/>
+<line x1="1044.0" y1="1008.5" x2="1048.0" y2="1015.4" stroke="#e3b23c" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="1056.6" y1="990.5" x2="1064.5" y2="991.9" stroke="#e3b23c" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="1050.9" y1="969.3" x2="1057.0" y2="964.1" stroke="#e3b23c" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="1031.0" y1="960.0" x2="1031.0" y2="952.0" stroke="#e3b23c" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="1011.1" y1="969.3" x2="1005.0" y2="964.1" stroke="#e3b23c" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="1005.4" y1="990.5" x2="997.5" y2="991.9" stroke="#e3b23c" stroke-width="1.3" stroke-linecap="round"/>
+<line x1="1018.0" y1="1008.5" x2="1014.0" y2="1015.4" stroke="#e3b23c" stroke-width="1.3" stroke-linecap="round"/>
+<text x="1031.0" y="1036.0" font-size="10.5" fill="#1c2433" text-anchor="middle" font-weight="bold">100 W · 5 h</text>
+<text x="1131.0" y="976.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="normal">0,1 kW × 5 h</text>
+<text x="1131.0" y="994.0" font-size="12" fill="#e08a1e" text-anchor="middle" font-weight="bold">= 0,5 kWh</text>
+<text x="1131.0" y="1012.0" font-size="11" fill="#e08a1e" text-anchor="middle" font-weight="bold">= 1,8·10<tspan dy="-4.4" font-size="7.7">6</tspan><tspan dy="4.4">​</tspan> J</text>
+<text x="1082.0" y="1072.0" font-size="13" fill="#2e7d32" text-anchor="middle" font-weight="bold" font-style="italic">P = V·I · E = P·t</text>
+<text x="1082.0" y="1090.0" font-size="12" fill="#2e7d32" text-anchor="middle" font-weight="bold">1 kWh = 3,6·10<tspan dy="-4.8" font-size="8.4">6</tspan><tspan dy="4.8">​</tspan> J</text>
+<text x="1082.0" y="1118.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">kW: μονάδα ισχύος · kWh: ενέργειας.</text>
+<text x="606.0" y="1158.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: W έργο (J) • K κινητική • U δυναμική • E<tspan dy="3.9" font-size="9.1">μηχ</tspan><tspan dy="-3.9">​</tspan> = K + U • T τριβή • N κάθετη αντίδραση • Q θερμότητα • P ισχύς (W) • η απόδοση • g = 10 m/s<tspan dy="-5.2" font-size="9.1">2</tspan><tspan dy="5.2">​</tspan></text>
+<text x="606.0" y="1180.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">Πριν από κάθε άσκηση: ποιες δυνάμεις κάνουν έργο; Μόνο βάρος/ελατήριο ⇒ ΑΔΜΕ. Υπάρχει τριβή ⇒ ΘΜΚΕ ή W<tspan dy="3.9" font-size="9.1">T</tspan><tspan dy="-3.9">​</tspan> = ΔE<tspan dy="3.9" font-size="9.1">μηχ</tspan><tspan dy="-3.9">​</tspan>.</text>
+<text x="606.0" y="1208.0" font-size="11" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
+</svg>
