@@ -208,6 +208,7 @@ export default function ConfirmationPanel() {
             })}
             <button type="button" className={`${secondaryButton} justify-self-start`} onClick={() => set({ payments: [...data.payments, { description: "", amount: 0 }] })}>+ Πληρωμή</button>
 
+            <Field id="crm-conf-prepaid" label="Προπληρωμένη μέσω (κενό = πληρώνει σε εμάς)" value={data.prepaidVia ?? ""} onChange={(prepaidVia) => set({ prepaidVia })} />
             <Field id="crm-conf-breakfast" label="Πρωινό" value={data.breakfast} onChange={(breakfast) => set({ breakfast })} />
             <div>
               <label htmlFor="crm-conf-comments" className={labelClass}>Σχόλια πελάτη</label>

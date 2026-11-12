@@ -3,7 +3,10 @@ import { neon } from "@neondatabase/serverless";
 import { guestCountry, guestLanguage, guestPhone } from "@/lib/crm/beds24-contacts";
 import {
   buildConfirmationEmail,
+  cleanChargeDescription,
+  cleanGuestComments,
   DEFAULT_BREAKFAST,
+  ROOM_TYPE_NAMES,
   type BankDetails,
   type ConfirmationCharge,
   type ConfirmationData,
@@ -71,6 +74,16 @@ async function fetchBooking(id: string) {
   return rows.find((row: any) => text(row?.id) === id) ?? rows[0] ?? null;
 }
 
+const GENERIC_CHANNEL: Record<EmailLanguage, string> = { el: "της πλατφόρμας κράτησης", en: "the booking platform", tr: "rezervasyon platformu" };
+
+function channelName(api: any, stored: any, language: EmailLanguage) {
+  const raw = `${text(api?.channel)} ${text(api?.apiSource)} ${text(stored?.raw_json?.api_v2_lookup?.api_source_id) === "19" ? "booking" : ""}`.toLowerCase();
+  if (raw.includes("booking")) return "Booking.com";
+  if (raw.includes("expedia")) return "Expedia";
+  if (raw.includes("airbnb")) return "Airbnb";
+  return GENERIC_CHANNEL[language];
+}
+
 function pickLanguage(language: string | null, country: string | null): EmailLanguage {
   if (language === "el" || language === "en" || language === "tr") return language;
   if (country === "GR" || country === "CY") return "el";
@@ -91,7 +104,7 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
   const bookings = [primary, ...others].filter(Boolean);
 
   const stored = (await sql`
-    select b.booking_id, b.firstname, b.lastname, b.email, b.phone, b.country, b.guest_language, b.room, b.price,
+    select b.booking_id, b.firstname, b.lastname, b.email, b.phone, b.country, b.guest_language, b.room, b.price, b.raw_json,
       to_char(b.checkin, 'YYYY-MM-DD') as checkin, to_char(b.checkout, 'YYYY-MM-DD') as checkout,
       (select r.display_name from booking_core.rooms r where r.room_id::text = b.raw_json->>'room_id' limit 1) as core_room
     from public.beds24_bookings b where b.booking_id = any(${ids}::text[])
@@ -100,9 +113,18 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
   const self = storedById.get(bookingId);
   if (!primary && !self) return null;
 
+  const language = pickLanguage(guestLanguage(primary) ?? self?.guest_language?.slice(0, 2) ?? null, guestCountry(primary) ?? self?.country ?? null);
+  const isGroup = bookings.length > 1;
+  // For a group, Beds24 stores all room names joined on the first booking ("A, B, B"),
+  // so each card takes its own room type from its Beds24 room id instead.
   const roomName = (id: string, api: any) => {
     const row = storedById.get(id);
-    return text(row?.room) || text(row?.core_room) || text(api?.roomName);
+    const roomId = text(api?.roomId) || text(row?.raw_json?.room_id);
+    const typeName = ROOM_TYPE_NAMES[roomId]?.[language];
+    if (typeName) return typeName;
+    const storedName = text(row?.room);
+    if (storedName && !(isGroup && storedName.includes(","))) return storedName;
+    return text(api?.roomName) || text(row?.core_room);
   };
   const activeIds = bookings.length ? bookings.map((row: any) => text(row.id)) : [bookingId];
   const rooms = (bookings.length ? bookings : [{ id: bookingId }]).map((row: any) => {
@@ -117,23 +139,28 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
   const charges: ConfirmationCharge[] = [];
   const payments: ConfirmationPayment[] = [];
   const seen = new Set<string>();
-  for (const booking of bookings) {
+  bookings.forEach((booking: any, index: number) => {
+    const context = rooms[index] ?? rooms[0];
     for (const item of Array.isArray(booking.invoiceItems) ? booking.invoiceItems : []) {
       const key = text(item.id);
       if (key && seen.has(key)) continue;
       if (key) seen.add(key);
       const amount = Number(item.amount) || 0;
       if (/payment/i.test(text(item.type))) payments.push({ description: text(item.description), amount: Math.abs(amount) });
-      else charges.push({ description: text(item.description), qty: Number(item.qty) || 1, amount });
+      else charges.push({ description: cleanChargeDescription(text(item.description), language, context), qty: Number(item.qty) || 1, amount });
     }
-  }
+  });
   if (!charges.length) {
     const price = Number(String(primary?.price ?? self?.price ?? "").replace(/[^\d.]/g, "")) || 0;
-    charges.push({ description: "Accommodation", qty: 1, amount: price });
+    charges.push({ description: rooms[0]?.room || "Accommodation", qty: 1, amount: price });
     warnings.push("Δεν βρέθηκαν γραμμές τιμολογίου. Έλεγξε τα οικονομικά.");
   }
 
-  const language = pickLanguage(guestLanguage(primary) ?? self?.guest_language?.slice(0, 2) ?? null, guestCountry(primary) ?? self?.country ?? null);
+  // Booking.com/Expedia put their own system lines in the guest comments; keep only what the guest wrote.
+  const guestComments = cleanGuestComments(text(primary?.comments));
+  const prepaidVia = guestComments.prepaid ? channelName(primary, self, language) : "";
+  if (prepaidVia) warnings.push(`Η κράτηση είναι προπληρωμένη μέσω ${prepaidVia}: το email δεν θα δείχνει IBAN/τρόπους πληρωμής.`);
+
   const sum = (key: string) => bookings.reduce((total: number, row: any) => total + (Number(row[key]) || 0), 0);
   const names = [...new Set((bookings.length ? bookings : [self]).map((row: any) => `${text(row.firstName ?? row.firstname)} ${text(row.lastName ?? row.lastname)}`.trim()).filter(Boolean))];
 
@@ -157,7 +184,8 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
       charges,
       payments,
       // Only the guest's own comments. Beds24 "notes" are internal and stay out.
-      comments: text(primary?.comments),
+      comments: guestComments.comments,
+      prepaidVia,
     },
   };
 }
