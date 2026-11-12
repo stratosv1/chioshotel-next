@@ -37,3 +37,7 @@ room-detail-schema-paths-check.txt
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# Apps Script (clasp) credentials - never commit
+apps-script/.clasp.json
+.clasprc.json

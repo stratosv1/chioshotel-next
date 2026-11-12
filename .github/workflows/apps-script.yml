@@ -1,0 +1,94 @@
+name: Apps Script sync
+
+# Keeps the Google Apps Script project ("Voulamandis Wizard API") in this repo.
+#
+#   pull  - copies the current code from script.google.com into apps-script/src
+#           and commits it to main (run manually from the Actions tab).
+#   push  - uploads apps-script/src to script.google.com. Runs automatically
+#           when a change under apps-script/src lands on main, or manually.
+#
+# Required repository secrets (Settings -> Secrets and variables -> Actions):
+#   APPS_SCRIPT_ID  - Script ID from the Apps Script editor (Project Settings)
+#   CLASPRC_JSON    - full contents of ~/.clasprc.json after `npx @google/clasp@2 login`
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps-script/src/**"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "pull = script.google.com -> repo, push = repo -> script.google.com"
+        required: true
+        default: pull
+        type: choice
+        options:
+          - pull
+          - push
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apps-script-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Configure clasp
+        env:
+          APPS_SCRIPT_ID: ${{ secrets.APPS_SCRIPT_ID }}
+          CLASPRC_JSON: ${{ secrets.CLASPRC_JSON }}
+        run: |
+          if [ -z "$APPS_SCRIPT_ID" ] || [ -z "$CLASPRC_JSON" ]; then
+            echo "::error::Missing APPS_SCRIPT_ID or CLASPRC_JSON repository secret."
+            exit 1
+          fi
+          printf '%s' "$CLASPRC_JSON" > "$HOME/.clasprc.json"
+          chmod 600 "$HOME/.clasprc.json"
+          printf '{"scriptId":"%s","rootDir":"src"}\n' "$APPS_SCRIPT_ID" > apps-script/.clasp.json
+          npm install -g @google/clasp@2 --no-audit --no-fund
+
+      - name: Pull from script.google.com
+        if: github.event_name == 'workflow_dispatch' && inputs.action == 'pull'
+        working-directory: apps-script
+        run: |
+          mkdir -p src
+          clasp pull
+          cd ..
+          git add apps-script/src
+          if git diff --cached --quiet; then
+            echo "Repo already matches script.google.com."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Sync Apps Script from script.google.com"
+          git push origin HEAD:main
+
+      - name: Push to script.google.com
+        if: github.event_name == 'push' || inputs.action == 'push'
+        working-directory: apps-script
+        run: |
+          if [ -z "$(ls -A src 2>/dev/null | cat)" ]; then
+            echo "::error::apps-script/src is empty - run the pull action first."
+            exit 1
+          fi
+          clasp push --force
+
+      - name: Remove credentials
+        if: always()
+        run: rm -f "$HOME/.clasprc.json" apps-script/.clasp.json
