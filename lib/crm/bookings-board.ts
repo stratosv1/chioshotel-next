@@ -49,6 +49,30 @@ export function arrivalFromSummary(summary: string | null) {
   return summary.match(TIME_IN_TEXT)?.[0]?.replace(".", ":") ?? null;
 }
 
+const ARRIVAL_WORDS = /αεροπλ|πτήσ|πλοί|βαπόρ|φέρι|λιμάν|αεροδρόμ|ξενοδοχ|κατάλυμ|αυτοκίνητ|ταξί|λεωφορ|ενοικιαζ|από (την |το )?(αθήνα|πειραιά|λέσβο|σάμο|τουρκία|τσεσμέ|θεσσαλονίκη|καβάλα)/i;
+
+/**
+ * How and from where the guest arrives ("αεροπλάνο", "πλοίο από Πειραιά", "από άλλο ξενοδοχείο στη Χίο"),
+ * taken from the first part of the staff summary with dates and times removed.
+ */
+export function arrivalInfoFromSummary(summary: string | null) {
+  if (!summary || /αναχώρηση/i.test(summary)) return null;
+  const first = summary.split(/[,;]/)[0] ?? "";
+  const info = first
+    .replace(/\b\d{1,2}\/\d{1,2}(\/\d{2,4})?\b/g, " ")
+    .replace(/\b([01]?\d|2[0-3])[:.][0-5]\d\b/g, " ")
+    .replace(/^\s*(άφιξη|έρχονται|έρχεται)\s*:?\s*/i, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  return info && ARRIVAL_WORDS.test(info) ? info : null;
+}
+
+/** "αεροπλάνο 21:25", "από άλλο ξενοδοχείο στη Χίο", or just the time. */
+export function arrivalLabel(time: string | null, info: string | null) {
+  const text = [info, time].filter(Boolean).join(" ").trim();
+  return text ? text.charAt(0).toLocaleUpperCase("el") + text.slice(1) : "";
+}
+
 const EMAIL_TITLES: Record<string, string> = {
   confirmation: "Επιβεβαίωση κράτησης", arrival: "Pre-arrival", chios_info: "Πληροφορίες για το νησί", welcome: "Καλωσόρισμα",
   daily: "Πρόταση ημέρας", breakfast: "Υπενθύμιση πρωινού", checkout: "Υπενθύμιση αναχώρησης", thank_you: "Ευχαριστούμε",
@@ -139,7 +163,11 @@ async function listBookings(month: string | null): Promise<BoardBooking[]> {
     const lastSms = [...events].reverse().find((event) => event.channel === "sms");
     const failedSms = FAILED_SMS.includes(lastSms?.status ?? "");
     const failedChannel = outreach.some((row) => has(row.booking_id) && (row.status === "failed" || row.reminder_status === "failed"));
-    const arrival = [...own].reverse().find((row) => row.arrival_time || arrivalFromSummary(row.summary));
+    const fromGuest = [...own].reverse().filter((row) => row.direction !== "staff");
+    const arrival = fromGuest.find((row) => row.arrival_time || arrivalFromSummary(row.summary));
+    const arrivalInfo = arrivalInfoFromSummary(arrival?.summary ?? null)
+      ?? fromGuest.map((row) => arrivalInfoFromSummary(row.summary)).find(Boolean)
+      ?? null;
     return {
       bookingIds,
       name: `${first.firstname ?? ""} ${first.lastname ?? ""}`.trim(),
@@ -154,7 +182,7 @@ async function listBookings(month: string | null): Promise<BoardBooking[]> {
       emailState: !address ? "none" : virtual ? "virtual" : "real",
       phone: first.phone,
       arrivalTime: manualArrival?.manual_arrival_time || (arrival ? arrival.arrival_time || arrivalFromSummary(arrival.summary) : null),
-      arrivalDetails: manualArrival?.arrival_details ?? null,
+      arrivalDetails: manualArrival ? manualArrival.arrival_details ?? null : arrivalInfo,
       arrivalClosed: Boolean(manualArrival),
       smsTemplate: buildGuestSms(boardLanguage(first.guest_language, first.country), first.firstname ?? ""),
       deliveryProblem: failedSms ? "Το SMS δεν παραδόθηκε" : failedChannel ? "Το μήνυμα Booking/Expedia απέτυχε" : null,

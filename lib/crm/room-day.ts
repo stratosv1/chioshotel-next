@@ -1,7 +1,7 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
 import { fetchBeds24BookingById } from "@/lib/beds24/api-v2-booking";
-import { arrivalFromSummary } from "@/lib/crm/bookings-board";
+import { arrivalFromSummary, arrivalInfoFromSummary } from "@/lib/crm/bookings-board";
 
 export type RoomStay = {
   room: number;
@@ -77,15 +77,17 @@ export async function getRoomDay(day: string): Promise<RoomDay> {
     sql`select booking_id, arrival_time, arrival_details from public.crm_booking_contacts
       where booking_id = any(${arrivalIds}::text[]) and arrival_saved_at is not null`,
     sql`select booking_ids, arrival_time, summary from public.crm_guest_messages
-      where booking_ids && ${arrivalIds}::text[] order by sent_at desc`,
+      where booking_ids && ${arrivalIds}::text[] and direction = 'guest' order by sent_at desc`,
   ]) as any[][] : [[], []];
 
   const arrivalFor = (id: string) => {
     const ids = [id, masterOf(id)];
     const saved = contacts.find((row) => ids.includes(row.booking_id));
     if (saved) return { time: saved.arrival_time as string | null, details: saved.arrival_details as string | null };
-    const message = messages.find((row) => row.booking_ids.some((item: string) => ids.includes(item)) && (row.arrival_time || arrivalFromSummary(row.summary)));
-    return { time: message ? message.arrival_time || arrivalFromSummary(message.summary) : null, details: null };
+    const own = messages.filter((row) => row.booking_ids.some((item: string) => ids.includes(item)));
+    const message = own.find((row) => row.arrival_time || arrivalFromSummary(row.summary));
+    const details = arrivalInfoFromSummary(message?.summary ?? null) ?? own.map((row) => arrivalInfoFromSummary(row.summary)).find(Boolean) ?? null;
+    return { time: message ? message.arrival_time || arrivalFromSummary(message.summary) : null, details };
   };
 
   const leavingRooms = new Set(departures.map((row) => row.room_number as number));

@@ -3,6 +3,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import RoomDayPanel from "../rooms/RoomDayPanel";
 
+/** Keeps the arrival chip short: the first part of what the guest said, at most ~40 characters. */
+const shortInfo = (details: string) => {
+  const first = details.split(/[,;]/)[0].trim();
+  return first.length > 40 ? `${first.slice(0, 39).trimEnd()}…` : first;
+};
+/** "Αεροπλάνο 21:25", "Από άλλο ξενοδοχείο στη Χίο 14:00". */
+const arrivalLabel = (time: string | null, info: string | null) => {
+  const text = [info, time].filter(Boolean).join(" ").trim();
+  return text ? text.charAt(0).toLocaleUpperCase("el") + text.slice(1) : "";
+};
+
 type BoardEvent = { time: string; channel: "guest" | "staff" | "email" | "sms" | "whatsapp" | "ota"; title: string; body: string | null; summary: string | null; status: string | null };
 type Booking = {
   bookingIds: string[]; name: string; firstName: string; rooms: string[]; checkin: string; checkout: string; status: string;
@@ -340,7 +351,8 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
             {step ? <span className={`text-sm font-bold ${tier === "later" ? "text-stone-600" : tier === "arriving" && !booking.deliveryProblem && booking.emailState === "real" && !missingArrival ? "text-emerald-800" : "text-red-900"}`}>{step}</span> : null}
             <span className="flex flex-wrap gap-1.5">
               {booking.emailState === "real" ? (attention ? null : <Chip tone="ok">✓ Email</Chip>) : days >= 0 ? <Chip tone={soon ? "bad" : "quiet"}>Χωρίς email</Chip> : null}
-              {booking.arrivalTime ? <Chip tone="ok">Άφιξη {booking.arrivalTime}</Chip> : booking.arrivalClosed ? <Chip tone="ok">✓ Άφιξη</Chip> : soon ? <Chip tone="bad">Χωρίς ώρα άφιξης</Chip> : days >= 0 && !attention ? <Chip tone="quiet">Ώρα άφιξης αργότερα</Chip> : null}
+              {booking.arrivalTime ? <Chip tone="ok">{booking.arrivalDetails ? arrivalLabel(booking.arrivalTime, shortInfo(booking.arrivalDetails)) : `Άφιξη ${booking.arrivalTime}`}</Chip> : booking.arrivalClosed ? <Chip tone="ok">{booking.arrivalDetails ? `✓ ${arrivalLabel(null, shortInfo(booking.arrivalDetails))}` : "✓ Άφιξη"}</Chip> : booking.arrivalDetails ? <Chip tone="quiet">{arrivalLabel(null, shortInfo(booking.arrivalDetails))}</Chip> : null}
+              {!booking.arrivalTime && !booking.arrivalClosed ? (soon ? <Chip tone="bad">Χωρίς ώρα άφιξης</Chip> : days >= 0 && !attention ? <Chip tone="quiet">Ώρα άφιξης αργότερα</Chip> : null) : null}
               {booking.deliveryProblem ? <span className="rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-black text-white">⚠ {booking.deliveryProblem}</span> : null}
               {booking.emailSyncError ? <span className="rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-black text-white">⚠ Το email δεν γράφτηκε στο Beds24</span> : null}
               {guestMessages ? <Chip tone="quiet">💬 {guestMessages}</Chip> : null}
