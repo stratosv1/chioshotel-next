@@ -13,6 +13,7 @@ import { RotatingDisk, Wheels } from "./Wheels";
 import { Formula, Note } from "./shared";
 import { TrapezaThemata } from "./TrapezaThemata";
 import { OmaliTheoryEmbed } from "./OmaliTheoryEmbed";
+import { OmaliTypologio } from "./OmaliTypologio";
 
 function Section({
   id,
@@ -574,27 +575,20 @@ export function OmaliLesson() {
           intro={
             <p>
               Όλες οι κλασικές περιπτώσεις μαζί: δρόμοι με κλίση, κωνικό εκκρεμές, νήμα σε κατακόρυφο κύκλο, λόφοι, κοιλάδες και λούπες. Για κάθε
-              μία δες <b>ποιες δυνάμεις δείχνουν προς το κέντρο</b> — αυτές γράφεις στο ΣF = mυ²/R. Πάτα την εικόνα για να την ανοίξεις σε πλήρες μέγεθος.
-              Για <b>κινούμενο σχέδιο βήμα βήμα</b> σε κάθε κουτάκι, άνοιξε το{" "}
+              μία δες <b>ποιες δυνάμεις δείχνουν προς το κέντρο</b>: αυτές γράφεις στο ΣF = mυ²/R. <b>Πάτα ένα κουτάκι</b> και ανοίγει από κάτω
+              αναλυτικά, με κινούμενο σχέδιο βήμα βήμα. Όλα μαζί, σε μία σελίδα, είναι στο{" "}
               <a href="/mixalis/omali2" className="font-semibold text-[#c9822f] underline underline-offset-2">
-                Τυπολόγιο κυκλικής κίνησης με κινούμενα σχέδια
+                τυπολόγιο κυκλικής κίνησης
+              </a>{" "}
+              ·{" "}
+              <a href="/mixalis/omali-typologio.svg" target="_blank" rel="noopener" className="font-semibold text-[#c9822f] underline underline-offset-2">
+                poster σε πλήρες μέγεθος
               </a>
               .
             </p>
           }
         >
-          <a href="/mixalis/omali-typologio.svg" target="_blank" rel="noopener" className="block overflow-hidden rounded-2xl border border-black/10 bg-[#fbf8f2]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/mixalis/omali-typologio.svg"
-              alt="Τυπολόγιο κυκλικής κίνησης: 30 περιπτώσεις με διαγράμματα δυνάμεων και τύπους"
-              width={1212}
-              height={1720}
-              loading="lazy"
-              decoding="async"
-              className="mx-auto h-auto w-full max-w-3xl"
-            />
-          </a>
+          <OmaliTypologio />
           <Note tone="warn" title="Προσοχή στα σύμβολα">
             <ul className="mt-1 space-y-1">
               <li>• Το <b>T</b> είναι <b>περίοδος</b> στα κουτάκια 2 και 12 και <b>τάση νήματος</b> σε όλα τα άλλα.</li>
@@ -608,7 +602,7 @@ export function OmaliLesson() {
               <li>• <b>Κωνικό εκκρεμές</b> (T·συνφ = mg, T·ημφ = mυ²/r): κουτάκια 11–15.</li>
               <li>• <b>Αεροπλάνο / πιλότος σε κατακόρυφο κύκλο</b>: 21 (κάτω: N − mg) και 25 (πάνω: N + mg).</li>
               <li>• <b>Γρανάζια, ιμάντας, δίσκος</b> (υ = ωR): κουτάκι 5.</li>
-              <li>• <b>Στροφή με κλίση</b> (εφφ = υ²/(gR)): κουτάκι 6.</li>
+              <li>• <b>Στροφή με κλίση</b> (εφφ = υ²/(gR)): κουτάκι 6 · με τριβή: 35.</li>
             </ul>
           </div>
         </Section>
