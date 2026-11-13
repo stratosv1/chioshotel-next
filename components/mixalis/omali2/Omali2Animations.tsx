@@ -9,6 +9,7 @@ import { section4 } from "./scenes-4";
 import { section5 } from "./scenes-5";
 import { section6 } from "./scenes-6";
 import { section7 } from "./scenes-7";
+import { section2Extra } from "./scenes-8";
 
 /* Colours and titles follow the six sections of the omali poster. */
 export const SECTIONS: { title: string; color: string; bg: string; intro: string; cases: OCase[] }[] = [
@@ -24,7 +25,7 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
     color: "#0f7d8c",
     bg: "#e6f6f8",
     intro: "Κάποια πραγματική δύναμη πρέπει να «δώσει» την κεντρομόλο: η τάση ενός νήματος, η στατική τριβή, η κάθετη δύναμη ενός τοίχου ή ενός κεκλιμένου δρόμου.",
-    cases: section2,
+    cases: [...section2, ...section2Extra],
   },
   {
     title: "Κωνικό εκκρεμές",
@@ -63,13 +64,24 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
   },
 ];
 
+/** "κουτάκια 6–10 · επιπλέον 35–36": poster cells (1–30) first, then extra cases. */
+function caseRange(cases: OCase[]) {
+  const poster = cases.filter((c) => c.n <= 30);
+  const extra = cases.filter((c) => c.n > 30);
+  const span = (list: OCase[]) => (list.length > 1 ? `${list[0].n}–${list[list.length - 1].n}` : `${list[0].n}`);
+  const parts: string[] = [];
+  if (poster.length) parts.push(`κουτάκια ${span(poster)}`);
+  if (extra.length) parts.push(`${poster.length ? "επιπλέον" : "επιπλέον ασκήσεις"} ${span(extra)}`);
+  return parts.join(" · ");
+}
+
 export function Omali2Animations() {
   return (
     <div className="space-y-6">
       {SECTIONS.map((s, i) => !s.cases.length ? null : (
         <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 rounded-3xl border p-4 sm:p-6" style={{ borderColor: s.color, backgroundColor: s.bg }}>
           <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: s.color }}>
-            Ενότητα {i + 1} · {s.cases[0].n > 30 ? "επιπλέον ασκήσεις" : "κουτάκια"} {s.cases[0].n}–{s.cases[s.cases.length - 1].n}
+            Ενότητα {i + 1} · {caseRange(s.cases)}
           </p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1c2433] sm:text-3xl">{s.title}</h2>
           <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">{s.intro}</p>
