@@ -73,10 +73,21 @@ type CanonicalRow = {
 };
 
 type CanonicalSnapshot = {
+  notModified?: false;
   generatedAt: string;
   dataUpdatedAt: string;
   sourceRefreshedAt: string;
   rows: CanonicalRow[];
+};
+
+// The source answers a pull that sends `since=<dataUpdatedAt we already have>`
+// with no rows when nothing changed, so an unchanged check costs one small
+// response and one sync_runs insert instead of a full 6k-row snapshot.
+type NotModifiedSnapshot = {
+  notModified: true;
+  generatedAt: string;
+  dataUpdatedAt: string;
+  sourceRefreshedAt: string;
 };
 
 function text(value: unknown) {
@@ -152,7 +163,7 @@ function parseCanonicalRow(value: unknown, index: number): CanonicalRow {
   };
 }
 
-function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot {
+function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot | NotModifiedSnapshot {
   if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     throw new Error("Google Script returned an invalid booking_core_snapshot payload");
   }
@@ -176,6 +187,14 @@ function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot {
   if (!validIsoTimestamp(source.generatedAt)) throw new Error("Source generatedAt is invalid");
   if (!validIsoTimestamp(source.dataUpdatedAt)) throw new Error("Source dataUpdatedAt is invalid");
   if (!validIsoTimestamp(source.sourceRefreshedAt)) throw new Error("Source sourceRefreshedAt is invalid");
+  if (source.notModified === true) {
+    return {
+      notModified: true,
+      generatedAt: source.generatedAt,
+      dataUpdatedAt: source.dataUpdatedAt,
+      sourceRefreshedAt: source.sourceRefreshedAt,
+    };
+  }
   if (!Array.isArray(source.rows) || source.rows.length === 0) throw new Error("Source returned no booking rows");
   if (Number(source.count) !== source.rows.length) throw new Error("Source count does not match rows length");
 
@@ -188,11 +207,12 @@ function parseCanonicalSnapshot(payload: unknown): CanonicalSnapshot {
   };
 }
 
-async function fetchCanonicalSnapshot(baseUrl: string, secret: string) {
+async function fetchCanonicalSnapshot(baseUrl: string, secret: string, since: string) {
   const url = new URL(baseUrl);
   url.searchParams.set("action", SOURCE_ACTION);
   url.searchParams.set("_ts", String(Date.now()));
   if (secret) url.searchParams.set("secret", secret);
+  if (since) url.searchParams.set("since", since);
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), SOURCE_TIMEOUT_MS);
@@ -234,7 +254,9 @@ async function readPushedSnapshot(request: NextRequest) {
   } catch {
     throw new Error("Push body is not valid JSON");
   }
-  return parseCanonicalSnapshot(payload);
+  const snapshot = parseCanonicalSnapshot(payload);
+  if (snapshot.notModified) throw new Error("A pushed snapshot must contain rows");
+  return snapshot;
 }
 
 function requestSecret(request: NextRequest) {
@@ -322,15 +344,6 @@ async function syncBookingCore(request: NextRequest) {
   const startedAt = Date.now();
   let source = request.method === "POST" ? PUSH_SOURCE : PULL_SOURCE;
   try {
-    let snapshot = await readPushedSnapshot(request);
-    if (!snapshot) {
-      source = PULL_SOURCE;
-      if (!scriptUrl) return NextResponse.json({ ok: false, error: "OCCUPANCY_SCRIPT_URL is missing" }, { status: 500 });
-      snapshot = await fetchCanonicalSnapshot(scriptUrl, scriptSecret);
-    }
-
-    await retryPendingPricingAlert(databaseUrl);
-
     const sql = neon(databaseUrl);
     const markerRows = await sql`
       select text_value
@@ -338,11 +351,59 @@ async function syncBookingCore(request: NextRequest) {
       where setting_key = ${DATA_UPDATED_AT_SETTING}
       limit 1
     `;
-    const alreadyApplied = text((markerRows as any[])[0]?.text_value) === snapshot.dataUpdatedAt;
+    const appliedDataUpdatedAt = text((markerRows as any[])[0]?.text_value);
 
-    if (alreadyApplied) {
+    let received: CanonicalSnapshot | NotModifiedSnapshot | null = await readPushedSnapshot(request);
+    if (!received) {
+      source = PULL_SOURCE;
+      if (!scriptUrl) return NextResponse.json({ ok: false, error: "OCCUPANCY_SCRIPT_URL is missing" }, { status: 500 });
+      received = await fetchCanonicalSnapshot(scriptUrl, scriptSecret, appliedDataUpdatedAt);
+    }
+
+    // Nothing changed at the source: record that the source is still fresh
+    // (inventory_status reads source_generated_at) and stop. No rows travel,
+    // no inventory scan, no availability-watch run.
+    if (received.notModified === true) {
+      const unchanged = received;
+      if (unchanged.dataUpdatedAt !== appliedDataUpdatedAt) {
+        throw new Error("Source reported not modified for data this database has not applied");
+      }
+      await sql`
+        insert into booking_core.sync_runs (
+          started_at, completed_at, status, source, rows_received, rows_written, source_generated_at
+        ) values (
+          ${new Date(startedAt).toISOString()}::timestamptz,
+          now(),
+          ${"ok"},
+          ${source},
+          0,
+          0,
+          ${unchanged.sourceRefreshedAt}::timestamptz
+        )
+      `;
+      return NextResponse.json({
+        ok: true,
+        alreadyApplied: true,
+        notModified: true,
+        source,
+        schemaVersion: SOURCE_SCHEMA_VERSION,
+        rowsReceived: 0,
+        rowsWritten: 0,
+        sourceDataUpdatedAt: unchanged.dataUpdatedAt,
+        sourceRefreshedAt: unchanged.sourceRefreshedAt,
+        sourceResponseGeneratedAt: unchanged.generatedAt,
+        durationMs: Date.now() - startedAt,
+      }, { headers: { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" } });
+    }
+    const snapshot = received as CanonicalSnapshot;
+
+    await retryPendingPricingAlert(databaseUrl);
+
+    if (appliedDataUpdatedAt === snapshot.dataUpdatedAt) {
       const { minDate, maxDate } = snapshotDateRange(snapshot.rows);
-      const bookingIdsWritten = await syncInventoryBookingIds(sql, snapshot.rows);
+      // Booking ids were written when this data was applied; only an explicit
+      // re-push (forcePushBookingCore in the Apps Script) backfills them again.
+      const bookingIdsWritten = source === PUSH_SOURCE ? await syncInventoryBookingIds(sql, snapshot.rows) : 0;
       await sql`
         insert into booking_core.sync_runs (
           started_at,
@@ -367,7 +428,6 @@ async function syncBookingCore(request: NextRequest) {
         )
       `;
 
-      scheduleAvailabilityWatchCheck();
       return NextResponse.json({
         ok: true,
         alreadyApplied: true,
@@ -421,15 +481,16 @@ async function syncBookingCore(request: NextRequest) {
           description = excluded.description
     `;
 
+    // Only changed inventory can make a watched room newly available; the
+    // availability-watch cron still runs the full check twice a day.
     if (rowsWritten > 0) {
       try {
         revalidateTag(BOOKING_CORE_DEALS_CACHE_TAG, { expire: 0 });
       } catch (cacheError) {
         console.error("booking_core could not invalidate deals cache", cacheError);
       }
+      scheduleAvailabilityWatchCheck();
     }
-
-    scheduleAvailabilityWatchCheck();
     return NextResponse.json({
       ok: true,
       source,
