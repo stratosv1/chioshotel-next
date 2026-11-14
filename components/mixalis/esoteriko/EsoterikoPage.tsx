@@ -5,6 +5,7 @@ import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { BANK_MAP, FIRST_MOVES, FORMULAS, GROUPS, type Case } from "./cases";
 import { ProjectionFigure, SignFigure, SledFigure } from "./figures";
 import { Reveal } from "./Reveal";
+import { Shell, type CaseSlide, type Panel } from "./Shell";
 import { rich } from "./rich";
 
 const LESSON = "esoteriko";
@@ -31,7 +32,7 @@ function Section({ id, n, kicker, title, intro, children }: { id: string; n: str
 
 function CaseBlock({ c }: { c: Case }) {
   return (
-    <article id={c.id} data-study-lesson={LESSON} data-study-id={c.id} className="scroll-mt-20 border-t border-black/10 py-10 first:border-t-0 first:pt-0">
+    <article id={c.id} data-study-lesson={LESSON} data-study-id={c.id} className="scroll-mt-20">
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span className="text-lg font-bold text-[#c9822f]">{c.code}</span>
         <h3 className="text-2xl font-semibold tracking-tight sm:text-3xl">{rich(c.title)}</h3>
@@ -76,51 +77,47 @@ function CaseBlock({ c }: { c: Case }) {
   );
 }
 
-const nav: [string, string][] = [
-  ["#protakinisi", "Τι σου ζητάνε"],
-  ["#typologio", "Τυπολόγιο"],
-  ["#noima", "Τι σημαίνει"],
-  ["#fysiki", "Φυσική"],
-  ["#syntetagmenes", "Α · Συντεταγμένες"],
-  ["#metra", "Β · Μέτρα και γωνίες"],
-  ["#thema4", "Γ · Θέμα 4"],
-  ["#trapeza", "Τράπεζα Θεμάτων"],
-];
-
 export function EsoterikoPage() {
-  let n = 4;
+  const slides: CaseSlide[] = GROUPS.flatMap((g) =>
+    g.cases.map((c) => ({
+      id: c.id,
+      code: c.code,
+      title: c.title,
+      group: g.letter,
+      groupTitle: g.title,
+      groupIntro: <p>{rich(g.intro)}</p>,
+      node: <CaseBlock c={c} />,
+    })),
+  );
   return (
     <main className="min-h-screen bg-[#f3efe8] text-[#2c2825]">
-      <header className="mx-auto w-full max-w-[1400px] px-4 pb-10 pt-10 sm:px-8 sm:pt-14">
+      <header className="mx-auto w-full max-w-[1400px] px-4 pb-6 pt-6 sm:px-8 sm:pt-8">
         <Link href="/mixalis" prefetch={false} className="text-sm font-semibold text-[#857261] hover:underline">
           ← Τα μαθήματά μου
         </Link>
-        <p className="mt-6 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Μαθηματικά Β΄ Λυκείου · §1.5</p>
-        <h1 className="mt-2 max-w-4xl text-4xl font-semibold tracking-tight sm:text-6xl">Εσωτερικό γινόμενο: οι περιπτώσεις ασκήσεων</h1>
+        <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Μαθηματικά Β΄ Λυκείου · §1.5</p>
+        <h1 className="mt-2 max-w-4xl text-3xl font-semibold tracking-tight sm:text-5xl">Εσωτερικό γινόμενο: οι περιπτώσεις ασκήσεων</h1>
         <p className="mt-5 max-w-3xl text-[19px] leading-9 text-[#5c534c]">
           Μιχάλη, οι ασκήσεις του εσωτερικού γινομένου μοιάζουν πολλές, αλλά είναι <b>25 περιπτώσεις</b> που επαναλαμβάνονται. Για καθεμία θα δεις τι
-          θα σου ζητήσουν, τι πρέπει να σκεφτείς και τι κάνεις βήμα-βήμα, με μια λυμένη άσκηση. Λύσε την πρώτα στο τετράδιο και μετά άνοιξε τη λύση.
+          θα σου ζητήσουν, τι πρέπει να σκεφτείς και τι κάνεις βήμα-βήμα, με μια λυμένη άσκηση. Διάλεξε περίπτωση από τα κουμπάκια Α1…Γ8 ή προχώρα με «Επόμενη». Λύσε πρώτα στο τετράδιο και μετά άνοιξε τη λύση.
         </p>
         <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#857261]">
           Από την Τράπεζα Θεμάτων, το βοήθημα του Μπάρλα και τις σημειώσεις του φροντιστηρίου.
         </p>
       </header>
 
-      <nav className="sticky top-0 z-20 border-y border-black/10 bg-[#f3efe8]/90 backdrop-blur" aria-label="Ενότητες">
-        <div className="mx-auto flex w-full max-w-[1400px] gap-1 overflow-x-auto px-3 py-2 sm:px-8">
-          {nav.map(([href, label]) => (
-            <a key={href} href={href} className="shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold text-[#4d4138] hover:bg-black/5">
-              {label}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <div className="mx-auto w-full max-w-[1400px] px-4 pb-4 sm:px-8">
+        <StudyBar lesson={LESSON} />
+      </div>
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8">
-        <div className="pt-6">
-          <StudyBar lesson={LESSON} />
-        </div>
-
+      <Shell
+        lesson={LESSON}
+        cases={slides}
+        panels={[
+          {
+            id: "protakinisi",
+            label: "Τι σου ζητάνε",
+            node: (
         <Section id="protakinisi" n="1" kicker="Πριν από κάθε άσκηση" title="Πρώτα ρώτα: τι μου ζητάνε;" intro={<p>Η λέξη της εκφώνησης σού λέει σχεδόν πάντα την πρώτη κίνηση.</p>}>
           <table className="w-full max-w-5xl text-left text-[17px]">
             <thead>
@@ -139,7 +136,12 @@ export function EsoterikoPage() {
             </tbody>
           </table>
         </Section>
-
+            ),
+          },
+          {
+            id: "typologio",
+            label: "Τυπολόγιο",
+            node: (
         <Section id="typologio" n="2" kicker="Τυπολόγιο" title="Όλοι οι τύποι σε μία ματιά">
           <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {FORMULAS.map(([label, lines]) => (
@@ -154,7 +156,12 @@ export function EsoterikoPage() {
             ))}
           </div>
         </Section>
-
+            ),
+          },
+          {
+            id: "noima",
+            label: "Τι σημαίνει",
+            node: (
         <Section
           id="noima"
           n="3"
@@ -207,7 +214,12 @@ export function EsoterikoPage() {
             </div>
           </div>
         </Section>
-
+            ),
+          },
+          {
+            id: "fysiki",
+            label: "Φυσική",
+            node: (
         <Section
           id="fysiki"
           n="4"
@@ -292,20 +304,15 @@ export function EsoterikoPage() {
           </div>
         </Section>
 
-        {GROUPS.map((g) => {
-          n += 1;
-          return (
-            <Section key={g.id} id={g.id} n={String(n)} kicker={`Ομάδα ${g.letter}`} title={g.title} intro={<p>{rich(g.intro)}</p>}>
-              {g.cases.map((c) => (
-                <CaseBlock key={c.id} c={c} />
-              ))}
-            </Section>
-          );
-        })}
-
+            ),
+          },
+          {
+            id: "trapeza",
+            label: "Τράπεζα Θεμάτων",
+            node: (
         <Section
           id="trapeza"
-          n={String(n + 1)}
+          n="5"
           kicker="Τράπεζα Θεμάτων ΙΕΠ"
           title="Τα 32 θέματα της Τράπεζας για την §1.5"
           intro={<p>Κάθε θέμα της Τράπεζας ανήκει σε μία από τις περιπτώσεις πάνω. Πάτα την περίπτωση για να δεις τη μέθοδο.</p>}
@@ -350,6 +357,12 @@ export function EsoterikoPage() {
           </div>
         </Section>
 
+            ),
+          },
+        ]}
+      />
+
+      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8">
         <p className="border-t border-black/10 py-8 text-center text-sm text-[#857261]">
           Πηγές: σχολικό βιβλίο Μαθηματικών Β΄ Λυκείου (§1.5), Τράπεζα Θεμάτων Διαβαθμισμένης Δυσκολίας (ΙΕΠ), βοήθημα Μπάρλα, σημειώσεις φροντιστηρίου.
           Τα διανύσματα γράφονται με βελάκι από πάνω.
