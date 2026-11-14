@@ -66,6 +66,17 @@ export default function OrmiPage() {
             κουτάκι βλέπεις ταχύτητες (μπλε), δυνάμεις (κόκκινο) και αποτελέσματα (πράσινο). <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο
             σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.
           </p>
+          <Link
+            href="/mixalis/ormi/periptoseis"
+            prefetch={false}
+            className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-[#2c2825] px-5 py-4 text-white hover:bg-black"
+          >
+            <span>
+              <span className="block text-xs font-semibold uppercase tracking-[0.18em] text-[#f2a65a]">Νέο · Τράπεζα Θεμάτων §2.3–2.7</span>
+              <span className="mt-1 block text-lg font-semibold sm:text-xl">Οι 20 περιπτώσεις ασκήσεων: τι σου ζητάνε, τι σκέφτεσαι, λυμένο παράδειγμα</span>
+            </span>
+            <span className="shrink-0 rounded-full bg-[#c9822f] px-4 py-1.5 text-sm font-semibold">Άνοιξε →</span>
+          </Link>
           <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
             <a href="/mixalis/ormi-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Poster σε πλήρες μέγεθος
