@@ -65,6 +65,7 @@ import { mentionsEarlyMorningArrival, nightBefore } from "@/lib/ai-assistant/ear
 import { earlyArrivalMessage } from "./room-finder-early-arrival";
 import { extractArrivalTime } from "@/lib/ai-assistant/arrival-time";
 import { arrivalTimeMessage } from "./room-finder-arrival-time";
+import { homeHolidayMessage } from "./room-finder-home-holiday";
 import { detectSupportIntent } from "@/lib/ai-assistant/support-intent";
 import { fetchDirectDiscounts, supportMessage } from "./room-finder-support";
 import { extractChildren, type ChildrenInfo } from "@/lib/ai-assistant/children";
@@ -652,6 +653,8 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const turnLocked = useRef(false);
   const languageRef = useRef(language);
   const announcedLongStayKey = useRef<string | null>(null);
+  // Home-country holidays already mentioned in this conversation.
+  const mentionedHolidays = useRef<Set<string>>(new Set());
   // Bumped on every new search or reset, so a late "add a night" suggestion
   // from an older search is dropped.
   const searchSeq = useRef(0);
@@ -877,24 +880,39 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     setTyping(false);
   };
 
+  // A Turkish-speaking guest whose dates fall on a Turkish public holiday
+  // (e.g. Kurban Bayramı) hears about it once, before the results.
+  function maybeAnnounceHomeHoliday(nextDraft: BookingDraft) {
+    if (!nextDraft.checkin || !nextDraft.checkout) return false;
+    const notice = homeHolidayMessage(language, nextDraft.checkin, nextDraft.checkout, mentionedHolidays.current);
+    if (!notice) return false;
+    notice.holidayIds.forEach(id => mentionedHolidays.current.add(id));
+    add("assistant", notice.message);
+    return true;
+  }
+
+  // Stay notices shown once the dates are known: home-country holiday, then
+  // the long-stay discount. Returns true when anything was said.
   async function maybeAnnounceLongStay(nextDraft: BookingDraft) {
     if (!nextDraft.checkin || !nextDraft.checkout) return false;
+    const holidayAnnounced = maybeAnnounceHomeHoliday(nextDraft);
 
     const key = `${nextDraft.checkin}:${nextDraft.checkout}`;
-    if (announcedLongStayKey.current === key) return false;
+    if (announcedLongStayKey.current === key) return holidayAnnounced;
 
     try {
       const info = await fetchLongStayDiscount(nextDraft.checkin, nextDraft.checkout);
-      if (!info) return false;
+      if (!info) return holidayAnnounced;
 
       announcedLongStayKey.current = key;
-      if (!info.eligible) return false;
+      if (!info.eligible) return holidayAnnounced;
 
+      if (holidayAnnounced) await wait(220);
       add("assistant", longStayDiscountMessage(language, info));
       return true;
     } catch (error) {
       console.error("Room Finder long-stay notice failed", error);
-      return false;
+      return holidayAnnounced;
     }
   }
 
@@ -917,6 +935,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     languageRef.current = language;
     turnLocked.current = false;
     announcedLongStayKey.current = null;
+    mentionedHolidays.current = new Set();
     dispatchFlow({ type: "reset" });
     setMessages([{ id: rid(), role: "assistant", content: copy.welcome }]);
     setInput("");
