@@ -26,10 +26,14 @@ Secrets (Settings → Secrets and variables → Actions):
     node apps-script/test/test.js
 
 Μετά το deploy, μία φορά στον editor:
-1. `setupTriggers()` — σβήνει παλιά/διπλά triggers, φτιάχνει `refreshSystem` κάθε 30 λεπτά.
+1. `setupTriggers()` — σβήνει παλιά/διπλά triggers, φτιάχνει `refreshSystem` κάθε 2 ώρες
+   (δίχτυ ασφαλείας· οι αλλαγές του Beds24 έρχονται με webhook σε ~1 λεπτό).
 2. Deploy → Manage deployments → ✏️ → Version: New version → Deploy
    (χωρίς νέα έκδοση το web app τρέχει ακόμα τον παλιό κώδικα).
 3. `?action=booking_core_health` → πρέπει να δείχνει `ok: true`, `refreshTriggerInstalled: true`.
+
+Το `booking_core_snapshot` δέχεται `since=<dataUpdatedAt>`: αν η Neon έχει ήδη τα τρέχοντα
+δεδομένα, απαντά `notModified: true` χωρίς γραμμές και χωρίς να διαβάσει το φύλλο.
 
 Προαιρετικά Script Properties:
 - `BOOKING_CORE_SNAPSHOT_SECRET` — αν οριστεί, το `booking_core_snapshot` θέλει `?secret=`

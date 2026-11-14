@@ -2,7 +2,7 @@
  * VOULAMANDIS HOUSE — BOOKING SOURCE (Beds24 → Google Sheet → Neon)
  *
  * Ροή:
- *   refreshSystem (trigger κάθε REFRESH_EVERY_MINUTES + Beds24 webhook)
+ *   refreshSystem (Beds24 webhook ~1 λεπτό μετά από κάθε αλλαγή + δίχτυ ασφαλείας κάθε REFRESH_EVERY_HOURS)
  *     → τιμές (Beds24 API, fallback CSV) + κρατήσεις (Beds24 API)
  *     → φύλλα Availability / occupancy_calendar (μόνο όταν άλλαξε κάτι)
  *     → push στο https://chioshotel.gr/api/booking-core/sync/ (μόνο όταν άλλαξε κάτι)
@@ -41,10 +41,11 @@ const CALENDAR_DAYS_BACK = 60;
 const CALENDAR_DAYS_AHEAD = 540;
 const PRICE_CSV_WARNING_DAYS = 120;
 
-// Περιοδικό refresh. Οι αλλαγές από Beds24 έρχονται ήδη με webhook σε ~1 λεπτό,
-// οπότε αυτό είναι δίχτυ ασφαλείας. Επιτρεπτές τιμές: 1, 5, 10, 15, 30.
-// (Οι λογαριασμοί gmail έχουν όριο 90 λεπτά/ημέρα συνολικό χρόνο triggers.)
-const REFRESH_EVERY_MINUTES = 30;
+// Περιοδικό refresh = μόνο δίχτυ ασφαλείας: κάθε αλλαγή στο Beds24 (κράτηση,
+// ακύρωση, τιμή, κλείσιμο) φέρνει ήδη refresh σε ~1 λεπτό μέσω webhook.
+// Πιάνει επίσης την αλλαγή ημέρας (το ημερολόγιο προχωράει μία μέρα).
+// Επιτρεπτές τιμές: 1, 2, 4, 6, 8, 12.
+const REFRESH_EVERY_HOURS = 2;
 
 const LOCK_WAIT_MS = 1000;
 const SNAPSHOT_LOCK_WAIT_MS = 3000;
@@ -373,9 +374,9 @@ function setupTriggers() {
     'updateDealsCache',
     'rebuildOccupancyCalendarNow'
   ]);
-  ScriptApp.newTrigger('refreshSystem').timeBased().everyMinutes(REFRESH_EVERY_MINUTES).create();
+  ScriptApp.newTrigger('refreshSystem').timeBased().everyHours(REFRESH_EVERY_HOURS).create();
   cleanupLegacyProperties_();
-  console.log('Trigger: refreshSystem κάθε ' + REFRESH_EVERY_MINUTES + ' λεπτά. Triggers τώρα: ' +
+  console.log('Trigger: refreshSystem κάθε ' + REFRESH_EVERY_HOURS + ' ώρες. Triggers τώρα: ' +
     ScriptApp.getProjectTriggers().map(function(t) { return t.getHandlerFunction(); }).join(', '));
 }
 
@@ -1228,9 +1229,15 @@ function getBookingCoreSnapshot_(params) {
   }
 
   const startedMs = Date.now();
+  // since = dataUpdatedAt που έχει ήδη η Neon. Αν δεν άλλαξε τίποτα, απαντάμε
+  // χωρίς γραμμές και χωρίς να διαβάσουμε το φύλλο.
+  const since = String((params && params.since) || '').trim();
   const lock = LockService.getScriptLock();
-  if (!lock.tryLock(SNAPSHOT_LOCK_WAIT_MS)) {
-    return snapshotError_('SOURCE_BUSY', 'Booking source refresh is currently running');
+
+  if (!lock.tryLock(since ? 0 : SNAPSHOT_LOCK_WAIT_MS)) {
+    // Τρέχει refresh: ό,τι αλλάξει θα έρθει με push, τα τρέχοντα δεδομένα ισχύουν.
+    const running = notModifiedSnapshot_(props, since);
+    return running || snapshotError_('SOURCE_BUSY', 'Booking source refresh is currently running');
   }
 
   try {
@@ -1262,6 +1269,9 @@ function getBookingCoreSnapshot_(params) {
       );
     }
 
+    const unchanged = notModifiedSnapshot_(props, since);
+    if (unchanged) return unchanged;
+
     const payload = buildBookingCoreSnapshotPayload_(buildBookingCoreRowsFromAvailability_().rows, dataUpdatedAt, sourceRefreshedAt);
     payload.durationMs = Date.now() - startedMs;
     return jsonOutput_(payload);
@@ -1270,6 +1280,27 @@ function getBookingCoreSnapshot_(params) {
   } finally {
     lock.releaseLock();
   }
+}
+
+// Απάντηση «δεν άλλαξε τίποτα» όταν ο καλών έχει ήδη τα τρέχοντα δεδομένα (null αλλιώς).
+function notModifiedSnapshot_(props, since) {
+  const dataUpdatedAt = String(props.getProperty(PROP.DATA_UPDATED_AT) || '').trim();
+  const sourceRefreshedAt = String(props.getProperty(PROP.COMPLETED_AT) || '').trim();
+  if (!since || since !== dataUpdatedAt || !sourceRefreshedAt) return null;
+  return jsonOutput_({
+    success: true,
+    ok: true,
+    type: 'booking_core_snapshot',
+    schemaVersion: BOOKING_CORE_SCHEMA_VERSION,
+    source: 'google_sheet_availability',
+    refreshState: 'READY',
+    notModified: true,
+    generatedAt: nowIso_(),
+    sourceRefreshedAt: sourceRefreshedAt,
+    dataUpdatedAt: dataUpdatedAt,
+    count: 0,
+    rows: []
+  });
 }
 
 // Το πολύ ένα αυτόματο refresh ανά 15 λεπτά από αποτυχημένα snapshots.

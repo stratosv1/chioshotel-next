@@ -62,6 +62,16 @@ neonValidate(snap);
 assert.strictEqual(ctx.computeBookingCoreFingerprint_(snap.rows), ctx.computeBookingCoreFingerprint_(pushes[0].rows), 'pull vs push differ');
 assert.strictEqual(snap.dataUpdatedAt, pushes[0].dataUpdatedAt);
 
+// 3b. since = current dataUpdatedAt → not modified, no rows, sheet not read
+const nm = get({ action: 'booking_core_snapshot', since: snap.dataUpdatedAt });
+assert.strictEqual(nm.ok, true); assert.strictEqual(nm.notModified, true); assert.strictEqual(nm.rows.length, 0);
+assert.strictEqual(nm.refreshState, 'READY'); assert.strictEqual(nm.sourceRefreshedAt, props.BOOKING_CORE_LAST_REFRESH_COMPLETED_AT);
+assert.strictEqual(get({ action: 'booking_core_snapshot', since: '2020-01-01T00:00:00.000Z' }).rows.length, snap.rows.length, 'old since → full');
+H.setLock(true);
+assert.strictEqual(get({ action: 'booking_core_snapshot', since: snap.dataUpdatedAt }).notModified, true, 'refresh running → still not modified');
+assert.strictEqual(get({ action: 'booking_core_snapshot', since: 'other' }).code, 'SOURCE_BUSY');
+H.setLock(false);
+
 // 4. snapshot secret
 props.BOOKING_CORE_SNAPSHOT_SECRET = 's3';
 assert.strictEqual(get({ action: 'booking_core_snapshot' }).code, 'UNAUTHORIZED');
@@ -71,8 +81,12 @@ delete props.BOOKING_CORE_SNAPSHOT_SECRET;
 // 5. lock busy
 H.setLock(true); assert.strictEqual(get({ action: 'booking_core_snapshot' }).code, 'SOURCE_BUSY'); assert.strictEqual(ctx.refreshSystem(), false); H.setLock(false);
 
-// 6. stuck UPDATING → self-heal
+// 6. stuck UPDATING → self-heal (even when the caller sends since)
 props.BOOKING_CORE_REFRESH_STATE = 'UPDATING';
+assert.strictEqual(get({ action: 'booking_core_snapshot', since: snap.dataUpdatedAt }).code, 'SOURCE_REFRESH_ERROR');
+props.BOOKING_CORE_REFRESH_STATE = 'UPDATING';
+for (const k of Object.keys(H.cacheStore)) delete H.cacheStore[k];
+H.triggers.splice(0, H.triggers.length, ...H.triggers.filter(t => t.h !== 'runBeds24WebhookRefresh'));
 const healed = get({ action: 'booking_core_snapshot' });
 assert.strictEqual(healed.code, 'SOURCE_REFRESH_ERROR'); assert.strictEqual(healed.selfHealRefreshScheduled, true);
 assert(H.triggers.some(t => t.h === 'runBeds24WebhookRefresh'));

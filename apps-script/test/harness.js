@@ -51,7 +51,7 @@ let triggers = [{ h: 'runRefreshNow' }, { h: 'refreshSystem' }, { h: 'refreshTur
 const ScriptApp = {
   getProjectTriggers: () => triggers.map(t => ({ getHandlerFunction: () => t.h, _t: t })),
   deleteTrigger: x => { triggers = triggers.filter(t => t !== x._t); },
-  newTrigger: h => { const chain = { timeBased: () => chain, everyMinutes: () => chain, after: () => chain, create: () => triggers.push({ h }) }; return chain; },
+  newTrigger: h => { const chain = { timeBased: () => chain, everyMinutes: () => chain, everyHours: () => chain, after: () => chain, create: () => triggers.push({ h }) }; return chain; },
   getService: () => ({ getUrl: () => 'https://script.google.com/macros/s/X/exec' })
 };
 const Utilities = {
