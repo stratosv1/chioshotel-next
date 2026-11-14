@@ -114,6 +114,22 @@ const SUBJECTS: Subject[] = [
     soft: "bg-[#f8e9e0] text-[#86391a]",
     lessons: [
       {
+        title: "Εσωτερικό γινόμενο: οι περιπτώσεις ασκήσεων",
+        subtitle: "25 περιπτώσεις: τι θα σου ζητήσουν, τι σκέφτεσαι και τι κάνεις, με λυμένο παράδειγμα για καθεμία. Μαζί προβολή και σύνδεση με τη Φυσική.",
+        href: "/mixalis/esoteriko",
+        study: "esoteriko",
+        links: [
+          { label: "Τι σου ζητάνε", href: "/mixalis/esoteriko#protakinisi" },
+          { label: "Τυπολόγιο", href: "/mixalis/esoteriko#typologio" },
+          { label: "Τι σημαίνει", href: "/mixalis/esoteriko#noima" },
+          { label: "Φυσική", href: "/mixalis/esoteriko#fysiki" },
+          { label: "Α · Συντεταγμένες", href: "/mixalis/esoteriko#syntetagmenes" },
+          { label: "Β · Μέτρα και γωνίες", href: "/mixalis/esoteriko#metra" },
+          { label: "Γ · Θέμα 4", href: "/mixalis/esoteriko#thema4" },
+          { label: "Τράπεζα Θεμάτων", href: "/mixalis/esoteriko#trapeza" },
+        ],
+      },
+      {
         title: "Διανύσματα: συντεταγμένες",
         subtitle: "Θεωρία με κινούμενα σχέδια, θέματα Τράπεζας Θεμάτων λυμένα βήμα-βήμα και εξάσκηση.",
         href: "/mixalis/dianismata",

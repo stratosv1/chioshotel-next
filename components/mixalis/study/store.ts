@@ -15,6 +15,7 @@ export const STUDY_LESSONS: Record<string, string> = {
   pedio: "Ηλεκτρικό πεδίο",
   ergo: "Έργο, ενέργεια, ισχύς",
   organiki1: "Οργανική χημεία",
+  esoteriko: "Εσωτερικό γινόμενο",
 };
 
 function readJson<T>(key: string, fallback: T): T {
