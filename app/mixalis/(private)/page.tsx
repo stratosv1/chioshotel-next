@@ -82,6 +82,7 @@ const SUBJECTS: Subject[] = [
         href: "/mixalis/ormi",
         study: "ormi",
         links: [
+          { label: "Περιπτώσεις ασκήσεων (Τράπεζα)", href: "/mixalis/ormi/periptoseis" },
           { label: "Θεωρία (μάθημα με κίνηση)", href: "/mixalis/ormi#mathima" },
           { label: "Ασκήσεις Τριπολίτη (λυμένες)", href: "/mixalis/ormi#askiseis" },
         ],
