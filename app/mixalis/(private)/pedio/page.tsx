@@ -63,9 +63,9 @@ const pct = (v: number, total: number) => `${((v / total) * 100).toFixed(3)}%`;
 
 export default function PedioPage() {
   return (
-    <main className="min-h-screen bg-[#f4f1ea] px-4 py-6 text-[#2c2825] sm:px-8 sm:py-10 lg:px-[3rem]">
-      <div className="w-full space-y-[4rem]">
-        <header>
+    <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
+      <div className="mx-auto max-w-6xl space-y-6">
+        <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
           <div className="flex flex-wrap gap-x-5 gap-y-1">
             <Link href="/mixalis" prefetch={false} className="text-sm font-semibold text-[#857261] hover:text-[#5f5045]">
               ← Τα μαθήματά μου
@@ -84,7 +84,7 @@ export default function PedioPage() {
             Θέμα Α και τα διαγράμματα του κεφαλαίου.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
-            <a href="/mixalis/pedio-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+            <a href="/mixalis/pedio-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Poster σε πλήρες μέγεθος
             </a>
             <a href="/mixalis/pedio-typologio-A4.pdf" target="_blank" rel="noopener" className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
@@ -95,24 +95,24 @@ export default function PedioPage() {
 
         <StudyBar lesson="pedio" />
 
-        <section id="eisagogi" data-study-lesson="pedio" data-study-id="eisagogi" className="scroll-mt-20 border-t border-[#ddd5c7] pt-8">
-          <div className="flex flex-wrap items-end justify-between gap-3 pb-5">
+        <section id="eisagogi" data-study-lesson="pedio" data-study-id="eisagogi" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ξεκίνα από εδώ</p>
               <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Η θεωρία με κίνηση: πρώτη γνωριμία με το ηλεκτρικό πεδίο</h2>
               <p className="mt-1 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
                 27 διαφάνειες με κινούμενα σχέδια: όλη η θεωρία του κεφαλαίου, από το τι είναι το πεδίο μέχρι το δυναμικό και τον πυκνωτή. Πώς προσθέτεις εντάσεις, ομογενές πεδίο και κίνηση, δυναμική ενέργεια, πού μηδενίζεται το δυναμικό. Κάθε ενότητα πιο κάτω έχει κουμπί που σε φέρνει στις διαφάνειές της.</p>
             </div>
-            <a href="/mixalis/pedio-intro.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
+            <a href="/mixalis/pedio-intro.html" target="_blank" rel="noopener" className="shrink-0 rounded-full border border-black/10 bg-white px-4 py-1.5 text-sm font-semibold hover:bg-[#f3efe8]">
               Σε πλήρη οθόνη ↗
             </a>
           </div>
           <PedioIntroEmbed />
-          <StudyMark lesson="pedio" id="eisagogi" title="Εισαγωγή στο ηλεκτρικό πεδίο" path="/mixalis/pedio" className="mt-4" />
+          <StudyMark lesson="pedio" id="eisagogi" title="Εισαγωγή στο ηλεκτρικό πεδίο" path="/mixalis/pedio" className="mt-4 px-2 sm:px-1" />
         </section>
 
-        <section className="border-t border-[#ddd5c7] pt-8">
-          <div className="relative mx-auto max-w-[1500px]">
+        <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
+          <div className="relative overflow-hidden rounded-2xl border border-black/10 bg-[#fbfaf7]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/mixalis/pedio-typologio.svg"
@@ -134,7 +134,7 @@ export default function PedioPage() {
           </div>
         </section>
 
-        <nav className="sticky top-0 z-10 -mx-4 border-b border-[#ddd5c7] bg-[rgba(244,241,234,0.92)] px-4 py-2 backdrop-blur sm:-mx-[2rem] sm:px-8 lg:-mx-[3rem] lg:px-[3rem]" aria-label="Ενότητες">
+        <nav className="sticky top-2 z-10 rounded-2xl border border-black/10 bg-white/90 p-2 shadow-sm backdrop-blur" aria-label="Ενότητες">
           <div className="flex gap-1.5 overflow-x-auto text-sm font-semibold">
             {sectionNames.map((name, i) => (
               <a key={name} href={`#enotita-${i + 1}`} className="shrink-0 rounded-full px-3 py-1.5 text-[#4d4138] hover:bg-[#f3efe8]">
@@ -147,7 +147,7 @@ export default function PedioPage() {
           </div>
         </nav>
 
-        <section className="border-t border-[#ddd5c7] pt-8">
+        <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Κινούμενα σχέδια</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Πώς διαβάζεις τα σχέδια</h2>
           <ol className="mt-4 max-w-3xl list-decimal space-y-2 pl-5 text-[15px] leading-7 text-[#3d4452]">
@@ -162,8 +162,8 @@ export default function PedioPage() {
               Πριν ανοίξεις τη λύση, προσπάθησε να τη γράψεις μόνος σου. Μετά πάτα <b>«Δείξε τη λύση»</b> και σύγκρινε.
             </li>
           </ol>
-          <div className="mt-6 grid gap-x-[2.5rem] gap-y-[1.5rem] lg:grid-cols-3">
-            <div className="border-l-2 border-[#c9822f]/50 pl-4 text-sm leading-6 text-[#3d4452]">
+          <div className="mt-5 grid gap-3 lg:grid-cols-3">
+            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452]">
               <p className="font-semibold text-[#1c2433]">Τα χρώματα</p>
               <p className="mt-1">
                 <span className="font-semibold text-[#1f9d55]">Πράσινο</span> = ένταση E και δυναμικές γραμμές ·{" "}
@@ -172,14 +172,14 @@ export default function PedioPage() {
                 <span className="font-semibold text-[#e08a1e]">πορτοκαλί</span> = δυναμικό ή ενέργεια. Θετικά φορτία κόκκινοι δίσκοι με «+», αρνητικά μπλε με «−».
               </p>
             </div>
-            <div className="border-l-2 border-[#c9822f]/50 pl-4 text-sm leading-6 text-[#3d4452]">
+            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452]">
               <p className="font-semibold text-[#1c2433]">Οι ράβδοι και το κουτάκι δεξιά</p>
               <p className="mt-1">
                 Οι ράβδοι δείχνουν μέτρα (εντάσεις, ενέργειες, φορτία) και αλλάζουν μαζί με το σχέδιο· η τιμή γράφεται δεξιά με τη μονάδα της. Στο λευκό
                 κουτάκι γράφονται οι πράξεις του βήματος που βλέπεις.
               </p>
             </div>
-            <div className="border-l-2 border-[#c9822f]/50 pl-4 text-sm leading-6 text-[#3d4452]">
+            <div className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4 text-sm leading-6 text-[#3d4452]">
               <p className="font-semibold text-[#1c2433]">Σύμβολα και σταθερές</p>
               <ul className="mt-1 grid gap-y-1">
                 <li>
@@ -215,12 +215,12 @@ export default function PedioPage() {
 
         <PedioGraphs />
 
-        <section className="border-t border-[#ddd5c7] pt-8">
+        <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Οδηγός</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Τι προσέχεις σε κάθε ενότητα</h2>
-          <div className="mt-6 grid gap-x-[2.5rem] gap-y-[1.5rem] sm:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
             {groups.map((g) => (
-              <div key={g.range} className="border-t border-[#ddd5c7] pt-3">
+              <div key={g.range} className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4">
                 <p className="text-xs font-semibold text-[#857261]">{g.range === "31–34" ? "Επιπλέον ασκήσεις" : "Κουτάκια"} {g.range}</p>
                 <p className="mt-1 font-semibold">{g.title}</p>
                 <p className="mt-2 text-sm leading-6 text-[#5c534c]">{g.text}</p>

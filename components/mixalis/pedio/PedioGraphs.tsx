@@ -108,16 +108,16 @@ const GRAPHS: { title: string; formula: string; svg: ReactNode; text: string }[]
 
 export function PedioGraphs() {
   return (
-    <section id="diagrammata" className="scroll-mt-20 border-t border-[#ddd5c7] pt-8">
+    <section id="diagrammata" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ζητούνται στις εξετάσεις</p>
       <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Τα διαγράμματα του κεφαλαίου</h2>
       <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
         Τέσσερα διαγράμματα που σου ζητάνε να «κατασκευάσεις» ή να αναγνωρίσεις. Μάθε τη μορφή τους και τη διαφορά: η ένταση πάει σαν 1/r² και είναι
         πάντα θετική (μέτρο), το δυναμικό και η δυναμική ενέργεια πάνε σαν 1/r και έχουν πρόσημο.
       </p>
-      <div className="mt-6 grid gap-x-[2.5rem] gap-y-[2rem] sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {GRAPHS.map((g) => (
-          <figure key={g.title} className="border-t-2 border-[#c9822f]/60 pt-3">
+          <figure key={g.title} className="rounded-2xl border border-black/10 bg-[#fbf8f3] p-4">
             <figcaption>
               <p className="font-semibold text-[#1c2433]">{g.title}</p>
               <p className="text-sm font-semibold text-[#a8651f]">{g.formula}</p>
