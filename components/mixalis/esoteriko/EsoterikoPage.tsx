@@ -4,6 +4,7 @@ import { StudyBar } from "@/components/mixalis/study/StudyBar";
 import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { BANK_MAP, FIRST_MOVES, FORMULAS, GROUPS, type Case } from "./cases";
 import { ProjectionFigure, SignFigure, SledFigure } from "./figures";
+import { Hint } from "./Hint";
 import { Reveal } from "./Reveal";
 import { Shell, type CaseSlide, type Panel } from "./Shell";
 import { rich } from "./rich";
@@ -44,24 +45,33 @@ function CaseBlock({ c }: { c: Case }) {
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#857261]">Μιχάλη, θα σου ζητήσουν</p>
             <p className="mt-1 text-[#2c2825]">{rich(c.ask)}</p>
           </div>
-          <div className="border-l-4 border-[#c9822f] pl-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#a8651f]">Τότε σκέψου</p>
-            <p className="mt-1 text-[19px] font-medium leading-8 text-[#2c2825]">{rich(c.think)}</p>
-          </div>
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#857261]">Και κάνε αυτά</p>
-            <ol className="mt-2 list-decimal space-y-1.5 pl-6 text-[#2c2825] marker:font-bold marker:text-[#c9822f]">
-              {c.todo.map((t, i) => (
-                <li key={i}>{rich(t)}</li>
-              ))}
-            </ol>
-          </div>
-          {c.watch ? (
-            <p className="text-[#5c534c]">
-              <b className="text-[#8a2f22]">Πρόσεξε: </b>
-              {rich(c.watch)}
-            </p>
-          ) : null}
+          <p className="text-[15px] leading-7 text-[#857261]">
+            Ξεκίνα πρώτα τη λυμένη άσκηση μόνος σου. Αν κολλήσεις, άνοιξε την ιδέα και μετά τη μέθοδο.
+          </p>
+          <Hint label="Κόλλησες; Δείξε την ιδέα (Τότε σκέψου)" hideLabel="Κρύψε την ιδέα" accent="#a8651f">
+            <div className="border-l-4 border-[#c9822f] pl-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#a8651f]">Τότε σκέψου</p>
+              <p className="mt-1 text-[19px] font-medium leading-8 text-[#2c2825]">{rich(c.think)}</p>
+            </div>
+          </Hint>
+          <Hint label="Δείξε τη μέθοδο (Και κάνε αυτά)" hideLabel="Κρύψε τη μέθοδο" accent="#857261">
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#857261]">Και κάνε αυτά</p>
+                <ol className="mt-2 list-decimal space-y-1.5 pl-6 text-[#2c2825] marker:font-bold marker:text-[#c9822f]">
+                  {c.todo.map((t, i) => (
+                    <li key={i}>{rich(t)}</li>
+                  ))}
+                </ol>
+              </div>
+              {c.watch ? (
+                <p className="text-[#5c534c]">
+                  <b className="text-[#8a2f22]">Πρόσεξε: </b>
+                  {rich(c.watch)}
+                </p>
+              ) : null}
+            </div>
+          </Hint>
           <p className="text-sm text-[#857261]">Από: {c.sources}</p>
         </div>
 
@@ -280,14 +290,18 @@ export function EsoterikoPage() {
             <div className="space-y-4 text-[17px] leading-8">
               <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#857261]">Τράπεζα Θεμάτων 18520 (γ)</p>
               <h3 className="text-2xl font-semibold tracking-tight">Συνισταμένη δύο δυνάμεων</h3>
-              <div className="border-l-4 border-[#c9822f] pl-4">
-                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#a8651f]">Τότε σκέψου</p>
-                <p className="mt-1 text-[19px] font-medium">
-                  Η συνισταμένη είναι <b>μέτρο αθροίσματος</b>: υψώνεις στο τετράγωνο, όπως στη Β2. Δεν είναι 10 + 10 = 20 N, γιατί οι δυνάμεις δεν έχουν την
-                  ίδια κατεύθυνση.
-                </p>
-              </div>
-              <p className="text-[20px]">{rich("|{F₁} + {F₂}|² = |{F₁}|² + 2{F₁}·{F₂} + |{F₂}|²")}</p>
+              <Hint label="Κόλλησες; Δείξε την ιδέα (Τότε σκέψου)" hideLabel="Κρύψε την ιδέα" accent="#a8651f">
+                <div className="space-y-4">
+                  <div className="border-l-4 border-[#c9822f] pl-4">
+                    <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#a8651f]">Τότε σκέψου</p>
+                    <p className="mt-1 text-[19px] font-medium">
+                      Η συνισταμένη είναι <b>μέτρο αθροίσματος</b>: υψώνεις στο τετράγωνο, όπως στη Β2. Δεν είναι 10 + 10 = 20 N, γιατί οι δυνάμεις δεν έχουν
+                      την ίδια κατεύθυνση.
+                    </p>
+                  </div>
+                  <p className="text-[20px]">{rich("|{F₁} + {F₂}|² = |{F₁}|² + 2{F₁}·{F₂} + |{F₂}|²")}</p>
+                </div>
+              </Hint>
             </div>
             <div className="lg:border-l lg:border-black/10 lg:pl-14">
               <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#0e6e66]">Λυμένο παράδειγμα</p>
