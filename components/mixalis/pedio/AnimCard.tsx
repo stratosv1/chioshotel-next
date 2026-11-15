@@ -7,7 +7,7 @@ import { H, W } from "@/components/mixalis/ormi/kit";
 import { EC, type ECase } from "./kitE";
 
 /** Turns "υ_1", "F_μ" or "p_{ολ,πριν}" inside plain text into real subscripts. */
-function rich(node: ReactNode): ReactNode {
+export function rich(node: ReactNode): ReactNode {
   if (typeof node === "string") {
     const out: ReactNode[] = [];
     const re = /_\{([^}]*)\}|_([\p{L}\p{N}]+)/gu;
@@ -42,6 +42,35 @@ const LEGEND = {
 } as const;
 
 const EPS = 0.001;
+
+/** A follow-up question on the same data; the answer stays hidden until asked for. */
+function MoreQuestion({ q, a, accent }: { q: string; a: ReactNode; accent: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="border-t border-[#ddd5c7] py-3 text-sm leading-6">
+      <p>
+        <span className="font-semibold" style={{ color: accent }}>
+          Και ένα ερώτημα ακόμα:{" "}
+        </span>
+        {rich(q)}
+      </p>
+      {open ? (
+        <p className="mt-1.5">
+          <span className="font-semibold text-[#1f9d55]">Απάντηση: </span>
+          {rich(a)}
+        </p>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="mt-1.5 rounded-full border border-[#1f9d55]/40 bg-white px-3.5 py-1 text-sm font-semibold text-[#1f9d55] hover:bg-[#ecf7f0]"
+        >
+          Δείξε την απάντηση
+        </button>
+      )}
+    </div>
+  );
+}
 
 export function AnimCard({ data, accent, study }: { data: ECase; accent: string; study?: { lesson: string; path: string } }) {
   const [playing, setPlaying] = usePlaying(true);
@@ -195,7 +224,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
                     i === phaseIndex ? "text-[#1c2433]" : "text-[#9aa3b2] group-hover:text-[#5b6577]"
                   }`}
                 >
-                  {i + 1}. {p.label}
+                  {i + 1}. {rich(p.label)}
                 </span>
               </button>
             );
@@ -272,6 +301,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
           </div>
         )}
       </div>
+      {data.more?.map((m, i) => <MoreQuestion key={i} q={m.q} a={m.a} accent={accent} />)}
       {study ? (
         <StudyMark lesson={study.lesson} id={`k${data.n}`} title={`${data.n}. ${data.title}`} path={study.path} className="border-t border-[#ddd5c7] py-3" />
       ) : null}

@@ -29,6 +29,8 @@ export type ECase = {
   solve: ReactNode;
   trap?: ReactNode;
   legend?: ELegend[];
+  /** Extra follow-up questions under the solution, each with its own hidden answer. */
+  more?: { q: string; a: ReactNode }[];
 };
 
 /** Point charge drawn as a coloured disc with its sign. */
