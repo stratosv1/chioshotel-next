@@ -11,10 +11,10 @@ import { BANK_MAP, FIRST_MOVES, FORMULAS, GROUPS, type Case } from "./cases";
 const LESSON = "ormi";
 const PATH = "/mixalis/ormi/periptoseis";
 
-/** Ανοιχτή ενότητα: αριθμός, τίτλος και μια λεπτή γραμμή από πάνω, χωρίς κουτί. */
+/** Ενότητα μέσα σε λευκή κάρτα (η κάρτα έρχεται από το Shell): αριθμός, τίτλος, εισαγωγή. */
 function Section({ id, n, kicker, title, intro, children }: { id: string; n: string; kicker: string; title: string; intro?: ReactNode; children: ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-16 border-t border-black/10 py-12 sm:py-16">
+    <section id={id} className="scroll-mt-16 py-8 sm:py-10">
       <div className="flex items-start gap-4 sm:gap-6">
         <span aria-hidden="true" className="text-5xl font-bold leading-none text-transparent sm:text-7xl" style={{ WebkitTextStroke: "1.5px #c9822f" }}>
           {n}
@@ -93,7 +93,8 @@ export function OrmiPeriptoseisPage() {
 
   return (
     <main className="min-h-screen bg-[#f3efe8] text-[#2c2825]">
-      <header className="mx-auto w-full max-w-[1400px] px-4 pb-6 pt-6 sm:px-8 sm:pt-8">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-8 sm:pt-8">
+      <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-[#857261]">
           <Link href="/mixalis" prefetch={false} className="hover:underline">
             ← Τα μαθήματά μου
@@ -114,11 +115,13 @@ export function OrmiPeriptoseisPage() {
         </p>
       </header>
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 pb-4 sm:px-8">
+      <div className="py-6">
         <StudyBar lesson={LESSON} />
+      </div>
       </div>
 
       <Shell
+        boxed
         lesson={LESSON}
         cases={slides}
         panels={[
@@ -272,8 +275,8 @@ export function OrmiPeriptoseisPage() {
         ]}
       />
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8">
-        <p className="border-t border-black/10 py-8 text-center text-sm text-[#857261]">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-8">
+        <p className="py-8 text-center text-sm text-[#857261]">
           Πηγές: Τράπεζα Θεμάτων Διαβαθμισμένης Δυσκολίας (ΙΕΠ), Φυσική Προσανατολισμού Β΄ Λυκείου, §2.3–2.7. g = 10 m/s² σε όλα τα παραδείγματα.
         </p>
       </div>
