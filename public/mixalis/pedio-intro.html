@@ -110,7 +110,7 @@ a { color: var(--accent); }
 
 <div class="top">
   <div class="brand">Ηλεκτρικό πεδίο <span>· πρώτη γνωριμία</span></div>
-  <div class="counter" id="counter" aria-live="polite">1 / 14</div>
+  <div class="counter" id="counter" aria-live="polite">1 / 27</div>
 </div>
 
 <main class="stage" id="stage">
@@ -134,6 +134,14 @@ const SLIDES = [
       <p class="lead">Δύο θετικά φορτία απωθούνται. Το μέτρο της δύναμης το δίνει ο νόμος του Coulomb: F = k·|Q·q|/r².</p>
       <p>Τα φορτία όμως δεν έρχονται ποτέ σε επαφή. Πώς ασκεί το ένα δύναμη στο άλλο από απόσταση;</p>
       <p class="note"><span class="q">Σκέψου:</span> αν απομακρύνουμε το ένα φορτίο, έχει μείνει κάτι στον χώρο γύρω από το άλλο;</p>`, caption: "Δύο ίσα θετικά φορτία απωθούνται από απόσταση", scene: "coulomb" },
+  { kicker: "Από τι φτιάχνεται το φορτίο", title: "Φορτίο σημαίνει ηλεκτρόνια που λείπουν ή περισσεύουν", html: `
+      <p class="lead">Ένα σώμα φορτίζεται όταν <b>χάσει</b> ή <b>πάρει</b> ηλεκτρόνια. Κάθε ηλεκτρόνιο έχει φορτίο −e.</p>
+      <ul class="recap">
+        <li><b>Λείπουν</b> ηλεκτρόνια (έλλειμμα) ⇒ το σώμα γίνεται <b>θετικό</b>.</li>
+        <li><b>Περισσεύουν</b> ηλεκτρόνια (πλεόνασμα) ⇒ το σώμα γίνεται <b>αρνητικό</b>.</li>
+      </ul>
+      <div class="formula">q = N·e   ·   e = 1,6·10⁻¹⁹ C</div>
+      <p class="note"><span class="q">Παράδειγμα:</span> λείπουν N = 2,5·10¹³ ηλεκτρόνια ⇒ q = 2,5·10¹³ · 1,6·10⁻¹⁹ = +4·10⁻⁶ C = +4 μC.</p>`, caption: "Αριστερά φεύγουν ηλεκτρόνια, δεξιά έρχονται", scene: "electrons" },
   { kicker: "Η ιδέα", title: "Το φορτίο αλλάζει τον χώρο", html: `
       <p class="lead">Η απάντηση της Φυσικής είναι ότι το φορτίο Q δημιουργεί γύρω του <b>ηλεκτρικό πεδίο</b>.</p>
       <p>Ηλεκτρικό πεδίο λέμε τον χώρο μέσα στον οποίο, αν βάλουμε ένα φορτίο, αυτό δέχεται δύναμη. Σε κάθε σημείο του πεδίου μπορούμε να πούμε πόσο μεγάλη δύναμη θα δεχτεί ένα φορτίο εκεί και προς ποια κατεύθυνση.</p>
@@ -160,23 +168,106 @@ const SLIDES = [
       <p class="lead">Συνδυάζοντας τον νόμο του Coulomb με τον ορισμό E = F/q, βρίσκουμε την ένταση σε απόσταση r από σημειακό φορτίο Q:</p>
       <div class="formula">E = k·|Q| / r²</div>
       <p>Σε διπλάσια απόσταση η ένταση γίνεται 4 φορές μικρότερη· σε τριπλάσια, 9 φορές μικρότερη. Το πεδίο εξασθενεί γρήγορα καθώς απομακρυνόμαστε.</p>
-      <p class="note">k = 9·10⁹ N·m²/C²</p>`, caption: "Η ένταση είναι αντιστρόφως ανάλογη του r²", scene: "coulombE" },
+      <p class="note"><span class="q">Ποια σχέση πότε;</span> Το E = F/q ισχύει σε <b>κάθε</b> πεδίο. Το E = k·|Q|/r² μόνο για <b>σημειακό φορτίο</b> (k = 9·10⁹ N·m²/C²). Αν κάπου διαβάσεις «αντιστρόφως ανάλογη της απόστασης», το σωστό είναι <b>του τετραγώνου</b> της απόστασης.</p>`, caption: "Η ένταση είναι αντιστρόφως ανάλογη του r²", scene: "coulombE" },
   { kicker: "Ο χάρτης", title: "Δυναμικές γραμμές", html: `
       <p class="lead">Οι δυναμικές γραμμές είναι νοητές γραμμές που μας δείχνουν πώς είναι το πεδίο. Σε κάθε σημείο τους η ένταση είναι εφαπτόμενη στη γραμμή.</p>
-      <p>Ξεκινούν από τα θετικά φορτία και καταλήγουν στα αρνητικά. Όπου είναι πυκνότερες, εκεί η ένταση είναι μεγαλύτερη.</p>
+      <p>Είναι <b>ανοικτές</b> γραμμές: ξεκινούν από τα θετικά φορτία και καταλήγουν στα αρνητικά. Όπου είναι πυκνότερες, εκεί η ένταση είναι μεγαλύτερη.</p>
       <p class="note">Οι δυναμικές γραμμές δεν τέμνονται ποτέ, γιατί σε κάθε σημείο η ένταση έχει μία μόνο κατεύθυνση.</p>`, caption: "Πρώτα ένα θετικό φορτίο, μετά ένα θετικό και ένα αρνητικό", scene: "lines" },
+  { kicker: "Δύο είδη πεδίου", title: "Ομογενές ή ανομοιογενές;", html: `
+      <p class="lead">Αν η ένταση είναι <b>ίδια σε κάθε σημείο</b> (ίδιο μέτρο, ίδια διεύθυνση, ίδια φορά), το πεδίο λέγεται <b>ομογενές</b>. Αλλιώς λέγεται <b>ανομοιογενές</b>.</p>
+      <p>Γύρω από ένα σημειακό φορτίο, το βελάκι της έντασης αλλάζει μήκος και κατεύθυνση όπως κινείσαι: το πεδίο είναι ανομοιογενές. Ανάμεσα σε δύο φορτισμένες πλάκες μένει παντού ίδιο: ομογενές.</p>
+      <p class="note">Στο σχέδιο, η μαύρη κουκκίδα κινείται και το μπλε βελάκι δείχνει την ένταση εκεί που βρίσκεται.</p>`, caption: "Αριστερά σημειακό φορτίο, δεξιά δύο πλάκες", scene: "homog" },
   { kicker: "Πολλά φορτία", title: "Οι εντάσεις προστίθενται διανυσματικά", html: `
       <p class="lead">Όταν υπάρχουν δύο φορτία, σε κάθε σημείο το καθένα δημιουργεί τη δική του ένταση. Η ολική ένταση είναι το διανυσματικό τους άθροισμα.</p>
       <p>Γι' αυτό σε κάποια σημεία οι δύο εντάσεις αλληλοαναιρούνται και η ολική ένταση γίνεται μηδέν. Πρόσεξε στο σχέδιο: το φορτίο που είναι πιο κοντά δίνει μεγαλύτερη ένταση.</p>
       <div class="formula"><span class='vec'>E</span> = <span class='vec'>E</span>₁ + <span class='vec'>E</span>₂</div>`, caption: "Ο κανόνας του παραλληλογράμμου για δύο ίσα θετικά φορτία", scene: "superpose" },
+  { kicker: "Πρόσθεση εντάσεων", title: "Τέσσερις περιπτώσεις, τέσσερις τύποι", html: `
+      <p class="lead">Οι εντάσεις είναι διανύσματα, οπότε <b>δεν προσθέτεις απλώς τα μέτρα</b>. Κοίτα πρώτα πώς είναι τοποθετημένες:</p>
+      <ul class="recap">
+        <li><b>Ίδια φορά:</b> E = E₁ + E₂</li>
+        <li><b>Αντίθετη φορά:</b> E = |E₁ − E₂|, με τη φορά της μεγαλύτερης</li>
+        <li><b>Κάθετες:</b> E = √(E₁² + E₂²), το Πυθαγόρειο</li>
+        <li><b>Σε γωνία φ:</b> E² = E₁² + E₂² + 2·E₁·E₂·συνφ</li>
+      </ul>
+      <p class="note">Ο τελευταίος τύπος είναι ακριβώς το |<span class='vec'>α</span> + <span class='vec'>β</span>|² = |<span class='vec'>α</span>|² + 2<span class='vec'>α</span>·<span class='vec'>β</span> + |<span class='vec'>β</span>|² από το εσωτερικό γινόμενο.</p>`, caption: "Μεταφέρουμε το E₂ στην άκρη του E₁ και ενώνουμε", scene: "addcases" },
+  { kicker: "Κόλπο", title: "Ψάξε πρώτα τη συμμετρία", html: `
+      <p class="lead">Δύο <b>ίσα</b> φορτία, σε <b>ίσες αποστάσεις</b> από ένα σημείο και από <b>αντίθετες μεριές</b>, δίνουν εκεί εντάσεις ίσες και αντίθετες: αλληλοαναιρούνται.</p>
+      <p>Στο ισόπλευρο τρίγωνο, στο μέσο της βάσης μένει μόνο η ένταση από την κορυφή. Στο τετράγωνο με τέσσερα ίσα φορτία, στο κέντρο η ένταση είναι μηδέν. Γλιτώνεις πράξεις.</p>
+      <p class="note">Χρήσιμες αποστάσεις: ύψος ισόπλευρου α√3/2, διαγώνιος τετραγώνου α√2. Αν σου δίνουν μόνο το <b>μέτρο</b> της έντασης, το φορτίο βγαίνει με ±: δύο λύσεις.</p>`, caption: "Πρώτα ισόπλευρο τρίγωνο, μετά τετράγωνο", scene: "symmetry" },
   { kicker: "Το πιο απλό πεδίο", title: "Ομογενές πεδίο", html: `
-      <p class="lead">Ανάμεσα σε δύο παράλληλες μεταλλικές πλάκες με αντίθετα φορτία, η ένταση είναι <b>ίδια σε όλα τα σημεία</b>.</p>
-      <p>Οι δυναμικές γραμμές είναι παράλληλες και ισαπέχουν. Ένα φορτίο μέσα στο πεδίο δέχεται σταθερή δύναμη F = q·E, άρα, αν ξεκινήσει από την ηρεμία, κάνει ευθύγραμμη ομαλά επιταχυνόμενη κίνηση, όπως ένα σώμα που πέφτει ελεύθερα.</p>
+      <p class="lead">Ανάμεσα σε δύο παράλληλες μεταλλικές πλάκες με αντίθετα φορτία η ένταση είναι <b>ίδια σε όλα τα σημεία</b>. Οι 4 ιδιότητές του:</p>
+      <ul class="recap">
+        <li>η E έχει την <b>ίδια τιμή</b> παντού</li>
+        <li>η E είναι <b>κάθετη</b> στις πλάκες</li>
+        <li>η E έχει φορά <b>από την + προς την −</b> πλάκα</li>
+        <li>οι δυναμικές γραμμές είναι <b>παράλληλες και ισαπέχουν</b></li>
+      </ul>
+      <p>Η δύναμη F = q·E είναι σταθερή, άρα και η επιτάχυνση. Από την ηρεμία: ευθύγραμμη ομαλά επιταχυνόμενη κίνηση, όπως στην ελεύθερη πτώση.</p>
       <div class="formula">α = q·E / m</div>`, caption: "Ένα θετικό φορτίο αφήνεται ελεύθερο κοντά στη θετική πλάκα", scene: "uniform" },
+  { kicker: "Κίνηση στο ομογενές", title: "Πετάμε το φορτίο ανάποδα", html: `
+      <p class="lead">Αν η ταχύτητα είναι <b>αντίθετη</b> στη δύναμη, το φορτίο φρενάρει με σταθερό ρυθμό, σταματά για μια στιγμή και γυρίζει πίσω. Το ίδιο κάνει ένα αρνητικό φορτίο που το πετάμε κατά τη φορά της E.</p>
+      <ul class="recap">
+        <li>σταματά τη στιγμή <b>t₁ = υ₀/α</b></li>
+        <li>μέχρι τότε έχει διανύσει <b>x = υ₀²/(2α)</b></li>
+        <li>ξαναπερνά από το σημείο βολής τη στιγμή <b>2t₁</b>, με το ίδιο μέτρο ταχύτητας υ₀</li>
+      </ul>
+      <p class="note"><span class="q">Δεν σου δίνουν χρόνο;</span> Θεώρημα κινητικής ενέργειας: K<sub>τελ</sub> − K<sub>αρχ</sub> = q·E·x. Ισχύς της δύναμης του πεδίου: P = F·υ.</p>`, caption: "Πάνω η κίνηση, κάτω το διάγραμμα ταχύτητας–χρόνου", scene: "reverse" },
+  { kicker: "Ισορροπία", title: "Αιωρείται… μέχρι να αλλάξει η τάση", html: `
+      <p class="lead">Μια φορτισμένη σταγόνα ισορροπεί ανάμεσα στις πλάκες όταν η ηλεκτρική δύναμη εξουδετερώνει το βάρος.</p>
+      <div class="formula">|q|·E = m·g   ⇔   |q|·V/ℓ = m·g</div>
+      <ul class="recap">
+        <li>Αυξάνουμε την τάση ⇒ μεγαλώνουν η E και η ηλεκτρική δύναμη ⇒ η σταγόνα <b>ανεβαίνει</b>.</li>
+        <li>Μειώνουμε την τάση ⇒ νικάει το βάρος ⇒ η σταγόνα <b>πέφτει</b>.</li>
+      </ul>`, caption: "Η μπάρα δεξιά δείχνει την τάση των πλακών", scene: "balance" },
+  { kicker: "Δυναμική ενέργεια", title: "Το πρόσημο της U λέει την ιστορία", html: `
+      <p class="lead">Δύο φορτία έχουν δυναμική ενέργεια επειδή αλληλεπιδρούν. Τη γράφουμε <b>με τα πρόσημα</b> των φορτίων:</p>
+      <div class="formula">U = k·q₁·q₂ / r</div>
+      <ul class="recap">
+        <li><b>Ομόσημα: U &gt; 0.</b> Αν τα αφήσεις, φεύγουν μόνα τους και η U γίνεται κινητική.</li>
+        <li><b>Ετερόσημα: U &lt; 0.</b> Για να τα χωρίσεις, πρέπει εσύ να δώσεις ενέργεια.</li>
+        <li>Στο άπειρο U = 0. Το έργο της δύναμης του πεδίου είναι <b>W(A→B) = U<sub>A</sub> − U<sub>B</sub></b>, όποια διαδρομή κι αν ακολουθήσει το φορτίο.</li>
+      </ul>`, caption: "Πάνω ομόσημα, κάτω ετερόσημα· δεξιά οι ενέργειες", scene: "usign" },
+  { kicker: "Προσοχή", title: "Στο πεδίο Coulomb η επιτάχυνση αλλάζει", html: `
+      <p class="lead">Όσο ένα φορτίο απομακρύνεται από το Q, η δύναμη μικραίνει σαν 1/r², άρα μικραίνει και η επιτάχυνση:</p>
+      <div class="formula">α = k·|Q·q| / (m·r²)</div>
+      <p>Γι' αυτό εδώ <b>δεν</b> ισχύουν τα υ = α·t, x = ½·α·t², υ² = 2·α·x. Αυτοί οι τύποι θέλουν σταθερή α, όπως στο ομογενές πεδίο (κάτω στο σχέδιο).</p>
+      <p class="note"><span class="q">Τι κάνεις τότε;</span> Λύνεις με ενέργεια: K + U = σταθερό.</p>`, caption: "Κόκκινο: δύναμη · μπλε: ταχύτητα", scene: "coulombMotion" },
   { kicker: "Ενέργεια", title: "Το δυναμικό μοιάζει με το ύψος", html: `
       <p class="lead">Μια μπάλα κατεβαίνει από ψηλά προς τα χαμηλά και αποκτά ταχύτητα. Με τον ίδιο τρόπο, ένα θετικό φορτίο που αφήνεται ελεύθερο κινείται από σημεία υψηλού προς σημεία χαμηλού <b>δυναμικού</b>.</p>
       <p>Το δυναμικό V είναι μονόμετρο μέγεθος: σε κάθε σημείο είναι η δυναμική ενέργεια ανά μονάδα φορτίου (V = U/q). Καθώς το φορτίο κινείται, η δυναμική του ενέργεια μετατρέπεται σε κινητική.</p>
-      <div class="formula">U = q·V   ·   E = V/ℓ</div>`, caption: "Πορτοκαλί: δυναμική ενέργεια U · Μπλε: κινητική ενέργεια K", scene: "energy" },
+      <div class="formula">U = q·V   ·   E = V/ℓ</div>
+      <p class="note">Μονάδα: 1 V = 1 J/C. «V = +30 V» σημαίνει ότι για κάθε 1 C που πηγαίνει από εκεί στο άπειρο, η δύναμη του πεδίου δίνει έργο 30 J.</p>`, caption: "Πορτοκαλί: δυναμική ενέργεια U · Μπλε: κινητική ενέργεια K", scene: "energy" },
+  { kicker: "Δυναμικό", title: "Ένας αριθμός με πρόσημο σε κάθε σημείο", html: `
+      <p class="lead">Γύρω από ένα σημειακό φορτίο το δυναμικό είναι</p>
+      <div class="formula">V = k·Q / r</div>
+      <p>με το πρόσημο του Q: θετικό γύρω από θετικό φορτίο, αρνητικό γύρω από αρνητικό. Πλησιάζει το 0 όσο απομακρυνόμαστε.</p>
+      <p>Σύγκρινε στο διάγραμμα: το δυναμικό πέφτει σαν <b>1/r</b> και έχει πρόσημο. Η ένταση πέφτει σαν <b>1/r²</b>, δηλαδή πιο γρήγορα, και είναι πάντα θετική, γιατί είναι μέτρο.</p>
+      <p class="note">Ισχύουν παντού: V = U/q και V<sub>AB</sub> = V<sub>A</sub> − V<sub>B</sub> = W(A→B)/q. Μόνο για σημειακό φορτίο: V = kQ/r.</p>`, caption: "Πάνω το φορτίο, κάτω τα διαγράμματα V–r και E–r", scene: "vgraph" },
+  { kicker: "Μην τα μπερδεύεις", title: "Εντάσεις: βελάκια. Δυναμικά: αριθμοί.", html: `
+      <p class="lead">Με πολλά φορτία, οι εντάσεις προστίθενται <b>διανυσματικά</b>, ενώ τα δυναμικά <b>σαν αριθμοί με πρόσημο</b>.</p>
+      <div class="formula">V = V₁ + V₂ + …</div>
+      <ul class="recap">
+        <li>Δύο ίσα θετικά φορτία: στο μέσο τους <b>E = 0</b>, αλλά <b>V ≠ 0</b>.</li>
+        <li>Ίσα και αντίθετα φορτία: στο μέσο τους <b>V = 0</b>, αλλά <b>E ≠ 0</b>.</li>
+      </ul>
+      <p class="note">Άρα E = 0 δεν σημαίνει V = 0, ούτε το αντίστροφο.</p>`, caption: "Στο μέσο M: πρώτα τα βελάκια, μετά οι αριθμοί", scene: "evsv" },
+  { kicker: "Δυναμικό μηδέν", title: "Πού μηδενίζεται το δυναμικό;", html: `
+      <p class="lead">Χρωματίσαμε κάθε σημείο: <b style="color:var(--energy)">πορτοκαλί</b> όπου V &gt; 0, <b style="color:var(--neg)">μπλε</b> όπου V &lt; 0. Εκεί που το χρώμα σβήνει, V = 0.</p>
+      <ul class="recap">
+        <li><b>Ίσα και αντίθετα</b> φορτία: V = 0 σε <b>όλη τη μεσοκάθετο</b>.</li>
+        <li><b>Άνισα ετερόσημα:</b> πάνω στην ευθεία τους υπάρχουν <b>δύο σημεία</b> με V = 0, εκατέρωθεν του μικρότερου φορτίου.</li>
+        <li><b>Ομόσημα:</b> <b>κανένα</b> σημείο, μόνο στο άπειρο.</li>
+      </ul>`, caption: "Τρεις περιπτώσεις, η μία μετά την άλλη", scene: "vzero" },
+  { kicker: "Έργο", title: "Φέρνουμε ένα φορτίο από το άπειρο", html: `
+      <p class="lead">Το έργο της δύναμης του πεδίου βγαίνει από τη διαφορά δυναμικού. Το q μπαίνει με το πρόσημό του:</p>
+      <div class="formula">W(A→B) = q·(V<sub>A</sub> − V<sub>B</sub>)</div>
+      <p>Από το άπειρο, όπου V = 0, σε ένα σημείο K: <b>W(∞→K) = −q·V<sub>K</sub></b>.</p>
+      <p class="note"><span class="q">Αργά, χωρίς να αλλάζει η ταχύτητα;</span> Τότε ΔK = 0, άρα η δική μας (εξωτερική) δύναμη κάνει το αντίθετο έργο: W<sub>εξ</sub> = −W<sub>πεδ</sub>.</p>`, caption: "Το πεδίο σπρώχνει προς τα έξω, εμείς σπρώχνουμε προς τα μέσα", scene: "work" },
+  { kicker: "Ομογενές πεδίο", title: "Το δυναμικό κατεβαίνει σαν ράμπα", html: `
+      <p class="lead">Στο ομογενές πεδίο το δυναμικό μειώνεται <b>ομοιόμορφα</b> κατά τη φορά της έντασης: στο διάγραμμα V–x είναι ευθεία.</p>
+      <div class="formula">E = (V<sub>A</sub> − V<sub>B</sub>) / (AB)</div>
+      <p>Ισχύει για <b>οποιαδήποτε δύο σημεία</b> της ίδιας δυναμικής γραμμής, όχι μόνο για τις πλάκες. Γι' αυτό στο μέσο M: <b>V<sub>M</sub> = (V<sub>A</sub> + V<sub>B</sub>)/2</b>.</p>
+      <p class="note">Μονάδες: 1 V/m = 1 N/C. Η σχέση E = V/ℓ ισχύει μόνο στο ομογενές πεδίο.</p>`, caption: "Πάνω οι πλάκες, κάτω το διάγραμμα V–x", scene: "ladder" },
   { kicker: "Αποθήκευση", title: "Ο πυκνωτής αποθηκεύει ενέργεια", html: `
       <p class="lead">Συνδέουμε δύο παράλληλες μεταλλικές πλάκες (τους οπλισμούς) με μια μπαταρία και φορτίζονται με αντίθετα φορτία. Ανάμεσά τους δημιουργείται ηλεκτρικό πεδίο, στο οποίο αποθηκεύεται ενέργεια.</p>
       <p>Αν μετά συνδέσουμε τους οπλισμούς με ένα λαμπάκι, ο πυκνωτής εκφορτίζεται: η ενέργεια του πεδίου μετατρέπεται σε φως και θερμότητα, και το λαμπάκι ανάβει για λίγο.</p>
@@ -189,7 +280,7 @@ const SLIDES = [
         <li>Οι <b>δυναμικές γραμμές</b> ξεκινούν από τα θετικά και καταλήγουν στα αρνητικά φορτία· είναι πυκνότερες εκεί όπου η ένταση είναι μεγαλύτερη.</li>
         <li>Το <b>δυναμικό</b> μοιάζει με το ύψος στη βαρύτητα, και στο πεδίο μπορεί να αποθηκευτεί <b>ενέργεια</b> (πυκνωτής).</li>
       </ul>
-      <p class="note">Επόμενο βήμα: το τυπολόγιο με τις 30 περιπτώσεις και τις ασκήσεις, ακριβώς από κάτω σε αυτή τη σελίδα.</p>`, caption: "Ένα θετικό και ένα αρνητικό φορτίο: γραμμές, ένταση, δύναμη", scene: "recap" },
+      <p class="note">Επόμενο βήμα: το τυπολόγιο με τις 34 περιπτώσεις και τις ασκήσεις, ακριβώς από κάτω σε αυτή τη σελίδα.</p>`, caption: "Ένα θετικό και ένα αρνητικό φορτίο: γραμμές, ένταση, δύναμη", scene: "recap" },
 ];
 
 /* ---------- theme colours from CSS tokens ---------- */
@@ -273,6 +364,42 @@ function plates(x1, x2, y1, y2) {
 }
 const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+
+/* ---------- helpers for the theory slides ---------- */
+let RT = null; // r(t) table for release in a Coulomb field
+function dot(x, y, r, c) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); }
+function pill(s, x, y, color = COL.accent, size = 15) {
+  if (W < 480) size = Math.max(11, size - 3);
+  ctx.font = FONT(size, 800);
+  let w = ctx.measureText(s).width + 24;
+  if (w > W - 16) { size = Math.max(9, Math.floor((size * (W - 40)) / (w - 24))); ctx.font = FONT(size, 800); w = ctx.measureText(s).width + 24; }
+  const h = size + 14;
+  x = Math.max(w / 2 + 8, Math.min(W - w / 2 - 8, x));
+  ctx.fillStyle = COL.paper; ctx.strokeStyle = color; ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  if (ctx.roundRect) ctx.roundRect(x - w / 2, y - h / 2, w, h, h / 2); else ctx.rect(x - w / 2, y - h / 2, w, h);
+  ctx.fill(); ctx.stroke();
+  ctx.fillStyle = color; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(s, x, y + 1); ctx.textBaseline = "alphabetic";
+}
+function dash(x1, y1, x2, y2, color = COL.muted, w = 1.2) {
+  ctx.setLineDash([5, 5]); ctx.strokeStyle = color; ctx.lineWidth = w;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.setLineDash([]);
+}
+function hplates(x1, x2, yTop, yBot, topPositive) {
+  const a = topPositive ? COL.pos : COL.neg, b = topPositive ? COL.neg : COL.pos;
+  ctx.fillStyle = a; ctx.fillRect(x1, yTop - 5, x2 - x1, 10);
+  ctx.fillStyle = b; ctx.fillRect(x1, yBot - 5, x2 - x1, 10);
+  text(topPositive ? "+" : "−", x1 - 14, yTop + 7, a, 20, "center", 800);
+  text(topPositive ? "−" : "+", x1 - 14, yBot + 7, b, 20, "center", 800);
+}
+/* Signed bar: v in [−1, 1], zero line at x0. */
+function sbar(x0, y, half, v, color, label) {
+  ctx.fillStyle = COL.grid; ctx.fillRect(x0 - half, y, 2 * half, 10);
+  const w = half * clamp(Math.abs(v));
+  ctx.fillStyle = color; ctx.fillRect(v >= 0 ? x0 : x0 - w, y, w, 10);
+  ctx.fillStyle = COL.ink; ctx.fillRect(x0 - 1, y - 3, 2, 16);
+  if (label) text(label, x0 - half - 6, y + 10, color, 13, "right");
+}
 
 /* ---------- scenes ---------- */
 const SCENES = {
@@ -486,6 +613,339 @@ const SCENES = {
     const bw = 150; ctx.fillStyle = COL.grid; ctx.fillRect(W / 2 - bw / 2, 14, bw, 9); ctx.fillStyle = COL.energy; ctx.fillRect(W / 2 - bw / 2, 14, bw * charge01 * charge01, 9);
     text("ενέργεια στο πεδίο", W / 2, 40, COL.energy, 12);
   },
+  /* ---------- theory slides ---------- */
+  electrons(t) {
+    const tc = t % 8, n = 6, small = W < 480;
+    const R = Math.max(26, Math.min(W * 0.12, H * 0.16)), cy = H * 0.44;
+    const cols = [
+      { x: W * 0.27, out: true, tint: COL.pos, sg: "+", top: "χάνει ηλεκτρόνια" },
+      { x: W * 0.73, out: false, tint: COL.neg, sg: "−", top: "παίρνει ηλεκτρόνια" },
+    ];
+    for (const c of cols) {
+      let done = 0;
+      const es = [];
+      for (let i = 0; i < n; i++) {
+        const a = -Math.PI / 2 + (i - (n - 1) / 2) * 0.5;
+        const p = clamp((tc - 0.6 - i * 0.55) / 1.1);
+        if (p >= 1) done++;
+        const rIn = R * 0.55, rOut = R * 2.3, e = ease(p);
+        const r = c.out ? rIn + (rOut - rIn) * e : rOut - (rOut - rIn) * e;
+        es.push({ x: c.x + Math.cos(a) * r, y: cy + Math.sin(a) * r, al: c.out ? 1 - 0.8 * p : 0.25 + 0.75 * p, hx: c.x + Math.cos(a) * rIn, hy: cy + Math.sin(a) * rIn, p });
+      }
+      dot(c.x, cy, R, COL.grid);
+      ctx.globalAlpha = 0.15 + 0.7 * (done / n); dot(c.x, cy, R, c.tint); ctx.globalAlpha = 1;
+      ctx.strokeStyle = COL.muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(c.x, cy, R, 0, Math.PI * 2); ctx.stroke();
+      if (c.out) for (const e of es) if (e.p > 0.3) text("+", e.hx, e.hy + 6, "#ffffff", 17, "center", 800);
+      for (const e of es) {
+        if (c.out && e.p >= 1) continue;
+        ctx.globalAlpha = e.al; dot(e.x, e.y, 7, COL.neg); text("−", e.x, e.y + 4.5, "#ffffff", 12, "center", 800); ctx.globalAlpha = 1;
+      }
+      text(c.top, c.x, cy + R + 24, COL.ink, small ? 12 : 14);
+      text(`q = ${done ? c.sg : ""}${done}·e`, c.x, cy + R + 46, c.tint, small ? 14 : 17, "center", 800);
+    }
+    pill("q = N · e      e = 1,6·10⁻¹⁹ C", W / 2, H - 24, COL.accent, 16);
+  },
+  homog(t) {
+    const vert = W < 560;
+    const A = vert ? { x: 8, y: 8, w: W - 16, h: H / 2 - 14 } : { x: 8, y: 8, w: W / 2 - 14, h: H - 16 };
+    const B = vert ? { x: 8, y: H / 2 + 6, w: W - 16, h: H / 2 - 14 } : { x: W / 2 + 6, y: 8, w: W / 2 - 14, h: H - 16 };
+    for (const r of [A, B]) { ctx.strokeStyle = COL.line; ctx.lineWidth = 1; ctx.strokeRect(r.x, r.y, r.w, r.h); }
+    const step = Math.max(30, Math.min(A.w, A.h) / 6);
+    ctx.save(); ctx.beginPath(); ctx.rect(A.x, A.y, A.w, A.h); ctx.clip();
+    const qx = A.x + A.w * 0.32, qy = A.y + A.h * 0.56;
+    const lenA = (r) => Math.min(step * 0.85, step * 0.85 * Math.pow((step * 1.4) / r, 2));
+    for (let gx = A.x + step / 2; gx < A.x + A.w; gx += step) for (let gy = A.y + 40 + step / 2; gy < A.y + A.h; gy += step) {
+      const dx = gx - qx, dy = gy - qy, r = Math.hypot(dx, dy);
+      if (r < 30) continue;
+      const L = lenA(r);
+      if (L < 4) continue;
+      ctx.globalAlpha = 0.5; arrow(gx - (dx / r) * L / 2, gy - (dy / r) * L / 2, gx + (dx / r) * L / 2, gy + (dy / r) * L / 2, COL.field, 1.6, null, 6); ctx.globalAlpha = 1;
+    }
+    charge(qx, qy, 1, 15);
+    const th = t * 0.55, rp = step * (1.3 + 1.2 * (0.5 + 0.5 * Math.sin(t * 0.9)));
+    const px = qx + Math.cos(th) * rp * 1.2, py = qy + Math.sin(th) * rp * 0.8;
+    const dx = px - qx, dy = py - qy, r = Math.hypot(dx, dy), L = Math.max(8, lenA(r) * 1.5);
+    dot(px, py, 5, COL.ink); arrow(px, py, px + (dx / r) * L, py + (dy / r) * L, COL.accent, 3.4, "E");
+    ctx.restore();
+    pill("ανομοιογενές: η E αλλάζει", A.x + A.w / 2, A.y + 20, COL.ink, 14);
+    const x1 = B.x + 22, x2 = B.x + B.w - 22, y1 = B.y + 50, y2 = B.y + B.h - 12;
+    plates(x1, x2, y1, y2);
+    for (let gx = x1 + step * 0.6; gx < x2 - step * 0.4; gx += step) for (let gy = y1 + step / 2; gy < y2; gy += step) {
+      ctx.globalAlpha = 0.5; arrow(gx - step * 0.3, gy, gx + step * 0.3, gy, COL.field, 1.6, null, 6); ctx.globalAlpha = 1;
+    }
+    const bx = (x1 + x2) / 2 + Math.sin(t * 0.7) * (x2 - x1) * 0.28, by = (y1 + y2) / 2 + Math.sin(t * 1.1) * (y2 - y1) * 0.3;
+    dot(bx, by, 5, COL.ink); arrow(bx, by, bx + step * 0.9, by, COL.accent, 3.4, "E");
+    pill("ομογενές: ίδια E παντού", B.x + B.w / 2, B.y + 20, COL.ink, 14);
+  },
+  addcases(t) {
+    const D = 5, i = Math.floor(t / D) % 4, k = t % D, a60 = Math.PI / 3;
+    const C4 = [
+      { n: "1 · ίδια φορά", e1: [95, 0], e2: [60, 0], f: "E = E₁ + E₂", line: true },
+      { n: "2 · αντίθετη φορά", e1: [110, 0], e2: [-60, 0], f: "E = |E₁ − E₂|", line: true },
+      { n: "3 · κάθετες", e1: [95, 0], e2: [0, -75], f: "E = √(E₁² + E₂²)" },
+      { n: "4 · σε γωνία φ", e1: [95, 0], e2: [75 * Math.cos(a60), -75 * Math.sin(a60)], f: "E² = E₁² + E₂² + 2·E₁·E₂·συνφ" },
+    ][i];
+    const s = (Math.min(W, H) / 400) * 1.5, px = W * 0.3, py = H * 0.58;
+    const e1 = [C4.e1[0] * s, C4.e1[1] * s], e2 = [C4.e2[0] * s, C4.e2[1] * s], off = C4.line ? 28 : 0;
+    text(C4.n, W / 2, 32, COL.ink, W < 480 ? 16 : 19, "center", 800);
+    for (let j = 0; j < 4; j++) dot(W / 2 - 27 + j * 18, 52, j === i ? 5 : 3.5, j === i ? COL.accent : COL.line);
+    const g1 = clamp(k / 0.8), g2 = clamp((k - 0.6) / 0.8);
+    arrow(px, py, px + e1[0] * g1, py + e1[1] * g1, COL.field, 3, g1 > 0.9 ? "E₁" : null);
+    arrow(px, py + off, px + e2[0] * g2, py + off + e2[1] * g2, COL.field, 3, g2 > 0.9 ? "E₂" : null);
+    if (k > 1.7) {
+      const m = ease(clamp((k - 1.7) / 1.2)), sx = px + e1[0] * m, sy = py + off + e1[1] * m;
+      ctx.globalAlpha = 0.75; ctx.setLineDash([6, 5]); arrow(sx, sy, sx + e2[0], sy + e2[1], COL.field, 2, null); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      if (!C4.line && m > 0.99) dash(px + e2[0], py + e2[1], px + e1[0] + e2[0], py + e1[1] + e2[1]);
+    }
+    if (k > 3.1) {
+      const r = ease(clamp((k - 3.1) / 1.0));
+      arrow(px, py - off, px + (e1[0] + e2[0]) * r, py - off + (e1[1] + e2[1]) * r, COL.accent, 4, r > 0.9 ? "E" : null);
+    }
+    if (i === 3) { ctx.strokeStyle = COL.muted; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(px, py, 26, -a60, 0); ctx.stroke(); text("φ", px + 38, py - 10, COL.muted, 15); }
+    dot(px, py, 4.5, COL.ink);
+    pill(C4.f, W / 2, H - 30, COL.accent, 18);
+  },
+  symmetry(t) {
+    const tc = t % 11;
+    if (tc < 5.5) {
+      const a = Math.min(W * 0.55, H * 0.6), by = H * 0.7, cx = W / 2;
+      const B = [cx - a / 2, by], G = [cx + a / 2, by], A = [cx, by - a * 0.866];
+      ctx.strokeStyle = COL.line; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]); ctx.lineTo(G[0], G[1]); ctx.closePath(); ctx.stroke();
+      dash(A[0], A[1], cx, by);
+      text("α√3/2", cx + 10, (A[1] + by) / 2, COL.muted, 13, "left");
+      const L = a * 0.3, g = clamp(tc / 0.8), fade = tc > 2 ? Math.max(0.15, 1 - (tc - 2) / 0.8) : 1;
+      ctx.globalAlpha = fade;
+      arrow(cx, by - 9, cx + L * g, by - 9, COL.field, 3, g > 0.9 ? "E₁" : null);
+      arrow(cx, by + 9, cx - L * g, by + 9, COL.field, 3, g > 0.9 ? "E₂" : null);
+      ctx.globalAlpha = 1;
+      if (tc > 2.8) { const g3 = ease(clamp((tc - 2.8) / 0.9)); arrow(cx, by, cx, by - L * 0.9 * g3, COL.accent, 4, g3 > 0.9 ? "E₃" : null); }
+      charge(B[0], B[1], 1, 15); charge(G[0], G[1], 1, 15); charge(A[0], A[1], -1, 15);
+      text("1", B[0] - 24, B[1] + 5, COL.ink, 14); text("2", G[0] + 24, G[1] + 5, COL.ink, 14); text("3", A[0] + 24, A[1] + 5, COL.ink, 14);
+      dot(cx, by, 4, COL.ink); text("Δ", cx - 14, by - 14, COL.ink, 14);
+      if (tc > 1.4) pill(tc < 3.8 ? "ίσα φορτία, ίσες αποστάσεις ⇒ E₁ + E₂ = 0" : "στο Δ μένει μόνο η E₃ από την κορυφή", cx, by + 44, tc < 3.8 ? COL.field : COL.accent, 14);
+    } else {
+      const k = tc - 5.5, a = Math.min(W * 0.46, H * 0.56), cx = W / 2, cy = H * 0.46;
+      const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([u, v]) => [cx + (u * a) / 2, cy + (v * a) / 2]);
+      ctx.strokeStyle = COL.line; ctx.lineWidth = 1.5; ctx.strokeRect(cx - a / 2, cy - a / 2, a, a);
+      dash(corners[0][0], corners[0][1], corners[2][0], corners[2][1]); dash(corners[1][0], corners[1][1], corners[3][0], corners[3][1]);
+      const L = a * 0.28, g = clamp(k / 0.8), fade = k > 2 ? Math.max(0.12, 1 - (k - 2) / 0.8) : 1;
+      ctx.globalAlpha = fade;
+      for (const [x, y] of corners) { const dx = cx - x, dy = cy - y, r = Math.hypot(dx, dy); arrow(cx, cy, cx + (dx / r) * L * g, cy + (dy / r) * L * g, COL.field, 3); }
+      ctx.globalAlpha = 1;
+      for (const [x, y] of corners) charge(x, y, 1, 14);
+      dot(cx, cy, 4, COL.ink);
+      if (k > 0.5) text("διαγώνιος = α√2", cx, cy - a / 2 - 22, COL.muted, 13);
+      if (k > 2.4) pill("4 ίσα φορτία: E = 0 στο κέντρο", cx, H - 24, COL.field, 14);
+    }
+  },
+  reverse(t) {
+    const x1 = 44, x2 = W - 44, y1 = 46, y2 = H * 0.56;
+    plates(x1, x2, y1, y2);
+    for (let i = 0; i < 4; i++) { const y = y1 + 14 + (i * (y2 - y1 - 28)) / 3; ctx.globalAlpha = 0.45; arrow(x1 + 10, y, x2 - 10, y, COL.field, 1.3, null, 7); ctx.globalAlpha = 1; }
+    const T1 = 2, tm = clamp((t % 7) - 0.6, 0, 2 * T1), Dd = (x2 - x1 - 70) * 0.75, v0 = (2 * Dd) / T1, acc = v0 / T1;
+    const xs = x2 - 30, x = xs - v0 * tm + 0.5 * acc * tm * tm, v = -v0 + acc * tm, y = (y1 + y2) / 2;
+    dash(xs - Dd, y1 + 4, xs - Dd, y2 - 4, COL.energy);
+    text("x = υ₀²/(2α)", xs - Dd - 6, y2 - 10, COL.energy, 13, "right");
+    charge(x, y, 1, 11);
+    arrow(x + 14, y + 24, x + 58, y + 24, COL.pos, 3, "F");
+    if (Math.abs(v) > 0.04 * v0) arrow(x, y - 24, x + (v / v0) * 70, y - 24, COL.neg, 3, "υ");
+    const msg = tm < T1 - 0.05 ? ["η F είναι αντίθετη στην υ ⇒ φρενάρει", COL.pos] : tm < T1 + 0.9 ? ["υ = 0 τη στιγμή t₁ = υ₀/α", COL.energy] : tm < 2 * T1 - 0.01 ? ["γυρίζει πίσω και επιταχύνεται", COL.pos] : ["στο 2t₁ ξανά εδώ, με το ίδιο μέτρο υ₀", COL.accent];
+    pill(msg[0], W / 2, y2 + 24, msg[1], 14);
+    const gx = 60, gw = W - 110, gTop = y2 + 48, gh = H - 16 - gTop, zero = gTop + gh / 2;
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(gx, gTop); ctx.lineTo(gx, gTop + gh); ctx.moveTo(gx, zero); ctx.lineTo(gx + gw, zero); ctx.stroke();
+    ctx.strokeStyle = COL.neg; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(gx, zero - gh * 0.42); ctx.lineTo(gx + gw, zero + gh * 0.42); ctx.stroke();
+    const f = tm / (2 * T1);
+    dot(gx + f * gw, zero - gh * 0.42 + f * gh * 0.84, 5, COL.neg);
+    text("υ", gx - 12, gTop + 10, COL.muted, 13); text("t", gx + gw + 10, zero + 4, COL.muted, 13);
+    text("t₁", gx + gw / 2, zero + 16, COL.muted, 12); text("2t₁", gx + gw, zero + 16, COL.muted, 12);
+  },
+  balance(t) {
+    const x1 = 70, x2 = W - 96, yT = 52, yB = H * 0.64, mid = (yT + yB) / 2;
+    hplates(x1, x2, yT, yB, false);
+    const D = 4.5, ph = Math.floor(t / D) % 3, tau = t % D;
+    const Vt = [1, 1.6, 0.5][ph], Vp = [0.5, 1, 1.6][ph], V = Vp + (Vt - Vp) * ease(clamp(tau / 0.5));
+    ctx.globalAlpha = 0.2 + (0.4 * V) / 1.6;
+    for (let i = 0; i < 6; i++) { const xx = x1 + 20 + (i * (x2 - x1 - 40)) / 5; arrow(xx, yB - 10, xx, yT + 10, COL.field, 1.3, null, 7); }
+    ctx.globalAlpha = 1;
+    const s = clamp(tau - 0.5, 0, 4);
+    const y = Math.max(yT + 24, Math.min(yB - 24, mid - (Vt - 1) * 16 * s * s));
+    const xd = (x1 + x2) / 2;
+    ctx.globalAlpha = clamp(tau / 0.3);
+    charge(xd, y, 1, 10);
+    arrow(xd + 16, y, xd + 16, y - 44 * V, COL.pos, 3, "qE");
+    arrow(xd - 16, y, xd - 16, y + 44, COL.ink, 3, "mg");
+    ctx.globalAlpha = 1;
+    const mx = W - 52;
+    ctx.fillStyle = COL.grid; ctx.fillRect(mx - 7, yT, 14, yB - yT);
+    const hV = ((yB - yT) * V) / 1.8;
+    ctx.fillStyle = COL.energy; ctx.fillRect(mx - 7, yB - hV, 14, hV);
+    text("V", mx, yT - 10, COL.energy, 15);
+    pill(["qE = mg ⇒ ισορροπεί", "V ↑ ⇒ qE > mg ⇒ ανεβαίνει", "V ↓ ⇒ qE < mg ⇒ πέφτει"][ph], W / 2, H - 50, ph ? COL.pos : COL.field, 15);
+    text("|q|·V/ℓ = m·g", W / 2, H - 14, COL.accent, 15);
+  },
+  usign(t) {
+    const tc = t % 7, p = ease(clamp((tc - 0.8) / 4)), small = W < 480;
+    const cx = W * 0.32, bx0 = W * 0.84, half = Math.min(W * 0.12, 90), sp = W * 0.2;
+    const yA = H * 0.26, dA = 22 + p * sp;
+    if (!small) text("ομόσημα", 16, yA - 34, COL.ink, 14, "left");
+    charge(cx - dA, yA, 1, 14); charge(cx + dA, yA, 1, 14);
+    if (p > 0.02) { const vl = 8 + (small ? 18 : 34) * Math.sqrt(p); arrow(cx + dA + 18, yA, cx + dA + 18 + vl, yA, COL.neg, 2.6, "υ"); arrow(cx - dA - 18, yA, cx - dA - 18 - vl, yA, COL.neg, 2.6); }
+    const UA = 22 / dA;
+    sbar(bx0, yA - 16, half, UA, COL.energy, "U"); sbar(bx0, yA + 4, half, 1 - UA, COL.neg, "K");
+    pill("U > 0 · φεύγουν μόνα τους", cx, yA + (small ? 34 : 44), COL.energy, 14);
+    const yB = H * 0.64, dB = 22 + p * sp;
+    if (!small) text("ετερόσημα", 16, yB - 34, COL.ink, 14, "left");
+    charge(cx - dB, yB, 1, 14); charge(cx + dB, yB, -1, 14);
+    ctx.setLineDash([6, 4]); arrow(cx + dB + 18, yB, cx + dB + 18 + (small ? 26 : 42), yB, COL.ink, 2.6, "F εξ"); ctx.setLineDash([]);
+    arrow(cx + dB - 18, yB, cx + dB - 18 - (8 + 26 * Math.pow(22 / dB, 2)), yB, COL.pos, 2.6);
+    sbar(bx0, yB - 6, half, -22 / dB, COL.energy, "U");
+    pill("U < 0 · θέλουν ενέργεια για να χωρίσουν", cx, yB + (small ? 34 : 44), COL.energy, 14);
+    pill("U = k·q₁·q₂ / r   (με τα πρόσημα)", W / 2, H - 20, COL.accent, 15);
+  },
+  coulombMotion(t) {
+    if (!RT) {
+      RT = [[0, 1]];
+      let r = 1.0005, tt = 0;
+      while (r < 14) { tt += 0.01 / Math.sqrt(1 - 1 / r); r += 0.01; RT.push([tt, r]); }
+    }
+    const tc = t % 6.5, s = clamp((tc - 0.5) / 4.2), target = s * RT[RT.length - 1][0];
+    let r = 1;
+    for (const [a, b] of RT) { if (a > target) break; r = b; }
+    const yA = H * 0.3, x0 = 46, unit = (W - 140) / 13, xq = x0 + 20 + (r - 1) * unit;
+    text("πεδίο Coulomb: F ∝ 1/r²", 16, yA - 42, COL.ink, 14, "left");
+    if (s > 0.05) text("α μικραίνει ↓", W - 16, yA - 42, COL.pos, 14, "right");
+    charge(x0, yA, 1, 16, 0.2); charge(xq, yA, 1, 9);
+    const Fl = 60 / (r * r), vl = 60 * Math.sqrt(Math.max(0, 1 - 1 / r));
+    arrow(xq + 4, yA - 18, xq + 4 + Fl, yA - 18, COL.pos, 3, Fl > 10 ? "F" : null);
+    if (vl > 4) arrow(xq + 4, yA + 18, xq + 4 + vl, yA + 18, COL.neg, 3, "υ");
+    const yB = H * 0.68, p1 = 30, p2 = W - 30;
+    plates(p1, p2, yB - 44, yB + 44);
+    ctx.globalAlpha = 0.35; arrow(p1 + 10, yB - 30, p2 - 10, yB - 30, COL.field, 1.2, null, 7); arrow(p1 + 10, yB + 30, p2 - 10, yB + 30, COL.field, 1.2, null, 7); ctx.globalAlpha = 1;
+    text("ομογενές: F σταθερή", 50, yB - 58, COL.ink, 14, "left");
+    if (s > 0.05) text("α = σταθερή", W - 48, yB - 58, COL.field, 14, "right");
+    const xb = p1 + 30 + (p2 - p1 - 100) * s * s;
+    charge(xb, yB, 1, 9);
+    arrow(xb + 4, yB - 16, xb + 34, yB - 16, COL.pos, 3, "F");
+    if (s > 0.03) arrow(xb + 4, yB + 16, xb + 4 + 60 * s, yB + 16, COL.neg, 3, "υ");
+    pill("Coulomb ⇒ όχι υ = α·t · λύνω με K + U = σταθ.", W / 2, H - 20, COL.accent, 15);
+  },
+  vgraph(t) {
+    const ph = Math.floor(t / 6) % 2, tc = t % 6, sg = ph ? -1 : 1, s = clamp((tc - 0.4) / 4.6), r = 1 + 5 * s;
+    const y0 = H * 0.17, x0 = 46, px = x0 + 26 + ((W - 120) * (r - 1)) / 5;
+    charge(x0, y0, sg, 16, 0.2);
+    dot(px, y0, 5, COL.ink);
+    text(`V = ${sg > 0 ? "+" : "−"}${Math.round(90 / r)} kV`, px, y0 - 16, sg > 0 ? COL.energy : COL.neg, 15);
+    pill(sg > 0 ? "Q > 0 ⇒ V > 0 παντού" : "Q < 0 ⇒ V < 0 παντού", W / 2, y0 + 40, sg > 0 ? COL.energy : COL.neg, 14);
+    const gx = 50, gw = W - 90, zero = H * 0.68, gh = H * 0.24;
+    const X = (rr) => gx + ((rr - 1) / 5) * gw;
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(gx, zero - gh - 8); ctx.lineTo(gx, zero + gh + 8); ctx.moveTo(gx, zero); ctx.lineTo(gx + gw, zero); ctx.stroke();
+    text("r", gx + gw + 10, zero + 4, COL.muted, 13); text("0", gx - 10, zero + 4, COL.muted, 12);
+    const curve = (f, color, w, upto, alpha = 1, dashd = false) => {
+      ctx.globalAlpha = alpha; ctx.strokeStyle = color; ctx.lineWidth = w; if (dashd) ctx.setLineDash([5, 4]);
+      ctx.beginPath(); for (let i = 0; i <= 80; i++) { const rr = 1 + (i / 80) * (upto - 1); const yy = zero - f(rr) * gh; i ? ctx.lineTo(X(rr), yy) : ctx.moveTo(X(rr), yy); } ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+    };
+    curve((rr) => 1 / (rr * rr), COL.field, 2, 6, 0.9, true);
+    curve((rr) => 1 / rr, COL.energy, 2, 6, 0.2); curve((rr) => -1 / rr, COL.neg, 2, 6, 0.2);
+    curve((rr) => sg / rr, sg > 0 ? COL.energy : COL.neg, 3, r);
+    dot(X(r), zero - (sg / r) * gh, 5, sg > 0 ? COL.energy : COL.neg);
+    text("E ∝ 1/r²  (πάντα > 0)", X(2.4), zero - gh / (2.4 * 2.4) - 10, COL.field, 13, "left");
+    text("V ∝ 1/r  (με πρόσημο)", X(3.4), zero - (sg * gh) / 3.4 - sg * 14 + (sg < 0 ? 6 : 0), sg > 0 ? COL.energy : COL.neg, 13, "left");
+  },
+  evsv(t) {
+    const D = 6.5, ph = Math.floor(t / D) % 2, k = t % D;
+    const y = H * 0.36, xa = W * 0.17, xb = W * 0.83, xm = W / 2, L = Math.min(90, W * 0.14), off = Math.max(58, W * 0.11);
+    charge(xa, y, 1, 18); charge(xb, y, ph ? -1 : 1, 18);
+    const g = clamp(k / 0.8), fadeE = ph === 0 && k > 1.8 ? Math.max(0.15, 1 - (k - 1.8) / 0.6) : 1;
+    ctx.globalAlpha = fadeE;
+    arrow(xm, y - 9, xm + L * g, y - 9, COL.field, 3, g > 0.9 ? "E₁" : null);
+    arrow(xm, y + 9, xm + (ph ? 1 : -1) * L * g, y + 9, COL.field, 3, g > 0.9 ? "E₂" : null);
+    ctx.globalAlpha = 1;
+    dot(xm, y, 4.5, COL.ink); text("M", xm - 14, y - 14, COL.ink, 14);
+    if (k > 1.8) {
+      if (ph === 0) pill("E = 0", xm, y - 44, COL.field, 15);
+      else { const r = ease(clamp((k - 1.8) / 0.6)); arrow(xm, y - 40, xm + 2 * L * r, y - 40, COL.accent, 4, r > 0.9 ? "E ≠ 0" : null); }
+    }
+    if (k > 2.8) {
+      const m = ease(clamp((k - 2.8) / 1.2)), ty = y + 74, sy = y + 40;
+      pill("V₁ = +9 kV", xa + (xm - off - xa) * m, sy + (ty - sy) * m, COL.energy, 14);
+      pill(ph ? "V₂ = −9 kV" : "V₂ = +9 kV", xb + (xm + off - xb) * m, sy + (ty - sy) * m, ph ? COL.neg : COL.energy, 14);
+      if (k > 4.2) pill(ph ? "V = 9 − 9 = 0" : "V = 9 + 9 = 18 kV ≠ 0", xm, ty + 44, ph ? COL.ink : COL.energy, 17);
+    }
+    text("εντάσεις: διανυσματικά · δυναμικά: σαν αριθμοί", W / 2, H - 12, COL.muted, 13);
+  },
+  vzero(t) {
+    const ph = Math.floor(t / 6) % 3, cy = H * 0.44, step = W < 480 ? 7 : 8, c = W * 0.12;
+    const cfg = [
+      [{ x: W * 0.3, s: 1 }, { x: W * 0.7, s: -1 }],
+      [{ x: W * 0.32, s: 1 }, { x: W * 0.74, s: -4 }],
+      [{ x: W * 0.3, s: 1 }, { x: W * 0.7, s: 1 }],
+    ][ph];
+    for (let x = 0; x < W; x += step) for (let y = 0; y < H - 44; y += step) {
+      let V = 0;
+      for (const q of cfg) V += q.s / Math.max(14, Math.hypot(x + step / 2 - q.x, y + step / 2 - cy));
+      const a = 0.6 * (1 - Math.exp(-Math.abs(V) * c));
+      if (a < 0.02) continue;
+      ctx.globalAlpha = a; ctx.fillStyle = V > 0 ? COL.energy : COL.neg; ctx.fillRect(x, y, step, step);
+    }
+    ctx.globalAlpha = 1;
+    if (ph === 0) {
+      ctx.strokeStyle = COL.ink; ctx.lineWidth = 2; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(W / 2, 8); ctx.lineTo(W / 2, H - 52); ctx.stroke(); ctx.setLineDash([]);
+      text("V = 0", W / 2 + 8, 24, COL.ink, 14, "left");
+    } else if (ph === 1) {
+      const x1 = cfg[0].x, d = cfg[1].x - x1;
+      for (const xx of [x1 + d / 5, x1 - d / 3]) { dot(xx, cy, 6, COL.ink); text("V = 0", xx, cy - 16, COL.ink, 13); }
+    } else {
+      const px = W / 2 + Math.sin(t * 0.8) * W * 0.36, py = cy + Math.cos(t * 1.1) * H * 0.28;
+      dot(px, py, 5, COL.ink); text("V > 0", px + 10, py - 8, COL.ink, 13, "left");
+    }
+    for (const q of cfg) { charge(q.x, cy, q.s > 0 ? 1 : -1, q.s === -4 ? 22 : 16); text(q.s === -4 ? "−4q" : q.s > 0 ? "+q" : "−q", q.x, cy + 40, COL.ink, 13); }
+    pill(["ίσα και αντίθετα: V = 0 σε όλη τη μεσοκάθετο", "άνισα ετερόσημα: δύο σημεία, δίπλα στο μικρότερο", "ομόσημα: πουθενά V = 0 (μόνο στο άπειρο)"][ph], W / 2, H - 22, COL.ink, 14);
+  },
+  work(t) {
+    const tc = t % 7.5, p = ease(clamp((tc - 0.6) / 4.6)), sc = Math.min(1, W / 600);
+    const qx = W * 0.18, y = H * 0.34, xK = W * 0.45, xS = W - 24;
+    charge(qx, y, 1, 18, 0.2);
+    dot(xK, y, 4, COL.ink); text("K", xK - 14, y - 10, COL.ink, 14);
+    text("από το ∞", xS - 4, y - 34, COL.muted, 13, "right");
+    const x = xS - p * (xS - xK), r = x - qx, rK = xK - qx, r0 = xS - qx;
+    const F = (14 + 60 * Math.pow(rK / r, 2)) * sc;
+    charge(x, y, 1, 9);
+    arrow(x + 12, y - 24, x + 12 + F, y - 24, COL.pos, 3, "F πεδίου");
+    ctx.setLineDash([6, 4]); arrow(x - 12, y + 24, x - 12 - F, y + 24, COL.ink, 3, "F εξ"); ctx.setLineDash([]);
+    const n = (rK / r - rK / r0) / (1 - rK / r0), bx = W / 2 + 20, half = Math.min(W * 0.28, 170), by = H * 0.56;
+    sbar(bx, by, half, -n, COL.pos, "W πεδίου"); sbar(bx, by + 24, half, n, COL.ink, "W εξ");
+    pill("αργά (ΔK = 0) ⇒ W εξ = −W πεδίου", W / 2, H - 56, COL.ink, 14);
+    pill("W(∞→K) = q·(V∞ − V(K)) = −q·V(K)", W / 2, H - 22, COL.accent, 15);
+  },
+  ladder(t) {
+    const x1 = 56, x2 = W - 56, y1 = 64, y2 = H * 0.48;
+    const gr = ctx.createLinearGradient(x1, 0, x2, 0); gr.addColorStop(0, COL.energy + "66"); gr.addColorStop(1, COL.energy + "00");
+    ctx.fillStyle = gr; ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
+    plates(x1, x2, y1, y2);
+    for (let i = 0; i < 3; i++) { const yy = y1 + 14 + (i * (y2 - y1 - 28)) / 2; ctx.globalAlpha = 0.4; arrow(x1 + 10, yy, x2 - 10, yy, COL.field, 1.3, null, 7); ctx.globalAlpha = 1; }
+    text("100 V", x1, y2 + 20, COL.energy, 13); text("0 V", x2, y2 + 20, COL.energy, 13);
+    const X = (f) => x1 + f * (x2 - x1), gTop = y2 + 40, gBot = H - 58, Gy = (f) => gTop + f * (gBot - gTop), ym = (y1 + y2) / 2;
+    ctx.strokeStyle = COL.line; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x1, gTop - 6); ctx.lineTo(x1, gBot); ctx.lineTo(x2 + 10, gBot); ctx.stroke();
+    text("V", x1 - 14, gTop + 4, COL.muted, 13); text("x", x2 + 18, gBot + 4, COL.muted, 13);
+    ctx.strokeStyle = COL.energy; ctx.lineWidth = 2.6; ctx.beginPath(); ctx.moveTo(x1, gTop); ctx.lineTo(x2, gBot); ctx.stroke();
+    const tc = t % 11;
+    if (tc < 4.5) {
+      const f = clamp((tc - 0.3) / 4);
+      dash(X(f), ym, X(f), Gy(f), COL.muted, 1);
+      dot(X(f), ym, 5, COL.ink); text(`V = ${Math.round(100 - 100 * f)} V`, X(f), ym - 14, COL.ink, 14);
+      dot(X(f), Gy(f), 5, COL.energy);
+      pill("ίσα βήματα x ⇒ ίσες πτώσεις V", W / 2, H - 22, COL.energy, 14);
+    } else {
+      [["A", 0.2], ["B", 0.4], ["Γ", 0.8], ["M", 0.3]].forEach(([nm, f], j) => {
+        if (tc < 4.6 + j * 0.9) return;
+        const col = nm === "M" ? COL.accent : COL.ink;
+        dot(X(f), ym, 5, col); text(nm, X(f), ym + 22, col, 14); text(String(Math.round(100 - 100 * f)), X(f), ym - 12, COL.energy, 13);
+        dot(X(f), Gy(f), 4.5, nm === "M" ? COL.accent : COL.energy);
+      });
+      pill(tc < 7.8 ? "E = (V(A) − V(B)) / (AB), για κάθε δύο σημεία" : "M στη μέση: V(M) = (80 + 60)/2 = 70 V", W / 2, H - 22, tc < 7.8 ? COL.energy : COL.accent, 14);
+    }
+  },
   recap(t) {
     const qs = [{ x: W * 0.3, y: H * 0.42, s: 1 }, { x: W * 0.7, y: H * 0.42, s: -1 }];
     traceLines(qs, 14, 22, 0.85);
@@ -520,6 +980,7 @@ function render() {
   try { localStorage.setItem("pedio-intro-slide", String(idx)); } catch (e) {}
 }
 function go(i) { idx = Math.max(0, Math.min(SLIDES.length - 1, i)); render(); }
+function slideIndex(key) { return /^\d+$/.test(key) ? Number(key) - 1 : SLIDES.findIndex((s) => s.scene === key); }
 prev.addEventListener("click", () => go(idx - 1));
 next.addEventListener("click", () => go(idx + 1));
 addEventListener("keydown", (e) => {
@@ -539,6 +1000,7 @@ let sx = null;
 document.getElementById("stage").addEventListener("touchstart", (e) => { sx = e.touches[0].clientX; }, { passive: true });
 document.getElementById("stage").addEventListener("touchend", (e) => { if (sx === null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 60) go(idx + (dx < 0 ? 1 : -1)); sx = null; });
 try { const saved = Number(localStorage.getItem("pedio-intro-slide")); if (saved > 0 && saved < SLIDES.length) idx = saved; } catch (e) {}
+if (location.hash.length > 1) { const i = slideIndex(decodeURIComponent(location.hash.slice(1))); if (i >= 0 && i < SLIDES.length) idx = i; }
 render(); resize();
 function frame(now) {
   const dtReal = Math.max(0, Math.min(100, now - lastReal)); lastReal = Math.max(lastReal, now);
@@ -558,7 +1020,10 @@ function reportHeight() {
 new ResizeObserver(reportHeight).observe(document.body);
 addEventListener("load", reportHeight);
 document.fonts && document.fonts.ready.then(reportHeight);
-addEventListener("message", (e) => { if (e.data === "pedio-intro-ping") { lastH = 0; reportHeight(); } });
+addEventListener("message", (e) => {
+  if (e.data === "pedio-intro-ping") { lastH = 0; reportHeight(); }
+  if (e.data && e.data.type === "pedio-intro-go") { const i = slideIndex(String(e.data.id)); if (i >= 0) go(i); }
+});
 </script>
 </body>
 </html>
