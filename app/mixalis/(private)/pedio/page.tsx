@@ -10,12 +10,12 @@ import { PedioIntroEmbed } from "@/components/mixalis/pedio/PedioIntroEmbed";
 export const metadata: Metadata = {
   title: { absolute: "Ηλεκτρικό πεδίο · Τυπολόγιο · Physics Workspace" },
   description:
-    "30 περιπτώσεις ηλεκτρικού πεδίου (ένταση, ομογενές πεδίο, δυναμική ενέργεια, δυναμικό, πυκνωτής) από το σχολικό βιβλίο και τον Σαββάλα, με κινούμενο σχέδιο για κάθε περίπτωση.",
+    "34 περιπτώσεις ηλεκτρικού πεδίου (ένταση, ομογενές πεδίο, δυναμική ενέργεια, δυναμικό, πυκνωτής) από το σχολικό βιβλίο και τον Σαββάλα, με κινούμενο σχέδιο για κάθε περίπτωση.",
   robots: { index: false, follow: false },
 };
 
 const POSTER_W = 1212;
-const POSTER_H = 1720;
+const POSTER_H = 1976;
 
 const sectionNames = ["Ένταση", "Ομογενές πεδίο", "Δυναμική ενέργεια", "Δυναμικό", "Τάση & ένταση", "Πυκνωτής"];
 
@@ -53,7 +53,7 @@ const groups: { range: string; title: string; text: string }[] = [
 ];
 
 /** Clickable areas over the poster cells (same grid as the poster SVG). */
-const cells = Array.from({ length: 30 }, (_, i) => {
+const cells = Array.from({ length: 34 }, (_, i) => {
   const section = Math.floor(i / 5);
   const col = i % 5;
   return { n: i + 1, x: 17 + 238 * col, y: 146 + 256 * section, w: 226, h: 212 };
@@ -77,10 +77,10 @@ export default function PedioPage() {
           <p className="mt-5 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Φυσική Γενικής Παιδείας Β΄ Λυκείου</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Ηλεκτρικό πεδίο: τυπολόγιο</h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-[#5c534c] sm:text-base">
-            30 περιπτώσεις σε ένα σχέδιο, από τα κεφάλαια 3–8 του Σαββάλα και τις ενότητες 1.2–1.5 του σχολικού βιβλίου: ένταση, ομογενές πεδίο,
+            34 περιπτώσεις σε ένα σχέδιο, από τα κεφάλαια 3–8 του Σαββάλα και τις ενότητες 1.2–1.5 του σχολικού βιβλίου: ένταση, ομογενές πεδίο,
             δυναμική ενέργεια, δυναμικό, τάση και πυκνωτής. Οι αριθμοί των κινούμενων σχεδίων είναι από τις λυμένες ασκήσεις του Σαββάλα.{" "}
             <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.{" "}
-            Κάτω από το σχέδιο θα βρεις και 4 επιπλέον ασκήσεις (31–34), τη θεωρία που ζητείται σε κάθε ενότητα, έναν γρήγορο έλεγχο με ερωτήσεις σαν το
+            Τα κουτάκια 31–34 είναι οι επιπλέον ασκήσεις (σχήματα με φορτία, κίνηση σε πεδίο Coulomb, αντίστροφα προβλήματα). Θα βρεις ακόμα τη θεωρία που ζητείται σε κάθε ενότητα, έναν γρήγορο έλεγχο με ερωτήσεις σαν το
             Θέμα Α και τα διαγράμματα του κεφαλαίου.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
