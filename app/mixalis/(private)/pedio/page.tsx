@@ -4,12 +4,14 @@ import { StudyBar } from "@/components/mixalis/study/StudyBar";
 import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { Note } from "@/components/mixalis/omali/shared";
 import { PedioAnimationsClient } from "@/components/mixalis/pedio/PedioAnimationsClient";
+import { PedioGraphs } from "@/components/mixalis/pedio/PedioGraphs";
 import { PedioIntroEmbed } from "@/components/mixalis/pedio/PedioIntroEmbed";
 
 export const metadata: Metadata = {
   title: { absolute: "Ηλεκτρικό πεδίο · Τυπολόγιο · Physics Workspace" },
   description:
     "30 περιπτώσεις ηλεκτρικού πεδίου (ένταση, ομογενές πεδίο, δυναμική ενέργεια, δυναμικό, πυκνωτής) από το σχολικό βιβλίο και τον Σαββάλα, με κινούμενο σχέδιο για κάθε περίπτωση.",
+  robots: { index: false, follow: false },
 };
 
 const POSTER_W = 1212;
@@ -77,7 +79,9 @@ export default function PedioPage() {
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-[#5c534c] sm:text-base">
             30 περιπτώσεις σε ένα σχέδιο, από τα κεφάλαια 3–8 του Σαββάλα και τις ενότητες 1.2–1.5 του σχολικού βιβλίου: ένταση, ομογενές πεδίο,
             δυναμική ενέργεια, δυναμικό, τάση και πυκνωτής. Οι αριθμοί των κινούμενων σχεδίων είναι από τις λυμένες ασκήσεις του Σαββάλα.{" "}
-            <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.
+            <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.{" "}
+            Κάτω από το σχέδιο θα βρεις και 4 επιπλέον ασκήσεις (31–34), τη θεωρία που ζητείται σε κάθε ενότητα, έναν γρήγορο έλεγχο με ερωτήσεις σαν το
+            Θέμα Α και τα διαγράμματα του κεφαλαίου.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
             <a href="/mixalis/pedio-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-[#ddd5c7] bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
@@ -138,6 +142,9 @@ export default function PedioPage() {
                 {i + 1}. {name}
               </a>
             ))}
+            <a href="#diagrammata" className="shrink-0 rounded-full px-3 py-1.5 text-[#4d4138] hover:bg-[#f3efe8]">
+              Διαγράμματα
+            </a>
           </div>
         </nav>
 
@@ -206,6 +213,8 @@ export default function PedioPage() {
         </section>
 
         <PedioAnimationsClient />
+
+        <PedioGraphs />
 
         <section className="border-t border-[#ddd5c7] pt-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Οδηγός</p>

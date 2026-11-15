@@ -2,12 +2,14 @@
 
 import { AnimCard } from "./AnimCard";
 import type { ECase } from "./kitE";
+import { QUIZ, QuickCheck, THEORY, TheoryBox } from "./PedioExtras";
 import { section1 } from "./scenes-1";
 import { section2 } from "./scenes-2";
 import { section3 } from "./scenes-3";
 import { section4 } from "./scenes-4";
 import { section5 } from "./scenes-5";
 import { section6 } from "./scenes-6";
+import { extraSection3, extraSection4 } from "./scenes-extra";
 
 /* Colours and titles follow the six sections of the electric-field poster. */
 export const SECTIONS: { title: string; color: string; bg: string; intro: string; cases: ECase[] }[] = [
@@ -30,14 +32,14 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
     color: "#6b3fa0",
     bg: "#f3edfa",
     intro: "Δύο φορτία έχουν ενέργεια επειδή αλληλεπιδρούν: U = kQq/r, με τα πρόσημα. Το έργο της δύναμης του πεδίου είναι η μείωση της U (σχολικό §1.3, Σαββάλας κεφ. 5).",
-    cases: section3,
+    cases: [...section3, ...extraSection3],
   },
   {
     title: "Δυναμικό – διαφορά δυναμικού",
     color: "#c46a12",
     bg: "#fdf3e7",
     intro: "Το δυναμικό είναι «ενέργεια ανά φορτίο» σε κάθε σημείο: ένας αριθμός με πρόσημο. Δυναμικά προστίθενται σαν αριθμοί, εντάσεις σαν διανύσματα (σχολικό §1.4, Σαββάλας κεφ. 6).",
-    cases: section4,
+    cases: [...section4, ...extraSection4],
   },
   {
     title: "Τάση και ένταση στο ομογενές πεδίο",
@@ -55,23 +57,37 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
   },
 ];
 
+/** "κουτάκια 16–20 · επιπλέον 32, 33": poster cells (1–30) plus the extra exercises (31+). */
+function caseRange(cases: ECase[]) {
+  const poster = cases.filter((c) => c.n <= 30).map((c) => c.n);
+  const extra = cases.filter((c) => c.n > 30).map((c) => c.n);
+  const main = poster.length ? `κουτάκια ${poster[0]}–${poster[poster.length - 1]}` : "";
+  return extra.length ? `${main} · επιπλέον ${extra.join(", ")}` : main;
+}
+
 export function PedioAnimations() {
   return (
     <div className="space-y-[4rem]">
-      {SECTIONS.map((s, i) => (
-        <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 border-t-4 pt-6" style={{ borderColor: s.color }}>
-          <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: s.color }}>
-            Ενότητα {i + 1} · κουτάκια {s.cases[0].n}–{s.cases[s.cases.length - 1].n}
-          </p>
-          <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1c2433] sm:text-3xl">{s.title}</h2>
-          <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">{s.intro}</p>
-          <div className="mt-8 grid gap-x-[3rem] gap-y-[3.5rem] lg:grid-cols-2">
-            {s.cases.map((c) => (
-              <AnimCard key={c.n} data={c} accent={s.color} study={{ lesson: "pedio", path: "/mixalis/pedio" }} />
-            ))}
-          </div>
-        </section>
-      ))}
+      {SECTIONS.map((s, i) => {
+        const theory = THEORY[i];
+        const quiz = QUIZ[i];
+        return (
+          <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 border-t-4 pt-6" style={{ borderColor: s.color }}>
+            <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: s.color }}>
+              Ενότητα {i + 1} · {caseRange(s.cases)}
+            </p>
+            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1c2433] sm:text-3xl">{s.title}</h2>
+            <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">{s.intro}</p>
+            {theory ? <TheoryBox items={theory} color={s.color} /> : null}
+            <div className="mt-8 grid gap-x-[3rem] gap-y-[3.5rem] lg:grid-cols-2">
+              {s.cases.map((c) => (
+                <AnimCard key={c.n} data={c} accent={s.color} study={{ lesson: "pedio", path: "/mixalis/pedio" }} />
+              ))}
+            </div>
+            {quiz ? <QuickCheck items={quiz} color={s.color} /> : null}
+          </section>
+        );
+      })}
     </div>
   );
 }
