@@ -67,19 +67,19 @@ function caseRange(cases: ECase[]) {
 
 export function PedioAnimations() {
   return (
-    <div className="space-y-[4rem]">
+    <div className="space-y-6">
       {SECTIONS.map((s, i) => {
         const theory = THEORY_LINKS[i];
         const quiz = QUIZ[i];
         return (
-          <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 border-t-4 pt-6" style={{ borderColor: s.color }}>
+          <section key={s.title} id={`enotita-${i + 1}`} className="scroll-mt-20 rounded-3xl border p-4 sm:p-6" style={{ borderColor: s.color, backgroundColor: s.bg }}>
             <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color: s.color }}>
               Ενότητα {i + 1} · {caseRange(s.cases)}
             </p>
             <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1c2433] sm:text-3xl">{s.title}</h2>
             <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">{s.intro}</p>
             {theory ? <TheoryLink id={theory.id} slides={theory.slides} color={s.color} /> : null}
-            <div className="mt-8 grid gap-x-[3rem] gap-y-[3.5rem] lg:grid-cols-2">
+            <div className="mt-5 grid gap-5 lg:grid-cols-2">
               {s.cases.map((c) => (
                 <AnimCard key={c.n} data={c} accent={s.color} study={{ lesson: "pedio", path: "/mixalis/pedio" }} />
               ))}

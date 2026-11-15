@@ -269,7 +269,7 @@ function QuizItem({ item, n, color }: { item: Quiz; n: number; color: string }) 
 
 export function QuickCheck({ items, color }: { items: Quiz[]; color: string }) {
   return (
-    <div className="mt-12 max-w-4xl">
+    <div className="mt-6 rounded-2xl border border-black/10 bg-white p-4 sm:p-5">
       <p className="text-xs font-semibold uppercase tracking-[0.18em]" style={{ color }}>
         Γρήγορος έλεγχος
       </p>

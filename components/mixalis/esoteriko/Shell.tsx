@@ -13,7 +13,8 @@ const CASES_TAB = "periptoseis";
  * Όλα αποδίδονται στον server· εδώ απλώς δείχνουμε ένα κομμάτι τη φορά.
  * Το #hash της διεύθυνσης κρατά πού είσαι (π.χ. #a4, #typologio), ώστε οι σύνδεσμοι να δουλεύουν.
  */
-export function Shell({ lesson, panels, cases }: { lesson: string; panels: Panel[]; cases: CaseSlide[] }) {
+/** boxed: διάταξη σαν το /mixalis/ormi (κεντραρισμένο πλάτος, λευκές κάρτες). Χωρίς αυτό: ανοιχτή διάταξη σε όλο το πλάτος. */
+export function Shell({ lesson, panels, cases, boxed = false }: { lesson: string; panels: Panel[]; cases: CaseSlide[]; boxed?: boolean }) {
   const [tab, setTab] = useState<string>(CASES_TAB);
   const [idx, setIdx] = useState(0);
   const [marks, setMarks] = useState<Record<string, StudyState>>({});
@@ -121,8 +122,18 @@ export function Shell({ lesson, panels, cases }: { lesson: string; panels: Panel
 
   return (
     <div ref={topRef} className="scroll-mt-0">
-      <nav className="sticky top-0 z-20 border-y border-black/10 bg-[#f3efe8]/95 backdrop-blur" aria-label="Ενότητες">
-        <div className="mx-auto flex w-full max-w-[1400px] gap-1 overflow-x-auto px-3 py-2 sm:px-8" role="tablist">
+      <nav
+        className={boxed ? "sticky top-2 z-20 mx-auto w-full max-w-6xl px-4 sm:px-8" : "sticky top-0 z-20 border-y border-black/10 bg-[#f3efe8]/95 backdrop-blur"}
+        aria-label="Ενότητες"
+      >
+        <div
+          className={
+            boxed
+              ? "flex gap-1 overflow-x-auto rounded-2xl border border-black/10 bg-white/90 p-2 shadow-sm backdrop-blur"
+              : "mx-auto flex w-full max-w-[1400px] gap-1 overflow-x-auto px-3 py-2 sm:px-8"
+          }
+          role="tablist"
+        >
           {tabs.map((t) => (
             <button
               key={t.id}
@@ -140,14 +151,23 @@ export function Shell({ lesson, panels, cases }: { lesson: string; panels: Panel
         </div>
       </nav>
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8">
+      <div className={boxed ? "mx-auto w-full max-w-6xl px-4 pb-6 sm:px-8" : "mx-auto w-full max-w-[1400px] px-4 sm:px-8"}>
         {panels.map((p) => (
-          <div key={p.id} data-panel={p.id} hidden={tab !== p.id}>
+          <div
+            key={p.id}
+            data-panel={p.id}
+            hidden={tab !== p.id}
+            className={boxed ? "mt-6 rounded-3xl border border-black/10 bg-white px-5 shadow-sm sm:px-8" : undefined}
+          >
             {p.node}
           </div>
         ))}
 
-        <div data-panel={CASES_TAB} hidden={tab !== CASES_TAB} className="pb-16 pt-8">
+        <div
+          data-panel={CASES_TAB}
+          hidden={tab !== CASES_TAB}
+          className={boxed ? "mt-6 rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8" : "pb-16 pt-8"}
+        >
           {/* Κουμπάκια Α1…Γ8, ανά ομάδα */}
           <div className="space-y-3">
             {groups.map((g) => (

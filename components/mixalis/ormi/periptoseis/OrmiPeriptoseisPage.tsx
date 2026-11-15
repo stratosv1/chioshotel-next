@@ -3,18 +3,20 @@ import type { ReactNode } from "react";
 import { StudyBar } from "@/components/mixalis/study/StudyBar";
 import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { Reveal } from "@/components/mixalis/esoteriko/Reveal";
+import { Hint } from "@/components/mixalis/esoteriko/Hint";
 import { Shell, type CaseSlide } from "@/components/mixalis/esoteriko/Shell";
 import { rich } from "@/components/mixalis/esoteriko/rich";
 import { BANK_MAP, FIRST_MOVES, FORMULAS, GROUPS, type Case } from "./cases";
+import { CASE_FIGURES } from "./figures";
 
 /** Τα σημάδια μελέτης μπαίνουν στο μάθημα «Ορμή και κρούσεις», με id p… για να μη μπερδεύονται με τα κουτάκια του poster. */
 const LESSON = "ormi";
 const PATH = "/mixalis/ormi/periptoseis";
 
-/** Ανοιχτή ενότητα: αριθμός, τίτλος και μια λεπτή γραμμή από πάνω, χωρίς κουτί. */
+/** Ενότητα μέσα σε λευκή κάρτα (η κάρτα έρχεται από το Shell): αριθμός, τίτλος, εισαγωγή. */
 function Section({ id, n, kicker, title, intro, children }: { id: string; n: string; kicker: string; title: string; intro?: ReactNode; children: ReactNode }) {
   return (
-    <section id={id} className="scroll-mt-16 border-t border-black/10 py-12 sm:py-16">
+    <section id={id} className="scroll-mt-16 py-8 sm:py-10">
       <div className="flex items-start gap-4 sm:gap-6">
         <span aria-hidden="true" className="text-5xl font-bold leading-none text-transparent sm:text-7xl" style={{ WebkitTextStroke: "1.5px #c9822f" }}>
           {n}
@@ -31,6 +33,7 @@ function Section({ id, n, kicker, title, intro, children }: { id: string; n: str
 }
 
 function CaseBlock({ c }: { c: Case }) {
+  const Figure = CASE_FIGURES[c.id];
   return (
     <article id={c.id} data-study-lesson={LESSON} data-study-id={c.id} className="scroll-mt-20">
       <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
@@ -44,30 +47,44 @@ function CaseBlock({ c }: { c: Case }) {
             <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#857261]">Μιχάλη, θα σου ζητήσουν</p>
             <p className="mt-1 text-[#2c2825]">{rich(c.ask)}</p>
           </div>
-          <div className="border-l-4 border-[#c9822f] pl-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#a8651f]">Τότε σκέψου</p>
-            <p className="mt-1 text-[19px] font-medium leading-8 text-[#2c2825]">{rich(c.think)}</p>
-          </div>
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#857261]">Και κάνε αυτά</p>
-            <ol className="mt-2 list-decimal space-y-1.5 pl-6 text-[#2c2825] marker:font-bold marker:text-[#c9822f]">
-              {c.todo.map((t, i) => (
-                <li key={i}>{rich(t)}</li>
-              ))}
-            </ol>
-          </div>
-          {c.watch ? (
-            <p className="text-[#5c534c]">
-              <b className="text-[#8a2f22]">Πρόσεξε: </b>
-              {rich(c.watch)}
-            </p>
-          ) : null}
+          <p className="text-[15px] leading-7 text-[#857261]">
+            Ξεκίνα πρώτα τη λυμένη άσκηση μόνος σου. Αν κολλήσεις, άνοιξε την ιδέα και μετά τη μέθοδο.
+          </p>
+          <Hint label="Κόλλησες; Δείξε την ιδέα (Τότε σκέψου)" hideLabel="Κρύψε την ιδέα" accent="#a8651f">
+            <div className="border-l-4 border-[#c9822f] pl-4">
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#a8651f]">Τότε σκέψου</p>
+              <p className="mt-1 text-[19px] font-medium leading-8 text-[#2c2825]">{rich(c.think)}</p>
+            </div>
+          </Hint>
+          <Hint label="Δείξε τη μέθοδο (Και κάνε αυτά)" hideLabel="Κρύψε τη μέθοδο" accent="#857261">
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#857261]">Και κάνε αυτά</p>
+                <ol className="mt-2 list-decimal space-y-1.5 pl-6 text-[#2c2825] marker:font-bold marker:text-[#c9822f]">
+                  {c.todo.map((t, i) => (
+                    <li key={i}>{rich(t)}</li>
+                  ))}
+                </ol>
+              </div>
+              {c.watch ? (
+                <p className="text-[#5c534c]">
+                  <b className="text-[#8a2f22]">Πρόσεξε: </b>
+                  {rich(c.watch)}
+                </p>
+              ) : null}
+            </div>
+          </Hint>
           <p className="text-sm text-[#857261]">Από: {c.sources}</p>
         </div>
 
         <div className="lg:border-l lg:border-black/10 lg:pl-14">
           <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#0e6e66]">Λυμένο παράδειγμα</p>
           <p className="mt-1 text-[18px] leading-8 text-[#2c2825]">{rich(c.example.q)}</p>
+          {Figure ? (
+            <div className="mt-4 rounded-2xl border border-black/10 bg-[#fbfaf7] p-3">
+              <Figure />
+            </div>
+          ) : null}
           <Reveal steps={c.example.steps.map((s) => rich(s))} answer={rich(c.example.answer)} />
         </div>
       </div>
@@ -93,7 +110,8 @@ export function OrmiPeriptoseisPage() {
 
   return (
     <main className="min-h-screen bg-[#f3efe8] text-[#2c2825]">
-      <header className="mx-auto w-full max-w-[1400px] px-4 pb-6 pt-6 sm:px-8 sm:pt-8">
+      <div className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-8 sm:pt-8">
+      <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-[#857261]">
           <Link href="/mixalis" prefetch={false} className="hover:underline">
             ← Τα μαθήματά μου
@@ -114,11 +132,13 @@ export function OrmiPeriptoseisPage() {
         </p>
       </header>
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 pb-4 sm:px-8">
+      <div className="py-6">
         <StudyBar lesson={LESSON} />
+      </div>
       </div>
 
       <Shell
+        boxed
         lesson={LESSON}
         cases={slides}
         panels={[
@@ -272,8 +292,8 @@ export function OrmiPeriptoseisPage() {
         ]}
       />
 
-      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-8">
-        <p className="border-t border-black/10 py-8 text-center text-sm text-[#857261]">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-8">
+        <p className="py-8 text-center text-sm text-[#857261]">
           Πηγές: Τράπεζα Θεμάτων Διαβαθμισμένης Δυσκολίας (ΙΕΠ), Φυσική Προσανατολισμού Β΄ Λυκείου, §2.3–2.7. g = 10 m/s² σε όλα τα παραδείγματα.
         </p>
       </div>

@@ -49,7 +49,7 @@ export function PedioIntroEmbed() {
           pending.current = null;
         }
       }}
-      className="block w-full bg-[#f4f1ea]"
+      className="block w-full rounded-2xl bg-[#f3efe8]"
       style={{ height }}
     />
   );
