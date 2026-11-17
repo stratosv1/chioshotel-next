@@ -756,6 +756,9 @@ function testCalendarButton() {
   assert(/addDaysToIsoDate\(finder\.checkin, 1\)/.test(production), "check-out can be picked on or before check-in");
   assert(/type: "set_stay_dates", \[field\]: iso/.test(hook), "a picked date does not use the normal booking flow");
   assert(/type="date"/.test(picker) && /showPicker/.test(picker), "the calendar button does not open the native date picker");
+  // Desktop Chrome fires "input" (React onChange) when the open calendar
+  // only moves to another month; only the native "change" may send a date.
+  assert(/addEventListener\("change"/.test(picker) && !/onChange=/.test(picker), "moving the calendar to another month can send a date");
 
   // The picked dates flow through the deterministic booking flow.
   const picked = resolveAssistantTurn(createInitialBookingFlowState(), command([{ type: "set_stay_dates", checkin: "2030-06-10" }]));
