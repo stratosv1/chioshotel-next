@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 
 /**
@@ -9,6 +9,11 @@ import type { RoomFinderLanguage } from "./room-finder-copy";
  * phone's own date picker; the picked date goes through the same booking
  * flow as a typed date (past dates, long stays and the next question are
  * handled there).
+ *
+ * Only the native "change" event commits the date. Desktop Chrome fires
+ * "input" (React's onChange) every time the open calendar moves its
+ * highlight, e.g. on the next-month arrow, which used to send a date the
+ * guest never chose. "change" fires once the guest actually picks a day.
  */
 
 const LABELS: Record<RoomFinderLanguage, { checkin: string; checkout: string }> = {
@@ -58,6 +63,22 @@ export function DatePickReply({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const label = (LABELS[language] || LABELS.en)[field];
+  const onPickRef = useRef(onPick);
+  onPickRef.current = onPick;
+
+  useEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    let committed = false;
+    const handleChange = () => {
+      const value = input.value;
+      if (committed || !/^\d{4}-\d{2}-\d{2}$/.test(value) || value < min) return;
+      committed = true;
+      onPickRef.current(value);
+    };
+    input.addEventListener("change", handleChange);
+    return () => input.removeEventListener("change", handleChange);
+  }, [min]);
 
   function openPicker() {
     const input = inputRef.current;
@@ -87,10 +108,6 @@ export function DatePickReply({
           min={min}
           aria-label={label}
           onClick={openPicker}
-          onChange={event => {
-            const value = event.target.value;
-            if (/^\d{4}-\d{2}-\d{2}$/.test(value) && value >= min) onPick(value);
-          }}
           className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
         />
       </div>
