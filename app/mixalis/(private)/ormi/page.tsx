@@ -4,6 +4,7 @@ import { StudyBar } from "@/components/mixalis/study/StudyBar";
 import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { Note } from "@/components/mixalis/omali/shared";
 import { OrmiAnimationsClient } from "@/components/mixalis/ormi/OrmiAnimationsClient";
+import { OrmiMapEmbed } from "@/components/mixalis/ormi/OrmiMapEmbed";
 import { OrmiMathimaEmbed } from "@/components/mixalis/ormi/OrmiMathimaEmbed";
 import { TripolitisClient } from "@/components/mixalis/tripolitis/TripolitisClient";
 import { TrapezaOrmi } from "@/components/mixalis/ormi/trapeza/TrapezaOrmi";
@@ -101,6 +102,8 @@ export default function OrmiPage() {
         </header>
 
         <StudyBar lesson="ormi" />
+
+        <OrmiMapEmbed />
 
         <section id="mathima" data-study-lesson="ormi" data-study-id="mathima" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="flex flex-wrap items-end justify-between gap-3 px-2 pb-3 pt-1 sm:px-1">
