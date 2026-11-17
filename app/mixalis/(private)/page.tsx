@@ -183,6 +183,21 @@ const SUBJECTS: Subject[] = [
           { label: "Λεξικό", href: "/mixalis/organiki1#lexiko" },
         ],
       },
+      {
+        title: "Αιθέρες & Εστέρες",
+        subtitle: "Αιθέρες, εστέρες, εστεροποίηση, λίπη και σαπούνι, με κινούμενα μόρια, λυμένα ισομερή και κουίζ επανάληψης με «Ταξινόμησε» και «Φτιάξε εστέρα».",
+        href: "/mixalis/organiki2",
+        study: "organiki2",
+        plain: true,
+        links: [
+          { label: "Αιθέρες", href: "/mixalis/organiki2#aitheres" },
+          { label: "Εστέρες", href: "/mixalis/organiki2#esteres" },
+          { label: "Εστεροποίηση", href: "/mixalis/organiki2#esteropoiisi" },
+          { label: "Λίπη & σαπούνι", href: "/mixalis/organiki2#lipi" },
+          { label: "Παγίδες", href: "/mixalis/organiki2#pagides" },
+          { label: "Κουίζ & παιχνίδια", href: "/mixalis/organiki2#kouiz" },
+        ],
+      },
     ],
   },
   {

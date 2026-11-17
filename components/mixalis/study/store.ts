@@ -15,6 +15,7 @@ export const STUDY_LESSONS: Record<string, string> = {
   pedio: "Ηλεκτρικό πεδίο",
   ergo: "Έργο, ενέργεια, ισχύς",
   organiki1: "Οργανική χημεία",
+  organiki2: "Αιθέρες & Εστέρες",
   esoteriko: "Εσωτερικό γινόμενο",
 };
 
