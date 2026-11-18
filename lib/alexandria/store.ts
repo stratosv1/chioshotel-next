@@ -13,6 +13,7 @@ export type AlexandriaBooking = {
   phone: string;
   notes: string;
   updatedAt: string;
+  beds24Id: string;
 };
 
 type Row = {
@@ -26,6 +27,7 @@ type Row = {
   phone: string;
   notes: string | null;
   updated_at: string;
+  beds24_id: string | null;
 };
 
 function getSql() {
@@ -53,11 +55,18 @@ async function ensureTable() {
         country TEXT NOT NULL DEFAULT '',
         phone TEXT NOT NULL DEFAULT '',
         notes TEXT,
+        beds24_id TEXT,
         created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
         deleted_at TIMESTAMPTZ
       )`;
     await sql`CREATE INDEX IF NOT EXISTS alexandria_bookings_room_dates ON alexandria_bookings (room, checkin, checkout) WHERE deleted_at IS NULL`;
+  } else {
+    // Column added 2026-11-18 for the Beds24 mirror; read-only check first so no write happens normally.
+    const cols = (await sql`
+      SELECT 1 FROM information_schema.columns
+       WHERE table_schema = 'public' AND table_name = 'alexandria_bookings' AND column_name = 'beds24_id'`) as unknown[];
+    if (cols.length === 0) await sql`ALTER TABLE alexandria_bookings ADD COLUMN IF NOT EXISTS beds24_id TEXT`;
   }
   tableReady = true;
 }
@@ -74,11 +83,12 @@ function mapRow(row: Row): AlexandriaBooking {
     phone: row.phone,
     notes: row.notes ?? "",
     updatedAt: row.updated_at,
+    beds24Id: row.beds24_id ?? "",
   };
 }
 
 const columns = `id, room, to_char(checkin, 'YYYY-MM-DD') AS checkin, to_char(checkout, 'YYYY-MM-DD') AS checkout,
-  first_name, last_name, country, phone, notes, updated_at`;
+  first_name, last_name, country, phone, notes, updated_at, beds24_id`;
 
 export async function listBookings() {
   await ensureTable();
@@ -110,7 +120,11 @@ export async function findOverlap(room: string, checkin: string, checkout: strin
   return rows[0] ? mapRow(rows[0]) : null;
 }
 
-export type BookingInput = Omit<AlexandriaBooking, "id" | "updatedAt">;
+export type BookingInput = Omit<AlexandriaBooking, "id" | "updatedAt" | "beds24Id">;
+
+export async function setBeds24Id(id: string, beds24Id: string) {
+  await getSql().query(`UPDATE alexandria_bookings SET beds24_id = $2 WHERE id = $1`, [Number(id), beds24Id]);
+}
 
 export async function createBooking(input: BookingInput) {
   await ensureTable();
@@ -168,7 +182,24 @@ function describe(b: AlexandriaBooking) {
 
 export type ChangeKind = "created" | "updated" | "deleted";
 
-export async function notifyChange(kind: ChangeKind, booking: AlexandriaBooking, before?: AlexandriaBooking | null) {
+export type Beds24Status = { ok: true; bookingId: string } | { ok: false; error: string } | null;
+
+function beds24Line(kind: ChangeKind, status: Beds24Status) {
+  if (!status) return "";
+  if (status.ok) {
+    const verb = { created: "Περάστηκε", updated: "Ενημερώθηκε", deleted: "Ακυρώθηκε" }[kind];
+    return `✅ ${verb} αυτόματα στο Beds24 (κράτηση #${status.bookingId}).`;
+  }
+  const error = (status as { error: string }).error;
+  return `⚠️ ΔΕΝ ${kind === "deleted" ? "ακυρώθηκε" : "περάστηκε"} στο Beds24 (${error}) — κάν' το χειροκίνητα.`;
+}
+
+export async function notifyChange(
+  kind: ChangeKind,
+  booking: AlexandriaBooking,
+  before?: AlexandriaBooking | null,
+  beds24?: Beds24Status,
+) {
   const smtpUser = process.env.SMTP_USER;
   const smtpPass = process.env.SMTP_PASS;
   const smtpFrom = process.env.SMTP_FROM || smtpUser;
@@ -188,7 +219,8 @@ export async function notifyChange(kind: ChangeKind, booking: AlexandriaBooking,
 
   const title = { created: "Νέα κράτηση", updated: "Αλλαγή κράτησης", deleted: "Ακύρωση κράτησης" }[kind];
   const guest = `${booking.firstName} ${booking.lastName}`.trim();
-  const subject = `Alexandria Institute — ${title}: ${guest}, ${roomLabel(booking.room)} (${formatGreekDate(booking.checkin)}–${formatGreekDate(booking.checkout)})`;
+  const b24 = beds24Line(kind, beds24 ?? null);
+  const subject = `${beds24 && !beds24.ok ? "⚠️ " : ""}Alexandria Institute — ${title}: ${guest}, ${roomLabel(booking.room)} (${formatGreekDate(booking.checkin)}–${formatGreekDate(booking.checkout)})`;
 
   const after = describe(booking);
   const prev = before ? describe(before) : null;
@@ -211,6 +243,7 @@ export async function notifyChange(kind: ChangeKind, booking: AlexandriaBooking,
       return kind === "updated" && old !== undefined && old !== value ? `${label}: ${old} → ${value}` : `${label}: ${value}`;
     }),
     "",
+    b24,
     "Ημερολόγιο: https://chioshotel.gr/andreas",
   ].join("\n");
 
@@ -224,6 +257,7 @@ export async function notifyChange(kind: ChangeKind, booking: AlexandriaBooking,
         <h2 style="margin:0 0 4px">${title}</h2>
         <p style="margin:0 0 12px;color:#6b5a48">Από τον Ανδρέα — Alexandria Institute</p>
         <table style="border-collapse:collapse;background:#faf6ef;border-radius:8px">${rowsHtml}</table>
+        ${b24 ? `<p style="margin-top:12px;font-weight:600;color:${beds24?.ok ? "#166534" : "#9a3412"}">${escapeHtml(b24)}</p>` : ""}
         <p style="margin-top:14px"><a href="https://chioshotel.gr/andreas" style="color:#9a5b1e">Άνοιγμα ημερολογίου</a></p>
       </div>`,
     });

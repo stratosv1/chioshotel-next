@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { waitUntil } from "@vercel/functions";
 import { isAlexandriaRoom, periodForStay } from "@/lib/alexandria/config";
+import { cancelInBeds24, createInBeds24, updateInBeds24 } from "@/lib/alexandria/beds24";
 import {
   createBooking,
   deleteBooking,
@@ -8,6 +9,7 @@ import {
   getBooking,
   listBookings,
   notifyChange,
+  setBeds24Id,
   updateBooking,
   type BookingInput,
 } from "@/lib/alexandria/store";
@@ -75,7 +77,13 @@ export async function POST(request: NextRequest) {
     const clash = await checkOverlap(input);
     if (clash) return json({ ok: false, error: clash }, 409);
     const booking = await createBooking(input);
-    waitUntil(notifyChange("created", booking));
+    waitUntil(
+      (async () => {
+        const beds24 = await createInBeds24(booking);
+        if (beds24.ok) await setBeds24Id(booking.id, beds24.bookingId).catch((e) => console.error("[andreas] save beds24 id", e));
+        await notifyChange("created", booking, null, beds24);
+      })(),
+    );
     return json({ ok: true, booking });
   } catch (error) {
     console.error("[andreas] create failed", error);
@@ -95,7 +103,14 @@ export async function PATCH(request: NextRequest) {
     if (clash) return json({ ok: false, error: clash }, 409);
     const booking = await updateBooking(id, input);
     if (!booking) return json({ ok: false, error: "Η κράτηση δεν βρέθηκε." }, 404);
-    waitUntil(notifyChange("updated", booking, before));
+    waitUntil(
+      (async () => {
+        const beds24 = before.beds24Id ? await updateInBeds24(before.beds24Id, booking) : await createInBeds24(booking);
+        if (beds24.ok && !before.beds24Id)
+          await setBeds24Id(booking.id, beds24.bookingId).catch((e) => console.error("[andreas] save beds24 id", e));
+        await notifyChange("updated", booking, before, beds24);
+      })(),
+    );
     return json({ ok: true, booking });
   } catch (error) {
     console.error("[andreas] update failed", error);
@@ -108,7 +123,12 @@ export async function DELETE(request: NextRequest) {
     const id = clean(request.nextUrl.searchParams.get("id"), 12);
     const booking = id ? await deleteBooking(id) : null;
     if (!booking) return json({ ok: false, error: "Η κράτηση δεν βρέθηκε." }, 404);
-    waitUntil(notifyChange("deleted", booking));
+    waitUntil(
+      (async () => {
+        const beds24 = booking.beds24Id ? await cancelInBeds24(booking.beds24Id) : null;
+        await notifyChange("deleted", booking, null, beds24);
+      })(),
+    );
     return json({ ok: true });
   } catch (error) {
     console.error("[andreas] delete failed", error);
