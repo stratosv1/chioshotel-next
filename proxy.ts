@@ -604,6 +604,55 @@ function isStaffPath(pathname: string) {
   );
 }
 
+// Partner calendar for Andreas (Alexandria Institute). Own login (ANDREAS_USERNAME /
+// ANDREAS_PASSWORD env vars); the staff login also works so Stratos can open it.
+function isAndreasPath(pathname: string) {
+  return (
+    pathname === "/andreas" ||
+    pathname.startsWith("/andreas/") ||
+    pathname === "/api/andreas" ||
+    pathname.startsWith("/api/andreas/")
+  );
+}
+
+function readBasicCredentials(request: NextRequest) {
+  const authorization = request.headers.get("authorization");
+  if (!authorization || !authorization.startsWith("Basic ")) return null;
+  try {
+    const decoded = atob(authorization.slice("Basic ".length));
+    const separatorIndex = decoded.indexOf(":");
+    if (separatorIndex === -1) return null;
+    return { username: decoded.slice(0, separatorIndex), password: decoded.slice(separatorIndex + 1) };
+  } catch {
+    return null;
+  }
+}
+
+function isAuthorizedAndreasRequest(request: NextRequest) {
+  if (isAuthorizedStaffRequest(request)) return true;
+  const username = process.env.ANDREAS_USERNAME;
+  const password = process.env.ANDREAS_PASSWORD;
+  if (!username || !password) return false;
+  const provided = readBasicCredentials(request);
+  return Boolean(
+    provided &&
+      provided.username.toLowerCase() === username.toLowerCase() &&
+      provided.password === password,
+  );
+}
+
+function unauthorizedAndreasResponse() {
+  return new NextResponse("Authentication required", {
+    status: 401,
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "www-authenticate": 'Basic realm="Alexandria Institute", charset="UTF-8"',
+      "x-robots-tag": "noindex, nofollow",
+      "cache-control": "no-store",
+    },
+  });
+}
+
 function unauthorizedStaffResponse() {
   return new NextResponse("Authentication required", {
     status: 401,
@@ -654,6 +703,7 @@ const seoRuntimeExemptPrefixes = [
   "/trip-planner",
   "/ai-assistant",
   "/ai-room-finder",
+  "/andreas",
 ];
 
 function isGoogleCrawler(request: NextRequest) {
@@ -803,6 +853,16 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     return unauthorizedStaffResponse();
   }
 
+  if (pathname === "/Andreas" || pathname === "/Andreas/" || pathname === "/ANDREAS") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/andreas";
+    return NextResponse.redirect(url, 307);
+  }
+
+  if (isAndreasPath(pathname) && !isAuthorizedAndreasRequest(request)) {
+    return unauthorizedAndreasResponse();
+  }
+
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-current-pathname", pathname);
 
@@ -812,7 +872,7 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     },
   });
 
-  if (isStaffPath(pathname)) {
+  if (isStaffPath(pathname) || isAndreasPath(pathname)) {
     response.headers.set("x-robots-tag", "noindex, nofollow");
     response.headers.set("cache-control", "no-store");
   }
@@ -836,6 +896,12 @@ export const config = {
     "/web-stories/:path*",
     "/staff/:path*",
     "/api/staff/:path*",
+    "/andreas",
+    "/andreas/:path*",
+    "/Andreas",
+    "/ANDREAS",
+    "/Andreas/:path*",
+    "/api/andreas/:path*",
     // Static images in /public/images are served straight from the CDN; the
     // proxy only needs them for the www -> apex redirect and the one legacy
     // .png -> .webp alias in legacyRedirects.

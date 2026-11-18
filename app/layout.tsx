@@ -97,7 +97,8 @@ function isGuidePath(pathname: string): boolean {
 }
 
 function isStaffPath(pathname: string): boolean {
-  return pathname === "/staff" || pathname.startsWith("/staff/");
+  // /andreas = private partner calendar (Alexandria Institute): no site chrome, no analytics.
+  return pathname === "/staff" || pathname.startsWith("/staff/") || pathname === "/andreas" || pathname.startsWith("/andreas/");
 }
 
 // Private study workspaces (/mixalis, /sideris): Greek, no site header/footer.
