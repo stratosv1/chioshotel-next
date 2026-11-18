@@ -149,15 +149,6 @@ export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: 
         <span className="absolute left-3 top-3 inline-flex min-h-7 items-center rounded-full bg-white px-3 text-xs font-semibold text-[#2f261f] shadow-sm">
           {card.badge}
         </span>
-        {bed ? (
-          <span
-            className="absolute bottom-3 left-3 inline-flex min-h-8 max-w-[calc(100%-1.5rem)] items-center gap-1.5 rounded-2xl bg-[#2f261f]/90 px-3 py-1 text-[13px] font-semibold leading-tight text-white"
-            aria-label={`${ui.bedAria}: ${bed}`}
-          >
-            <span className="shrink-0"><BedIcon /></span>
-            {bed}
-          </span>
-        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col px-2 pb-1.5 pt-3.5">
@@ -168,8 +159,17 @@ export function RoomCard({ card, locale, price, priority, ctaLabel, categoryId: 
           {card.description}
         </p>
 
-        {card.meta.length ? (
-          <ul className="mt-3 flex flex-wrap gap-x-3.5 gap-y-1.5 text-[13px] font-medium text-[#4a3b30]">
+        {bed || card.meta.length ? (
+          <ul className="mt-3 flex flex-wrap items-center gap-x-3.5 gap-y-1.5 text-[13px] font-medium text-[#4a3b30]">
+            {bed ? (
+              <li
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#fbeee0] px-2 py-1 font-semibold leading-tight text-[#7c2d12]"
+              >
+                <span className="shrink-0 text-[#9a3412]"><BedIcon /></span>
+                <span className="sr-only">{ui.bedAria}: </span>
+                {bed}
+              </li>
+            ) : null}
             {card.meta.map((item, i) => (
               <li key={item} className="inline-flex items-center gap-1.5">
                 <span className="text-[#9a3412]">{i === 0 ? <GuestsIcon /> : <CheckIcon />}</span>
