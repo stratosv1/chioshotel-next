@@ -12,6 +12,13 @@ export const metadata: Metadata = {
 
 const staffLinks = [
   {
+    href: "/staff/pyrgos",
+    icon: "🗼",
+    label: "Πύργος ελέγχου · Σήμερα",
+    subText: "Αφίξεις · αναχωρήσεις · καθαριότητα · κρεβάτια · τι λείπει · τι έγινε",
+    className: styles.performance,
+  },
+  {
     href: "/staff/room-agreements",
     icon: "📲",
     label: "Αναζήτηση & Συμφωνία",
