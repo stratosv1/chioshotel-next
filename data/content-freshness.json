@@ -3,8 +3,8 @@
   "site": "https://chioshotel.gr",
   "pages": {
     "/": {
-      "hash": "d9c3e9051493623a6e49",
-      "modified": "2026-11-08"
+      "hash": "ce389d1d20e6a8075d2e",
+      "modified": "2026-11-18"
     },
     "/agents/rooms/": {
       "hash": "6e543b5b0ccb734ed62c",
@@ -251,8 +251,8 @@
       "modified": "2026-11-08"
     },
     "/de/": {
-      "hash": "c9d19d565d38f1c371b1",
-      "modified": "2026-11-08"
+      "hash": "57451fbe62eea8d7be69",
+      "modified": "2026-11-18"
     },
     "/de/agents/rooms/": {
       "hash": "1441a94e7fe9f229f23c",
@@ -527,8 +527,8 @@
       "modified": "2026-11-08"
     },
     "/el/": {
-      "hash": "3c5ae6a2f7dfb7b23e5a",
-      "modified": "2026-11-08"
+      "hash": "e6ae1d13ced5e26f67f8",
+      "modified": "2026-11-18"
     },
     "/el/agents/rooms/": {
       "hash": "de510f3bce58293b0f07",
@@ -803,8 +803,8 @@
       "modified": "2026-11-08"
     },
     "/es/": {
-      "hash": "b63b5a5111dcf93e7ea2",
-      "modified": "2026-11-08"
+      "hash": "ea502037e8205b0df824",
+      "modified": "2026-11-18"
     },
     "/es/actividades-en-quios/": {
       "hash": "38f54c2e21cef30839fd",
@@ -1083,8 +1083,8 @@
       "modified": "2026-11-08"
     },
     "/fr/": {
-      "hash": "aac2ed20756f07b56df7",
-      "modified": "2026-11-08"
+      "hash": "2be56fe267b67108f073",
+      "modified": "2026-11-18"
     },
     "/fr/activites-a-chios/": {
       "hash": "6de67f2f3fee500dc5fc",
@@ -1367,8 +1367,8 @@
       "modified": "2026-11-08"
     },
     "/it/": {
-      "hash": "300c3887aaba1eaa40eb",
-      "modified": "2026-11-08"
+      "hash": "32699dd2b1c28d8c2b7d",
+      "modified": "2026-11-18"
     },
     "/it/agents/rooms/": {
       "hash": "a1239702ebb6eb12b29b",
@@ -1691,8 +1691,8 @@
       "modified": "2026-11-08"
     },
     "/tr/": {
-      "hash": "bc5d54354a223f572b1e",
-      "modified": "2026-11-08"
+      "hash": "658c6b58d98040eb8a6b",
+      "modified": "2026-11-18"
     },
     "/tr/agents/rooms/": {
       "hash": "e1286cc132080fea3c74",
