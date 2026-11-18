@@ -145,6 +145,7 @@ export default function PlanBoard() {
   const [newBooking, setNewBooking] = useState<{ room: number; checkin: string } | null>(null);
   const [dragOver, setDragOver] = useState<number | null>(null);
   const dragged = useRef<PlanBooking | null>(null);
+  const [resize, setResize] = useState<{ b: PlanBooking; edge: "start" | "end"; x: number; delta: number } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -229,6 +230,87 @@ export default function PlanBoard() {
     });
   }
 
+  function swapWith(a: PlanBooking, b: PlanBooking) {
+    const warning = a.room && b.room ? categoryWarning(a, b.room) : undefined;
+    setConfirm({
+      title: "Αντιμετάθεση κρατήσεων",
+      lines: [
+        `${a.firstName} ${a.lastName}: ${roomLabel(a.room)} → ${roomLabel(b.room)}`,
+        `${b.firstName} ${b.lastName}: ${roomLabel(b.room)} → ${roomLabel(a.room)}`,
+        "Θα γραφτεί και στο Beds24.",
+      ],
+      warning,
+      requireCheck: warning ? "Ναι, θέλω αλλαγή κατηγορίας" : undefined,
+      confirmLabel: "Αντιμετάθεση",
+      onConfirm: async () => {
+        const json = await post({ action: "swap", idA: a.id, idB: b.id, confirmCategory: Boolean(warning) });
+        if (!json.ok) {
+          setToast({ text: json.error || "Η αντιμετάθεση απέτυχε." });
+          return;
+        }
+        await load();
+        setToast({ text: "Έγινε αντιμετάθεση · Beds24 ✓", undo: () => swapWith({ ...a, room: b.room }, { ...b, room: a.room }) });
+      },
+    });
+  }
+
+  function dropOnRoom(b: PlanBooking, room: number) {
+    if (room === b.room) return;
+    // Dropped on a room that is taken by exactly one booking those days → offer a swap.
+    const blocking = (byRoom.get(room) ?? []).filter((o) => o.id !== b.id && o.checkin < b.checkout && o.checkout > b.checkin);
+    if (blocking.length === 1 && blocking[0].status !== "black") return swapWith(b, blocking[0]);
+    if (blocking.length > 1) {
+      setToast({ text: `Το ${roomLabel(room)} έχει ${blocking.length} κρατήσεις εκείνες τις μέρες · δεν χωράει.` });
+      return;
+    }
+    moveRoom(b, room);
+  }
+
+  // Resize a booking by dragging its left/right edge (direct bookings only).
+  useEffect(() => {
+    if (!resize) return;
+    let latest = resize;
+    const onMove = (e: PointerEvent) => {
+      latest = { ...latest, delta: Math.round((e.clientX - latest.x) / W) };
+      setResize(latest);
+    };
+    const onUp = () => {
+      const r = latest;
+      setResize(null);
+      if (!r || !r.delta) return;
+      const checkin = r.edge === "start" ? addDays(r.b.checkin, r.delta) : r.b.checkin;
+      const checkout = r.edge === "end" ? addDays(r.b.checkout, r.delta) : r.b.checkout;
+      if (diffDays(checkin, checkout) < 1) {
+        setToast({ text: "Χρειάζεται τουλάχιστον 1 νύχτα." });
+        return;
+      }
+      setConfirm({
+        title: "Αλλαγή ημερομηνιών",
+        lines: [
+          `${r.b.firstName} ${r.b.lastName} · ${roomLabel(r.b.room)}`,
+          `${dm(r.b.checkin)}–${dm(r.b.checkout)} (${r.b.nights} ν.) → ${dm(checkin)}–${dm(checkout)} (${diffDays(checkin, checkout)} ν.)`,
+          "Αν η τιμή είναι ανά βραδιά, το σύνολο ξαναϋπολογίζεται· αν είναι σύνολο, μένει ίδιο.",
+        ],
+        onConfirm: async () => {
+          const json = await post({ action: "update", id: r.b.id, checkin, checkout });
+          if (!json.ok) {
+            setToast({ text: json.error || "Η αλλαγή απέτυχε." });
+            return;
+          }
+          await load();
+          setToast({ text: "Οι ημερομηνίες άλλαξαν · Beds24 ✓" });
+        },
+      });
+    };
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp, { once: true });
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resize?.b.id, resize?.edge, W]);
+
   const today = athensToday();
   const gridWidth = ROOM_COL + days.length * W;
 
@@ -282,7 +364,7 @@ export default function PlanBoard() {
             ))}
             <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-[repeating-linear-gradient(45deg,#e5e7eb,#e5e7eb_3px,#f3f4f6_3px,#f3f4f6_6px)]" />Κλειστό</span>
             <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded border-2 border-dashed border-[#f59e0b] bg-[#fffbeb]" />Κενό 1–2 νυχτών</span>
-            <span className="text-[#5b6b80]">Σύρε μια κράτηση σε άλλη γραμμή για μετακίνηση · πάτα κενό κελί για νέα κράτηση</span>
+            <span className="text-[#5b6b80]">Σύρε κράτηση σε άλλη γραμμή = μετακίνηση (πάνω σε άλλη κράτηση = αντιμετάθεση) · σύρε την άκρη = ημερομηνίες · κενό κελί = νέα κράτηση</span>
           </div>
 
           {error && <p className="rounded-xl bg-[#fff4dc] px-4 py-3 text-sm font-semibold text-[#92400e]">{error}</p>}
@@ -317,7 +399,7 @@ export default function PlanBoard() {
                       setDragOver(null);
                       const b = dragged.current;
                       dragged.current = null;
-                      if (b) moveRoom(b, room.number);
+                      if (b) dropOnRoom(b, room.number);
                     }}
                   >
                     <div style={{ width: ROOM_COL }} className={`sticky left-0 z-10 flex flex-col justify-center border-r border-[#e3e9f0] px-3 ${economy ? "bg-[#dff0fb]" : "bg-white"}`}>
@@ -345,8 +427,10 @@ export default function PlanBoard() {
                       );
                     })}
                     {(byRoom.get(room.number) ?? []).map((b) => {
-                      const startIdx = diffDays(start, b.checkin);
-                      const endIdx = diffDays(start, b.checkout);
+                      const preview = resize && resize.b.id === b.id ? resize : null;
+                      const startIdx = diffDays(start, b.checkin) + (preview?.edge === "start" ? preview.delta : 0);
+                      const endIdx = diffDays(start, b.checkout) + (preview?.edge === "end" ? preview.delta : 0);
+                      const resizable = b.status !== "black" && !OTA.has(b.channel);
                       const left = startIdx < 0 ? 0 : startIdx + 0.5;
                       const right = endIdx >= days.length ? days.length : endIdx + 0.5;
                       const width = Math.max((right - left) * W - 4, 18);
@@ -355,8 +439,12 @@ export default function PlanBoard() {
                         <button
                           key={b.id}
                           type="button"
-                          draggable={b.status !== "black"}
+                          draggable={b.status !== "black" && !resize}
                           onDragStart={(e) => {
+                            if ((e.target as HTMLElement).dataset?.handle) {
+                              e.preventDefault();
+                              return;
+                            }
                             dragged.current = b;
                             e.dataTransfer.effectAllowed = "move";
                           }}
@@ -364,7 +452,7 @@ export default function PlanBoard() {
                             dragged.current = null;
                             setDragOver(null);
                           }}
-                          onClick={() => b.status !== "black" && setOpenId(b.id)}
+                          onClick={() => !resize && b.status !== "black" && setOpenId(b.id)}
                           title={`${b.firstName} ${b.lastName} · ${dm(b.checkin)}–${dm(b.checkout)} · ${b.channel}${b.notes ? ` · 📝 ${b.notes}` : ""}`}
                           style={{ left: ROOM_COL + left * W + 2, width, top: 6, height: ROW_H - 12 }}
                           className={`absolute z-[5] flex flex-col justify-center overflow-hidden rounded-lg border px-2 text-left shadow-sm hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5443c9] ${style.bar} ${openId === b.id ? "ring-2 ring-[#1f2a3c]" : ""}`}
@@ -378,6 +466,34 @@ export default function PlanBoard() {
                             <span className="truncate text-[10px] font-semibold opacity-90">
                               {people(b)} άτ.{b.beds ? ` · ${b.beds}` : ""} · {style.label}
                             </span>
+                          )}
+                          {resizable && startIdx >= 0 && (
+                            <span
+                              data-handle="start"
+                              aria-hidden="true"
+                              title="Σύρε για αλλαγή άφιξης"
+                              onClick={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setResize({ b, edge: "start", x: e.clientX, delta: 0 });
+                              }}
+                              className="absolute inset-y-0 left-0 w-2.5 cursor-ew-resize rounded-l-lg bg-black/0 hover:bg-black/15"
+                            />
+                          )}
+                          {resizable && endIdx <= days.length && (
+                            <span
+                              data-handle="end"
+                              aria-hidden="true"
+                              title="Σύρε για αλλαγή αναχώρησης"
+                              onClick={(e) => e.stopPropagation()}
+                              onPointerDown={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setResize({ b, edge: "end", x: e.clientX, delta: 0 });
+                              }}
+                              className="absolute inset-y-0 right-0 w-2.5 cursor-ew-resize rounded-r-lg bg-black/0 hover:bg-black/15"
+                            />
                           )}
                         </button>
                       );
@@ -410,6 +526,8 @@ export default function PlanBoard() {
             load();
           }}
           onMove={(b, to) => moveRoom(b, to)}
+          onSwap={(a, b) => swapWith(a, b)}
+          planBookings={bookings}
           setConfirm={setConfirm}
         />
       )}
@@ -566,12 +684,16 @@ function BookingPanel({
   onClose,
   onChanged,
   onMove,
+  onSwap,
+  planBookings,
   setConfirm,
 }: {
   id: string;
   onClose: () => void;
   onChanged: (text: string) => void;
   onMove: (b: PlanBooking, to: number) => void;
+  onSwap: (a: PlanBooking, b: PlanBooking) => void;
+  planBookings: PlanBooking[];
   setConfirm: (c: ConfirmState) => void;
 }) {
   const [data, setData] = useState<{ booking: PlanBooking; history: any[]; group: { id: string; room: number }[] } | null>(null);
@@ -763,8 +885,31 @@ function BookingPanel({
                 <option key={r.number} value={r.number}>{r.label} — {r.categoryLabel}</option>
               ))}
             </select>
+            {(() => {
+              const others = planBookings.filter(
+                (o) => o.id !== b.id && o.room && o.room !== b.room && o.status !== "black" && o.checkin < b.checkout && o.checkout > b.checkin,
+              );
+              return others.length ? (
+                <select
+                  aria-label="Αντιμετάθεση με άλλη κράτηση"
+                  value=""
+                  onChange={(e) => {
+                    const other = others.find((o) => o.id === e.target.value);
+                    if (other) onSwap(b, other);
+                  }}
+                  className="min-h-11 rounded-full border border-[#cfd9e4] bg-white px-3 text-sm font-bold"
+                >
+                  <option value="">Αντιμετάθεση με…</option>
+                  {others.map((o) => (
+                    <option key={o.id} value={o.id}>{roomLabel(o.room)} · {o.firstName} {o.lastName} ({dm(o.checkin)}–{dm(o.checkout)})</option>
+                  ))}
+                </select>
+              ) : null;
+            })()}
           </div>
         </section>
+
+        {b.nights >= 2 && b.status !== "black" && <SplitStay booking={b} setConfirm={setConfirm} onDone={(text) => { onChanged(text); reload(); }} />}
 
         <section className="space-y-2 rounded-xl bg-[#f4f7fa] p-3">
           <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Τιμή & πληρωμή</h3>
@@ -896,6 +1041,82 @@ function BookingPanel({
   );
 }
 
+// ---------- split stay ----------
+
+function SplitStay({ booking: b, setConfirm, onDone }: { booking: PlanBooking; setConfirm: (c: ConfirmState) => void; onDone: (text: string) => void }) {
+  const [day, setDay] = useState(addDays(b.checkin, 1));
+  const [room, setRoom] = useState(0);
+  const [free, setFree] = useState<number[] | null>(null);
+  const [error, setError] = useState("");
+  const options = Array.from({ length: Math.max(b.nights - 1, 0) }, (_, i) => addDays(b.checkin, i + 1));
+
+  useEffect(() => {
+    let alive = true;
+    setFree(null);
+    api(`/api/staff/pyrgos/plan/?free&from=${day}&to=${b.checkout}`).then((json) => alive && json.ok && setFree(json.free));
+    return () => {
+      alive = false;
+    };
+  }, [day, b.checkout]);
+
+  function submit() {
+    if (!room) return setError("Διάλεξε δωμάτιο.");
+    setError("");
+    const warning = categoryWarning(b, room);
+    setConfirm({
+      title: "Split stay",
+      lines: [
+        `${b.firstName} ${b.lastName}`,
+        `${roomLabel(b.room)}: ${dm(b.checkin)} → ${dm(day)} (${diffDays(b.checkin, day)} ν.)`,
+        `${roomLabel(room)}: ${dm(day)} → ${dm(b.checkout)} (${diffDays(day, b.checkout)} ν.)`,
+        "Στο Beds24 γίνονται δύο κρατήσεις μαζί (group). Η τιμή μένει στην πρώτη.",
+        ...(OTA.has(b.channel) ? [`Στο ${b.channel} η κράτηση μένει όπως είναι.`] : []),
+      ],
+      warning,
+      requireCheck: warning ? "Ναι, θέλω αλλαγή κατηγορίας" : undefined,
+      confirmLabel: "Split stay",
+      onConfirm: async () => {
+        const json = await post({ action: "split", id: b.id, splitDate: day, room, confirmCategory: Boolean(warning) });
+        if (!json.ok) {
+          setError(json.error || "Το split stay απέτυχε.");
+          return;
+        }
+        onDone(`Split stay · ${roomLabel(b.room)} → ${roomLabel(room)} στις ${dm(day)} · Beds24 ✓`);
+      },
+    });
+  }
+
+  return (
+    <section className="space-y-2 rounded-xl border border-[#e3e9f0] p-3">
+      <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Split stay (αλλαγή δωματίου στη μέση)</h3>
+      {error && <p className="rounded-lg bg-[#fff4dc] px-3 py-2 text-xs font-semibold text-[#92400e]">{error}</p>}
+      <div className="grid grid-cols-2 gap-2">
+        <label className="text-xs font-bold">
+          Αλλάζει δωμάτιο στις
+          <select value={day} onChange={(e) => setDay(e.target.value)} className={input}>
+            {options.map((o) => (
+              <option key={o} value={o}>{wd(o)} {dm(o)}</option>
+            ))}
+          </select>
+        </label>
+        <label className="text-xs font-bold">
+          Νέο δωμάτιο
+          <select value={room} onChange={(e) => setRoom(Number(e.target.value))} className={input}>
+            <option value={0}>{free ? "Διάλεξε…" : "Φόρτωση…"}</option>
+            {PYRGOS_ROOMS.filter((r) => r.number !== b.room && (!free || free.includes(r.number))).map((r) => (
+              <option key={r.number} value={r.number}>{r.label} — {r.categoryLabel}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      {room && categoryWarning(b, room) ? (
+        <p className="rounded-lg border-2 border-[#f87171] bg-[#fef2f2] px-3 py-2 text-xs font-bold text-[#991b1b]">⚠️ {categoryWarning(b, room)}</p>
+      ) : null}
+      <button type="button" onClick={submit} className="min-h-11 rounded-full border border-[#cfd9e4] px-4 text-sm font-bold">Split stay</button>
+    </section>
+  );
+}
+
 // ---------- new booking ----------
 
 function NewBookingDialog({
@@ -911,6 +1132,8 @@ function NewBookingDialog({
 }) {
   const [f, setF] = useState<any>({
     room: initial.room,
+    group: false,
+    rooms: initial.room ? [initial.room] : [],
     checkin: initial.checkin,
     checkout: addDays(initial.checkin, 1),
     adults: 2,
@@ -965,17 +1188,19 @@ function NewBookingDialog({
   }, [nights]);
 
   function submit() {
-    if (!f.room) return setError("Διάλεξε δωμάτιο.");
+    const rooms: number[] = f.group ? f.rooms : f.room ? [Number(f.room)] : [];
+    if (!rooms.length) return setError("Διάλεξε δωμάτιο.");
+    if (free && rooms.some((r) => !free.includes(r))) return setError("Κάποιο δωμάτιο δεν είναι ελεύθερο αυτές τις μέρες.");
     if (nights <= 0) return setError("Έλεγξε τις ημερομηνίες.");
     if (!f.firstName.trim() || !f.lastName.trim()) return setError("Συμπλήρωσε όνομα και επώνυμο.");
-    if (free && !free.includes(Number(f.room))) return setError("Το δωμάτιο δεν είναι ελεύθερο αυτές τις μέρες.");
     setError("");
     setConfirm({
       title: "Νέα κράτηση",
       lines: [
         `${f.firstName} ${f.lastName} · ${f.children ? `${f.adults}+${f.children}` : f.adults} άτομα`,
-        `${roomLabel(Number(f.room))} · ${dm(f.checkin)} → ${dm(f.checkout)} · ${nights} νύχτες`,
-        `Σύνολο ${f.total ? euro(Number(f.total)) : "χωρίς τιμή"}${f.deposit ? ` · προκαταβολή ${euro(Number(f.deposit))}` : ""}`,
+        `${rooms.map((r) => roomLabel(r)).join(", ")} · ${dm(f.checkin)} → ${dm(f.checkout)} · ${nights} νύχτες`,
+        `Σύνολο ${f.total ? euro(Number(f.total)) : "χωρίς τιμή"}${rooms.length > 1 ? " για όλο το group" : ""}${f.deposit ? ` · προκαταβολή ${euro(Number(f.deposit))}` : ""}`,
+        ...(rooms.length > 1 ? [`Group: ${rooms.length} κρατήσεις στο Beds24, η τιμή στην πρώτη (${roomLabel(rooms[0])}).`, "Τα άτομα ισχύουν για κάθε δωμάτιο."] : []),
         f.sendConfirmation && f.email ? `Email επιβεβαίωσης στο ${f.email}` : "Χωρίς email επιβεβαίωσης",
         "Θα καταχωρηθεί στο Beds24.",
       ],
@@ -983,7 +1208,8 @@ function NewBookingDialog({
       onConfirm: async () => {
         const json = await post({
           action: "create",
-          room: Number(f.room),
+          room: rooms[0],
+          rooms,
           checkin: f.checkin,
           checkout: f.checkout,
           adults: Number(f.adults),
@@ -1010,7 +1236,7 @@ function NewBookingDialog({
           return;
         }
         const email = json.result?.email;
-        onCreated(`Νέα κράτηση #${json.result.id} · Beds24 ✓${email === "sent" ? " · email ✓" : email === "failed" ? " · ⚠️ email δεν στάλθηκε" : ""}`);
+        onCreated(`${rooms.length > 1 ? `Group ${rooms.length} δωματίων` : "Νέα κράτηση"} #${json.result.id} · Beds24 ✓${email === "sent" ? " · email ✓" : email === "failed" ? " · ⚠️ email δεν στάλθηκε" : ""}`);
       },
     });
   }
@@ -1032,7 +1258,13 @@ function NewBookingDialog({
               <label className="text-xs font-bold">Παιδιά<input type="number" min={0} max={6} value={f.children} onChange={(e) => set({ children: e.target.value })} className={input} /></label>
             </div>
             <div>
-              <div className="text-xs font-bold">Δωμάτιο {free ? <span className="font-normal text-[#5b6b80]">· ελεύθερα: {free.length}</span> : null}</div>
+              <div className="flex items-center justify-between">
+                <div className="text-xs font-bold">{f.group ? `Δωμάτια (${f.rooms.length})` : "Δωμάτιο"} {free ? <span className="font-normal text-[#5b6b80]">· ελεύθερα: {free.length}</span> : null}</div>
+                <label className="flex items-center gap-1.5 text-xs font-bold text-[#3b2f8a]">
+                  <input type="checkbox" className="h-4 w-4" checked={f.group} onChange={(e) => set({ group: e.target.checked, rooms: f.room ? [Number(f.room)] : [] })} />
+                  Group (πολλά δωμάτια)
+                </label>
+              </div>
               <div className="mt-1 grid grid-cols-3 gap-1.5">
                 {PYRGOS_ROOMS.map((r) => {
                   const isFree = !free || free.includes(r.number);
@@ -1041,9 +1273,16 @@ function NewBookingDialog({
                       key={r.number}
                       type="button"
                       disabled={!isFree}
-                      aria-pressed={Number(f.room) === r.number}
-                      onClick={() => set({ room: r.number, night: "", total: "", priceMode: null })}
-                      className={`rounded-lg border px-2 py-2 text-left text-xs ${Number(f.room) === r.number ? "border-[#5443c9] bg-[#e9e4fe] font-black text-[#3b2f8a]" : isFree ? "border-[#cfd9e4] bg-white" : "border-[#eef2f6] bg-[#f4f7fa] text-[#a3aebd] line-through"}`}
+                      aria-pressed={f.group ? f.rooms.includes(r.number) : Number(f.room) === r.number}
+                      onClick={() =>
+                        f.group
+                          ? set({
+                              rooms: f.rooms.includes(r.number) ? f.rooms.filter((x: number) => x !== r.number) : [...f.rooms, r.number],
+                              room: f.rooms.includes(r.number) ? f.rooms.filter((x: number) => x !== r.number)[0] ?? 0 : f.room || r.number,
+                            })
+                          : set({ room: r.number, rooms: [r.number], night: "", total: "", priceMode: null })
+                      }
+                      className={`rounded-lg border px-2 py-2 text-left text-xs ${(f.group ? f.rooms.includes(r.number) : Number(f.room) === r.number) ? "border-[#5443c9] bg-[#e9e4fe] font-black text-[#3b2f8a]" : isFree ? "border-[#cfd9e4] bg-white" : "border-[#eef2f6] bg-[#f4f7fa] text-[#a3aebd] line-through"}`}
                     >
                       <span className="block font-bold">{r.label}</span>
                       <span className="block text-[10px]">{r.categoryLabel}</span>

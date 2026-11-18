@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ActionError, addNote, cancelBooking, createBooking, updateBeds, updateBooking, updateMoney } from "@/lib/pyrgos/actions";
+import { ActionError, addNote, cancelBooking, createBooking, splitBooking, swapBookings, updateBeds, updateBooking, updateMoney } from "@/lib/pyrgos/actions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +16,8 @@ const ACTIONS: Record<string, (body: any) => Promise<unknown>> = {
   money: updateMoney,
   beds: updateBeds,
   note: addNote,
+  swap: swapBookings,
+  split: splitBooking,
 };
 
 export async function POST(request: NextRequest) {

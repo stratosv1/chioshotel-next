@@ -54,10 +54,13 @@ async function noteToBeds24(id: string, line: string) {
 
 export async function createBooking(body: any) {
   await ensureBookingsTable();
-  const room = Number(body.room);
+  // One room, or a group: several rooms for the same guest with one price on the first (master).
+  const rooms: number[] = Array.isArray(body.rooms) && body.rooms.length ? body.rooms.map(Number) : [Number(body.room)];
   const arrival = body.checkin;
   const departure = body.checkout;
-  if (!roomByNumber(room)) throw new ActionError("Διάλεξε δωμάτιο.");
+  if (!rooms.length || rooms.some((room) => !roomByNumber(room)) || new Set(rooms).size !== rooms.length) {
+    throw new ActionError("Διάλεξε δωμάτιο.");
+  }
   if (!isDay(arrival) || !isDay(departure) || departure <= arrival) throw new ActionError("Έλεγξε τις ημερομηνίες.");
   const firstName = clean(body.firstName, 60);
   const lastName = clean(body.lastName, 60);
@@ -69,7 +72,7 @@ export async function createBooking(body: any) {
   const mode: PriceMode | null = body.priceMode === "night" || body.priceMode === "total" ? body.priceMode : null;
   const price = resolvePrice(mode, money(body.nightPrice), money(body.totalPrice), nights);
 
-  await assertFree(room, arrival, departure);
+  for (const room of rooms) await assertFree(room, arrival, departure);
 
   const guest = {
     firstName,
@@ -81,16 +84,52 @@ export async function createBooking(body: any) {
     children,
   };
   const notes = clean(body.notes, 500);
-  const id = await createBeds24Booking({ ...guest, room, arrival, departure, total: price.totalPrice, notes });
+  const created: { id: string; room: number; master: string | null }[] = [];
+  for (const [index, room] of rooms.entries()) {
+    const master = index === 0 ? null : created[0].id;
+    try {
+      const { id } = await createBeds24Booking({
+        ...guest,
+        room,
+        arrival,
+        departure,
+        total: index === 0 ? price.totalPrice : 0,
+        notes: index === 0 ? notes : [notes, `Group με την κράτηση #${master}`].filter(Boolean).join("\n"),
+        masterId: master ?? undefined,
+      });
+      created.push({ id, room, master });
+    } catch (error) {
+      if (!created.length) throw error;
+      throw new ActionError(
+        `Μπήκαν ${created.length} από ${rooms.length} δωμάτια (${created.map((c) => roomLabel(c.room)).join(", ")}). ` +
+          `Το ${roomLabel(room)} απέτυχε: ${error instanceof Error ? error.message : "σφάλμα"}`,
+        502,
+      );
+    }
+  }
 
-  await getSql()`
-    insert into public.pyrgos_bookings (booking_id, status, channel, referer, room_number, checkin, checkout, nights, adults,
-      children, first_name, last_name, email, phone, country, price, booked_at, price_source, notes)
-    values (${id}, 'confirmed', 'Απευθείας', 'Πύργος ελέγχου', ${room}, ${arrival}::date, ${departure}::date, ${nights}, ${adults},
-      ${children}, ${firstName}, ${lastName}, ${guest.email || null}, ${guest.phone || null}, ${guest.country || null},
-      ${price.totalPrice}, now(), ${price.totalPrice !== null ? "pyrgos" : null}, ${notes || null})
-    on conflict (booking_id) do nothing
-  `;
+  for (const c of created) {
+    const isMaster = c.master === null;
+    await getSql()`
+      insert into public.pyrgos_bookings (booking_id, master_id, status, channel, referer, room_number, checkin, checkout, nights,
+        adults, children, first_name, last_name, email, phone, country, price, booked_at, price_source, notes)
+      values (${c.id}, ${c.master ?? (rooms.length > 1 ? c.id : null)}, 'confirmed', 'Απευθείας', 'Πύργος ελέγχου', ${c.room},
+        ${arrival}::date, ${departure}::date, ${nights}, ${adults}, ${children}, ${firstName}, ${lastName},
+        ${guest.email || null}, ${guest.phone || null}, ${guest.country || null},
+        ${isMaster ? price.totalPrice : null}, now(), ${isMaster && price.totalPrice !== null ? "pyrgos" : null}, ${notes || null})
+      on conflict (booking_id) do nothing
+    `;
+    if (body.bedSetup || body.cot || body.rollaway || body.bedOther) {
+      await saveExtras({
+        bookingId: c.id,
+        bedSetup: (body.bedSetup || null) as BedSetup | null,
+        cot: Boolean(body.cot),
+        rollaway: Boolean(body.rollaway),
+        other: clean(body.bedOther, 120),
+      });
+    }
+  }
+  const id = created[0].id;
   await saveMoney({
     bookingId: id,
     priceMode: mode,
@@ -99,15 +138,6 @@ export async function createBooking(body: any) {
     deposit: money(body.deposit),
     paid: Boolean(body.paid),
   });
-  if (body.bedSetup || body.cot || body.rollaway || body.bedOther) {
-    await saveExtras({
-      bookingId: id,
-      bedSetup: (body.bedSetup || null) as BedSetup | null,
-      cot: Boolean(body.cot),
-      rollaway: Boolean(body.rollaway),
-      other: clean(body.bedOther, 120),
-    });
-  }
   if (money(body.deposit)) await noteToBeds24(id, `Προκαταβολή: €${money(body.deposit)}`);
 
   let email = "skipped";
@@ -123,13 +153,18 @@ export async function createBooking(body: any) {
       email = "failed";
     }
   }
-  await logHistory(
-    id,
-    "Νέα κράτηση",
-    `${roomLabel(room)} · ${arrival} → ${departure} · ${adults}+${children} · ${price.totalPrice ?? "-"}€${email === "sent" ? " · email επιβεβαίωσης" : ""}`,
-    "ok",
-  );
-  return { id, email };
+  for (const c of created) {
+    await logHistory(
+      c.id,
+      rooms.length > 1 ? "Νέα κράτηση (group)" : "Νέα κράτηση",
+      `${roomLabel(c.room)} · ${arrival} → ${departure} · ${adults}+${children}` +
+        (c.master === null ? ` · ${price.totalPrice ?? "-"}€` : ` · μαζί με #${c.master}`) +
+        (rooms.length > 1 && c.master === null ? ` · group: ${created.map((x) => roomLabel(x.room)).join(", ")}` : "") +
+        (email === "sent" && c.master === null ? " · email επιβεβαίωσης" : ""),
+      "ok",
+    );
+  }
+  return { id, ids: created.map((c) => c.id), email };
 }
 
 // ---------- update (dates / room / guest / people) ----------
@@ -301,4 +336,135 @@ export async function addNote(body: any) {
   `;
   await logHistory(id, "Σημείωση", note, beds24 === "ok" ? "ok" : "failed");
   return { id, beds24: beds24 === "ok" ? "ok" : "failed" };
+}
+
+// ---------- swap two bookings ----------
+
+export async function swapBookings(body: any) {
+  const idA = clean(body.idA, 20);
+  const idB = clean(body.idB, 20);
+  const [a, b] = await Promise.all([getBookingDetail(idA), getBookingDetail(idB)]).then((r) => r.map((x) => x?.booking));
+  if (!a || !b) throw new ActionError("Δεν βρέθηκαν οι κρατήσεις.", 404);
+  if (!a.room || !b.room || a.room === b.room) throw new ActionError("Οι κρατήσεις πρέπει να είναι σε διαφορετικά δωμάτια.");
+  if (a.status === "black" || b.status === "black") throw new ActionError("Τα μπλοκαρίσματα αλλάζουν μόνο στο Beds24.");
+  if (isCategoryChange(a.room, b.room) && !body.confirmCategory) {
+    throw new ActionError("Αλλαγή κατηγορίας δωματίου: χρειάζεται επιβεβαίωση.", 409, "category");
+  }
+  const roomA = a.room;
+  const roomB = b.room;
+  // A goes to B's room for A's dates, B to A's room for B's dates; only each other may be in the way.
+  const freeForA = await freeRooms(a.checkin, a.checkout, a.id);
+  const freeForB = await freeRooms(b.checkin, b.checkout, b.id);
+  const aBlockedOnlyByB = freeForA.includes(roomB) || (await onlyOther(roomB, a.checkin, a.checkout, [a.id, b.id]));
+  const bBlockedOnlyByA = freeForB.includes(roomA) || (await onlyOther(roomA, b.checkin, b.checkout, [a.id, b.id]));
+  if (!aBlockedOnlyByB || !bBlockedOnlyByA) throw new ActionError("Η αντιμετάθεση δεν χωράει: υπάρχει και άλλη κράτηση στη μέση.", 409);
+  for (const [room, s, e] of [[roomB, a.checkin, a.checkout], [roomA, b.checkin, b.checkout]] as const) {
+    const clash = await liveOverlap(room, s, e, [a.id, b.id]);
+    if (clash) throw new ActionError(`Στο Beds24 υπάρχει άλλη κράτηση στο ${roomLabel(room)} εκείνες τις μέρες.`, 409);
+  }
+
+  await modifyBeds24Booking(a.id, { room: roomB });
+  try {
+    await modifyBeds24Booking(b.id, { room: roomA });
+  } catch (error) {
+    // Put A back so nothing is left double-booked.
+    await modifyBeds24Booking(a.id, { room: roomA }).catch((e) => console.error("[pyrgos] swap rollback failed", e));
+    throw error;
+  }
+  await getSql()`update public.pyrgos_bookings set room_number = ${roomB}, updated_at = now() where booking_id = ${a.id}`;
+  await getSql()`update public.pyrgos_bookings set room_number = ${roomA}, updated_at = now() where booking_id = ${b.id}`;
+  const detail = `${a.firstName} ${a.lastName}: ${roomLabel(roomA)} → ${roomLabel(roomB)} ⇄ ${b.firstName} ${b.lastName}: ${roomLabel(roomB)} → ${roomLabel(roomA)}`;
+  await logHistory(a.id, "Αντιμετάθεση", detail, "ok");
+  await logHistory(b.id, "Αντιμετάθεση", detail, "ok");
+  return { idA: a.id, idB: b.id };
+}
+
+async function onlyOther(room: number, from: string, to: string, ids: string[]) {
+  const rows = (await getSql()`
+    select booking_id from public.pyrgos_bookings
+    where room_number = ${room} and status in ('confirmed', 'new', 'request', 'black')
+      and checkin < ${to}::date and checkout > ${from}::date
+  `) as { booking_id: string }[];
+  const closed = (await getSql()`
+    select 1 from booking_core.inventory where room_number = ${room} and stay_date >= ${from}::date and stay_date < ${to}::date
+      and booking_id is null and reason = 'CLOSED' limit 1
+  `) as unknown[];
+  return !closed.length && rows.every((row) => ids.includes(String(row.booking_id)));
+}
+
+// ---------- split stay ----------
+
+export async function splitBooking(body: any) {
+  const id = clean(body.id, 20);
+  const current = (await getBookingDetail(id))?.booking;
+  if (!current) throw new ActionError("Η κράτηση δεν βρέθηκε.", 404);
+  if (current.status === "black") throw new ActionError("Τα μπλοκαρίσματα αλλάζουν μόνο στο Beds24.");
+  const splitDate = body.splitDate;
+  const newRoom = Number(body.room);
+  if (!isDay(splitDate) || splitDate <= current.checkin || splitDate >= current.checkout) {
+    throw new ActionError("Η ημέρα αλλαγής πρέπει να είναι μέσα στη διαμονή.");
+  }
+  if (!roomByNumber(newRoom) || newRoom === current.room) throw new ActionError("Διάλεξε άλλο δωμάτιο για το δεύτερο κομμάτι.");
+  if (isCategoryChange(current.room, newRoom) && !body.confirmCategory) {
+    throw new ActionError("Αλλαγή κατηγορίας δωματίου: χρειάζεται επιβεβαίωση.", 409, "category");
+  }
+  await assertFree(newRoom, splitDate, current.checkout);
+
+  const master = current.masterId ?? current.id;
+  const originalCheckout = current.checkout;
+  // 1) shorten the original to the split day; 2) create the second part linked to it, price 0
+  //    (the price of the whole stay stays on the original / master booking).
+  await modifyBeds24Booking(current.id, { arrival: current.checkin, departure: splitDate });
+  let secondId: string;
+  try {
+    const created = await createBeds24Booking({
+      firstName: current.firstName,
+      lastName: current.lastName,
+      email: current.email,
+      phone: current.phone,
+      country: current.country,
+      adults: current.adults ?? 2,
+      children: current.children ?? 0,
+      room: newRoom,
+      arrival: splitDate,
+      departure: originalCheckout,
+      total: 0,
+      notes: `Split stay: συνέχεια της κράτησης #${current.id} (${roomLabel(current.room)} → ${roomLabel(newRoom)} στις ${splitDate})`,
+      masterId: master,
+    });
+    secondId = created.id;
+  } catch (error) {
+    await modifyBeds24Booking(current.id, { arrival: current.checkin, departure: originalCheckout }).catch((e) =>
+      console.error("[pyrgos] split rollback failed", e),
+    );
+    throw error;
+  }
+  const firstNights = nightsOf(current.checkin, splitDate);
+  const secondNights = nightsOf(splitDate, originalCheckout);
+  await getSql()`
+    update public.pyrgos_bookings set checkout = ${splitDate}::date, nights = ${firstNights}, master_id = ${master}, updated_at = now()
+    where booking_id = ${current.id}
+  `;
+  await getSql()`
+    insert into public.pyrgos_bookings (booking_id, master_id, status, channel, referer, room_number, checkin, checkout, nights,
+      adults, children, first_name, last_name, email, phone, country, price, booked_at, notes)
+    select ${secondId}, ${master}, 'confirmed', channel, referer, ${newRoom}, ${splitDate}::date, ${originalCheckout}::date, ${secondNights},
+      adults, children, first_name, last_name, email, phone, country, null, now(), ${`Split stay από #${current.id}`}
+    from public.pyrgos_bookings where booking_id = ${current.id}
+    on conflict (booking_id) do nothing
+  `;
+  // Beds keep following the guest into the second room.
+  if (current.bedSetup || current.cot || current.rollaway || current.bedOther) {
+    await saveExtras({
+      bookingId: secondId,
+      bedSetup: current.bedSetup as BedSetup | null,
+      cot: current.cot,
+      rollaway: current.rollaway,
+      other: current.bedOther,
+    });
+  }
+  const detail = `${roomLabel(current.room)} ${current.checkin}→${splitDate} · ${roomLabel(newRoom)} ${splitDate}→${originalCheckout}`;
+  await logHistory(current.id, "Split stay", `${detail} · συνέχεια #${secondId}`, "ok");
+  await logHistory(secondId, "Split stay", `${detail} · από #${current.id}`, "ok");
+  return { id: current.id, secondId };
 }

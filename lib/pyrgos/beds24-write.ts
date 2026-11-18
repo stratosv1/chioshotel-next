@@ -93,9 +93,11 @@ export type GuestFields = {
   children: number;
 };
 
-export async function createBeds24Booking(input: GuestFields & { room: number; arrival: string; departure: string; total: number | null; notes: string }) {
+export async function createBeds24Booking(
+  input: GuestFields & { room: number; arrival: string; departure: string; total: number | null; notes: string; masterId?: string },
+) {
   const { roomId, unitId } = await unitFor(input.room);
-  const result = await post({
+  const body: Record<string, unknown> = {
     propertyId: PROPERTY_ID,
     roomId,
     unitId,
@@ -112,10 +114,23 @@ export async function createBeds24Booking(input: GuestFields & { room: number; a
     ...(input.total !== null ? { price: input.total } : {}),
     ...(input.notes ? { notes: input.notes } : {}),
     refererEditable: "Πύργος ελέγχου",
-  });
+  };
+  let linked = false;
+  let result: any;
+  if (input.masterId) {
+    // Link to the group (master booking); if Beds24 refuses the link, create it unlinked with a note.
+    try {
+      result = await post({ ...body, masterId: Number(input.masterId) });
+      linked = true;
+    } catch (error) {
+      console.error("[pyrgos] group link refused, creating unlinked", error);
+      body.notes = [body.notes, `Μαζί με την κράτηση #${input.masterId}`].filter(Boolean).join("\n");
+    }
+  }
+  if (!result) result = await post(body);
   const id = text(result?.new?.id ?? result?.id ?? result?.info?.[0]?.id);
   if (!id) throw new Error("Το Beds24 δεν έδωσε αριθμό κράτησης.");
-  return id;
+  return { id, linked };
 }
 
 export async function modifyBeds24Booking(
