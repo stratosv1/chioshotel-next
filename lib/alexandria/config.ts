@@ -33,20 +33,21 @@ export const ALEXANDRIA_PERIODS: AlexandriaPeriod[] = [
   },
 ];
 
-export type AlexandriaRoom = { id: string; label: string; type: string };
+export type AlexandriaRoom = { id: string; label: string; type: string; economy?: boolean };
 
-// Fixed room categories (owner, 2026-10-15).
+// Labels for Andreas (owner, 2026-11-18): 2 & 6 Economy (whole row highlighted),
+// 3, 4, 8, 9, 10 "με κουζίνα", the rest plain.
 export const ALEXANDRIA_ROOMS: AlexandriaRoom[] = [
-  { id: "1", label: "Δωμάτιο 1", type: "Α΄ όροφος" },
-  { id: "2", label: "Δωμάτιο 2", type: "Economy" },
-  { id: "3", label: "Δωμάτιο 3", type: "Α΄ όροφος" },
-  { id: "4", label: "Δωμάτιο 4", type: "Α΄ όροφος" },
-  { id: "5", label: "Δωμάτιο 5", type: "Ισόγειο" },
-  { id: "6", label: "Δωμάτιο 6", type: "Economy" },
-  { id: "7", label: "Δωμάτιο 7", type: "Ισόγειο" },
-  { id: "8", label: "Διαμέρισμα 8", type: "Οικογενειακό" },
-  { id: "9", label: "Διαμέρισμα 9", type: "Οικογενειακό" },
-  { id: "10", label: "Διαμέρισμα 10", type: "Οικογενειακό" },
+  { id: "1", label: "Δωμάτιο 1", type: "" },
+  { id: "2", label: "Δωμάτιο 2", type: "Economy", economy: true },
+  { id: "3", label: "Δωμάτιο 3", type: "Με κουζίνα" },
+  { id: "4", label: "Δωμάτιο 4", type: "Με κουζίνα" },
+  { id: "5", label: "Δωμάτιο 5", type: "" },
+  { id: "6", label: "Δωμάτιο 6", type: "Economy", economy: true },
+  { id: "7", label: "Δωμάτιο 7", type: "" },
+  { id: "8", label: "Διαμέρισμα 8", type: "Με κουζίνα" },
+  { id: "9", label: "Διαμέρισμα 9", type: "Με κουζίνα" },
+  { id: "10", label: "Διαμέρισμα 10", type: "Με κουζίνα" },
 ];
 
 export function isAlexandriaRoom(value: string) {

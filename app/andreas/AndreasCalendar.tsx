@@ -203,6 +203,7 @@ export default function AndreasCalendar() {
         <div className="mb-3 flex flex-wrap gap-4 text-xs text-stone-600">
           <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded-sm bg-amber-100 ring-1 ring-amber-300" /> Μέρες προγράμματος</span>
           <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded-sm bg-white ring-1 ring-stone-300" /> Νωρίτερη άφιξη / αργότερη αναχώρηση</span>
+          <span className="flex items-center gap-1.5"><span className="inline-block h-3 w-3 rounded-sm bg-sky-100 ring-1 ring-sky-300" /> Economy</span>
           <span>Πάτα σε κενό κελί για νέα κράτηση ή σε κράτηση για αλλαγή.</span>
         </div>
 
@@ -236,13 +237,22 @@ export default function AndreasCalendar() {
             {ALEXANDRIA_ROOMS.map((room) => {
               const roomBookings = periodBookings.filter((b) => b.room === room.id);
               return (
-                <div key={room.id} className="relative flex h-14 border-b border-stone-100 last:border-b-0">
+                <div
+                  key={room.id}
+                  className={`relative flex h-14 border-b border-stone-100 last:border-b-0 ${room.economy ? "bg-sky-50" : ""}`}
+                >
                   <div
                     style={{ width: ROOM_W }}
-                    className="sticky left-0 z-10 flex flex-col justify-center border-r border-stone-200 bg-white px-3"
+                    className={`sticky left-0 z-10 flex flex-col justify-center border-r px-3 ${
+                      room.economy ? "border-sky-200 bg-sky-100" : "border-stone-200 bg-white"
+                    }`}
                   >
                     <span className="text-sm font-black leading-tight">{room.label}</span>
-                    <span className="text-[11px] text-stone-500">{room.type}</span>
+                    {room.type && (
+                      <span className={`text-[11px] ${room.economy ? "font-bold uppercase tracking-wide text-sky-800" : "text-stone-500"}`}>
+                        {room.type}
+                      </span>
+                    )}
                   </div>
                   {days.map((d) => {
                     const inProgram = d >= period.programStart && d < period.programEnd;
@@ -256,7 +266,7 @@ export default function AndreasCalendar() {
                         aria-label={`${room.label}, ${formatGreekDate(d)}${busy ? " (κρατημένο)" : ""}`}
                         onClick={() => setDraft(emptyDraft(room.id, d, period))}
                         style={{ width: DAY_W }}
-                        className={`border-l border-stone-100 ${inProgram ? "bg-amber-50/70" : ""} ${
+                        className={`border-l ${room.economy ? "border-sky-100" : "border-stone-100"} ${inProgram && !room.economy ? "bg-amber-50/70" : ""} ${
                           busy || isLast ? "cursor-default" : "hover:bg-amber-100 focus:outline-none focus-visible:bg-amber-100"
                         }`}
                       />
@@ -356,7 +366,7 @@ export default function AndreasCalendar() {
                   className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base"
                 >
                   {ALEXANDRIA_ROOMS.map((r) => (
-                    <option key={r.id} value={r.id}>{r.label} — {r.type}</option>
+                    <option key={r.id} value={r.id}>{r.type ? `${r.label} — ${r.type}` : r.label}</option>
                   ))}
                 </select>
               </label>
