@@ -5,6 +5,33 @@ import { Info } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { RoomFinderCopy, RoomFinderLanguage } from "./room-finder-copy";
 import { splitStayNarrative } from "./room-finder-split-narrative";
+import {
+  BED_FEATURE_PATTERN,
+  ONLY_ONE_LABEL,
+  RIBBON_ICONS,
+  RIBBON_LABELS,
+  RIBBON_STYLES,
+  YOU_SAVE_LABEL,
+  bedLabel,
+  computeCardBadges,
+  guestsLabel,
+  perPersonLabel,
+  roomCategory,
+  type RoomCategoryKey,
+} from "./room-finder-card-badges";
+
+// Popular category is fetched once per page load (the API itself is cached for a day).
+let popularCategoryPromise: Promise<RoomCategoryKey | null> | null = null;
+function loadPopularCategory() {
+  popularCategoryPromise ??= fetch("/api/ai-room-finder/popular-category/")
+    .then(response => response.ok ? response.json() : null)
+    .then(data => {
+      const value = data?.category;
+      return value === "economy" || value === "ground" || value === "upper" || value === "family" ? value : null;
+    })
+    .catch(() => null);
+  return popularCategoryPromise;
+}
 
 export type RoomOffer = {
   roomId:string;
@@ -135,11 +162,6 @@ const PER_NIGHT_LABEL: Record<RoomFinderLanguage,string> = {
   tr:"/gece",
 };
 
-function discountPercent(offer:RoomOffer) {
-  if (!(offer.originalTotal > offer.directTotal) || offer.originalTotal <= 0) return 0;
-  return Math.round((1 - offer.directTotal / offer.originalTotal) * 100);
-}
-
 function shortDate(value:string,language:RoomFinderLanguage) {
   const locale = { el:"el-GR", en:"en-GB", de:"de-DE", fr:"fr-FR", it:"it-IT", es:"es-ES", tr:"tr-TR" }[language];
   const [year,month,day] = value.split("-").map(Number);
@@ -170,6 +192,16 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
   const [canScrollLeft,setCanScrollLeft] = useState(false);
   const [canScrollRight,setCanScrollRight] = useState(offers.length > 1);
   const [staffRequestedUnavailable,setStaffRequestedUnavailable] = useState<number|null>(null);
+  const [popularCategory,setPopularCategory] = useState<RoomCategoryKey|null>(null);
+
+  useEffect(() => {
+    let active = true;
+    loadPopularCategory().then(category => { if (active) setPopularCategory(category); });
+    return () => { active = false; };
+  },[]);
+
+  const offerKey = (offer:RoomOffer) => `${offer.roomId}:${offer.unitId}:${offer.alternativeCheckin||""}`;
+  const badges = computeCardBadges(offers,popularCategory,offerKey);
 
   const updateNavigation = useCallback(() => {
     const scroller = scrollerRef.current;
@@ -234,44 +266,62 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
         const narrative=isSplit?splitStayNarrative(offer,language):null;
         const nights=Math.max(1,Number(offer.nights)||1);
         const perNight=offer.directTotal/nights;
-        const discount=discountPercent(offer);
         const title=isSplit?SPLIT_SOLUTION_LABEL[language]:offer.category||offer.name;
         const subtitle=isSplit?splitVisuals.map(room => room.name).join(" + "):[offer.name,offer.floor].filter(Boolean).join(" · ");
-        const highlights=(offer.features||[]).slice(0,2).join(" · ");
+        const bed=isSplit?null:bedLabel(offer.roomNumber,language);
+        const highlights=(offer.features||[]).filter(feature => !bed || !BED_FEATURE_PATTERN.test(feature)).slice(0,bed?1:2).join(" · ");
+        const cardBadges=badges.get(key)||{};
+        const saving=Math.max(0,Math.round((offer.originalTotal-offer.directTotal)*100)/100);
+        const guests=Number(selectionGuests)||0;
+        const perPerson=!isSplit && roomCategory(offer.roomNumber)==="family" && guests>=3 ? perNight/guests : 0;
+        const ribbon = offer.requested
+          ? { label:REQUESTED_LABEL[language], className:"bg-[#ad572a]", icon:"★" }
+          : offer.categoryBadge
+            ? { label:offer.categoryBadge, className:"bg-[#2f261f]", icon:"★" }
+            : offer.recommended
+              ? { label:RECOMMENDED_LABEL[language], className:"bg-[#66714f]", icon:"★" }
+              : cardBadges.ribbon
+                ? { label:RIBBON_LABELS[cardBadges.ribbon][language], className:RIBBON_STYLES[cardBadges.ribbon], icon:RIBBON_ICONS[cardBadges.ribbon] }
+                : null;
         const selectLabel=pending ? SELECTING_LABEL[language] : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionGuests ? copy.selectForGuests(selectionGuests) : copy.select;
-        return <article data-room-card key={key} className="flex w-[78%] max-w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] border border-[#e1d8cc] bg-white shadow-[0_8px_24px_rgba(70,55,35,.08)] sm:w-[280px]">
-          <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} className="relative block aspect-[16/10] w-full shrink-0 overflow-hidden bg-[#efe8de] text-left">
+        return <article data-room-card key={key} className="flex w-[80%] max-w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] border border-[#eadfce] bg-white p-2 shadow-[0_8px_24px_rgba(70,55,35,.08)] sm:w-[290px]">
+          <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} className="relative block aspect-[16/10] w-full shrink-0 overflow-hidden rounded-[16px] bg-[#efe8de] text-left">
             {isSplit ? <div className="grid h-full w-full" style={{gridTemplateColumns:`repeat(${Math.min(splitVisuals.length,3)},minmax(0,1fr))`}}>
               {splitVisuals.slice(0,3).map((roomVisual,visualIndex) => <div key={`${roomVisual.name}:${visualIndex}`} className="relative min-w-0 overflow-hidden border-r border-white/70 last:border-r-0">
                 <Image src={roomVisual.image} alt="" fill sizes="(min-width: 640px) 140px, 38vw" className="object-cover"/>
               </div>)}
-            </div> : <Image src={offer.image} alt="" fill sizes="(min-width: 640px) 280px, 75vw" className="object-cover"/>}
-            {/* Badge and discount share one row so a long badge never runs under the discount. */}
-            <span className="absolute inset-x-2.5 top-2.5 flex items-start gap-2">
-              {offer.requested
-                ? <span className="min-w-0 truncate rounded-full bg-white/95 px-2.5 py-1 text-[11px] font-black text-[#ad572a] shadow-sm">★ {REQUESTED_LABEL[language]}</span>
-                : offer.categoryBadge
-                  ? <span className="min-w-0 truncate rounded-full bg-[#2f261f]/90 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {offer.categoryBadge}</span>
-                  : offer.recommended && <span className="min-w-0 truncate rounded-full bg-[#66714f]/95 px-2.5 py-1 text-[11px] font-black text-white shadow-sm">★ {RECOMMENDED_LABEL[language]}</span>}
-              {discount > 0 && <span className="ml-auto shrink-0 rounded-full bg-[#c66a34] px-2 py-1 text-[12px] font-black leading-none text-white shadow-sm [font-variant-numeric:tabular-nums]">−{discount}%</span>}
-            </span>
+            </div> : <Image src={offer.image} alt="" fill sizes="(min-width: 640px) 290px, 78vw" className="object-cover"/>}
+            {/* One ribbon at most: the discount every card shares lives in the price area, not on the photo. */}
+            {ribbon && <span className={`absolute left-0 top-3 max-w-[90%] truncate rounded-r-full py-1 pl-2.5 pr-3 text-[12px] font-bold text-white shadow-sm ${ribbon.className}`}>
+              <span aria-hidden="true">{ribbon.icon}</span> {ribbon.label}
+            </span>}
           </button>
-          <div className="flex flex-1 flex-col p-3">
+          <div className="flex flex-1 flex-col px-1.5 pb-1 pt-3">
             {offer.alternativeCheckin && offer.alternativeCheckout && <p className="mb-2 w-fit rounded-full bg-[#fbf4e8] px-2.5 py-1 text-[11px] font-bold text-[#765d3b]">
               {ALTERNATIVE_LABEL[language]} · {shortDate(offer.alternativeCheckin,language)}–{shortDate(offer.alternativeCheckout,language)}
             </p>}
-            <h2 className="line-clamp-2 text-[16px] font-black leading-snug text-[#29251f]">{title}</h2>
+            <h2 className="line-clamp-2 text-[17px] font-bold leading-snug text-[#2f261f]">{title}</h2>
             <p className="mt-0.5 line-clamp-2 text-[13px] leading-[18px] text-[#746b60]">{subtitle}</p>
-            {isSplit ? narrative && <p className="mt-1.5 line-clamp-2 text-[13px] leading-[18px] text-[#625b52]">{narrative}</p> : highlights && <p className="mt-1.5 line-clamp-1 text-[13px] leading-[18px] text-[#625b52]">{highlights}</p>}
+            {isSplit ? narrative && <p className="mt-1.5 line-clamp-2 text-[13px] leading-[18px] text-[#625b52]">{narrative}</p> : <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[13px] leading-tight">
+              {bed && <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#fbeee0] px-2 py-1 font-semibold text-[#7c2d12]"><span aria-hidden="true">🛏</span>{bed}</span>}
+              {highlights && <span className="text-[#625b52]">{highlights}</span>}
+            </div>}
+            {perPerson > 0 && <p className="mt-1.5 text-[13px] font-semibold text-[#27500a]">{perPersonLabel(language,money(perPerson,language))}</p>}
+            {cardBadges.onlyOne && <p className="mt-1.5 text-[13px] font-semibold text-[#a32d2d]"><span aria-hidden="true">⚠ </span>{ONLY_ONE_LABEL[language]}</p>}
             <div className="mt-auto pt-3">
-              <p className="flex items-baseline gap-1 [font-variant-numeric:tabular-nums]">
-                <span className="text-[19px] font-black text-[#5f7448]">{money(perNight,language)}</span>
-                <span className="text-[13px] font-semibold text-[#746b60]">{PER_NIGHT_LABEL[language]}</span>
-              </p>
-              <p className="mt-0.5 text-[12px] leading-4 text-[#746b60] [font-variant-numeric:tabular-nums]">
-                {discount > 0 && <s className="mr-1 text-[#a59a8d]">{money(offer.originalTotal,language)}</s>}
-                <b className="font-bold text-[#514a42]">{money(offer.directTotal,language)}</b> · {copy.nightLabel(nights)}
-              </p>
+              <div className="flex items-center justify-between gap-2 border-t border-[#f0e7da] pt-3 [font-variant-numeric:tabular-nums]">
+                {saving > 0 ? <span className="shrink-0 rounded-lg bg-[#3b6d11] px-2.5 py-1.5 text-[12px] font-semibold leading-tight text-white">
+                  {YOU_SAVE_LABEL[language]}<span className="block text-[15px] font-bold">{money(saving,language)}</span>
+                </span> : <span />}
+                <div className="min-w-0 text-right">
+                  <p className="text-[12px] leading-4 text-[#746b60]">{copy.nightLabel(nights)}{guests > 0 ? ` · ${guestsLabel(language,guests)}` : ""}</p>
+                  <p className="mt-0.5 flex items-baseline justify-end gap-2">
+                    {saving > 0 && <s className="text-[13px] text-[#a32d2d] decoration-[#e24b4a] decoration-2">{money(offer.originalTotal,language)}</s>}
+                    <b className="text-[20px] font-black text-[#2f261f]">{money(offer.directTotal,language)}</b>
+                  </p>
+                  <p className="text-[12px] leading-4 text-[#746b60]">{money(perNight,language)} {PER_NIGHT_LABEL[language]}</p>
+                </div>
+              </div>
               <div className="mt-2.5 flex gap-2">
                 <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} title={copy.details} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#d8cec1] text-[#514a42] transition hover:bg-[#fbf8f3] active:scale-[.97]"><Info className="h-5 w-5" aria-hidden="true" /></button>
                 <button
