@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MATH_CHAPTERS } from "@/lib/sideris/math";
 
 type SubLink = { label: string; href: string };
 type Lesson = {
@@ -19,6 +20,19 @@ type Subject = {
 
 // Add a lesson here when its page exists under app/sideris/(private)/<slug>.
 const SUBJECTS: Subject[] = [
+  {
+    key: "mathimatika",
+    name: "Μαθηματικά",
+    badge: "∑",
+    accent: "bg-[#3d6b3a] text-white",
+    soft: "bg-[#e3eee0] text-[#2c5229]",
+    lessons: MATH_CHAPTERS.map((c) => ({
+      title: `Κεφάλαιο ${c.number}: ${c.title}`,
+      subtitle: c.summary,
+      href: `/sideris/mathimatika/${c.slug}`,
+      links: c.sections.map((s) => ({ label: `${s.code} ${s.title}`, href: `/sideris/mathimatika/${c.slug}#${s.id}` })),
+    })),
+  },
   {
     key: "agglika",
     name: "Αγγλικά",
