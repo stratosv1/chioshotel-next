@@ -3,7 +3,7 @@
   "site": "https://chioshotel.gr",
   "pages": {
     "/": {
-      "hash": "ce389d1d20e6a8075d2e",
+      "hash": "4b8d4ac1fd67a0e60070",
       "modified": "2026-11-18"
     },
     "/agents/rooms/": {
@@ -87,8 +87,8 @@
       "modified": "2026-11-08"
     },
     "/chios-rooms/": {
-      "hash": "590a3e4a9513fe55ff0f",
-      "modified": "2026-11-08"
+      "hash": "1032c75648f5441631d7",
+      "modified": "2026-11-18"
     },
     "/chios-rooms/economy-double-rooms/": {
       "hash": "e867333bc6c179ced2bd",
@@ -251,7 +251,7 @@
       "modified": "2026-11-08"
     },
     "/de/": {
-      "hash": "57451fbe62eea8d7be69",
+      "hash": "f7c61b02883e7d9bd83a",
       "modified": "2026-11-18"
     },
     "/de/agents/rooms/": {
@@ -299,8 +299,8 @@
       "modified": "2026-11-08"
     },
     "/de/chios-zimmer/": {
-      "hash": "a9c3def5b6a7e7b04f73",
-      "modified": "2026-11-08"
+      "hash": "9bb484a1fce993b79555",
+      "modified": "2026-11-18"
     },
     "/de/chios/kampos-chios/": {
       "hash": "0d441c805fd740e47b3f",
@@ -527,7 +527,7 @@
       "modified": "2026-11-08"
     },
     "/el/": {
-      "hash": "e6ae1d13ced5e26f67f8",
+      "hash": "de6f752d3050e3810f60",
       "modified": "2026-11-18"
     },
     "/el/agents/rooms/": {
@@ -563,8 +563,8 @@
       "modified": "2026-11-08"
     },
     "/el/domatia-xios/": {
-      "hash": "088d45560364742d6ec6",
-      "modified": "2026-11-08"
+      "hash": "471514ecce4472a1bd56",
+      "modified": "2026-11-18"
     },
     "/el/domatia-xios/diklina-triklina-domatia/": {
       "hash": "d1d6f91381e077fa50f6",
@@ -803,7 +803,7 @@
       "modified": "2026-11-08"
     },
     "/es/": {
-      "hash": "ea502037e8205b0df824",
+      "hash": "7196b1ed1f1f332636c2",
       "modified": "2026-11-18"
     },
     "/es/actividades-en-quios/": {
@@ -859,8 +859,8 @@
       "modified": "2026-11-08"
     },
     "/es/habitaciones-en-chios/": {
-      "hash": "abafb03b8dc5c3887e13",
-      "modified": "2026-11-08"
+      "hash": "1adc20e803e59e1efd3c",
+      "modified": "2026-11-18"
     },
     "/es/habitaciones-en-chios/apartamentos-familiares-en-chios/": {
       "hash": "7e3b7beb4ba1ebc00fd5",
@@ -1083,7 +1083,7 @@
       "modified": "2026-11-08"
     },
     "/fr/": {
-      "hash": "2be56fe267b67108f073",
+      "hash": "e9a6942fa7d4af3f8eab",
       "modified": "2026-11-18"
     },
     "/fr/activites-a-chios/": {
@@ -1099,8 +1099,8 @@
       "modified": "2026-11-11"
     },
     "/fr/chambres-a-chios/": {
-      "hash": "00afa5e30fe7c1a84d70",
-      "modified": "2026-11-08"
+      "hash": "feced60e57d7f249f483",
+      "modified": "2026-11-18"
     },
     "/fr/chambres-a-chios/appartements-familiaux-de-chios/": {
       "hash": "2e8d45abda9c36b6885f",
@@ -1367,7 +1367,7 @@
       "modified": "2026-11-08"
     },
     "/it/": {
-      "hash": "32699dd2b1c28d8c2b7d",
+      "hash": "0aa6503ccd865a80feed",
       "modified": "2026-11-18"
     },
     "/it/agents/rooms/": {
@@ -1387,8 +1387,8 @@
       "modified": "2026-11-08"
     },
     "/it/camere-a-chios/": {
-      "hash": "8808b25a56db11b26bf9",
-      "modified": "2026-11-08"
+      "hash": "4a618383ee7119265851",
+      "modified": "2026-11-18"
     },
     "/it/chios-lisola-in-grecia/": {
       "hash": "291a7085dea7f125306d",
@@ -1643,8 +1643,8 @@
       "modified": "2026-11-08"
     },
     "/pl/": {
-      "hash": "cd8b46d272f48df5b167",
-      "modified": "2026-11-08"
+      "hash": "2c05503be16504ef1713",
+      "modified": "2026-11-18"
     },
     "/pl/apartamenty-na-chios/": {
       "hash": "60ae909846a13d88f6c5",
@@ -1663,8 +1663,8 @@
       "modified": "2026-11-08"
     },
     "/pl/pokoje-na-chios/": {
-      "hash": "0ed807a760a2f85a607f",
-      "modified": "2026-11-08"
+      "hash": "eb3fd0818ca20a4a1d50",
+      "modified": "2026-11-18"
     },
     "/pl/pokoje-na-chios/pokoj-dwuosobowy-economy/": {
       "hash": "e0227bcd2867d3c21fc6",
@@ -1691,7 +1691,7 @@
       "modified": "2026-11-08"
     },
     "/tr/": {
-      "hash": "658c6b58d98040eb8a6b",
+      "hash": "cc00a8db31af607ad549",
       "modified": "2026-11-18"
     },
     "/tr/agents/rooms/": {
@@ -1839,8 +1839,8 @@
       "modified": "2026-11-08"
     },
     "/tr/sakiz-adasi-odalari/": {
-      "hash": "58a874b90ad43ae066fc",
-      "modified": "2026-11-08"
+      "hash": "0bd263f25132514c2482",
+      "modified": "2026-11-18"
     },
     "/tr/sakiz-adasi-orkideleri/": {
       "hash": "7760b242875ec95be5e5",
