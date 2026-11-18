@@ -1,14 +1,14 @@
 import type { ReactNode } from "react";
 import { Block, Eq, Example, Exercise, F, M, Mx, Parts, Steps } from "../ui";
 
-// Ασκήσεις από το βοήθημα (το κόκκινο βιβλίο) για το Κεφάλαιο 2, με δικές μας λύσεις βήμα βήμα.
+// Ασκήσεις από το βοήθημα (Μπαρλάς) για το Κεφάλαιο 2, με δικές μας λύσεις βήμα βήμα.
 // Η αρίθμηση είναι αυτή του βοηθήματος, για να βρίσκει ο μαθητής την άσκηση στο βιβλίο του.
 
 const f = (n: ReactNode, d: ReactNode) => <F n={n} d={d} />;
 const mx = (w: ReactNode, n: ReactNode, d: ReactNode) => <Mx w={w} n={n} d={d} />;
 
-// Όνομα του βοηθήματος όπως φαίνεται στη σελίδα. Άλλαξέ το εδώ μόλις ξέρουμε ποιο βιβλίο είναι.
-const BOOK_LABEL = "Βοήθημα";
+// Όνομα του βοηθήματος όπως φαίνεται στη σελίδα.
+const BOOK_LABEL = "Βοήθημα Μπαρλά";
 
 function Box({ meta, title, children }: { meta: string; title: string; children: ReactNode }) {
   return (
