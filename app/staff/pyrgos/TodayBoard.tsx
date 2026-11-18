@@ -136,7 +136,7 @@ export default function TodayBoard() {
             <div className="text-lg font-black">Πύργος ελέγχου</div>
           </div>
           <a href="/staff/pyrgos" aria-current="page" className="rounded-xl bg-[#e9e4fe] px-3 py-2.5 text-sm font-bold text-[#3b2f8a]">Σήμερα</a>
-          <span className="rounded-xl px-3 py-2.5 text-sm text-[#8a97a8]" title="Έρχεται στο βήμα 2">Πλάνο (σύντομα)</span>
+          <a href="/staff/pyrgos/plano" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Πλάνο</a>
           <a href="/staff/crm" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Πελάτες (CRM)</a>
           <a href="#katharismos" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Καθαριότητα</a>
           <a href="/staff/statistics" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Στατιστικά</a>

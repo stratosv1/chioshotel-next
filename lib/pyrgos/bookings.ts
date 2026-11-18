@@ -85,6 +85,10 @@ export async function ensureBookingsTable() {
     )`;
     await sql`create index if not exists pyrgos_bookings_checkin on public.pyrgos_bookings (checkin)`;
   }
+  // Added 2026-11-18 for the plan: Beds24 notes / guest comments shown on the booking bar.
+  const cols = (await sql`select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'pyrgos_bookings' and column_name = 'notes'`) as unknown[];
+  if (!cols.length) await sql`alter table public.pyrgos_bookings add column if not exists notes text`;
   ready = true;
 }
 
@@ -219,6 +223,7 @@ function rowFromApi(b: ApiBooking) {
     price: price && price > 0 ? price : null,
     commission: commission && commission > 0 ? commission : null,
     booked_at: text(b.bookingTime) || null,
+    notes: [text(b.notes), text(b.comments)].filter(Boolean).join(" · ").slice(0, 1000) || null,
   };
 }
 
@@ -276,18 +281,18 @@ export async function upsertApiRows(rows: ReturnType<typeof rowFromApi>[]) {
   const col = <K extends keyof ReturnType<typeof rowFromApi>>(key: K) => rows.map((r) => r[key]);
   const result = (await getSql()`
     insert into public.pyrgos_bookings as p (booking_id, master_id, status, channel, referer, room_number, checkin, checkout,
-      nights, adults, children, first_name, last_name, email, phone, country, language, price, commission, booked_at, price_source)
+      nights, adults, children, first_name, last_name, email, phone, country, language, price, commission, booked_at, price_source, notes)
     select v.booking_id, v.master_id, v.status, v.channel, v.referer, v.room_number, v.checkin::date, v.checkout::date,
       greatest(v.checkout::date - v.checkin::date, 0), v.adults, v.children, v.first_name, v.last_name, v.email, v.phone,
-      v.country, v.language, v.price, v.commission, v.booked_at::timestamptz, case when v.price is not null then 'beds24_api' end
+      v.country, v.language, v.price, v.commission, v.booked_at::timestamptz, case when v.price is not null then 'beds24_api' end, v.notes
     from unnest(
       ${col("booking_id")}::text[], ${col("master_id")}::text[], ${col("status")}::text[], ${col("channel")}::text[],
       ${col("referer")}::text[], ${col("room_number")}::int[], ${col("checkin")}::text[], ${col("checkout")}::text[],
       ${col("adults")}::int[], ${col("children")}::int[], ${col("first_name")}::text[], ${col("last_name")}::text[],
       ${col("email")}::text[], ${col("phone")}::text[], ${col("country")}::text[], ${col("language")}::text[],
-      ${col("price")}::numeric[], ${col("commission")}::numeric[], ${col("booked_at")}::text[]
+      ${col("price")}::numeric[], ${col("commission")}::numeric[], ${col("booked_at")}::text[], ${col("notes")}::text[]
     ) as v(booking_id, master_id, status, channel, referer, room_number, checkin, checkout, adults, children, first_name,
-      last_name, email, phone, country, language, price, commission, booked_at)
+      last_name, email, phone, country, language, price, commission, booked_at, notes)
     on conflict (booking_id) do update set
       master_id = coalesce(excluded.master_id, p.master_id),
       status = excluded.status, channel = excluded.channel, referer = coalesce(excluded.referer, p.referer),
@@ -300,6 +305,7 @@ export async function upsertApiRows(rows: ReturnType<typeof rowFromApi>[]) {
       price = coalesce(excluded.price, p.price), commission = coalesce(excluded.commission, p.commission),
       booked_at = coalesce(excluded.booked_at, p.booked_at),
       price_source = case when excluded.price is not null then 'beds24_api' else p.price_source end,
+      notes = coalesce(excluded.notes, p.notes),
       updated_at = now()
     where (p.status, p.channel, p.checkin, p.checkout, p.room_number, p.adults, p.children, p.first_name, p.last_name, p.email,
         p.phone, p.country, p.price, p.commission, p.booked_at)
@@ -307,7 +313,7 @@ export async function upsertApiRows(rows: ReturnType<typeof rowFromApi>[]) {
         coalesce(excluded.room_number, p.room_number), coalesce(excluded.adults, p.adults), coalesce(excluded.children, p.children),
         coalesce(excluded.first_name, p.first_name), coalesce(excluded.last_name, p.last_name), coalesce(excluded.email, p.email),
         coalesce(excluded.phone, p.phone), coalesce(excluded.country, p.country), coalesce(excluded.price, p.price),
-        coalesce(excluded.commission, p.commission), coalesce(excluded.booked_at, p.booked_at))
+        coalesce(excluded.commission, p.commission), coalesce(excluded.booked_at, p.booked_at)) or p.notes is distinct from coalesce(excluded.notes, p.notes)
     returning p.booking_id
   `) as unknown[];
   return result.length;
