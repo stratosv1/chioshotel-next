@@ -2,3 +2,30 @@
 
 @source "./**/*.{ts,tsx}";
 @source "../../components/sideris/**/*.{ts,tsx}";
+
+/* ── Μαθηματικά: κίνηση και έμφαση ── */
+@keyframes sx-pop { 0% { opacity: 0; transform: translateY(6px) scale(0.97); } 100% { opacity: 1; transform: none; } }
+@keyframes sx-shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+@keyframes sx-shift { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+@keyframes sx-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes sx-flip { 0% { transform: rotateY(0); } 50% { transform: rotateY(90deg); } 100% { transform: rotateY(0); } }
+@keyframes sx-bounce { 0% { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); } }
+
+.sx-pop { animation: sx-pop 0.35s ease-out both; }
+.sx-shake { animation: sx-shake 0.4s ease-in-out; }
+.sx-float { display: inline-block; animation: sx-float 2.6s ease-in-out infinite; }
+.sx-flip { display: inline-flex; animation: sx-flip 0.6s ease-in-out; }
+.sx-bounce { display: inline-block; animation: sx-bounce 0.45s ease-out both; }
+.sx-key {
+  background: linear-gradient(120deg, #c96a2b, #e2b26a, #3d6b3a, #2f4f9a, #c96a2b);
+  background-size: 300% 100%;
+  animation: sx-shift 8s linear infinite;
+}
+.sx-reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.sx-reveal.is-in { opacity: 1; transform: none; }
+.sx-seg { transition: background-color 0.35s ease, width 0.45s ease, fill 0.35s ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sx-pop, .sx-shake, .sx-float, .sx-flip, .sx-bounce, .sx-key { animation: none; }
+  .sx-reveal { opacity: 1; transform: none; transition: none; }
+}
