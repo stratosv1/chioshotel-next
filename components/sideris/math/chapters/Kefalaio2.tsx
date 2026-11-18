@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Block, Eq, Example, Exercise, F, M, Mx, Parts, Rule, Section, Steps, Table } from "../ui";
-import { Barlas21 } from "./BarlasK2";
+import { Voithima21, Voithima22, Voithima23, Voithima24, Voithima25, Voithima26 } from "./Voithima";
 
 // Κεφάλαιο 2 — Τα κλάσματα (βιβλίο Α΄ Γυμνασίου, σελ. 33–54).
 // Θεωρία και παραδείγματα όπως στο βιβλίο. Οι λύσεις των ασκήσεων είναι δικές μας, βήμα βήμα.
@@ -209,7 +209,7 @@ export function Kefalaio2() {
           </Exercise>
         </Block>
 
-        <Barlas21 />
+        <Voithima21 />
       </Section>
 
       {/* ───────────────────────────── 2.2 ───────────────────────────── */}
@@ -380,6 +380,8 @@ export function Kefalaio2() {
             />
           </Exercise>
         </Block>
+
+        <Voithima22 />
       </Section>
 
       {/* ───────────────────────────── 2.3 ───────────────────────────── */}
@@ -521,6 +523,8 @@ export function Kefalaio2() {
             <p>Μετά απλοποίησε, κάνε τα ομώνυμα και βάλε τους αριθμητές σε σειρά, από τον μεγαλύτερο στον μικρότερο.</p>
           </Exercise>
         </Block>
+
+        <Voithima23 />
       </Section>
 
       {/* ───────────────────────────── 2.4 ───────────────────────────── */}
@@ -722,6 +726,8 @@ export function Kefalaio2() {
             <M>{f(4, 4)}</M>. Π.χ. <M>{f(1, 4)} + {f(1, 2)} + {f(1, 8)} + {f(1, 8)} = {f(4, 4)}</M>.
           </p>
         </Block>
+
+        <Voithima24 />
       </Section>
 
       {/* ───────────────────────────── 2.5 ───────────────────────────── */}
@@ -853,6 +859,8 @@ export function Kefalaio2() {
             />
           </Exercise>
         </Block>
+
+        <Voithima25 />
       </Section>
 
       {/* ───────────────────────────── 2.6 ───────────────────────────── */}
@@ -1017,6 +1025,8 @@ export function Kefalaio2() {
             />
           </Exercise>
         </Block>
+
+        <Voithima26 />
       </Section>
 
       {/* ───────────────────────── Ανακεφαλαίωση ───────────────────────── */}
