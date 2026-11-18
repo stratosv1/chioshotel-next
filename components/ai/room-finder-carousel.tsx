@@ -18,7 +18,14 @@ import {
   perPersonLabel,
   roomCategory,
   type RoomCategoryKey,
+  factsCategoryId,
+  upToGuestsLabel,
 } from "./room-finder-card-badges";
+import { AmenityIcon, GuestsIcon } from "@/components/rooms/RoomCard";
+import { amenityLabels, roomCategoryFacts } from "@/lib/room-category-facts";
+
+// Fridge / A/C already appear as amenity chips, so the room-specific line skips them.
+const AMENITY_FEATURE_PATTERN = /ψυγ|κλιματ|fridge|air cond|kühlschrank|klima|réfrig|climatis|frigo|aria condiz|nevera|frigor|aire acond|buzdolab/iu;
 
 // Popular category is fetched once per page load (the API itself is cached for a day).
 let popularCategoryPromise: Promise<RoomCategoryKey | null> | null = null;
@@ -269,8 +276,11 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
         const title=isSplit?SPLIT_SOLUTION_LABEL[language]:offer.category||offer.name;
         const subtitle=isSplit?splitVisuals.map(room => room.name).join(" + "):[offer.name,offer.floor].filter(Boolean).join(" · ");
         const bed=isSplit?null:bedLabel(offer.roomNumber,language);
-        const highlights=(offer.features||[]).filter(feature => !bed || !BED_FEATURE_PATTERN.test(feature)).slice(0,bed?1:2).join(" · ");
+        const highlights=(offer.features||[]).filter(feature => (!bed || !BED_FEATURE_PATTERN.test(feature)) && !AMENITY_FEATURE_PATTERN.test(feature)).slice(0,2).join(" · ");
         const cardBadges=badges.get(key)||{};
+        const factsId=isSplit?null:factsCategoryId(offer.roomNumber);
+        const facts=factsId?roomCategoryFacts[factsId]:null;
+        const size=facts?.sizeM2?(facts.sizeM2.min===facts.sizeM2.max?`${facts.sizeM2.min} m²`:`${facts.sizeM2.min}–${facts.sizeM2.max} m²`):null;
         const saving=Math.max(0,Math.round((offer.originalTotal-offer.directTotal)*100)/100);
         const guests=Number(selectionGuests)||0;
         const perPerson=!isSplit && roomCategory(offer.roomNumber)==="family" && guests>=3 ? perNight/guests : 0;
@@ -304,8 +314,16 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
             <p className="mt-0.5 line-clamp-2 text-[13px] leading-[18px] text-[#746b60]">{subtitle}</p>
             {isSplit ? narrative && <p className="mt-1.5 line-clamp-2 text-[13px] leading-[18px] text-[#625b52]">{narrative}</p> : <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[13px] leading-tight">
               {bed && <span className="inline-flex items-center gap-1.5 rounded-lg bg-[#fbeee0] px-2 py-1 font-semibold text-[#7c2d12]"><span aria-hidden="true">🛏</span>{bed}</span>}
-              {highlights && <span className="text-[#625b52]">{highlights}</span>}
+              {offer.maxGuests > 0 && <span className="inline-flex items-center gap-1 font-medium text-[#4a3b30]"><span className="text-[#9a3412]"><GuestsIcon /></span>{upToGuestsLabel(language,offer.maxGuests)}</span>}
+              {size && <span className="font-medium text-[#4a3b30]">{size}</span>}
             </div>}
+            {!isSplit && highlights && <p className="mt-1.5 line-clamp-1 text-[13px] leading-[18px] text-[#625b52]">{highlights}</p>}
+            {facts && <ul className="mt-2 flex flex-wrap gap-1.5">
+              {facts.amenities.map(amenity => <li key={amenity} className="inline-flex min-h-6 items-center gap-1 rounded-full bg-[#f7f1e8] px-2 text-[11px] text-[#4a3b30]">
+                <span className="text-[#7a5f4b]"><AmenityIcon amenity={amenity} /></span>
+                {amenityLabels[amenity][language]}
+              </li>)}
+            </ul>}
             {perPerson > 0 && <p className="mt-1.5 text-[13px] font-semibold text-[#27500a]">{perPersonLabel(language,money(perPerson,language))}</p>}
             {cardBadges.onlyOne && <p className="mt-1.5 text-[13px] font-semibold text-[#a32d2d]"><span aria-hidden="true">⚠ </span>{ONLY_ONE_LABEL[language]}</p>}
             <div className="mt-auto pt-3">

@@ -161,3 +161,28 @@ export function computeCardBadges<T extends BadgeOffer>(offers: T[], popularCate
   }
   return result;
 }
+
+const FACTS_CATEGORY: Record<RoomCategoryKey, "economy-double" | "ground-floor" | "first-floor" | "family-apartments"> = {
+  economy: "economy-double",
+  ground: "ground-floor",
+  upper: "first-floor",
+  family: "family-apartments",
+};
+
+/** Category id used by the shared homepage room facts (amenities, size). */
+export function factsCategoryId(roomNumber: number) {
+  const category = roomCategory(roomNumber);
+  return category ? FACTS_CATEGORY[category] : null;
+}
+
+export function upToGuestsLabel(language: RoomFinderLanguage, n: number) {
+  switch (language) {
+    case "el": return `Έως ${n} ${n === 1 ? "άτομο" : "άτομα"}`;
+    case "de": return `Bis zu ${n} ${n === 1 ? "Person" : "Personen"}`;
+    case "fr": return `Jusqu’à ${n} ${n === 1 ? "personne" : "personnes"}`;
+    case "it": return `Fino a ${n} ${n === 1 ? "persona" : "persone"}`;
+    case "es": return `Hasta ${n} ${n === 1 ? "persona" : "personas"}`;
+    case "tr": return `En fazla ${n} kişi`;
+    default: return `Up to ${n} ${n === 1 ? "guest" : "guests"}`;
+  }
+}

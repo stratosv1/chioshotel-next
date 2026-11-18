@@ -51,7 +51,7 @@ function BedIcon() {
   );
 }
 
-function GuestsIcon() {
+export function GuestsIcon() {
   return (
     <svg {...iconProps} width="15" height="15">
       <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
@@ -69,7 +69,7 @@ function CheckIcon() {
   );
 }
 
-function AmenityIcon({ amenity }: { amenity: AmenityKey }) {
+export function AmenityIcon({ amenity }: { amenity: AmenityKey }) {
   switch (amenity) {
     case "ac":
       return (
