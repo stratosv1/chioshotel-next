@@ -179,8 +179,22 @@ export class Beds24RateLimited extends Error {}
 
 type ApiBooking = Record<string, any>;
 
+// Apt 11 is sold only directly (never given to the channel manager): any other room of the
+// property that is not one of the four known room types is Apt 11 (owner, 2026-11-18).
+const KNOWN_ROOM_IDS = new Set(["267788", "268803", "626129", "265595"]);
+const PROPERTY_ID = String(process.env.BEDS24_PROPERTY_ID || "117813");
+
+function roomNumberFromApi(b: ApiBooking) {
+  const mapped = UNIT_TO_ROOM[`${text(b.roomId)}:${text(b.unitId)}`];
+  if (mapped) return mapped;
+  const roomId = text(b.roomId);
+  const property = text(b.propertyId);
+  if (roomId && !KNOWN_ROOM_IDS.has(roomId) && (!property || property === PROPERTY_ID)) return 11;
+  return null;
+}
+
 function rowFromApi(b: ApiBooking) {
-  const roomNumber = UNIT_TO_ROOM[`${text(b.roomId)}:${text(b.unitId)}`] ?? null;
+  const roomNumber = roomNumberFromApi(b);
   const price = num(b.price);
   const commission = num(b.commission);
   const referer = text(b.referer) || text(b.channel) || null;

@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
 
     if (body.action === "housekeeping") {
       const room = Number(body.room);
-      if (!isDay(body.day) || !Number.isInteger(room) || room < 1 || room > 10 || !STATUSES.includes(body.status)) {
+      if (!isDay(body.day) || !Number.isInteger(room) || room < 1 || room > 11 || !STATUSES.includes(body.status)) {
         return NextResponse.json({ ok: false, error: "Μη έγκυρα στοιχεία." }, { status: 400, headers });
       }
       await setHousekeeping(body.day, room, body.status);

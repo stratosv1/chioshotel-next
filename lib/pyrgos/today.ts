@@ -60,6 +60,37 @@ const toNumber = (value: unknown) => {
   return String(value ?? "").trim() !== "" && Number.isFinite(n) ? n : null;
 };
 
+export const TOTAL_ROOMS = 11;
+
+async function getApt11Day(day: string) {
+  await ensureBookingsTable();
+  const rows = (await getSql()`
+    select p.booking_id, p.first_name, p.last_name, p.adults, p.children,
+      to_char(p.checkin, 'YYYY-MM-DD') as checkin, to_char(p.checkout, 'YYYY-MM-DD') as checkout,
+      c.arrival_time, c.arrival_details
+    from public.pyrgos_bookings p
+    left join public.crm_booking_contacts c on c.booking_id = p.booking_id and c.arrival_saved_at is not null
+    where p.room_number = 11 and p.status in ('confirmed', 'new')
+      and p.checkin <= ${day}::date and p.checkout >= ${day}::date
+  `) as any[];
+  const toStay = (row: any): RoomStay => ({
+    room: 11,
+    bookingId: String(row.booking_id),
+    name: `${row.first_name ?? ""} ${row.last_name ?? ""}`.trim(),
+    adults: row.adults === null ? null : Number(row.adults),
+    children: row.children === null ? null : Number(row.children),
+    arrivalTime: row.arrival_time ?? null,
+    arrivalDetails: row.arrival_details ?? null,
+    checkout: row.checkout,
+    sameDayChange: false,
+  });
+  const arriving = rows.filter((row) => row.checkin === day).map(toStay);
+  const leaving = rows.filter((row) => row.checkout === day).map(toStay);
+  const staying = rows.filter((row) => row.checkin < day && row.checkout > day).map(toStay);
+  if (arriving.length && leaving.length) arriving.forEach((stay) => (stay.sameDayChange = true));
+  return { arriving, leaving, staying, occupied: arriving.length + staying.length > 0 };
+}
+
 export function channelFromEmail(email: string | null | undefined): Channel {
   return /expedia/i.test(email ?? "") ? "Expedia" : /booking\.com/i.test(email ?? "") ? "Booking" : "Απευθείας";
 }
@@ -68,7 +99,15 @@ const ORDER: Record<TaskKind, number> = { turnover: 0, prepare: 1, checkout: 2, 
 
 export async function getToday(day: string): Promise<TodayData> {
   const sql = getSql();
-  const roomDay = await getRoomDay(day);
+  const [inventoryDay, apt11] = await Promise.all([getRoomDay(day), getApt11Day(day)]);
+  // Apt 11 is not in the Booking Core inventory (sold only directly), so it comes from pyrgos_bookings.
+  const roomDay = {
+    ...inventoryDay,
+    arriving: [...inventoryDay.arriving, ...apt11.arriving],
+    leaving: [...inventoryDay.leaving, ...apt11.leaving],
+    staying: [...inventoryDay.staying, ...apt11.staying],
+    free: apt11.occupied ? inventoryDay.free : [...inventoryDay.free, 11],
+  };
   const all = [...roomDay.arriving, ...roomDay.leaving, ...roomDay.staying];
   const ids = [...new Set(all.map((stay) => stay.bookingId))];
   const month = day.slice(0, 7);

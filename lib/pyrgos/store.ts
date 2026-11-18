@@ -105,7 +105,7 @@ export const BED_LABELS: Record<BedSetup, string> = {
   double_two_singles: "διπλό + 2 μονά",
 };
 
-/** Family apartments 8, 9, 10 have 1 double + 2 singles; the other rooms a double bed. */
+/** Family apartments 8, 9, 10 (and Apt 11) have a double plus singles; the other rooms a double bed. */
 export function suggestBeds(room: number, people: number | null): BedSetup | null {
   if (people === null) return null;
   if (room >= 8) return people >= 4 ? "double_two_singles" : people === 3 ? "double_single" : "double";

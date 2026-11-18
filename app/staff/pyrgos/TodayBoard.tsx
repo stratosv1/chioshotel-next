@@ -23,7 +23,8 @@ const dayLabel = (day: string) =>
 const shortDate = (day: string) =>
   new Intl.DateTimeFormat("el-GR", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${day}T12:00:00Z`));
 const euro = (n: number) => new Intl.NumberFormat("el-GR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
-const roomName = (room: number) => (room >= 8 ? `Διαμ. ${room}` : `Δωμ. ${room}`);
+const roomName = (room: number) => (room === 11 ? "Apt 11" : room >= 8 ? `Διαμ. ${room}` : `Δωμ. ${room}`);
+const TOTAL_ROOMS = 11;
 
 const CHANNEL_STYLE: Record<string, string> = {
   Booking: "bg-[#d6eefc] text-[#0c4a6e]",
@@ -121,7 +122,7 @@ export default function TodayBoard() {
     }
   }
 
-  const occupiedTonight = data ? 10 - data.free.length : 0;
+  const occupiedTonight = data ? TOTAL_ROOMS - data.free.length : 0;
   const noTime = data ? data.arriving.filter((stay) => !stay.arrivalTime).length : 0;
   const message = useMemo(() => (data ? emiMessage(day, data.housekeeping) : ""), [data, day]);
   const today = athensToday();
@@ -181,8 +182,8 @@ export default function TodayBoard() {
                 </div>
                 <div className="rounded-2xl bg-[#e9e4fe] p-4 text-[#3b2f8a]">
                   <div className="text-sm font-semibold opacity-85">Μένουν απόψε</div>
-                  <div className="mt-1 text-3xl font-black">{occupiedTonight} / 10</div>
-                  <div className="text-xs opacity-85">Πληρότητα {occupiedTonight * 10}%</div>
+                  <div className="mt-1 text-3xl font-black">{occupiedTonight} / {TOTAL_ROOMS}</div>
+                  <div className="text-xs opacity-85">Πληρότητα {Math.round((occupiedTonight / TOTAL_ROOMS) * 100)}%</div>
                 </div>
                 <div className="rounded-2xl bg-[#d2f3f6] p-4 text-[#0b4d55]">
                   <div className="text-sm font-semibold capitalize opacity-85">Έσοδα {data.month.label}</div>
