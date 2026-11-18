@@ -10,6 +10,14 @@ const PROPERTY_ID = Number(process.env.BEDS24_PROPERTY_ID || "117813");
 const KNOWN_ROOM_IDS = new Set([267788, 268803, 626129, 265595]);
 const text = (value: unknown) => String(value ?? "").trim();
 
+/** Beds24 wants an ISO 3166 alpha-2 code; Greek letters (e.g. «ΕΛ») are refused, so map or drop. */
+export function countryCode(value: string) {
+  const v = value.trim().toUpperCase();
+  if (["ΕΛ", "ΕΛΛ", "ΕΛΛΑΔΑ", "GREECE", "GRC"].includes(v)) return "GR";
+  if (["ΚΥ", "ΚΥΠΡΟΣ", "CYPRUS", "CYP"].includes(v)) return "CY";
+  return /^[A-Z]{2}$/.test(v) ? v : "";
+}
+
 let apt11RoomId: number | null = Number(process.env.BEDS24_APT11_ROOM_ID || "") || null;
 
 /** Apt 11 is a room of the property outside the four known room types; found once and cached. */
@@ -76,6 +84,12 @@ async function post(body: Record<string, unknown>) {
   });
   const result = (await response.json().catch(() => null)) as any;
   const first = Array.isArray(result) ? result[0] : result;
+  const createdId = first?.new?.id ?? first?.info?.[0]?.id;
+  if (response.ok && createdId) {
+    // Beds24 can create the booking and still report a refused field (e.g. country2): keep the booking.
+    if (first?.success === false || first?.errors) console.warn("[pyrgos] Beds24 created with warnings", JSON.stringify(first?.errors ?? first?.warnings ?? "").slice(0, 300));
+    return first;
+  }
   if (!response.ok || first?.success === false) {
     const detail = JSON.stringify(first?.errors ?? first?.warnings ?? "").slice(0, 200);
     throw new Error(`Το Beds24 δεν δέχτηκε την αλλαγή (HTTP ${response.status}) ${detail}`.trim());
@@ -108,7 +122,7 @@ export async function createBeds24Booking(
     lastName: input.lastName,
     ...(input.email ? { email: input.email } : {}),
     ...(input.phone ? { mobile: input.phone, phone: input.phone } : {}),
-    ...(input.country ? { country2: input.country.slice(0, 2).toUpperCase() } : {}),
+    ...(countryCode(input.country) ? { country2: countryCode(input.country) } : {}),
     numAdult: input.adults,
     numChild: input.children,
     ...(input.total !== null ? { price: input.total } : {}),

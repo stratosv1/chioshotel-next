@@ -423,7 +423,8 @@ function ExtrasEditor({ stay, onClose, onSaved }: { stay: TodayStay; onClose: ()
 
 type YearSummary = { year: number; bookings: number; cancelled: number; nights: number; priced: number; gross: number; net: number };
 
-const MONTHS = Array.from({ length: 24 }, (_, i) => `${2025 + Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`);
+// 2025 up to the end of next year (future bookings belong in the plan too).
+const MONTHS = Array.from({ length: (new Date().getFullYear() + 2 - 2025) * 12 }, (_, i) => `${2025 + Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`);
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function HistoryCard({ onDone }: { onDone: () => void }) {
@@ -494,7 +495,7 @@ function HistoryCard({ onDone }: { onDone: () => void }) {
   return (
     <section aria-labelledby="base" className="space-y-3 rounded-2xl border border-[#e3e9f0] bg-white p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 id="base" className="text-lg font-black">Βάση κρατήσεων 2025–2026</h2>
+        <h2 id="base" className="text-lg font-black">Βάση κρατήσεων</h2>
         <button
           type="button"
           disabled={running}

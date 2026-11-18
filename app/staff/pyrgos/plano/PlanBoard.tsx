@@ -1507,7 +1507,7 @@ function NewBookingDialog({
             <label className="block text-xs font-bold">Email<input type="email" value={f.email} onChange={(e) => set({ email: e.target.value })} className={input} /></label>
             <div className="grid grid-cols-[1fr_6rem] gap-2">
               <label className="text-xs font-bold">Κινητό<input type="tel" value={f.phone} onChange={(e) => set({ phone: e.target.value })} placeholder="+30 69…" className={input} /></label>
-              <label className="text-xs font-bold">Χώρα<input value={f.country} maxLength={2} onChange={(e) => set({ country: e.target.value.toUpperCase() })} placeholder="GR" className={input} /></label>
+              <label className="text-xs font-bold">Χώρα<input value={f.country} maxLength={2} onChange={(e) => set({ country: e.target.value.toUpperCase() })} placeholder="GR" title="Κωδικός χώρας με λατινικά, π.χ. GR, DE, IT" className={input} /></label>
             </div>
             <label className="block text-xs font-bold">
               Κρεβάτια

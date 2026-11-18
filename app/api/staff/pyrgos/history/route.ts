@@ -22,10 +22,10 @@ export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as { step?: string; month?: string };
     if (body.step === "local") {
-      const changed = await importFromLocal("2025-01-01", "2026-12-31");
+      const changed = await importFromLocal("2025-01-01", "2028-12-31");
       return NextResponse.json({ ok: true, changed }, { headers });
     }
-    if (body.month && /^(2025|2026)-(0[1-9]|1[0-2])$/.test(body.month)) {
+    if (body.month && /^(2025|2026|2027|2028)-(0[1-9]|1[0-2])$/.test(body.month)) {
       return NextResponse.json({ ok: true, ...(await importFromBeds24Month(body.month)) }, { headers });
     }
     return NextResponse.json({ ok: false, error: "Μη έγκυρο αίτημα." }, { status: 400, headers });

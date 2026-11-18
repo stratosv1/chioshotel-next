@@ -93,7 +93,7 @@ export async function ensureBookingsTable() {
 }
 
 /** Copies 2025–2026 bookings from public.beds24_bookings (keeps any price already filled from Beds24). */
-export async function importFromLocal(fromDate = "2025-01-01", toDate = "2026-12-31") {
+export async function importFromLocal(fromDate = "2025-01-01", toDate = "2028-12-31") {
   await ensureBookingsTable();
   const rows = (await getSql()`
     with src as (
