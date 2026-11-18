@@ -184,3 +184,27 @@ export function Table({ head, rows, op }: { head: ReactNode[]; rows: { label: Re
     </div>
   );
 }
+
+/** Η «χρυσή» θεωρία της ενότητας, με κινούμενο χρωματιστό περίγραμμα. */
+export function KeyIdea({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <div className="sx-key rounded-3xl p-[3px] shadow-md">
+      <div className="rounded-[calc(1.5rem-3px)] bg-white p-5 sm:p-6">
+        <p className="mb-3 text-sm font-black uppercase tracking-[0.16em] text-[#a2531f]">
+          <span className="sx-float">🔑</span> Θυμήσου: {title}
+        </p>
+        <div className="space-y-2 text-[17px] leading-8">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+/** Μικρή εισαγωγή από την καθημερινή ζωή. */
+export function Hook({ emoji, children }: { emoji: string; children: ReactNode }) {
+  return (
+    <div className="flex items-start gap-4 rounded-3xl bg-[#2c2825] p-5 text-white shadow-md">
+      <span className="sx-float text-4xl">{emoji}</span>
+      <p className="text-[17px] leading-8">{children}</p>
+    </div>
+  );
+}
