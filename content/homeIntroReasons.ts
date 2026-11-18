@@ -12,28 +12,28 @@ const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
     title: "6 reasons your stay feels more personal, peaceful and authentically Chios",
     cards: [
       {
-        title: "🏡 Authentic Chios stay",
-        text: "A warm, family-run experience with local character and personal care.",
+        title: "🏡 Authentic Chios hospitality",
+        text: "A warm, family-run welcome with local character and personal care.",
       },
       {
-        title: "🌿 Peaceful courtyard",
-        text: "Quiet garden atmosphere for relaxed mornings and calm evenings.",
+        title: "🛏️ Comfortable, well-kept rooms",
+        text: "Thoughtfully prepared rooms and apartments for couples, friends and families.",
       },
       {
-        title: "🥐 Homemade breakfast",
-        text: "Breakfast with local products and homemade touches, available on request.",
+        title: "✨ High cleaning standards",
+        text: "Spotless rooms, fresh linen and careful attention to every detail.",
       },
       {
-        title: "📍 Smart location",
+        title: "📍 Smart location on Chios",
         text: "Near town, airport, port and beaches, without the noise of the center.",
       },
       {
-        title: "🍊 Local Chios tips",
-        text: "Personal suggestions for beaches, villages, food and authentic island routes.",
+        title: "⭐ Excellent guest reviews",
+        text: "Guests consistently praise our hospitality, cleanliness and peaceful setting.",
       },
       {
-        title: "🛎️ Book direct benefits",
-        text: "Clear communication, flexible support and better direct-booking value.",
+        title: "💶 Book direct benefits",
+        text: "Better direct-booking value, clear communication and personal support.",
       },
     ],
   },
@@ -42,28 +42,28 @@ const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
     title: "6 λόγοι που η διαμονή σας γίνεται πιο προσωπική, ήρεμη και αυθεντικά χιώτικη",
     cards: [
       {
-        title: "🏡 Αυθεντική διαμονή στη Χίο",
+        title: "🏡 Αυθεντική χιώτικη φιλοξενία",
         text: "Ζεστή οικογενειακή φιλοξενία με τοπικό χαρακτήρα και προσωπική φροντίδα.",
       },
       {
-        title: "🌿 Ήρεμη αυλή",
-        text: "Ατμόσφαιρα κήπου για χαλαρά πρωινά και ήσυχα βράδια.",
+        title: "🛏️ Άνετα & προσεγμένα δωμάτια",
+        text: "Φροντισμένα δωμάτια και διαμερίσματα για ζευγάρια, φίλους και οικογένειες.",
       },
       {
-        title: "🥐 Σπιτικό πρωινό",
-        text: "Πρωινό με τοπικά προϊόντα και σπιτικές πινελιές, διαθέσιμο κατόπιν ζήτησης.",
+        title: "✨ Υψηλά πρότυπα καθαριότητας",
+        text: "Πεντακάθαρα δωμάτια, φρέσκα λευκά είδη και προσοχή σε κάθε λεπτομέρεια.",
       },
       {
-        title: "📍 Έξυπνη τοποθεσία",
+        title: "📍 Έξυπνη τοποθεσία στη Χίο",
         text: "Κοντά σε πόλη, αεροδρόμιο, λιμάνι και παραλίες, χωρίς τη φασαρία του κέντρου.",
       },
       {
-        title: "🍊 Τοπικές προτάσεις Χίου",
-        text: "Προσωπικές ιδέες για παραλίες, χωριά, φαγητό και αυθεντικές διαδρομές.",
+        title: "⭐ Άριστες αξιολογήσεις επισκεπτών",
+        text: "Οι επισκέπτες μας ξεχωρίζουν σταθερά τη φιλοξενία, την καθαριότητα και την ηρεμία.",
       },
       {
-        title: "🛎️ Οφέλη απευθείας κράτησης",
-        text: "Καθαρή επικοινωνία, ευελιξία και καλύτερη αξία όταν κλείνετε απευθείας.",
+        title: "💶 Οφέλη απευθείας κράτησης",
+        text: "Καλύτερη τιμή όταν κλείνετε απευθείας, καθαρή επικοινωνία και προσωπική εξυπηρέτηση.",
       },
     ],
   },
@@ -72,28 +72,28 @@ const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
     title: "6 raisons pour un séjour plus personnel, paisible et authentiquement chiote",
     cards: [
       {
-        title: "🏡 Séjour authentique à Chios",
-        text: "Une expérience familiale chaleureuse, avec caractère local et attention personnelle.",
+        title: "🏡 Hospitalité authentique de Chios",
+        text: "Un accueil familial chaleureux, avec caractère local et attention personnelle.",
       },
       {
-        title: "🌿 Cour paisible",
-        text: "Une atmosphère de jardin pour des matins détendus et des soirées calmes.",
+        title: "🛏️ Chambres confortables et soignées",
+        text: "Chambres et appartements préparés avec soin pour couples, amis et familles.",
       },
       {
-        title: "🥐 Petit-déjeuner maison",
-        text: "Des produits locaux et des touches maison, disponibles sur demande.",
+        title: "✨ Propreté irréprochable",
+        text: "Chambres impeccables, linge frais et attention à chaque détail.",
       },
       {
-        title: "📍 Emplacement pratique",
+        title: "📍 Emplacement pratique à Chios",
         text: "Près de la ville, de l’aéroport, du port et des plages, sans le bruit du centre.",
       },
       {
-        title: "🍊 Conseils locaux sur Chios",
-        text: "Suggestions personnelles pour plages, villages, cuisine et itinéraires authentiques.",
+        title: "⭐ Excellents avis clients",
+        text: "Nos hôtes saluent régulièrement l’accueil, la propreté et le calme.",
       },
       {
-        title: "🛎️ Avantages en direct",
-        text: "Communication claire, soutien flexible et meilleure valeur en réservant directement.",
+        title: "💶 Avantages en direct",
+        text: "Meilleur prix en réservant directement, communication claire et suivi personnel.",
       },
     ],
   },
@@ -102,28 +102,28 @@ const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
     title: "6 Gründe für einen persönlicheren, ruhigeren und authentischeren Chios-Aufenthalt",
     cards: [
       {
-        title: "🏡 Authentischer Chios-Aufenthalt",
-        text: "Eine warme, familiengeführte Unterkunft mit lokalem Charakter und persönlicher Betreuung.",
+        title: "🏡 Authentische Gastfreundschaft auf Chios",
+        text: "Ein herzlicher, familiengeführter Empfang mit lokalem Charakter und persönlicher Betreuung.",
       },
       {
-        title: "🌿 Ruhiger Innenhof",
-        text: "Gartenatmosphäre für entspannte Morgen und ruhige Abende.",
+        title: "🛏️ Komfortable, gepflegte Zimmer",
+        text: "Liebevoll vorbereitete Zimmer und Apartments für Paare, Freunde und Familien.",
       },
       {
-        title: "🥐 Hausgemachtes Frühstück",
-        text: "Frühstück mit lokalen Produkten und hausgemachten Details, auf Anfrage verfügbar.",
+        title: "✨ Hohe Sauberkeitsstandards",
+        text: "Makellose Zimmer, frische Wäsche und Liebe zum Detail.",
       },
       {
-        title: "📍 Praktische Lage",
+        title: "📍 Praktische Lage auf Chios",
         text: "Nahe Stadt, Flughafen, Hafen und Stränden, ohne den Lärm des Zentrums.",
       },
       {
-        title: "🍊 Lokale Chios-Tipps",
-        text: "Persönliche Vorschläge für Strände, Dörfer, Essen und authentische Inselrouten.",
+        title: "⭐ Ausgezeichnete Gästebewertungen",
+        text: "Gäste loben immer wieder Gastfreundschaft, Sauberkeit und Ruhe.",
       },
       {
-        title: "🛎️ Direktbuchungs-Vorteile",
-        text: "Klare Kommunikation, flexible Unterstützung und besserer Wert bei direkter Buchung.",
+        title: "💶 Direktbuchungs-Vorteile",
+        text: "Besserer Preis bei direkter Buchung, klare Kommunikation und persönlicher Service.",
       },
     ],
   },
@@ -132,28 +132,28 @@ const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
     title: "6 motivi per un soggiorno più personale, tranquillo e autenticamente di Chios",
     cards: [
       {
-        title: "🏡 Soggiorno autentico a Chios",
-        text: "Un’esperienza familiare e calorosa, con carattere locale e cura personale.",
+        title: "🏡 Ospitalità autentica di Chios",
+        text: "Un’accoglienza familiare e calorosa, con carattere locale e cura personale.",
       },
       {
-        title: "🌿 Cortile tranquillo",
-        text: "Atmosfera di giardino per mattine rilassate e serate serene.",
+        title: "🛏️ Camere comode e curate",
+        text: "Camere e appartamenti preparati con cura per coppie, amici e famiglie.",
       },
       {
-        title: "🥐 Colazione fatta in casa",
-        text: "Prodotti locali e tocchi casalinghi, disponibili su richiesta.",
+        title: "✨ Alti standard di pulizia",
+        text: "Camere impeccabili, biancheria fresca e attenzione a ogni dettaglio.",
       },
       {
-        title: "📍 Posizione comoda",
+        title: "📍 Posizione comoda a Chios",
         text: "Vicino a città, aeroporto, porto e spiagge, senza il rumore del centro.",
       },
       {
-        title: "🍊 Consigli locali su Chios",
-        text: "Suggerimenti personali per spiagge, villaggi, cibo e percorsi autentici.",
+        title: "⭐ Recensioni eccellenti",
+        text: "Gli ospiti lodano costantemente l’accoglienza, la pulizia e la tranquillità.",
       },
       {
-        title: "🛎️ Vantaggi prenotazione diretta",
-        text: "Comunicazione chiara, supporto flessibile e più valore prenotando direttamente.",
+        title: "💶 Vantaggi prenotazione diretta",
+        text: "Prezzo migliore prenotando direttamente, comunicazione chiara e assistenza personale.",
       },
     ],
   },
@@ -162,28 +162,28 @@ const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
     title: "6 razones para una estancia más personal, tranquila y auténticamente de Quíos",
     cards: [
       {
-        title: "🏡 Estancia auténtica en Quíos",
-        text: "Una experiencia familiar y cálida, con carácter local y atención personal.",
+        title: "🏡 Hospitalidad auténtica de Quíos",
+        text: "Una bienvenida familiar y cálida, con carácter local y atención personal.",
       },
       {
-        title: "🌿 Patio tranquilo",
-        text: "Ambiente de jardín para mañanas relajadas y noches en calma.",
+        title: "🛏️ Habitaciones cómodas y cuidadas",
+        text: "Habitaciones y apartamentos preparados con esmero para parejas, amigos y familias.",
       },
       {
-        title: "🥐 Desayuno casero",
-        text: "Productos locales y detalles caseros, disponibles bajo petición.",
+        title: "✨ Altos estándares de limpieza",
+        text: "Habitaciones impecables, ropa de cama fresca y atención a cada detalle.",
       },
       {
-        title: "📍 Ubicación inteligente",
+        title: "📍 Ubicación inteligente en Quíos",
         text: "Cerca de la ciudad, aeropuerto, puerto y playas, sin el ruido del centro.",
       },
       {
-        title: "🍊 Consejos locales de Quíos",
-        text: "Sugerencias personales para playas, pueblos, comida y rutas auténticas.",
+        title: "⭐ Excelentes opiniones",
+        text: "Los huéspedes destacan siempre la hospitalidad, la limpieza y la tranquilidad.",
       },
       {
-        title: "🛎️ Ventajas de reservar directo",
-        text: "Comunicación clara, apoyo flexible y mejor valor al reservar directamente.",
+        title: "💶 Ventajas de reservar directo",
+        text: "Mejor precio al reservar directamente, comunicación clara y atención personal.",
       },
     ],
   },
@@ -192,28 +192,28 @@ const introReasonsByLocale: Record<SupportedLocale, IntroRight> = {
     title: "Konaklamanızı daha kişisel, sakin ve gerçek bir Sakız deneyimi yapan 6 neden",
     cards: [
       {
-        title: "🏡 Sakız’da otantik konaklama",
-        text: "Yerel karaktere ve kişisel ilgiye sahip sıcak, aile işletmesi bir deneyim.",
+        title: "🏡 Otantik Sakız misafirperverliği",
+        text: "Yerel karaktere ve kişisel ilgiye sahip sıcak, aile işletmesi bir karşılama.",
       },
       {
-        title: "🌿 Huzurlu avlu",
-        text: "Rahat sabahlar ve sakin akşamlar için bahçe atmosferi.",
+        title: "🛏️ Konforlu ve özenli odalar",
+        text: "Çiftler, arkadaşlar ve aileler için özenle hazırlanmış odalar ve daireler.",
       },
       {
-        title: "🥐 Ev yapımı kahvaltı",
-        text: "Yerel ürünler ve ev yapımı dokunuşlarla, talep üzerine kahvaltı.",
+        title: "✨ Yüksek temizlik standartları",
+        text: "Tertemiz odalar, taze nevresimler ve her ayrıntıya özen.",
       },
       {
-        title: "📍 Akıllı konum",
+        title: "📍 Sakız’da akıllı konum",
         text: "Merkezin gürültüsü olmadan şehir, havalimanı, liman ve plajlara yakın.",
       },
       {
-        title: "🍊 Yerel Sakız önerileri",
-        text: "Plajlar, köyler, yemek ve otantik ada rotaları için kişisel öneriler.",
+        title: "⭐ Mükemmel misafir yorumları",
+        text: "Misafirlerimiz misafirperverliği, temizliği ve huzuru sürekli övüyor.",
       },
       {
-        title: "🛎️ Doğrudan rezervasyon avantajları",
-        text: "Net iletişim, esnek destek ve doğrudan rezervasyonda daha iyi değer.",
+        title: "💶 Doğrudan rezervasyon avantajları",
+        text: "Doğrudan rezervasyonda daha iyi fiyat, net iletişim ve kişisel destek.",
       },
     ],
   },
