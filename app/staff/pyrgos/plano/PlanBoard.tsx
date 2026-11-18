@@ -846,6 +846,8 @@ function BookingPanel({
           </p>
         )}
 
+        <GuestCrm booking={b} setConfirm={setConfirm} onToast={onChanged} />
+
         <section className="space-y-2">
           <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Διαμονή</h3>
           <label className="block text-xs font-bold">
@@ -970,18 +972,6 @@ function BookingPanel({
         </section>
 
         <section className="space-y-2">
-          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Μηνύματα</h3>
-          <div className="flex flex-wrap gap-2">
-            {digits ? <a href={`https://wa.me/${digits}`} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#d3f2dc] px-4 py-2 text-sm font-bold text-[#14532d]">WhatsApp</a> : null}
-            {digits ? <a href={`sms:+${digits}`} className="rounded-full bg-[#d6eefc] px-4 py-2 text-sm font-bold text-[#0c4a6e]">SMS</a> : null}
-            {b.email && !/guest\.booking\.com|expediapartnercentral|m\.expediapartner/i.test(b.email) ? (
-              <a href={`mailto:${b.email}`} className="rounded-full bg-[#e9e4fe] px-4 py-2 text-sm font-bold text-[#3b2f8a]">Email</a>
-            ) : null}
-            {!digits && !b.email ? <span className="text-sm text-[#5b6b80]">Δεν υπάρχει τηλέφωνο ή email.</span> : null}
-          </div>
-        </section>
-
-        <section className="space-y-2">
           <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Σημειώσεις</h3>
           {b.notes ? <p className="whitespace-pre-line rounded-lg bg-[#fff8e8] p-3 text-sm">{b.notes}</p> : <p className="text-sm text-[#5b6b80]">Καμία σημείωση.</p>}
           <div className="flex gap-2">
@@ -1038,6 +1028,218 @@ function BookingPanel({
         )}
       </div>
     </aside>
+  );
+}
+
+// ---------- guest CRM & messages ----------
+
+type GuestProfile = {
+  language: "el" | "en" | "tr";
+  realEmail: string | null;
+  phone: string;
+  arrivalTime: string | null;
+  arrivalDetails: string | null;
+  missing: string[];
+  canOtaMessage: boolean;
+  outreachSent: boolean;
+  previous: { id: string; room: number | null; checkin: string; nights: number; channel: string }[];
+  timeline: { at: string; channel: string; direction: "in" | "out"; title: string; body: string; status: string }[];
+};
+
+const MAPS = "https://www.google.com/maps/place/Voulamandis+House";
+
+function templates(lang: "el" | "en" | "tr", name: string, checkin: string) {
+  const first = (name || "").split(" ")[0];
+  if (lang === "el") {
+    return [
+      { label: "Ώρα άφιξης", text: `Γεια σας ${first}, ευχαριστούμε για την κράτηση στο Voulamandis House! Τι ώρα περίπου θα φτάσετε στις ${dm(checkin)}; Το check-in είναι από τις 14:00.` },
+      { label: "Προσωπικό email", text: `Γεια σας ${first}, μπορείτε να μας στείλετε το προσωπικό σας email για να σας στείλουμε την επιβεβαίωση και πληροφορίες για τη διαμονή σας;` },
+      { label: "Οδηγίες", text: `Γεια σας ${first}, η τοποθεσία μας στον χάρτη: ${MAPS} . Για οτιδήποτε χρειαστείτε είμαστε εδώ. Voulamandis House` },
+      { label: "Ευχαριστώ", text: `Ευχαριστούμε πολύ ${first}! Σας περιμένουμε. Voulamandis House` },
+    ];
+  }
+  return [
+    { label: "Ώρα άφιξης", text: `Hello ${first}, thank you for booking Voulamandis House! Around what time will you arrive on ${dm(checkin)}? Check-in is from 14:00.` },
+    { label: "Προσωπικό email", text: `Hello ${first}, could you send us your personal email so we can send you the confirmation and information about your stay?` },
+    { label: "Οδηγίες", text: `Hello ${first}, here is our location: ${MAPS} . We are here for anything you need. Voulamandis House` },
+    { label: "Ευχαριστώ", text: `Thank you ${first}! We look forward to welcoming you. Voulamandis House` },
+  ];
+}
+
+function GuestCrm({ booking: b, setConfirm, onToast }: { booking: PlanBooking; setConfirm: (c: ConfirmState) => void; onToast: (text: string) => void }) {
+  const [p, setP] = useState<GuestProfile | null>(null);
+  const [error, setError] = useState("");
+  const [channel, setChannel] = useState<"sms" | "email" | "whatsapp" | "ota">("sms");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [arrival, setArrival] = useState({ time: "", details: "" });
+
+  const load = useCallback(async () => {
+    const json = await api(`/api/staff/pyrgos/guest/?id=${encodeURIComponent(b.id)}`);
+    if (!json.ok) return setError(json.error || "Δεν φόρτωσαν τα στοιχεία πελάτη.");
+    setP(json.profile);
+    setArrival({ time: json.profile.arrivalTime ?? "", details: json.profile.arrivalDetails ?? "" });
+    setChannel(json.profile.phone ? "sms" : json.profile.realEmail ? "email" : json.profile.canOtaMessage ? "ota" : "sms");
+  }, [b.id]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const guestPost = (body: Record<string, unknown>) =>
+    api("/api/staff/pyrgos/guest/", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: b.id, ...body }) });
+
+  if (!p) return <section className="text-sm text-[#5b6b80]">{error || "Φόρτωση πελάτη…"}</section>;
+
+  const digits = (p.phone || "").replace(/\D/g, "").replace(/^00/, "");
+  const waDigits = /^69\d{8}$/.test(digits) ? `30${digits}` : digits;
+  const name = `${b.firstName} ${b.lastName}`.trim();
+  const CH = [
+    { key: "sms", label: "SMS", ok: Boolean(p.phone), why: "δεν υπάρχει κινητό" },
+    { key: "email", label: "Email", ok: Boolean(p.realEmail), why: "δεν υπάρχει προσωπικό email" },
+    { key: "whatsapp", label: "WhatsApp", ok: Boolean(waDigits), why: "δεν υπάρχει κινητό" },
+    { key: "ota", label: b.channel === "Expedia" ? "Μήνυμα Expedia" : "Μήνυμα Booking", ok: p.canOtaMessage, why: "μόνο για Booking/Expedia" },
+  ] as const;
+  const current = CH.find((c) => c.key === channel)!;
+
+  function send() {
+    if (!current.ok) return setError(`Δεν γίνεται ${current.label}: ${current.why}.`);
+    if (!message.trim()) return setError("Γράψε το μήνυμα.");
+    setError("");
+    const to = channel === "sms" || channel === "whatsapp" ? `+${waDigits}` : channel === "email" ? p!.realEmail : b.channel;
+    setConfirm({
+      title: `Αποστολή ${current.label}`,
+      lines: [`Προς: ${name} (${to})`, ...(channel === "email" ? [`Θέμα: ${subject || "Voulamandis House"}`] : []), message.length > 220 ? `${message.slice(0, 220)}…` : message],
+      confirmLabel: channel === "whatsapp" ? "Άνοιγμα WhatsApp" : "Αποστολή",
+      onConfirm: async () => {
+        if (channel === "whatsapp") {
+          window.open(`https://wa.me/${waDigits}?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+        }
+        const json = await guestPost({ action: "send", channel, message, subject });
+        if (!json.ok) {
+          setError(json.error || "Η αποστολή απέτυχε.");
+          return;
+        }
+        setMessage("");
+        setSubject("");
+        onToast(channel === "whatsapp" ? "Άνοιξε το WhatsApp · πάτα αποστολή εκεί" : `${current.label} στάλθηκε ✓`);
+        load();
+      },
+    });
+  }
+
+  return (
+    <section className="space-y-3">
+      <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Πελάτης & μηνύματα</h3>
+      {error && <p className="rounded-lg bg-[#fff4dc] px-3 py-2 text-xs font-semibold text-[#92400e]">{error}</p>}
+
+      <div className="flex flex-wrap gap-1.5 text-xs font-bold">
+        {p.previous.length > 0 ? (
+          <span className="rounded-full bg-[#ece9fd] px-2.5 py-1 text-[#3b2f8a]" title={p.previous.map((x) => `${x.checkin} · ${roomLabel(x.room)} · ${x.nights} ν.`).join("\n")}>
+            ★ Έχει ξανάρθει {p.previous.length}× · τελευταία {dm(p.previous[0].checkin)}/{p.previous[0].checkin.slice(2, 4)}
+          </span>
+        ) : (
+          <span className="rounded-full bg-[#f4f7fa] px-2.5 py-1 text-[#5b6b80]">Πρώτη φορά</span>
+        )}
+        <span className="rounded-full bg-[#f4f7fa] px-2.5 py-1">{p.realEmail ? `✉ ${p.realEmail}` : "✉ —"}</span>
+        <span className="rounded-full bg-[#f4f7fa] px-2.5 py-1">{p.phone ? `☎ ${p.phone}` : "☎ —"}</span>
+      </div>
+
+      {p.missing.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#fff8e8] px-3 py-2 text-xs">
+          <span className="font-bold text-[#92400e]">Λείπει: {p.missing.join(", ")}</span>
+          {p.canOtaMessage && (p.missing.includes("email") || p.missing.includes("ώρα άφιξης")) && (
+            <button
+              type="button"
+              onClick={() =>
+                setConfirm({
+                  title: "Αίτημα στοιχείων",
+                  lines: [`Μήνυμα μέσω ${b.channel} στον/στην ${name}: ζητάμε προσωπικό email και ώρα άφιξης.`, p.outreachSent ? "Έχει ήδη σταλεί μία φορά · θα πάει υπενθύμιση." : ""].filter(Boolean),
+                  onConfirm: async () => {
+                    const json = await guestPost({ action: "request" });
+                    if (!json.ok) return setError(json.error || "Το αίτημα απέτυχε.");
+                    onToast("Το αίτημα στάλθηκε ✓");
+                    load();
+                  },
+                })
+              }
+              className="rounded-full bg-white px-3 py-1.5 font-bold text-[#92400e] ring-1 ring-[#fde3a7]"
+            >
+              Ζήτησέ τα μέσω {b.channel}
+            </button>
+          )}
+        </div>
+      )}
+
+      <div className="grid grid-cols-[6.5rem_1fr_auto] items-end gap-2">
+        <label className="text-xs font-bold">Ώρα άφιξης<input type="time" value={arrival.time} onChange={(e) => setArrival({ ...arrival, time: e.target.value })} className={input} /></label>
+        <label className="text-xs font-bold">Πώς έρχεται<input value={arrival.details} onChange={(e) => setArrival({ ...arrival, details: e.target.value })} placeholder="π.χ. Aegean A3 284" className={input} /></label>
+        <button
+          type="button"
+          onClick={async () => {
+            const json = await guestPost({ action: "arrival", time: arrival.time, details: arrival.details });
+            if (!json.ok) return setError(json.error || "Δεν αποθηκεύτηκε.");
+            onToast("Η ώρα άφιξης αποθηκεύτηκε");
+            load();
+          }}
+          className="min-h-11 rounded-full border border-[#cfd9e4] px-3 text-xs font-bold"
+        >
+          Αποθήκευση
+        </button>
+      </div>
+
+      <div className="rounded-xl border border-[#e3e9f0] p-3">
+        <div className="mb-2 flex flex-wrap gap-1" role="tablist" aria-label="Κανάλι μηνύματος">
+          {CH.map((c) => (
+            <button
+              key={c.key}
+              type="button"
+              role="tab"
+              aria-selected={channel === c.key}
+              onClick={() => setChannel(c.key)}
+              title={c.ok ? "" : c.why}
+              className={`min-h-9 rounded-full px-3 text-xs font-bold ${channel === c.key ? "bg-[#e9e4fe] text-[#3b2f8a]" : c.ok ? "bg-[#f4f7fa]" : "bg-[#f4f7fa] text-[#a3aebd] line-through"}`}
+            >
+              {c.label}
+            </button>
+          ))}
+        </div>
+        <div className="mb-2 flex flex-wrap gap-1">
+          {templates(p.language, name, b.checkin).map((t) => (
+            <button key={t.label} type="button" onClick={() => setMessage(t.text)} className="rounded-full border border-[#dbe3ec] px-2.5 py-1 text-[11px] font-semibold">
+              {t.label}
+            </button>
+          ))}
+        </div>
+        {channel === "email" && <input value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Θέμα" aria-label="Θέμα email" className={`${input} mt-0 mb-2`} />}
+        <textarea rows={4} value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Γράψε το μήνυμα…" aria-label="Μήνυμα" className={`${input} mt-0`} />
+        <div className="mt-2 flex items-center justify-between">
+          <span className="text-[11px] text-[#5b6b80]">
+            {channel === "sms" ? `${message.length}/918 · ${Math.max(1, Math.ceil(message.length / 70))} SMS` : channel === "whatsapp" ? "Ανοίγει το WhatsApp σου με έτοιμο το κείμενο" : channel === "ota" ? `Πηγαίνει μέσα από το ${b.channel}` : p.realEmail ?? ""}
+          </span>
+          <button type="button" onClick={send} disabled={!current.ok} className="min-h-11 rounded-full bg-[#d2f3f6] px-5 text-sm font-bold text-[#0b4d55] disabled:opacity-50">
+            {channel === "whatsapp" ? "Άνοιγμα WhatsApp" : `Αποστολή ${current.label}`}
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div className="mb-1 text-xs font-black uppercase tracking-wide text-[#5b6b80]">Επικοινωνία</div>
+        {p.timeline.length === 0 && <p className="text-xs text-[#5b6b80]">Δεν έχει γίνει επικοινωνία ακόμα.</p>}
+        <ul className="max-h-72 space-y-1.5 overflow-y-auto pr-1">
+          {p.timeline.map((t, i) => (
+            <li key={i} className={`rounded-lg px-3 py-2 text-xs ${t.direction === "in" ? "bg-[#e9f9ee]" : "bg-[#f4f7fa]"}`}>
+              <div className="flex justify-between gap-2">
+                <strong>{t.direction === "in" ? "← " : "→ "}{t.title}</strong>
+                <span className="shrink-0 text-[#5b6b80]">{t.at}</span>
+              </div>
+              {t.body ? <div className="mt-0.5 whitespace-pre-line text-[#3d4b5e]">{t.body}</div> : null}
+              {t.status ? <div className={`mt-0.5 font-semibold ${/fail|undeliver|reject/.test(t.status) ? "text-[#b45309]" : "text-[#5b6b80]"}`}>{t.status}</div> : null}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
 

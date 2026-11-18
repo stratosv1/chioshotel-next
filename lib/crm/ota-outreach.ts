@@ -48,7 +48,7 @@ export async function setOutreachEnabled(enabled: boolean) {
 }
 
 /** Beds24 confirms it accepted the message; a refusal throws, so it shows as failed. */
-async function postChannelMessage(bookingId: string, message: string) {
+export async function postChannelMessage(bookingId: string, message: string) {
   const token = await getBeds24WriteToken();
   const response = await fetch(WRITE_MESSAGES_URL, {
     method: "POST",
