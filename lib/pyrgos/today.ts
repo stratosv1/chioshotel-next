@@ -1,6 +1,7 @@
 import "server-only";
 import { getRoomDay, type RoomStay } from "@/lib/crm/room-day";
 import { listAttentionBookings } from "@/lib/crm/bookings-board";
+import { COMMISSION_RATE, ensureBookingsTable, type PyrgosChannel } from "./bookings";
 import {
   bedsText,
   getExtras,
@@ -12,9 +13,6 @@ import {
 } from "./store";
 
 export type Channel = "Booking" | "Expedia" | "Απευθείας";
-
-// Owner, 2026-11-18: Booking.com 15%, Expedia 20%.
-const COMMISSION: Record<Channel, number> = { Booking: 0.15, Expedia: 0.2, Απευθείας: 0 };
 
 export type TodayStay = RoomStay & {
   people: number | null;
@@ -54,7 +52,7 @@ export type TodayData = {
   housekeeping: HousekeepingTask[];
   missing: MissingItem[];
   feed: FeedItem[];
-  month: { label: string; gross: number; net: number; bookings: number };
+  month: { label: string; gross: number; net: number; bookings: number; priced: number };
 };
 
 const toNumber = (value: unknown) => {
@@ -85,8 +83,11 @@ export async function getToday(day: string): Promise<TodayData> {
       console.error("[pyrgos] attention list failed", error);
       return [];
     }),
-    sql`select email, price from public.beds24_bookings
-        where lower(status) in ('confirmed', 'new') and to_char(checkin, 'YYYY-MM') = ${month}` as Promise<any[]>,
+    ensureBookingsTable().then(
+      () =>
+        sql`select channel, price, commission from public.pyrgos_bookings
+          where status in ('confirmed', 'new') and to_char(checkin, 'YYYY-MM') = ${month}` as Promise<any[]>,
+    ),
     sql`select booking_id, status, firstname, lastname, room,
           to_char(checkin, 'DD/MM') as checkin, to_char(checkout, 'DD/MM') as checkout, email,
           to_char(updated_at at time zone 'Europe/Athens', 'DD/MM HH24:MI') as time
@@ -169,10 +170,11 @@ export async function getToday(day: string): Promise<TodayData> {
     .slice(0, 8);
 
   const monthGross = monthRows.reduce((sum, row) => sum + (toNumber(row.price) ?? 0), 0);
-  const monthNet = monthRows.reduce(
-    (sum, row) => sum + (toNumber(row.price) ?? 0) * (1 - COMMISSION[channelFromEmail(row.email)]),
-    0,
-  );
+  const monthNet = monthRows.reduce((sum, row) => {
+    const price = toNumber(row.price) ?? 0;
+    const commission = toNumber(row.commission) ?? price * (COMMISSION_RATE[row.channel as PyrgosChannel] ?? 0);
+    return sum + price - commission;
+  }, 0);
 
   const feed: FeedItem[] = feedRows.map((row) => {
     const cancelled = /cancel/i.test(String(row.status ?? ""));
@@ -196,6 +198,12 @@ export async function getToday(day: string): Promise<TodayData> {
     housekeeping: tasks,
     missing,
     feed,
-    month: { label: monthLabel, gross: Math.round(monthGross), net: Math.round(monthNet), bookings: monthRows.length },
+    month: {
+      label: monthLabel,
+      gross: Math.round(monthGross),
+      net: Math.round(monthNet),
+      bookings: monthRows.length,
+      priced: monthRows.filter((row) => toNumber(row.price)).length,
+    },
   };
 }

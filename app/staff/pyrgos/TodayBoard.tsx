@@ -187,7 +187,10 @@ export default function TodayBoard() {
                 <div className="rounded-2xl bg-[#d2f3f6] p-4 text-[#0b4d55]">
                   <div className="text-sm font-semibold capitalize opacity-85">Έσοδα {data.month.label}</div>
                   <div className="mt-1 text-3xl font-black">{euro(data.month.net)}</div>
-                  <div className="text-xs opacity-85">καθαρά μετά προμήθειες · μικτά {euro(data.month.gross)}</div>
+                  <div className="text-xs opacity-85">
+                    καθαρά μετά προμήθειες · μικτά {euro(data.month.gross)}
+                    {data.month.priced < data.month.bookings ? ` · ${data.month.bookings - data.month.priced} χωρίς τιμή` : ""}
+                  </div>
                 </div>
               </section>
 
@@ -343,6 +346,7 @@ export default function TodayBoard() {
                   </ul>
                 </section>
               </div>
+              <HistoryCard onDone={() => load(day)} />
             </>
           )}
         </main>
@@ -413,5 +417,129 @@ function ExtrasEditor({ stay, onClose, onSaved }: { stay: TodayStay; onClose: ()
         </button>
       </div>
     </div>
+  );
+}
+
+type YearSummary = { year: number; bookings: number; cancelled: number; nights: number; priced: number; gross: number; net: number };
+
+const MONTHS = Array.from({ length: 24 }, (_, i) => `${2025 + Math.floor(i / 12)}-${String((i % 12) + 1).padStart(2, "0")}`);
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+function HistoryCard({ onDone }: { onDone: () => void }) {
+  const [years, setYears] = useState<YearSummary[] | null>(null);
+  const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState("");
+  const [error, setError] = useState("");
+
+  const loadSummary = useCallback(async () => {
+    try {
+      const res = await fetch("/api/staff/pyrgos/history/", { cache: "no-store" });
+      const json = await res.json();
+      if (json.ok) setYears(json.years);
+    } catch {
+      /* summary is optional */
+    }
+  }, []);
+
+  useEffect(() => {
+    loadSummary();
+  }, [loadSummary]);
+
+  async function call(body: Record<string, unknown>) {
+    const res = await fetch("/api/staff/pyrgos/history/", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return { status: res.status, json: await res.json().catch(() => ({})) };
+  }
+
+  async function run() {
+    setRunning(true);
+    setError("");
+    try {
+      setProgress("Αντιγραφή από τη βάση του site…");
+      const local = await call({ step: "local" });
+      if (!local.json.ok) throw new Error(local.json.error || "local");
+      let changed = 0;
+      for (let i = 0; i < MONTHS.length; i++) {
+        const month = MONTHS[i];
+        setProgress(`Beds24: ${month} (${i + 1}/${MONTHS.length})…`);
+        let attempt = 0;
+        for (;;) {
+          const result = await call({ month });
+          if (result.status === 429 && attempt < 3) {
+            attempt += 1;
+            setProgress(`Beds24 ζήτησε παύση · περιμένω 1 λεπτό (${month})…`);
+            await wait(65_000);
+            continue;
+          }
+          if (!result.json.ok) throw new Error(`${month}: ${result.json.error || result.status}`);
+          changed += Number(result.json.changed || 0);
+          break;
+        }
+        await wait(1500);
+      }
+      setProgress(`Έτοιμο · ενημερώθηκαν ${changed} κρατήσεις από το Beds24`);
+      await loadSummary();
+      onDone();
+    } catch (e) {
+      setError(`Σταμάτησε: ${e instanceof Error ? e.message : "σφάλμα"}. Πάτα ξανά για συνέχεια.`);
+    } finally {
+      setRunning(false);
+    }
+  }
+
+  return (
+    <section aria-labelledby="base" className="space-y-3 rounded-2xl border border-[#e3e9f0] bg-white p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="base" className="text-lg font-black">Βάση κρατήσεων 2025–2026</h2>
+        <button
+          type="button"
+          disabled={running}
+          onClick={run}
+          className="min-h-11 rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a] disabled:opacity-60"
+        >
+          {running ? "Ενημέρωση…" : "Ενημέρωση από Beds24"}
+        </button>
+      </div>
+      {progress && <p className="text-sm font-semibold text-[#3b2f8a]">{progress}</p>}
+      {error && <p className="rounded-xl bg-[#fff4dc] px-3 py-2 text-sm font-semibold text-[#92400e]">{error}</p>}
+      {years && years.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[520px] text-left text-sm">
+            <thead className="text-xs text-[#5b6b80]">
+              <tr>
+                <th className="py-2 pr-3 font-bold">Έτος</th>
+                <th className="py-2 pr-3 font-bold">Κρατήσεις</th>
+                <th className="py-2 pr-3 font-bold">Νύχτες</th>
+                <th className="py-2 pr-3 font-bold">Ακυρώσεις</th>
+                <th className="py-2 pr-3 font-bold">Με τιμή</th>
+                <th className="py-2 pr-3 font-bold">Μικτά</th>
+                <th className="py-2 font-bold">Καθαρά</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#eef2f6]">
+              {years.map((y) => (
+                <tr key={y.year}>
+                  <td className="py-2 pr-3 font-black">{y.year}</td>
+                  <td className="py-2 pr-3">{y.bookings}</td>
+                  <td className="py-2 pr-3">{y.nights}</td>
+                  <td className="py-2 pr-3">{y.cancelled}</td>
+                  <td className="py-2 pr-3">{y.priced} / {y.bookings}</td>
+                  <td className="py-2 pr-3">{euro(y.gross)}</td>
+                  <td className="py-2 font-bold">{euro(y.net)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <p className="text-sm text-[#5b6b80]">Η βάση είναι άδεια. Πάτα «Ενημέρωση από Beds24».</p>
+      )}
+      <p className="text-xs text-[#5b6b80]">
+        Μία φορά αρκεί. Μετά, κάθε νέα κράτηση ή αλλαγή μπαίνει αυτόματα. Το Beds24 μόνο διαβάζεται, δεν αλλάζει τίποτα εκεί.
+      </p>
+    </section>
   );
 }

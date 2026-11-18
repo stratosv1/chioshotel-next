@@ -6,6 +6,7 @@ import { fetchBeds24BookingById, type Beds24ApiV2BookingLookup } from "@/lib/bed
 import { guestCountry, guestPhone } from "@/lib/crm/beds24-contacts";
 import { maybeSendOtaOutreach } from "@/lib/crm/ota-outreach";
 import { BOOKING_CORE_DEALS_CACHE_TAG } from "@/lib/booking-core/cache-tags";
+import { upsertFromWebhook } from "@/lib/pyrgos/bookings";
 import {
   isBeds24CancellationStatus,
   reconcileBookingCoreBookingEvent,
@@ -325,6 +326,13 @@ export async function POST(request: Request) {
     const resolvedBody = resolveBookingPayload(body, apiLookup);
 
     const stored = await saveBookingToDatabase(resolvedBody);
+
+    // Keep the control tower's booking base current (only writes when something changed).
+    try {
+      await upsertFromWebhook(apiLookup.booking);
+    } catch (pyrgosError) {
+      console.error("Beds24 webhook could not update pyrgos_bookings", pyrgosError);
+    }
     const bookingCore = await reconcileBookingCoreBookingEvent({
       bookingId,
       status: clean(resolvedBody.status),
