@@ -162,6 +162,28 @@ export default function PlanBoard() {
     load();
   }, [load]);
 
+  // Safety net for bookings typed straight into Beds24: ask Beds24 what changed recently,
+  // on open and every 2 minutes while the page is visible; reload the plan when something did.
+  const [syncInfo, setSyncInfo] = useState("");
+  const sync = useCallback(
+    async (minutes = 30, manual = false) => {
+      if (!manual && document.visibilityState !== "visible") return;
+      if (manual) setSyncInfo("Συγχρονισμός…");
+      const json = await api(`/api/staff/pyrgos/sync/?minutes=${minutes}`, { method: "POST" });
+      const time = new Intl.DateTimeFormat("el-GR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Athens" }).format(new Date());
+      if (json.ok) {
+        setSyncInfo(`Beds24 ✓ ${time}${json.changed ? ` · ${json.changed} αλλαγές` : ""}`);
+        if (json.changed) load();
+      } else setSyncInfo(json.rateLimited ? "Beds24: παύση, ξαναδοκιμάζει σε λίγο" : "⚠️ Ο συγχρονισμός απέτυχε");
+    },
+    [load],
+  );
+  useEffect(() => {
+    sync(24 * 60); // on open: everything changed in the last 24 h
+    const timer = setInterval(() => sync(), 120_000);
+    return () => clearInterval(timer);
+  }, [sync]);
+
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), toast.undo ? 12000 : 3500);
@@ -354,6 +376,15 @@ export default function PlanBoard() {
                   setOpenId(b.id);
                 }}
               />
+              <button
+                type="button"
+                onClick={() => sync(24 * 60, true)}
+                title="Φέρνει από το Beds24 ό,τι άλλαξε το τελευταίο 24ωρο"
+                className="h-10 rounded-full border border-[#dbe3ec] bg-white px-3 text-sm font-bold"
+              >
+                ⟳ Συγχρονισμός
+              </button>
+              {syncInfo && <span className="text-xs font-semibold text-[#5b6b80]">{syncInfo}</span>}
               <button type="button" onClick={() => setNewBooking({ room: 0, checkin: today })} className="h-10 rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]">+ Νέα κράτηση</button>
             </div>
           </header>

@@ -96,6 +96,22 @@ export default function TodayBoard() {
     load(day);
   }, [day, load]);
 
+  // Same safety net as the plan: pull what changed in Beds24 recently, every 2 minutes.
+  useEffect(() => {
+    let minutes = 24 * 60; // first run: the last 24 h, then the last 30 min
+    const run = async () => {
+      if (document.visibilityState !== "visible") return;
+      const json = await fetch(`/api/staff/pyrgos/sync/?minutes=${minutes}`, { method: "POST", cache: "no-store" })
+        .then((r) => r.json())
+        .catch(() => null);
+      minutes = 30;
+      if (json?.changed) load(day);
+    };
+    run();
+    const timer = setInterval(run, 120_000);
+    return () => clearInterval(timer);
+  }, [day, load]);
+
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(""), 3000);

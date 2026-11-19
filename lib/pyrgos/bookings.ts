@@ -362,3 +362,44 @@ export async function bookingsSummary(): Promise<YearSummary[]> {
     net: Math.round(Number(row.net)),
   }));
 }
+
+/**
+ * Safety net next to the Beds24 webhook (owner, 2026-11-19: bookings typed straight into Beds24
+ * did not arrive): pulls every booking Beds24 marks as modified in the last `minutes` and upserts
+ * what changed. Read-only towards Beds24; writes to our base only for real changes.
+ */
+export async function syncRecentFromBeds24(minutes = 30) {
+  await ensureBookingsTable();
+  const token = process.env.BEDS24_API_TOKEN?.trim();
+  if (!token) throw new Error("BEDS24_API_TOKEN is not configured.");
+  const since = new Date(Date.now() - Math.min(Math.max(minutes, 5), 7 * 24 * 60) * 60_000).toISOString().slice(0, 19);
+  const first = new URL("https://api.beds24.com/v2/bookings");
+  first.searchParams.set("modifiedFrom", since);
+  const withStatus = new URL(first);
+  for (const status of ["confirmed", "new", "request", "cancelled", "black", "inquiry"]) withStatus.searchParams.append("status", status);
+
+  const rows: ReturnType<typeof rowFromApi>[] = [];
+  let url: string | null = withStatus.toString();
+  let pages = 0;
+  let triedPlain = false;
+  while (url && pages < 10) {
+    const response: Response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(20_000) });
+    if (response.status === 429) throw new Beds24RateLimited("rate_limited");
+    if (response.status === 400 && pages === 0 && !triedPlain) {
+      triedPlain = true;
+      url = first.toString();
+      continue;
+    }
+    if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
+    const payload = (await response.json()) as any;
+    for (const booking of Array.isArray(payload?.data) ? payload.data : []) {
+      const row = rowFromApi(booking);
+      if (row.booking_id && /^\d{4}-\d{2}-\d{2}$/.test(row.checkin) && /^\d{4}-\d{2}-\d{2}$/.test(row.checkout)) rows.push(row);
+    }
+    const next = text(payload?.pages?.nextPageLink);
+    url = payload?.pages?.nextPageExists && next.startsWith("https://api.beds24.com/") ? next : null;
+    pages += 1;
+  }
+  const changed = await upsertApiRows(rows);
+  return { since, fetched: rows.length, changed };
+}
