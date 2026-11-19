@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PlanBooking, PlanCell } from "@/lib/pyrgos/plan";
+import { useBeds24Sync } from "../useBeds24Sync";
 import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
 
 // ---------- helpers ----------
@@ -154,10 +155,15 @@ export default function PlanBoard() {
   const dragged = useRef<PlanBooking | null>(null);
   const [resize, setResize] = useState<{ b: PlanBooking; edge: "start" | "end"; x: number; delta: number } | null>(null);
 
+  // Only the newest request may update the board (fast ‹ › clicks used to let an older, slower
+  // answer overwrite the week you are looking at).
+  const loadSeq = useRef(0);
   const load = useCallback(async () => {
+    const seq = ++loadSeq.current;
     setLoading(true);
     setError("");
     const json = await api(`/api/staff/pyrgos/plan/?from=${start}&to=${end}`);
+    if (seq !== loadSeq.current) return;
     if (json.ok) {
       setBookings(json.bookings);
       setCells(json.cells);
@@ -169,27 +175,10 @@ export default function PlanBoard() {
     load();
   }, [load]);
 
-  // Safety net for bookings typed straight into Beds24: ask Beds24 what changed recently,
-  // on open and every 2 minutes while the page is visible; reload the plan when something did.
-  const [syncInfo, setSyncInfo] = useState("");
-  const sync = useCallback(
-    async (minutes = 30, manual = false) => {
-      if (!manual && document.visibilityState !== "visible") return;
-      if (manual) setSyncInfo("Συγχρονισμός…");
-      const json = await api(`/api/staff/pyrgos/sync/?minutes=${minutes}`, { method: "POST" });
-      const time = new Intl.DateTimeFormat("el-GR", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Athens" }).format(new Date());
-      if (json.ok) {
-        setSyncInfo(`Beds24 ✓ ${time}${json.changed ? ` · ${json.changed} αλλαγές` : ""}`);
-        if (json.changed) load();
-      } else setSyncInfo(json.rateLimited ? "Beds24: παύση, ξαναδοκιμάζει σε λίγο" : "⚠️ Ο συγχρονισμός απέτυχε");
-    },
-    [load],
-  );
-  useEffect(() => {
-    sync(24 * 60); // on open: everything changed in the last 24 h
-    const timer = setInterval(() => sync(), 120_000);
-    return () => clearInterval(timer);
-  }, [sync]);
+  // Safety net for bookings typed straight into Beds24 (see useBeds24Sync).
+  const loadRef = useRef(load);
+  loadRef.current = load;
+  const { info: syncInfo, syncNow } = useBeds24Sync(() => loadRef.current());
 
   useEffect(() => {
     if (!toast) return;
@@ -300,7 +289,9 @@ export default function PlanBoard() {
     if (!resize) return;
     let latest = resize;
     const onMove = (e: PointerEvent) => {
-      latest = { ...latest, delta: Math.round((e.clientX - latest.x) / W) };
+      const delta = Math.round((e.clientX - latest.x) / W);
+      if (delta === latest.delta) return; // re-render only when the edge crosses a day
+      latest = { ...latest, delta };
       setResize(latest);
     };
     const onUp = () => {
@@ -385,7 +376,7 @@ export default function PlanBoard() {
               />
               <button
                 type="button"
-                onClick={() => sync(24 * 60, true)}
+                onClick={syncNow}
                 title="Φέρνει από το Beds24 ό,τι άλλαξε το τελευταίο 24ωρο"
                 className="h-10 rounded-full border border-[#dbe3ec] bg-white px-3 text-sm font-bold"
               >

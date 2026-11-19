@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useBeds24Sync } from "./useBeds24Sync";
 import type { HousekeepingTask, TodayData, TodayStay } from "@/lib/pyrgos/today";
 
 type BedSetup = "double" | "twin" | "double_single" | "double_two_singles";
@@ -77,18 +78,20 @@ export default function TodayBoard() {
   const [editing, setEditing] = useState<string | null>(null);
   const [toast, setToast] = useState("");
 
+  const loadSeq = useRef(0);
   const load = useCallback(async (target: string) => {
+    const seq = ++loadSeq.current;
     setLoading(true);
     setError("");
     try {
       const res = await fetch(`/api/staff/pyrgos/?day=${target}`, { cache: "no-store" });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error);
-      setData(json.data);
+      if (seq === loadSeq.current) setData(json.data);
     } catch {
-      setError("Δεν φόρτωσε η εικόνα της ημέρας. Δοκίμασε ξανά.");
+      if (seq === loadSeq.current) setError("Δεν φόρτωσε η εικόνα της ημέρας. Δοκίμασε ξανά.");
     } finally {
-      setLoading(false);
+      if (seq === loadSeq.current) setLoading(false);
     }
   }, []);
 
@@ -97,20 +100,10 @@ export default function TodayBoard() {
   }, [day, load]);
 
   // Same safety net as the plan: pull what changed in Beds24 recently, every 2 minutes.
-  useEffect(() => {
-    let minutes = 24 * 60; // first run: the last 24 h, then the last 30 min
-    const run = async () => {
-      if (document.visibilityState !== "visible") return;
-      const json = await fetch(`/api/staff/pyrgos/sync/?minutes=${minutes}`, { method: "POST", cache: "no-store" })
-        .then((r) => r.json())
-        .catch(() => null);
-      minutes = 30;
-      if (json?.changed) load(day);
-    };
-    run();
-    const timer = setInterval(run, 120_000);
-    return () => clearInterval(timer);
-  }, [day, load]);
+  // Safety net for bookings typed straight into Beds24 (see useBeds24Sync).
+  const dayRef = useRef(day);
+  dayRef.current = day;
+  useBeds24Sync(() => load(dayRef.current));
 
   useEffect(() => {
     if (!toast) return;
