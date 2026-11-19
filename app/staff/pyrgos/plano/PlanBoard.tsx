@@ -142,6 +142,13 @@ export default function PlanBoard() {
   const [toast, setToast] = useState<{ text: string; undo?: () => void } | null>(null);
   const [confirm, setConfirm] = useState<ConfirmState>(null);
   const [openId, setOpenId] = useState<string | null>(null);
+  // Deep link from Σήμερα / reminder email: ?open=<id>&from=<checkin>
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    const from = q.get("from");
+    if (from && /^\d{4}-\d{2}-\d{2}$/.test(from)) setStart(addDays(from, -1));
+    if (q.get("open")) setOpenId(q.get("open"));
+  }, []);
   const [newBooking, setNewBooking] = useState<{ room: number; checkin: string } | null>(null);
   const [dragOver, setDragOver] = useState<number | null>(null);
   const dragged = useRef<PlanBooking | null>(null);
@@ -487,9 +494,10 @@ export default function PlanBoard() {
                           onClick={() => !resize && b.status !== "black" && setOpenId(b.id)}
                           title={`${b.firstName} ${b.lastName} · ${dm(b.checkin)}–${dm(b.checkout)} · ${b.channel}${b.notes ? ` · 📝 ${b.notes}` : ""}`}
                           style={{ left: ROOM_COL + left * W + 2, width, top: 6, height: ROW_H - 12 }}
-                          className={`absolute z-[5] flex flex-col justify-center overflow-hidden rounded-lg border px-2 text-left shadow-sm hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5443c9] ${style.bar} ${openId === b.id ? "ring-2 ring-[#1f2a3c]" : ""}`}
+                          className={`absolute z-[5] flex flex-col justify-center overflow-hidden rounded-lg border px-2 text-left shadow-sm hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5443c9] ${style.bar} ${b.hold ? "border-2 border-dashed border-[#b45309]" : ""} ${openId === b.id ? "ring-2 ring-[#1f2a3c]" : ""}`}
                         >
                           <span className="flex items-center gap-1 truncate text-xs font-black leading-tight">
+                            {b.hold ? <span aria-label="σε αναμονή" title={`Σε αναμονή · υπενθύμιση ${dm(b.hold.remindOn)}`}>⏳</span> : null}
                             {b.masterId ? <span aria-label="μέρος group">🔗</span> : null}
                             {b.notes ? <span aria-label="έχει σημείωση">📝</span> : null}
                             <span className="truncate">{b.status === "black" ? "Μπλοκ" : `${b.firstName} ${b.lastName}`.trim() || "Χωρίς όνομα"}</span>
@@ -877,6 +885,7 @@ function BookingPanel({
 
       <div className="space-y-5 p-4">
         {error && <p className="rounded-xl bg-[#fff4dc] px-3 py-2 text-sm font-semibold text-[#92400e]">{error}</p>}
+        <HoldSection b={b} onDone={async (text) => { await reload(); onChanged(text); }} setError={setError} />
         {ota && (
           <p className="rounded-xl bg-[#fff8e8] px-3 py-2 text-xs font-semibold text-[#92400e]">
             Κράτηση {b.channel}: ημερομηνίες, τιμή και ακύρωση αλλάζουν μόνο από το {b.channel}. Εδώ μπορείς να αλλάξεις δωμάτιο, άτομα και στοιχεία.
@@ -1653,6 +1662,9 @@ function NewBookingDialog({
     charges: [] as { description: string; qty: number; unitPrice: number }[],
     notes: "",
     sendConfirmation: true,
+    hold: false,
+    holdRemindOn: addDays(athensToday(), 2),
+    holdNote: "",
   });
   const [free, setFree] = useState<number[] | null>(null);
   const [error, setError] = useState("");
@@ -1707,7 +1719,8 @@ function NewBookingDialog({
           ? [`Χρεώσεις: ${f.charges.map((c: any) => `${c.description} ${euro(c.qty * c.unitPrice)}`).join(", ")}`]
           : []),
         f.sendConfirmation && f.email ? `Email επιβεβαίωσης στο ${f.email}` : "Χωρίς email επιβεβαίωσης",
-        "Θα καταχωρηθεί στο Beds24.",
+        ...(f.hold ? [`⏳ Σε αναμονή · υπενθύμιση με email στις ${dm(f.holdRemindOn)}${f.holdNote.trim() ? ` · ${f.holdNote.trim()}` : ""}`] : []),
+        "Θα καταχωρηθεί στο Beds24 ως κανονική κράτηση (κλείνει διαθεσιμότητα).",
       ],
       confirmLabel: "Καταχώρηση",
       onConfirm: async () => {
@@ -1738,6 +1751,7 @@ function NewBookingDialog({
           charges: f.charges,
           notes: f.notes,
           sendConfirmation: f.sendConfirmation,
+          hold: f.hold ? { remindOn: f.holdRemindOn, note: f.holdNote } : null,
         });
         if (!json.ok) {
           setError(json.error || "Η καταχώρηση απέτυχε.");
@@ -1844,6 +1858,29 @@ function NewBookingDialog({
               Εσωτερικές σημειώσεις <span className="font-normal text-[#5b6b80]">· μόνο για εμάς</span>
               <textarea rows={2} value={f.notes} onChange={(e) => set({ notes: e.target.value })} className={input} />
             </label>
+            <div className="rounded-xl border border-[#fde3a7] bg-[#fff8e8] p-3">
+              <label className="flex min-h-11 items-center gap-2 text-sm font-semibold">
+                <input
+                  type="checkbox"
+                  className="h-5 w-5"
+                  checked={f.hold}
+                  onChange={(e) => set({ hold: e.target.checked, sendConfirmation: e.target.checked ? false : f.sendConfirmation })}
+                />
+                ⏳ Σε αναμονή <span className="text-xs font-normal text-[#5b6b80]">· δεν έχει επιβεβαιωθεί ακόμα</span>
+              </label>
+              {f.hold && (
+                <div className="mt-1 grid gap-2 sm:grid-cols-2">
+                  <label className="block text-xs font-bold">
+                    Υπενθύμιση στις
+                    <input type="date" value={f.holdRemindOn} min={athensToday()} onChange={(e) => set({ holdRemindOn: e.target.value })} className={input} />
+                  </label>
+                  <label className="block text-xs font-bold">
+                    Σημείωση
+                    <input value={f.holdNote} onChange={(e) => set({ holdNote: e.target.value })} placeholder="π.χ. περιμένουμε προκαταβολή" className={input} />
+                  </label>
+                </div>
+              )}
+            </div>
             <label className="flex min-h-11 items-center gap-2 text-sm font-semibold">
               <input type="checkbox" className="h-5 w-5" checked={f.sendConfirmation} onChange={(e) => set({ sendConfirmation: e.target.checked })} />
               Αποστολή email επιβεβαίωσης {f.email ? "" : <span className="text-xs font-normal text-[#5b6b80]">(χρειάζεται email)</span>}
@@ -1856,5 +1893,81 @@ function NewBookingDialog({
         </div>
       </div>
     </div>
+  );
+}
+
+function HoldSection({ b, onDone, setError }: { b: PlanBooking; onDone: (text: string) => Promise<void>; setError: (e: string) => void }) {
+  const [editing, setEditing] = useState(false);
+  const [date, setDate] = useState(b.hold?.remindOn ?? addDays(athensToday(), 2));
+  const [note, setNote] = useState(b.hold?.note ?? "");
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    setDate(b.hold?.remindOn ?? addDays(athensToday(), 2));
+    setNote(b.hold?.note ?? "");
+    setEditing(false);
+  }, [b.id, b.hold?.remindOn, b.hold?.note]);
+  if (b.status === "black") return null;
+  const run = async (body: Record<string, unknown>, text: string) => {
+    setBusy(true);
+    const json = await post(body);
+    setBusy(false);
+    if (!json.ok) {
+      setError(json.error || "Δεν αποθηκεύτηκε.");
+      return;
+    }
+    await onDone(text);
+  };
+  const form = (
+    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+      <label className="block text-xs font-bold">
+        Υπενθύμιση στις
+        <input type="date" value={date} min={athensToday()} onChange={(e) => setDate(e.target.value)} className={input} />
+      </label>
+      <label className="block text-xs font-bold">
+        Σημείωση
+        <input value={note} onChange={(e) => setNote(e.target.value)} placeholder="π.χ. περιμένουμε προκαταβολή" className={input} />
+      </label>
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() => run({ action: "hold_set", id: b.id, remindOn: date, note }, b.hold ? "Άλλαξε η υπενθύμιση" : "Σε αναμονή")}
+        className="min-h-11 rounded-full bg-[#fde3a7] px-4 text-sm font-bold text-[#7c4a03] sm:col-span-2"
+      >
+        {b.hold ? "Αποθήκευση υπενθύμισης" : "Βάλε σε αναμονή"}
+      </button>
+    </div>
+  );
+  if (!b.hold) {
+    return (
+      <details className="rounded-xl border border-[#eef2f6] px-3 py-2 text-sm">
+        <summary className="cursor-pointer font-semibold text-[#5b6b80]">⏳ Βάλε σε αναμονή (δεν έχει επιβεβαιωθεί)</summary>
+        {form}
+      </details>
+    );
+  }
+  return (
+    <section className={`rounded-2xl border-2 border-dashed p-3 text-sm ${b.hold.due ? "border-[#e8a0a0] bg-[#fff1f1]" : "border-[#f2c66d] bg-[#fff8e8]"}`}>
+      <p className="font-black">⏳ Σε αναμονή · δεν έχει επιβεβαιωθεί</p>
+      <p className="text-[#3d4b5e]">
+        Υπενθύμιση: <strong>{dm(b.hold.remindOn)}</strong>
+        {b.hold.due ? <span className="font-bold text-[#b42318]"> · ήρθε η ώρα: ισχύει ή διαγραφή;</span> : null}
+      </p>
+      {b.hold.note ? <p className="text-xs text-[#5b6b80]">{b.hold.note}</p> : null}
+      <div className="mt-2 flex flex-wrap gap-2">
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => run({ action: "hold_confirm", id: b.id }, "Η κράτηση επιβεβαιώθηκε")}
+          className="min-h-11 rounded-full bg-[#dff5e8] px-4 text-sm font-bold text-[#17603a]"
+        >
+          ✓ Επιβεβαιώθηκε
+        </button>
+        <button type="button" onClick={() => setEditing((v) => !v)} className="min-h-11 rounded-full border border-[#cfd9e4] px-4 text-sm font-bold text-[#4b5b70]">
+          Αλλαγή ημερομηνίας υπενθύμισης
+        </button>
+      </div>
+      {editing && form}
+      <p className="mt-2 text-xs text-[#5b6b80]">Για διαγραφή: «Ακύρωση κράτησης» στο τέλος.</p>
+    </section>
   );
 }

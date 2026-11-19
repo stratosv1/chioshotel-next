@@ -5,6 +5,7 @@ import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, ensureClimat
 import { ensureBookingsTable } from "./bookings";
 import { deleteCharge, insertCharge, logHistory, resolvePrice, saveMoney, type PriceMode } from "./ledger";
 import { freeRooms, getBookingDetail } from "./plan";
+import { closeHold, setHold } from "./holds";
 import { isCategoryChange, roomByNumber } from "./rooms";
 import { bedsText, getSql, saveExtras, type BedSetup } from "./store";
 
@@ -148,6 +149,10 @@ export async function createBooking(body: any) {
     .filter(Boolean)
     .join(" · ");
   if (extrasLine) await noteToBeds24(id, extrasLine);
+  // "Σε αναμονή": normal booking in Beds24, reminder date for the owner (all rooms of a group).
+  if (body.hold && isDay(body.hold.remindOn)) {
+    for (const c of created) await setHold(c.id, body.hold.remindOn, clean(body.hold.note, 200));
+  }
   for (const c of created) await syncClimateFee(c.id, nights);
   for (const charge of Array.isArray(body.charges) ? body.charges.slice(0, 20) : []) {
     try {
@@ -286,6 +291,7 @@ export async function cancelBooking(body: any) {
   await cancelBeds24Booking(id);
   await getSql()`update public.pyrgos_bookings set status = 'cancelled', updated_at = now() where booking_id = ${id}`;
   await logHistory(id, "Ακύρωση", `${roomLabel(current.room)} · ${current.checkin}–${current.checkout}`, "ok");
+  await closeHold(id, "cancelled");
   return { id };
 }
 
@@ -570,4 +576,25 @@ export async function removeCharge(body: any) {
   }
   await logHistory(String(removed.booking_id), "Διαγραφή χρέωσης", `${removed.description} · ${qty} × €${unit}`, beds24);
   return { id: String(removed.booking_id), beds24 };
+}
+
+// ---------- holds ("σε αναμονή") ----------
+
+export async function holdSet(body: any) {
+  const id = clean(body.id, 20);
+  if (!isDay(body.remindOn)) throw new ActionError("Διάλεξε ημερομηνία υπενθύμισης.");
+  const detail = await getBookingDetail(id);
+  if (!detail) throw new ActionError("Η κράτηση δεν βρέθηκε.", 404);
+  const ids = detail.group.length > 1 ? detail.group.map((g) => g.id) : [id];
+  for (const bookingId of ids) await setHold(bookingId, body.remindOn, clean(body.note, 200));
+  return { id };
+}
+
+export async function holdConfirm(body: any) {
+  const id = clean(body.id, 20);
+  const detail = await getBookingDetail(id);
+  if (!detail) throw new ActionError("Η κράτηση δεν βρέθηκε.", 404);
+  const ids = detail.group.length > 1 ? detail.group.map((g) => g.id) : [id];
+  for (const bookingId of ids) await closeHold(bookingId, "confirmed");
+  return { id };
 }

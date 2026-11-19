@@ -185,6 +185,41 @@ export default function TodayBoard() {
 
           {data && (
             <>
+              {data.holds?.length ? (
+                <section
+                  aria-labelledby="holds"
+                  className={`rounded-2xl border-2 border-dashed p-4 ${data.holds.some((h) => h.due) ? "border-[#e8a0a0] bg-[#fff1f1]" : "border-[#f2c66d] bg-[#fff8e8]"}`}
+                >
+                  <h2 id="holds" className="text-lg font-black">
+                    ⏳ Κρατήσεις σε αναμονή
+                    {data.holds.some((h) => h.due) ? (
+                      <span className="ml-2 text-sm font-bold text-[#b42318]">{data.holds.filter((h) => h.due).length} θέλουν απόφαση: ισχύει ή διαγραφή;</span>
+                    ) : null}
+                  </h2>
+                  <p className="text-xs text-[#5b6b80]">Καταχωρημένες στο Beds24 (κλείνουν διαθεσιμότητα) αλλά δεν έχουν επιβεβαιωθεί.</p>
+                  <ul className="mt-2 divide-y divide-[#f0dfc0] text-sm">
+                    {data.holds.map((h) => (
+                      <li key={h.bookingId} className="flex flex-wrap items-center justify-between gap-2 py-2">
+                        <span>
+                          <strong>{h.name}</strong> · {h.room ? roomName(h.room) : "χωρίς δωμάτιο"} · {shortDate(h.checkin)} → {shortDate(h.checkout)}
+                          {h.note ? <span className="block text-xs text-[#5b6b80]">{h.note}</span> : null}
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${h.due ? "bg-[#fde2e2] text-[#b42318]" : "bg-[#fdf0d2] text-[#7c4a03]"}`}>
+                            {h.due ? "Σήμερα απόφαση" : `Υπενθύμιση ${shortDate(h.remindOn)}`}
+                          </span>
+                          <a
+                            href={`/staff/pyrgos/plano?open=${encodeURIComponent(h.bookingId)}&from=${h.checkin}`}
+                            className="min-h-9 rounded-full bg-[#e9e4fe] px-3 py-1.5 text-xs font-bold text-[#3b2f8a]"
+                          >
+                            Άνοιγμα
+                          </a>
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ) : null}
               <section aria-label="Σύνοψη ημέρας" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <div className="rounded-2xl bg-[#ffe7bd] p-4 text-[#5a3a00]">
                   <div className="text-sm font-semibold opacity-85">Αφίξεις</div>

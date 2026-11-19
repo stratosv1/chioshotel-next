@@ -2,6 +2,7 @@ import "server-only";
 import { getRoomDay, type RoomStay } from "@/lib/crm/room-day";
 import { listAttentionBookings } from "@/lib/crm/bookings-board";
 import { COMMISSION_RATE, ensureBookingsTable, type PyrgosChannel } from "./bookings";
+import { listOpenHolds, type HoldListItem } from "./holds";
 import {
   bedsText,
   getExtras,
@@ -53,6 +54,7 @@ export type TodayData = {
   missing: MissingItem[];
   feed: FeedItem[];
   month: { label: string; gross: number; net: number; bookings: number; priced: number };
+  holds: HoldListItem[];
 };
 
 const toNumber = (value: unknown) => {
@@ -112,6 +114,10 @@ export async function getToday(day: string): Promise<TodayData> {
   const ids = [...new Set(all.map((stay) => stay.bookingId))];
   const month = day.slice(0, 7);
 
+  const holdsPromise = listOpenHolds().catch((error) => {
+    console.error("[pyrgos] holds failed", error);
+    return [] as HoldListItem[];
+  });
   const [bookingRows, extras, housekeeping, attention, monthRows, feedRows] = await Promise.all([
     ids.length
       ? (sql`select booking_id, email, phone, price from public.beds24_bookings where booking_id = any(${ids}::text[])` as Promise<any[]>)
@@ -237,6 +243,7 @@ export async function getToday(day: string): Promise<TodayData> {
     housekeeping: tasks,
     missing,
     feed,
+    holds: await holdsPromise,
     month: {
       label: monthLabel,
       gross: Math.round(monthGross),

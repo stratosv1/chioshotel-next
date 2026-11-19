@@ -3,6 +3,7 @@ import { retryFailedEmailSyncs } from "@/lib/crm/booking-email-sync";
 import { reconcileCancellations } from "@/lib/crm/cancellation-check";
 import { runDueEmails } from "@/lib/crm/guest-emails";
 import { runOutreachFollowUps } from "@/lib/crm/ota-outreach";
+import { runHoldReminders } from "@/lib/pyrgos/holds";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,7 +33,9 @@ export async function GET(request: NextRequest) {
     const emailSync = evening ? null : await housekeeping(retryFailedEmailSyncs);
     const emails = await runDueEmails(evening ? "evening" : "morning");
     const followUps = evening ? null : await runOutreachFollowUps();
-    return NextResponse.json({ ok: true, ...emails, followUps, cancellations, emailSync });
+    // Control tower: "σε αναμονή" bookings whose reminder date has come → email to the owner.
+    const holds = evening ? null : await housekeeping(runHoldReminders);
+    return NextResponse.json({ ok: true, ...emails, followUps, cancellations, emailSync, holds });
   } catch (error) {
     console.error("crm guest emails cron failed", error);
     return NextResponse.json({ ok: false, error: "Run failed" }, { status: 500 });
