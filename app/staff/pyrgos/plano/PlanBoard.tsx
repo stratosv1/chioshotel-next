@@ -754,7 +754,8 @@ function BookingPanel({
   const nights = diffDays(form.checkin, form.checkout);
   const totalNum = Number(form.total) || 0;
   const depositNum = Number(form.deposit) || 0;
-  const balance = form.total ? Math.round((totalNum - depositNum) * 100) / 100 : null;
+  const grandTotal = form.total || b.chargesTotal ? Math.round((totalNum + b.chargesTotal) * 100) / 100 : null;
+  const balance = grandTotal !== null ? Math.round((grandTotal - depositNum) * 100) / 100 : null;
   const style = channelStyle(b);
   const digits = (b.phone || "").replace(/\D/g, "");
   const set = (patch: Record<string, unknown>) => setForm({ ...form, ...patch });
@@ -938,11 +939,33 @@ function BookingPanel({
                   <div className={`text-lg font-black ${form.paid ? "text-[#14532d]" : ""}`}>{form.paid ? "Πληρωμένη ✓" : euro(balance)}</div>
                 </div>
               </div>
+              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={grandTotal} />
               <label className="flex min-h-11 items-center gap-2 text-sm font-bold">
                 <input type="checkbox" className="h-5 w-5" checked={form.paid} onChange={(e) => set({ paid: e.target.checked })} /> Πληρωμένη
                 {b.paidAt ? <span className="text-xs font-normal text-[#5b6b80]">({b.paidAt})</span> : null}
               </label>
-              <button type="button" onClick={saveMoneyClick} className="min-h-11 rounded-full bg-[#d2f3f6] px-4 text-sm font-bold text-[#0b4d55]">Αποθήκευση πληρωμής</button>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" onClick={saveMoneyClick} className="min-h-11 rounded-full bg-[#d2f3f6] px-4 text-sm font-bold text-[#0b4d55]">Αποθήκευση πληρωμής</button>
+                <button
+                  type="button"
+                  disabled={!b.deposit}
+                  title={b.deposit ? "" : "Αποθήκευσε πρώτα την προκαταβολή"}
+                  onClick={() => {
+                    const to = (form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")).trim();
+                    if (!to) return setError("Γράψε το email του πελάτη (πεδίο «Email επιβεβαίωσης προς» πιο κάτω).");
+                    const remaining = b.totalPrice !== null || b.beds24Price !== null ? Math.max((b.totalPrice ?? b.beds24Price ?? 0) + b.chargesTotal - (b.deposit ?? 0), 0) : null;
+                    setConfirm({
+                      title: "Email για την προκαταβολή",
+                      lines: [`Προς: ${to}`, `Λάβαμε προκαταβολή ${euro(b.deposit)}`, remaining !== null ? `Υπόλοιπο ${euro(remaining)}` : "Χωρίς σύνολο τιμής"],
+                      confirmLabel: "Αποστολή",
+                      onConfirm: () => run({ action: "deposit_email", id: b.id, to }, `Στάλθηκε email προκαταβολής στο ${to}`),
+                    });
+                  }}
+                  className="min-h-11 rounded-full border border-[#9fe3ea] bg-white px-4 text-sm font-bold text-[#0b4d55] disabled:opacity-50"
+                >
+                  Email για την προκαταβολή
+                </button>
+              </div>
             </>
           )}
         </section>
@@ -1285,6 +1308,101 @@ function GuestCrm({ booking: b, setConfirm, onToast }: { booking: PlanBooking; s
         </ul>
       </div>
     </section>
+  );
+}
+
+// ---------- extra charges ----------
+
+const CHARGE_PRESETS = ["Πρωινό", "Ράντζο", "Κούνια", "Μεταφορά", "Late check-out", "Μίνι μπαρ", "Πλυντήριο"];
+
+function Charges({
+  booking: b,
+  setConfirm,
+  run,
+  grandTotal,
+}: {
+  booking: PlanBooking;
+  setConfirm: (c: ConfirmState) => void;
+  run: (body: Record<string, unknown>, okText: string) => Promise<void>;
+  grandTotal: number | null;
+}) {
+  const [desc, setDesc] = useState("");
+  const [qty, setQty] = useState("1");
+  const [price, setPrice] = useState("");
+  const amount = Math.round((Number(qty.replace(",", ".")) || 0) * (Number(price.replace(",", ".")) || 0) * 100) / 100;
+
+  return (
+    <div className="space-y-2 rounded-lg bg-white p-3">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-black uppercase tracking-wide text-[#5b6b80]">Χρεώσεις διαμονής</span>
+        {b.charges.length > 0 && <span className="text-xs font-bold">{euro(b.chargesTotal)}</span>}
+      </div>
+      {b.charges.length === 0 && <p className="text-xs text-[#5b6b80]">Καμία επιπλέον χρέωση.</p>}
+      <ul className="divide-y divide-[#eef2f6] text-sm">
+        {b.charges.map((c) => (
+          <li key={c.id} className="flex items-center justify-between gap-2 py-1.5">
+            <span className="min-w-0">
+              <span className="font-semibold">{c.description}</span>
+              <span className="text-xs text-[#5b6b80]"> · {c.qty} × {euro(c.unitPrice)} · {c.at}{c.beds24 === "failed" ? " · ⚠️ σημείωση στο Beds24" : ""}</span>
+            </span>
+            <span className="flex shrink-0 items-center gap-2">
+              <strong>{euro(c.amount)}</strong>
+              <button
+                type="button"
+                aria-label={`Διαγραφή χρέωσης ${c.description}`}
+                onClick={() =>
+                  setConfirm({
+                    title: "Διαγραφή χρέωσης",
+                    lines: [`${c.description} · ${euro(c.amount)}`, "Στο Beds24 μπαίνει αντίστροφη γραμμή «Ακύρωση»."],
+                    danger: true,
+                    confirmLabel: "Διαγραφή",
+                    onConfirm: () => run({ action: "charge_remove", id: b.id, chargeId: c.id }, "Η χρέωση διαγράφηκε"),
+                  })
+                }
+                className="h-8 w-8 rounded-full text-[#5b6b80] hover:bg-[#f4f7fa]"
+              >
+                ×
+              </button>
+            </span>
+          </li>
+        ))}
+      </ul>
+      <div className="flex flex-wrap gap-1">
+        {CHARGE_PRESETS.map((preset) => (
+          <button key={preset} type="button" onClick={() => setDesc(preset)} className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${desc === preset ? "border-[#5443c9] bg-[#ece9fd]" : "border-[#dbe3ec]"}`}>
+            {preset}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-[1fr_4rem_5.5rem] gap-2">
+        <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Περιγραφή" aria-label="Περιγραφή χρέωσης" className={`${input} mt-0`} />
+        <input inputMode="decimal" value={qty} onChange={(e) => setQty(e.target.value)} aria-label="Ποσότητα" className={`${input} mt-0`} />
+        <input inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="€" aria-label="Τιμή μονάδας" className={`${input} mt-0`} />
+      </div>
+      <button
+        type="button"
+        disabled={!desc.trim() || amount <= 0}
+        onClick={() =>
+          setConfirm({
+            title: "Νέα χρέωση",
+            lines: [`${desc} · ${qty} × ${euro(Number(price.replace(",", ".")))} = ${euro(amount)}`, b.masterId ? "Μπαίνει στην κύρια κράτηση του group." : "", "Μπαίνει και στο τιμολόγιο του Beds24."].filter(Boolean),
+            confirmLabel: "Προσθήκη",
+            onConfirm: async () => {
+              await run({ action: "charge_add", id: b.id, description: desc, qty, unitPrice: price }, `Χρέωση ${euro(amount)} προστέθηκε`);
+              setDesc("");
+              setQty("1");
+              setPrice("");
+            },
+          })
+        }
+        className="min-h-11 w-full rounded-full border border-[#cfd9e4] text-sm font-bold disabled:opacity-50"
+      >
+        + Προσθήκη χρέωσης{amount > 0 ? ` (${euro(amount)})` : ""}
+      </button>
+      {grandTotal !== null && b.chargesTotal > 0 && (
+        <p className="text-xs text-[#3d4b5e]">Γενικό σύνολο (διαμονή + χρεώσεις): <strong>{euro(grandTotal)}</strong></p>
+      )}
+    </div>
   );
 }
 

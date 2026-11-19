@@ -1,6 +1,6 @@
 import "server-only";
 import { ensureBookingsTable } from "./bookings";
-import { ensureLedgerTables, getHistory, getMoney } from "./ledger";
+import { ensureLedgerTables, getCharges, getHistory, getMoney, type BookingCharge } from "./ledger";
 import { bedsText, getExtras, getSql } from "./store";
 
 export type PlanBooking = {
@@ -34,13 +34,15 @@ export type PlanBooking = {
   deposit: number | null;
   paid: boolean;
   paidAt: string | null;
+  charges: BookingCharge[];
+  chargesTotal: number;
 };
 
 export type PlanCell = { room: number; day: string; price: number | null; closed: boolean };
 
 const num = (v: unknown) => (v === null || v === undefined || v === "" ? null : Number(v));
 
-function mapRow(row: any, extras: Map<string, any>, money: Map<string, any>): PlanBooking {
+function mapRow(row: any, extras: Map<string, any>, money: Map<string, any>, charges: Map<string, BookingCharge[]>): PlanBooking {
   const id = String(row.booking_id);
   const ex = extras.get(id);
   const m = money.get(id);
@@ -75,6 +77,8 @@ function mapRow(row: any, extras: Map<string, any>, money: Map<string, any>): Pl
     deposit: m?.deposit ?? null,
     paid: m?.paid ?? false,
     paidAt: m?.paidAt ?? null,
+    charges: charges.get(id) ?? [],
+    chargesTotal: Math.round((charges.get(id) ?? []).reduce((sum, c) => sum + c.amount, 0) * 100) / 100,
   };
 }
 
@@ -84,8 +88,8 @@ const COLUMNS = `booking_id, master_id, status, channel, room_number, to_char(ch
 
 async function enrich(rows: any[]) {
   const ids = rows.map((row) => String(row.booking_id));
-  const [extras, money] = await Promise.all([getExtras(ids), getMoney(ids)]);
-  return rows.map((row) => mapRow(row, extras, money));
+  const [extras, money, charges] = await Promise.all([getExtras(ids), getMoney(ids), getCharges(ids)]);
+  return rows.map((row) => mapRow(row, extras, money, charges));
 }
 
 export async function getPlan(from: string, to: string) {

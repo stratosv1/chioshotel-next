@@ -1,9 +1,9 @@
 import "server-only";
 import { appendBookingNote, getBeds24WriteToken } from "@/lib/crm/booking-notes";
 import { loadConfirmation, sendConfirmation } from "@/lib/crm/booking-confirmation";
-import { cancelBeds24Booking, createBeds24Booking, liveOverlap, modifyBeds24Booking } from "./beds24-write";
+import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, liveOverlap, modifyBeds24Booking } from "./beds24-write";
 import { ensureBookingsTable } from "./bookings";
-import { logHistory, resolvePrice, saveMoney, type PriceMode } from "./ledger";
+import { deleteCharge, insertCharge, logHistory, resolvePrice, saveMoney, type PriceMode } from "./ledger";
 import { freeRooms, getBookingDetail } from "./plan";
 import { isCategoryChange, roomByNumber } from "./rooms";
 import { bedsText, getSql, saveExtras, type BedSetup } from "./store";
@@ -499,4 +499,49 @@ export async function splitBooking(body: any) {
   await logHistory(current.id, "Split stay", `${detail} · συνέχεια #${secondId}`, "ok");
   await logHistory(secondId, "Split stay", `${detail} · από #${current.id}`, "ok");
   return { id: current.id, secondId };
+}
+
+// ---------- extra charges during the stay ----------
+
+export async function addCharge(body: any) {
+  const id = clean(body.id, 20);
+  const current = (await getBookingDetail(id))?.booking;
+  if (!current) throw new ActionError("Η κράτηση δεν βρέθηκε.", 404);
+  const target = current.masterId ?? current.id; // a group pays on its master booking
+  const description = clean(body.description, 120);
+  const qty = Number(String(body.qty ?? 1).replace(",", "."));
+  const unitPrice = money(body.unitPrice);
+  if (!description) throw new ActionError("Γράψε περιγραφή χρέωσης.");
+  if (!Number.isFinite(qty) || qty <= 0 || qty > 999) throw new ActionError("Μη έγκυρη ποσότητα.");
+  if (unitPrice === null || unitPrice <= 0) throw new ActionError("Μη έγκυρη τιμή.");
+  let beds24 = "ok";
+  try {
+    await addBeds24Charge(target, description, qty, unitPrice);
+  } catch (error) {
+    console.error("[pyrgos] charge to Beds24 failed", error);
+    beds24 = "failed";
+    await noteToBeds24(target, `Χρέωση: ${description} ${qty} × €${unitPrice}`);
+  }
+  await insertCharge(target, description, qty, unitPrice, beds24);
+  await logHistory(target, "Χρέωση", `${description} · ${qty} × €${unitPrice} = €${Math.round(qty * unitPrice * 100) / 100}`, beds24);
+  return { id: target, beds24 };
+}
+
+export async function removeCharge(body: any) {
+  const chargeId = clean(body.chargeId, 20);
+  if (!/^\d+$/.test(chargeId)) throw new ActionError("Μη έγκυρη χρέωση.");
+  const removed = await deleteCharge(chargeId);
+  if (!removed) throw new ActionError("Η χρέωση δεν βρέθηκε.", 404);
+  const qty = Number(removed.qty);
+  const unit = Number(removed.unit_price);
+  let beds24 = "ok";
+  try {
+    // Beds24 history stays intact: a reversing line instead of deleting the original one.
+    await addBeds24Charge(String(removed.booking_id), `Ακύρωση: ${removed.description}`, qty, -unit);
+  } catch (error) {
+    console.error("[pyrgos] charge reversal to Beds24 failed", error);
+    beds24 = "failed";
+  }
+  await logHistory(String(removed.booking_id), "Διαγραφή χρέωσης", `${removed.description} · ${qty} × €${unit}`, beds24);
+  return { id: String(removed.booking_id), beds24 };
 }

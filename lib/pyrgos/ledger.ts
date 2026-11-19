@@ -22,8 +22,9 @@ export async function ensureLedgerTables() {
   if (ready) return;
   const sql = getSql();
   const rows = (await sql`
-    select to_regclass('public.pyrgos_booking_money') as m, to_regclass('public.pyrgos_booking_history') as h
-  `) as { m: string | null; h: string | null }[];
+    select to_regclass('public.pyrgos_booking_money') as m, to_regclass('public.pyrgos_booking_history') as h,
+      to_regclass('public.pyrgos_booking_charges') as c
+  `) as { m: string | null; h: string | null; c: string | null }[];
   if (!rows[0]?.m) {
     await sql`create table if not exists public.pyrgos_booking_money (
       booking_id text primary key,
@@ -47,7 +48,65 @@ export async function ensureLedgerTables() {
     )`;
     await sql`create index if not exists pyrgos_booking_history_booking on public.pyrgos_booking_history (booking_id, created_at desc)`;
   }
+  if (!rows[0]?.c) {
+    // Extra charges during the stay (owner, 2026-11-19), on the master booking of a group.
+    await sql`create table if not exists public.pyrgos_booking_charges (
+      id bigserial primary key,
+      booking_id text not null,
+      description text not null,
+      qty numeric(10,2) not null default 1,
+      unit_price numeric(10,2) not null,
+      beds24 text,
+      created_at timestamptz not null default now(),
+      deleted_at timestamptz
+    )`;
+    await sql`create index if not exists pyrgos_booking_charges_booking on public.pyrgos_booking_charges (booking_id) where deleted_at is null`;
+  }
   ready = true;
+}
+
+export type BookingCharge = { id: string; bookingId: string; description: string; qty: number; unitPrice: number; amount: number; beds24: string | null; at: string };
+
+export async function getCharges(ids: string[]) {
+  await ensureLedgerTables();
+  const map = new Map<string, BookingCharge[]>();
+  if (!ids.length) return map;
+  const rows = (await getSql()`
+    select id, booking_id, description, qty, unit_price, beds24, to_char(created_at at time zone 'Europe/Athens', 'DD/MM HH24:MI') as at
+    from public.pyrgos_booking_charges where booking_id = any(${ids}::text[]) and deleted_at is null order by created_at
+  `) as any[];
+  for (const row of rows) {
+    const charge: BookingCharge = {
+      id: String(row.id),
+      bookingId: String(row.booking_id),
+      description: row.description,
+      qty: Number(row.qty),
+      unitPrice: Number(row.unit_price),
+      amount: Math.round(Number(row.qty) * Number(row.unit_price) * 100) / 100,
+      beds24: row.beds24,
+      at: row.at,
+    };
+    map.set(charge.bookingId, [...(map.get(charge.bookingId) ?? []), charge]);
+  }
+  return map;
+}
+
+export async function insertCharge(bookingId: string, description: string, qty: number, unitPrice: number, beds24: string) {
+  await ensureLedgerTables();
+  const rows = (await getSql()`
+    insert into public.pyrgos_booking_charges (booking_id, description, qty, unit_price, beds24)
+    values (${bookingId}, ${description}, ${qty}, ${unitPrice}, ${beds24}) returning id
+  `) as any[];
+  return String(rows[0].id);
+}
+
+export async function deleteCharge(chargeId: string) {
+  await ensureLedgerTables();
+  const rows = (await getSql()`
+    update public.pyrgos_booking_charges set deleted_at = now() where id = ${Number(chargeId)} and deleted_at is null
+    returning booking_id, description, qty, unit_price
+  `) as any[];
+  return rows[0] ?? null;
 }
 
 export async function getMoney(ids: string[]) {

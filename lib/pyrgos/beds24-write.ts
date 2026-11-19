@@ -168,3 +168,8 @@ export async function modifyBeds24Booking(
 export async function cancelBeds24Booking(id: string) {
   await post({ id: Number(id), status: "cancelled" });
 }
+
+/** Adds a charge line to the Beds24 booking invoice (a negative amount reverses an earlier line). */
+export async function addBeds24Charge(id: string, description: string, qty: number, unitPrice: number) {
+  await post({ id: Number(id), invoiceItems: [{ type: "charge", description, qty, amount: unitPrice }] });
+}
