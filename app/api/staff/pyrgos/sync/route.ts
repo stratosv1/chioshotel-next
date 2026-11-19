@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Beds24RateLimited, syncRecentFromBeds24 } from "@/lib/pyrgos/bookings";
+import { Beds24RateLimited, healFromInventory, syncRecentFromBeds24 } from "@/lib/pyrgos/bookings";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,7 +18,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ ok: true, cached: true, ...(last.result as object), changed: 0 }, { headers });
   }
   try {
-    const result = await syncRecentFromBeds24(minutes);
+    const recent = await syncRecentFromBeds24(minutes);
+    // Then make sure no night that Beds24 reports as booked is missing from the plan.
+    const heal = await healFromInventory().catch((error) => {
+      console.error("[pyrgos] inventory heal failed", error);
+      return { missing: 0, changed: 0 };
+    });
+    const result = { ...recent, changed: recent.changed + heal.changed, healed: heal.changed, missing: heal.missing };
     last = { at: Date.now(), minutes, result };
     return NextResponse.json({ ok: true, ...result }, { headers });
   } catch (error) {

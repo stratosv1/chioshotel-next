@@ -319,12 +319,76 @@ export async function upsertApiRows(rows: ReturnType<typeof rowFromApi>[]) {
   return result.length;
 }
 
+/**
+ * Fetches bookings by id from Beds24 together with every booking of their groups
+ * (a group's other rooms are separate bookings the webhook never announces).
+ */
+export async function fetchBookingsWithGroups(ids: string[]) {
+  const token = process.env.BEDS24_API_TOKEN?.trim();
+  if (!token || !ids.length) return [] as ApiBooking[];
+  const get = async (list: string[]) => {
+    const url = new URL("https://api.beds24.com/v2/bookings");
+    for (const id of list) url.searchParams.append("id", id);
+    url.searchParams.set("includeBookingGroup", "true");
+    const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(20_000) });
+    if (response.status === 429) throw new Beds24RateLimited("rate_limited");
+    if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
+    const payload = (await response.json()) as any;
+    return (Array.isArray(payload?.data) ? payload.data : []) as ApiBooking[];
+  };
+  const found = new Map<string, ApiBooking>();
+  for (const booking of await get([...new Set(ids)].slice(0, 50))) found.set(text(booking.id), booking);
+  const groupIds = [...found.values()]
+    .flatMap((b) => [...(Array.isArray(b.bookingGroup?.ids) ? b.bookingGroup.ids : []), b.masterId])
+    .map(text)
+    .filter((id) => id && id !== "0" && !found.has(id));
+  if (groupIds.length) for (const booking of await get([...new Set(groupIds)].slice(0, 50))) found.set(text(booking.id), booking);
+  return [...found.values()];
+}
+
+function validRows(bookings: ApiBooking[]) {
+  return bookings
+    .map(rowFromApi)
+    .filter((row) => row.booking_id && /^\d{4}-\d{2}-\d{2}$/.test(row.checkin) && /^\d{4}-\d{2}-\d{2}$/.test(row.checkout));
+}
+
 /** Called from the Beds24 booking webhook with the API v2 booking it already looked up. */
 export async function upsertFromWebhook(apiBooking: ApiBooking | null | undefined) {
   if (!apiBooking || !text(apiBooking.id)) return 0;
   const row = rowFromApi(apiBooking);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(row.checkin) || !/^\d{4}-\d{2}-\d{2}$/.test(row.checkout)) return 0;
-  return upsertApiRows([row]);
+  let changed = await upsertApiRows([row]);
+  // Group bookings: bring in the group's other rooms too (audit 2026-11-19).
+  try {
+    const group = await fetchBookingsWithGroups([row.booking_id]);
+    if (group.length > 1) changed += await upsertApiRows(validRows(group));
+  } catch (error) {
+    console.error("[pyrgos] webhook group fetch failed", error);
+  }
+  return changed;
+}
+
+/**
+ * Self-heal (audit 2026-11-19): every future night Beds24 reports as booked (Booking Core
+ * inventory) must exist in the plan. Bookings that are missing are fetched by id, with their groups.
+ */
+export async function healFromInventory() {
+  await ensureBookingsTable();
+  const rows = (await getSql()`
+    select distinct i.booking_id
+    from booking_core.inventory i
+    where i.reason = 'BOOKED' and i.booking_id is not null and i.stay_date >= current_date
+      and not exists (
+        select 1 from public.pyrgos_bookings p
+        where p.room_number = i.room_number and p.status in ('confirmed', 'new', 'request', 'black')
+          and p.checkin <= i.stay_date and p.checkout > i.stay_date
+      )
+    limit 50
+  `) as { booking_id: string }[];
+  const missing = rows.map((row) => String(row.booking_id));
+  if (!missing.length) return { missing: 0, changed: 0 };
+  const changed = await upsertApiRows(validRows(await fetchBookingsWithGroups(missing)));
+  return { missing: missing.length, changed };
 }
 
 export type YearSummary = {
