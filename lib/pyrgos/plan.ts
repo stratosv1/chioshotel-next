@@ -26,6 +26,8 @@ export type PlanBooking = {
   cot: boolean;
   rollaway: boolean;
   bedOther: string;
+  breakfast: boolean;
+  guestNote: string;
   priceMode: "night" | "total" | null;
   nightPrice: number | null;
   totalPrice: number | null;
@@ -65,6 +67,8 @@ function mapRow(row: any, extras: Map<string, any>, money: Map<string, any>): Pl
     cot: ex?.cot ?? false,
     rollaway: ex?.rollaway ?? false,
     bedOther: ex?.other ?? "",
+    breakfast: ex?.breakfast ?? false,
+    guestNote: ex?.guestNote ?? "",
     priceMode: m?.priceMode ?? null,
     nightPrice: m?.nightPrice ?? null,
     totalPrice: m?.totalPrice ?? null,

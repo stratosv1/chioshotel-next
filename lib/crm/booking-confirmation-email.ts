@@ -38,6 +38,16 @@ export type ConfirmationData = {
   comments: string;
   /** Channel that already collected payment (e.g. "Booking.com"); empty when the guest still pays us. */
   prepaidVia?: string;
+  /** Agreed extras ticked in the control tower (baby cot, extra bed), already in the guest's language. */
+  extras?: string[];
+  /** Note we agreed with the guest, printed on the confirmation (control tower). */
+  hostNote?: string;
+};
+
+export const BREAKFAST_INCLUDED: Record<EmailLanguage, string> = { el: "Περιλαμβάνεται", en: "Included", tr: "Dahil" };
+export const EXTRA_LABELS: Record<"cot" | "rollaway", Record<EmailLanguage, string>> = {
+  cot: { el: "Βρεφική κούνια", en: "Baby cot", tr: "Bebek beşiği" },
+  rollaway: { el: "Επιπλέον κρεβάτι (ράντζο)", en: "Extra bed (rollaway)", tr: "Ek yatak" },
 };
 
 export type BankDetails = { iban: string; holder: string; bank: string; swift: string; iris: string };
@@ -106,7 +116,7 @@ const TEXT = {
   el: {
     subject: "Η κράτησή σας επιβεβαιώθηκε", eyebrow: "✓ Επιβεβαιωμένη κράτηση", heading: "Η κράτησή σας επιβεβαιώθηκε", preheader: "Όλα τα στοιχεία της κράτησής σας.",
     dear: "Αγαπητέ/ή", intro: "Σας ευχαριστούμε! Ανυπομονούμε να σας φιλοξενήσουμε. Εδώ είναι όλα τα στοιχεία της κράτησής σας.",
-    details: "Στοιχεία κράτησης", bookingNo: "Αριθμός κράτησης", bookingDate: "Ημερομηνία κράτησης", name: "Όνομα", adults: "Ενήλικες", children: "Παιδιά", phone: "Τηλέφωνο", email: "Email", breakfast: "Πρωινό", login: "Πρόσβαση",
+    details: "Στοιχεία κράτησης", bookingNo: "Αριθμός κράτησης", bookingDate: "Ημερομηνία κράτησης", name: "Όνομα", adults: "Ενήλικες", children: "Παιδιά", phone: "Τηλέφωνο", email: "Email", breakfast: "Πρωινό", extras: "Επιπλέον", hostNote: "Σημείωση από εμάς", login: "Πρόσβαση",
     billing: "Οικονομικά στοιχεία", item: "Περιγραφή", amount: "Ποσό", total: "Σύνολο", paid: "Πληρωμένο", balance: "Υπόλοιπο", comments: "Σχόλια πελάτη",
     payment: "Τρόποι πληρωμής", iban: "IBAN", holder: "Δικαιούχος", bank: "Τράπεζα", swift: "SWIFT", iris: "IRIS", methods: "Πληρωμή", methodsValue: "Μετρητά ή πιστωτική κάρτα (Visa / Mastercard)", faq: "Συχνές ερωτήσεις",
     prepaid: "Προπληρωμένο μέσω {channel}", prepaidTitle: "Η κράτηση είναι πληρωμένη", prepaidBody: "Η κράτησή σας έχει προπληρωθεί μέσω {channel}. Δεν χρειάζεται να μας στείλετε κάποιο ποσό για αυτές τις χρεώσεις.",
@@ -114,7 +124,7 @@ const TEXT = {
   en: {
     subject: "Your booking is confirmed", eyebrow: "✓ Booking confirmed", heading: "Your booking is confirmed", preheader: "All the details of your booking.",
     dear: "Dear", intro: "Thank you! We look forward to hosting you. Here are all the details of your booking.",
-    details: "Booking details", bookingNo: "Booking no.", bookingDate: "Booking date", name: "Name", adults: "Adults", children: "Children", phone: "Phone", email: "Email", breakfast: "Breakfast", login: "Guest login",
+    details: "Booking details", bookingNo: "Booking no.", bookingDate: "Booking date", name: "Name", adults: "Adults", children: "Children", phone: "Phone", email: "Email", breakfast: "Breakfast", extras: "Extras", hostNote: "A note from us", login: "Guest login",
     billing: "Billing summary", item: "Description", amount: "Amount", total: "Total", paid: "Paid", balance: "Balance", comments: "Guest comments",
     payment: "Payment details", iban: "Bank IBAN", holder: "Account holder", bank: "Bank", swift: "SWIFT", iris: "IRIS", methods: "Payment", methodsValue: "Cash or credit card (Visa / Mastercard)", faq: "Frequently asked questions",
     prepaid: "Prepaid via {channel}", prepaidTitle: "Your booking is paid", prepaidBody: "Your booking has been prepaid through {channel}. There is no need to send us any payment for these charges.",
@@ -122,7 +132,7 @@ const TEXT = {
   tr: {
     subject: "Rezervasyonunuz onaylandı", eyebrow: "✓ Rezervasyon onaylandı", heading: "Rezervasyonunuz onaylandı", preheader: "Rezervasyonunuzun tüm bilgileri.",
     dear: "Sevgili", intro: "Teşekkür ederiz! Sizi ağırlamak için sabırsızlanıyoruz. Rezervasyonunuzun tüm bilgileri aşağıda.",
-    details: "Rezervasyon bilgileri", bookingNo: "Rezervasyon no.", bookingDate: "Rezervasyon tarihi", name: "İsim", adults: "Yetişkin", children: "Çocuk", phone: "Telefon", email: "E-posta", breakfast: "Kahvaltı", login: "Misafir girişi",
+    details: "Rezervasyon bilgileri", bookingNo: "Rezervasyon no.", bookingDate: "Rezervasyon tarihi", name: "İsim", adults: "Yetişkin", children: "Çocuk", phone: "Telefon", email: "E-posta", breakfast: "Kahvaltı", extras: "Ekstralar", hostNote: "Bizden bir not", login: "Misafir girişi",
     billing: "Ödeme özeti", item: "Açıklama", amount: "Tutar", total: "Toplam", paid: "Ödenen", balance: "Kalan", comments: "Misafir yorumları",
     payment: "Ödeme bilgileri", iban: "Banka IBAN", holder: "Hesap sahibi", bank: "Banka", swift: "SWIFT", iris: "IRIS", methods: "Ödeme", methodsValue: "Nakit veya kredi kartı (Visa / Mastercard)", faq: "Sık sorulan sorular",
     prepaid: "{channel} üzerinden ön ödendi", prepaidTitle: "Rezervasyonunuz ödendi", prepaidBody: "Rezervasyonunuz {channel} üzerinden önceden ödendi. Bu tutarlar için bize ayrıca ödeme göndermenize gerek yok.",
@@ -163,6 +173,7 @@ export function buildConfirmationEmail(data: ConfirmationData, bank: BankDetails
     { label: t.phone, value: esc(data.phone) },
     { label: t.email, value: esc(data.email) },
     { label: t.breakfast, value: esc(data.breakfast) },
+    { label: t.extras, value: esc((data.extras ?? []).join(", ")) },
     { label: t.login, value: esc(data.guestLogin) },
   ]);
   const prepaidVia = (data.prepaidVia ?? "").trim();
@@ -179,6 +190,7 @@ export function buildConfirmationEmail(data: ConfirmationData, bank: BankDetails
     + stayTicket(language, data.rooms, "")
     + sectionTitle(t.details) + details
     + sectionTitle(t.billing) + billingTable(data, t)
+    + (data.hostNote?.trim() ? callout(t.hostNote, esc(data.hostNote.trim()).replace(/\n/g, "<br>")) : "")
     + (data.comments ? callout(t.comments, esc(data.comments).replace(/\n/g, "<br>")) : "")
     + (prepaidVia ? callout(t.prepaidTitle, esc(t.prepaidBody.replace("{channel}", prepaidVia))) : "")
     + (bankRows ? sectionTitle(t.payment) + bankRows : "")

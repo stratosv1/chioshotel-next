@@ -15,6 +15,10 @@ export type BookingExtras = {
   cot: boolean;
   rollaway: boolean;
   other: string;
+  /** Breakfast included (shown on the booking confirmation). Undefined = keep the saved value. */
+  breakfast?: boolean;
+  /** Note for the guest, printed on the booking confirmation. Undefined = keep the saved value. */
+  guestNote?: string;
 };
 
 export function getSql() {
@@ -51,6 +55,13 @@ export async function ensurePyrgosTables() {
       updated_at timestamptz not null default now()
     )`;
   }
+  // Added 2026-11-19: breakfast + guest note for the booking confirmation.
+  const cols = (await sql`select column_name from information_schema.columns
+    where table_schema = 'public' and table_name = 'pyrgos_booking_extras' and column_name in ('breakfast', 'guest_note')`) as any[];
+  if (cols.length < 2) {
+    await sql`alter table public.pyrgos_booking_extras add column if not exists breakfast boolean not null default false`;
+    await sql`alter table public.pyrgos_booking_extras add column if not exists guest_note text`;
+  }
   ready = true;
 }
 
@@ -75,13 +86,21 @@ export async function getExtras(bookingIds: string[]) {
   await ensurePyrgosTables();
   if (!bookingIds.length) return new Map<string, BookingExtras>();
   const rows = (await getSql()`
-    select booking_id, bed_setup, cot, rollaway, other from public.pyrgos_booking_extras
+    select booking_id, bed_setup, cot, rollaway, other, breakfast, guest_note from public.pyrgos_booking_extras
     where booking_id = any(${bookingIds}::text[])
   `) as any[];
   return new Map(
     rows.map((row) => [
       String(row.booking_id),
-      { bookingId: String(row.booking_id), bedSetup: row.bed_setup, cot: Boolean(row.cot), rollaway: Boolean(row.rollaway), other: row.other ?? "" },
+      {
+        bookingId: String(row.booking_id),
+        bedSetup: row.bed_setup,
+        cot: Boolean(row.cot),
+        rollaway: Boolean(row.rollaway),
+        other: row.other ?? "",
+        breakfast: Boolean(row.breakfast),
+        guestNote: row.guest_note ?? "",
+      },
     ]),
   );
 }
@@ -89,10 +108,14 @@ export async function getExtras(bookingIds: string[]) {
 export async function saveExtras(extras: BookingExtras) {
   await ensurePyrgosTables();
   await getSql()`
-    insert into public.pyrgos_booking_extras (booking_id, bed_setup, cot, rollaway, other)
-    values (${extras.bookingId}, ${extras.bedSetup}, ${extras.cot}, ${extras.rollaway}, ${extras.other || null})
+    insert into public.pyrgos_booking_extras (booking_id, bed_setup, cot, rollaway, other, breakfast, guest_note)
+    values (${extras.bookingId}, ${extras.bedSetup}, ${extras.cot}, ${extras.rollaway}, ${extras.other || null},
+      ${extras.breakfast ?? false}, ${extras.guestNote?.trim() || null})
     on conflict (booking_id) do update set bed_setup = excluded.bed_setup, cot = excluded.cot,
-      rollaway = excluded.rollaway, other = excluded.other, updated_at = now()
+      rollaway = excluded.rollaway, other = excluded.other,
+      breakfast = case when ${extras.breakfast === undefined} then pyrgos_booking_extras.breakfast else excluded.breakfast end,
+      guest_note = case when ${extras.guestNote === undefined} then pyrgos_booking_extras.guest_note else excluded.guest_note end,
+      updated_at = now()
   `;
 }
 

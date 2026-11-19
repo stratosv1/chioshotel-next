@@ -5,7 +5,9 @@ import {
   buildConfirmationEmail,
   cleanChargeDescription,
   cleanGuestComments,
+  BREAKFAST_INCLUDED,
   DEFAULT_BREAKFAST,
+  EXTRA_LABELS,
   ROOM_TYPE_NAMES,
   type BankDetails,
   type ConfirmationCharge,
@@ -161,6 +163,23 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
   const prepaidVia = guestComments.prepaid ? channelName(primary, self, language) : "";
   if (prepaidVia) warnings.push(`Η κράτηση είναι προπληρωμένη μέσω ${prepaidVia}: το email δεν θα δείχνει IBAN/τρόπους πληρωμής.`);
 
+  // Breakfast, cot/extra bed and the agreed note entered in the control tower (/staff/pyrgos).
+  let towerExtras: any[] = [];
+  try {
+    const exists = (await sql`select to_regclass('public.pyrgos_booking_extras') as t`) as any[];
+    if (exists[0]?.t) {
+      towerExtras = (await sql`select * from public.pyrgos_booking_extras where booking_id = any(${activeIds}::text[])`) as any[];
+    }
+  } catch (error) {
+    console.error("confirmation: control tower extras unavailable", error);
+  }
+  const breakfastIncluded = towerExtras.some((row) => row.breakfast === true);
+  const extras = [
+    ...(towerExtras.some((row) => row.cot) ? [EXTRA_LABELS.cot[language]] : []),
+    ...(towerExtras.some((row) => row.rollaway) ? [EXTRA_LABELS.rollaway[language]] : []),
+  ];
+  const hostNote = [...new Set(towerExtras.map((row) => text(row.guest_note)).filter(Boolean))].join("\n\n");
+
   const sum = (key: string) => bookings.reduce((total: number, row: any) => total + (Number(row[key]) || 0), 0);
   const names = [...new Set((bookings.length ? bookings : [self]).map((row: any) => `${text(row.firstName ?? row.firstname)} ${text(row.lastName ?? row.lastname)}`.trim()).filter(Boolean))];
 
@@ -180,7 +199,9 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
       children: sum("numChild"),
       phone: guestPhone(primary) || text(self?.phone),
       email: text(primary?.email) || text(self?.email),
-      breakfast: DEFAULT_BREAKFAST[language],
+      breakfast: breakfastIncluded ? BREAKFAST_INCLUDED[language] : DEFAULT_BREAKFAST[language],
+      extras,
+      hostNote,
       charges,
       payments,
       // Only the guest's own comments. Beds24 "notes" are internal and stay out.

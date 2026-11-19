@@ -728,6 +728,9 @@ function BookingPanel({
       cot: b.cot,
       rollaway: b.rollaway,
       bedOther: b.bedOther,
+      breakfast: b.breakfast,
+      guestNote: b.guestNote,
+      confirmTo: "",
       note: "",
     });
   }, [id]);
@@ -945,31 +948,72 @@ function BookingPanel({
         </section>
 
         <section className="space-y-2">
-          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Κρεβάτια & εξοπλισμός</h3>
+          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Κρεβάτια, πρωινό & επιβεβαίωση</h3>
           <select value={form.bedSetup} onChange={(e) => set({ bedSetup: e.target.value })} className={input} aria-label="Κρεβάτι">
             <option value="">—</option>
             {BED_OPTIONS.map((o) => (
               <option key={o.value} value={o.value}>{o.label}</option>
             ))}
           </select>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap gap-x-4">
+            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.breakfast} onChange={(e) => set({ breakfast: e.target.checked })} /> Πρωινό περιλαμβάνεται</label>
             <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.cot} onChange={(e) => set({ cot: e.target.checked })} /> Κούνια</label>
             <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.rollaway} onChange={(e) => set({ rollaway: e.target.checked })} /> Ράντζο</label>
           </div>
           <input value={form.bedOther} onChange={(e) => set({ bedOther: e.target.value })} placeholder="Άλλο (π.χ. επιπλέον μαξιλάρια)" aria-label="Άλλο εξοπλισμός" className={input} />
+          <label className="block text-xs font-bold">
+            Σημείωση για τον πελάτη <span className="font-normal text-[#5443c9]">· φαίνεται στην επιβεβαίωση</span>
+            <textarea rows={2} value={form.guestNote} onChange={(e) => set({ guestNote: e.target.value })} placeholder="π.χ. Συμφωνήσαμε late check-out στις 13:00" className={input} />
+          </label>
           <button
             type="button"
             onClick={() =>
               setConfirm({
-                title: "Αποθήκευση κρεβατιών",
-                lines: ["Θα γραφτεί και στις σημειώσεις του Beds24."],
-                onConfirm: () => run({ action: "beds", id: b.id, bedSetup: form.bedSetup, cot: form.cot, rollaway: form.rollaway, bedOther: form.bedOther }, "Τα κρεβάτια αποθηκεύτηκαν"),
+                title: "Αποθήκευση",
+                lines: [
+                  [form.breakfast ? "Πρωινό" : "", form.cot ? "Κούνια" : "", form.rollaway ? "Ράντζο" : ""].filter(Boolean).join(" · ") || "Χωρίς πρωινό / κούνια / ράντζο",
+                  form.guestNote.trim() ? `Σημείωση στην επιβεβαίωση: «${form.guestNote.trim().slice(0, 120)}»` : "Χωρίς σημείωση στην επιβεβαίωση",
+                  "Θα γραφτεί και στις σημειώσεις του Beds24.",
+                ],
+                onConfirm: () =>
+                  run(
+                    { action: "beds", id: b.id, bedSetup: form.bedSetup, cot: form.cot, rollaway: form.rollaway, bedOther: form.bedOther, breakfast: form.breakfast, guestNote: form.guestNote },
+                    "Αποθηκεύτηκε",
+                  ),
               })
             }
             className="min-h-11 rounded-full border border-[#cfd9e4] px-4 text-sm font-bold"
           >
-            Αποθήκευση κρεβατιών
+            Αποθήκευση
           </button>
+          <div className="flex flex-wrap items-end gap-2 rounded-xl bg-[#f4f7fa] p-3">
+            <label className="min-w-0 flex-1 text-xs font-bold">
+              Email επιβεβαίωσης προς
+              <input
+                type="email"
+                value={form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")}
+                onChange={(e) => set({ confirmTo: e.target.value })}
+                placeholder="email πελάτη"
+                className={input}
+              />
+            </label>
+            <button
+              type="button"
+              onClick={() => {
+                const to = (form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")).trim();
+                if (!to) return setError("Γράψε το email του πελάτη.");
+                setConfirm({
+                  title: "Αποστολή email επιβεβαίωσης",
+                  lines: [`Προς: ${to}`, "Με πρωινό/κούνια/ράντζο και τη σημείωση που έχουν αποθηκευτεί.", "Αν άλλαξες κάτι πιο πάνω, πάτα πρώτα «Αποθήκευση»."],
+                  confirmLabel: "Αποστολή",
+                  onConfirm: () => run({ action: "confirm", id: b.id, to }, `Το email επιβεβαίωσης στάλθηκε στο ${to}`),
+                });
+              }}
+              className="min-h-11 rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]"
+            >
+              Αποστολή επιβεβαίωσης
+            </button>
+          </div>
         </section>
 
         <section className="space-y-2">
@@ -1355,6 +1399,8 @@ function NewBookingDialog({
     cot: false,
     rollaway: false,
     bedOther: "",
+    breakfast: false,
+    guestNote: "",
     notes: "",
     sendConfirmation: true,
   });
@@ -1404,6 +1450,8 @@ function NewBookingDialog({
         `${rooms.map((r) => roomLabel(r)).join(", ")} · ${dm(f.checkin)} → ${dm(f.checkout)} · ${nights} νύχτες`,
         `Σύνολο ${f.total ? euro(Number(f.total)) : "χωρίς τιμή"}${rooms.length > 1 ? " για όλο το group" : ""}${f.deposit ? ` · προκαταβολή ${euro(Number(f.deposit))}` : ""}`,
         ...(rooms.length > 1 ? [`Group: ${rooms.length} κρατήσεις στο Beds24, η τιμή στην πρώτη (${roomLabel(rooms[0])}).`, "Τα άτομα ισχύουν για κάθε δωμάτιο."] : []),
+        [f.breakfast ? "Πρωινό" : "", f.cot ? "Κούνια" : "", f.rollaway ? "Ράντζο" : ""].filter(Boolean).join(" · ") || "Χωρίς πρωινό / κούνια / ράντζο",
+        ...(f.guestNote.trim() ? [`Σημείωση στην επιβεβαίωση: «${f.guestNote.trim().slice(0, 120)}»`] : []),
         f.sendConfirmation && f.email ? `Email επιβεβαίωσης στο ${f.email}` : "Χωρίς email επιβεβαίωσης",
         "Θα καταχωρηθεί στο Beds24.",
       ],
@@ -1431,6 +1479,8 @@ function NewBookingDialog({
           cot: f.cot,
           rollaway: f.rollaway,
           bedOther: f.bedOther,
+          breakfast: f.breakfast,
+          guestNote: f.guestNote,
           notes: f.notes,
           sendConfirmation: f.sendConfirmation,
         });
@@ -1519,11 +1569,19 @@ function NewBookingDialog({
                 ))}
               </select>
             </label>
-            <div className="flex gap-4">
+            <div className="flex flex-wrap gap-x-4">
+              <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={f.breakfast} onChange={(e) => set({ breakfast: e.target.checked })} /> Πρωινό περιλαμβάνεται</label>
               <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={f.cot} onChange={(e) => set({ cot: e.target.checked })} /> Κούνια</label>
               <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={f.rollaway} onChange={(e) => set({ rollaway: e.target.checked })} /> Ράντζο</label>
             </div>
-            <label className="block text-xs font-bold">Σημειώσεις<textarea rows={2} value={f.notes} onChange={(e) => set({ notes: e.target.value })} className={input} /></label>
+            <label className="block text-xs font-bold">
+              Σημείωση για τον πελάτη <span className="font-normal text-[#5443c9]">· φαίνεται στην επιβεβαίωση</span>
+              <textarea rows={2} value={f.guestNote} onChange={(e) => set({ guestNote: e.target.value })} placeholder="π.χ. Συμφωνήσαμε δωρεάν μεταφορά από το αεροδρόμιο" className={input} />
+            </label>
+            <label className="block text-xs font-bold">
+              Εσωτερικές σημειώσεις <span className="font-normal text-[#5b6b80]">· μόνο για εμάς</span>
+              <textarea rows={2} value={f.notes} onChange={(e) => set({ notes: e.target.value })} className={input} />
+            </label>
             <label className="flex min-h-11 items-center gap-2 text-sm font-semibold">
               <input type="checkbox" className="h-5 w-5" checked={f.sendConfirmation} onChange={(e) => set({ sendConfirmation: e.target.checked })} />
               Αποστολή email επιβεβαίωσης {f.email ? "" : <span className="text-xs font-normal text-[#5b6b80]">(χρειάζεται email)</span>}

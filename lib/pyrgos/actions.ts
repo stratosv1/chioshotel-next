@@ -119,17 +119,24 @@ export async function createBooking(body: any) {
         ${isMaster ? price.totalPrice : null}, now(), ${isMaster && price.totalPrice !== null ? "pyrgos" : null}, ${notes || null})
       on conflict (booking_id) do nothing
     `;
-    if (body.bedSetup || body.cot || body.rollaway || body.bedOther) {
+    if (body.bedSetup || body.cot || body.rollaway || body.bedOther || body.breakfast || body.guestNote) {
       await saveExtras({
         bookingId: c.id,
         bedSetup: (body.bedSetup || null) as BedSetup | null,
         cot: Boolean(body.cot),
         rollaway: Boolean(body.rollaway),
         other: clean(body.bedOther, 120),
+        breakfast: Boolean(body.breakfast),
+        // The agreed note goes on the confirmation once, on the first (master) booking.
+        guestNote: c.master === null ? String(body.guestNote ?? "").trim().slice(0, 1000) : "",
       });
     }
   }
   const id = created[0].id;
+  const extrasLine = [body.breakfast ? "Πρωινό: περιλαμβάνεται" : "", String(body.guestNote ?? "").trim() ? `Συμφωνία (στην επιβεβαίωση): ${String(body.guestNote).trim().slice(0, 300)}` : ""]
+    .filter(Boolean)
+    .join(" · ");
+  if (extrasLine) await noteToBeds24(id, extrasLine);
   await saveMoney({
     bookingId: id,
     priceMode: mode,
@@ -311,18 +318,43 @@ export async function updateMoney(body: any) {
 
 export async function updateBeds(body: any) {
   const id = clean(body.id, 20);
+  const guestNote = body.guestNote === undefined ? undefined : String(body.guestNote ?? "").trim().slice(0, 1000);
   const extras = {
     bookingId: id,
     bedSetup: (["double", "twin", "double_single", "double_two_singles"].includes(body.bedSetup) ? body.bedSetup : null) as BedSetup | null,
     cot: Boolean(body.cot),
     rollaway: Boolean(body.rollaway),
     other: clean(body.bedOther, 120),
+    breakfast: body.breakfast === undefined ? undefined : Boolean(body.breakfast),
+    guestNote,
   };
   await saveExtras(extras);
   const label = bedsText(extras);
-  const beds24 = label ? await noteToBeds24(id, `Κρεβάτια: ${label}`) : "ok";
-  await logHistory(id, "Κρεβάτια", label || "καθαρίστηκε", beds24 === "ok" ? "ok" : "failed");
+  const lines = [
+    label ? `Κρεβάτια: ${label}` : "",
+    extras.breakfast ? "Πρωινό: περιλαμβάνεται" : "",
+    guestNote ? `Συμφωνία (στην επιβεβαίωση): ${guestNote.slice(0, 300)}` : "",
+  ].filter(Boolean);
+  const beds24 = lines.length ? await noteToBeds24(id, lines.join(" · ")) : "ok";
+  await logHistory(
+    id,
+    "Κρεβάτια & πρωινό",
+    [label || "χωρίς κρεβάτια", extras.breakfast ? "πρωινό" : "", guestNote ? `σημείωση: ${guestNote.slice(0, 120)}` : ""].filter(Boolean).join(" · "),
+    beds24 === "ok" ? "ok" : "failed",
+  );
   return { id, beds24: beds24 === "ok" ? "ok" : "failed" };
+}
+
+/** (Re)send the booking confirmation email from the booking panel. */
+export async function sendConfirmationEmail(body: any) {
+  const id = clean(body.id, 20);
+  const to = clean(body.to, 160).toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) throw new ActionError("Μη έγκυρο email.");
+  const loaded = await loadConfirmation(id);
+  if (!loaded) throw new ActionError("Δεν φορτώθηκαν τα στοιχεία της κράτησης.", 502);
+  await sendConfirmation(loaded.data, to, "live");
+  await logHistory(id, "Email επιβεβαίωσης", to, "ok");
+  return { id, warnings: loaded.warnings };
 }
 
 export async function addNote(body: any) {
