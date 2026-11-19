@@ -5,7 +5,7 @@ import { chooseLanguage, deliverEmail } from "@/lib/crm/guest-emails";
 import { ActionError } from "./actions";
 import { logHistory } from "./ledger";
 import { getBookingDetail } from "./plan";
-import { roomByNumber } from "./rooms";
+import { CLIMATE_FEE_PER_NIGHT, roomByNumber } from "./rooms";
 import { getSql } from "./store";
 
 // Manual email (owner, 2026-11-19): "we have received your deposit for this booking".
@@ -75,7 +75,7 @@ export async function sendDepositEmail(body: any) {
   const deposit = master.deposit ?? 0;
   if (!deposit) throw new ActionError("Δεν έχει αποθηκευτεί προκαταβολή σε αυτή την κράτηση.");
   const stay = master.totalPrice ?? master.beds24Price ?? null;
-  const total = stay !== null ? Math.round((stay + master.chargesTotal) * 100) / 100 : null;
+
 
   const [row] = (await getSql()`select language, country from public.pyrgos_bookings where booking_id = ${master.id}`) as any[];
   const language = chooseLanguage(row?.language ?? null, row?.country ?? null);
@@ -88,6 +88,9 @@ export async function sendDepositEmail(body: any) {
       return { room: ROOM_TYPE_NAMES[roomId]?.[language] ?? roomByNumber(other.room)?.label ?? "", checkin: other.checkin, checkout: other.checkout };
     }),
   );
+  // Stay + climate fee (nights × €2 per room) + extra charges.
+  const nightsAll = ticketRooms.reduce((sum, r) => sum + Math.max(Math.round((Date.parse(r.checkout) - Date.parse(r.checkin)) / 86_400_000), 0), 0);
+  const total = stay !== null ? Math.round((stay + nightsAll * CLIMATE_FEE_PER_NIGHT + master.chargesTotal) * 100) / 100 : null;
   const balance = total !== null ? Math.max(total - deposit, 0) : null;
   const fullName = `${master.firstName} ${master.lastName}`.trim();
   const ids = rooms.map((g) => g.id);

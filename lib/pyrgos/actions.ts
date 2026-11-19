@@ -1,7 +1,7 @@
 import "server-only";
 import { appendBookingNote, getBeds24WriteToken } from "@/lib/crm/booking-notes";
 import { loadConfirmation, sendConfirmation } from "@/lib/crm/booking-confirmation";
-import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, liveOverlap, modifyBeds24Booking } from "./beds24-write";
+import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, ensureClimateFee, liveOverlap, modifyBeds24Booking } from "./beds24-write";
 import { ensureBookingsTable } from "./bookings";
 import { deleteCharge, insertCharge, logHistory, resolvePrice, saveMoney, type PriceMode } from "./ledger";
 import { freeRooms, getBookingDetail } from "./plan";
@@ -28,6 +28,17 @@ const int = (v: unknown, fallback: number) => {
   return Number.isInteger(n) && n >= 0 && n <= 12 ? n : fallback;
 };
 const roomLabel = (n: number | null) => roomByNumber(n)?.label ?? `Δωμ. ${n}`;
+
+/** Climate fee (ΤΑΚΚ) on the Beds24 invoice of a direct booking; never blocks the main action. */
+async function syncClimateFee(id: string, nights: number) {
+  try {
+    const outcome = await ensureClimateFee(id, nights);
+    if (outcome !== "exists") await logHistory(id, "Φόρος διαμονής", `${nights} × €2 · ${outcome === "added" ? "μπήκε στο Beds24" : "διορθώθηκε στο Beds24"}`, "ok");
+  } catch (error) {
+    console.error("[pyrgos] climate fee sync failed", error);
+    await logHistory(id, "Φόρος διαμονής", `${nights} × €2`, "failed").catch(() => undefined);
+  }
+}
 
 async function assertFree(room: number, arrival: string, departure: string, ignoreId?: string) {
   const free = await freeRooms(arrival, departure, ignoreId);
@@ -137,6 +148,7 @@ export async function createBooking(body: any) {
     .filter(Boolean)
     .join(" · ");
   if (extrasLine) await noteToBeds24(id, extrasLine);
+  for (const c of created) await syncClimateFee(c.id, nights);
   for (const charge of Array.isArray(body.charges) ? body.charges.slice(0, 20) : []) {
     try {
       await addCharge({ id, description: charge?.description, qty: charge?.qty, unitPrice: charge?.unitPrice });
@@ -237,6 +249,8 @@ export async function updateBooking(body: any) {
     ...(total !== undefined && !OTA.has(current.channel) ? { total } : {}),
   });
 
+  if (datesChanged && !OTA.has(current.channel)) await syncClimateFee(id, nights);
+
   await getSql()`
     update public.pyrgos_bookings set room_number = ${room}, checkin = ${arrival}::date, checkout = ${departure}::date,
       nights = ${nights},
@@ -301,6 +315,7 @@ export async function updateMoney(body: any) {
       beds24.push("failed");
     }
   }
+  if (!OTA.has(current.channel) && current.status !== "black") await syncClimateFee(id, current.nights);
   if (deposit !== current.deposit && deposit) beds24.push(await noteToBeds24(id, `Προκαταβολή: €${deposit}`));
   if (paid && !current.paid) beds24.push(await noteToBeds24(id, `Εξοφλήθηκε (${new Date().toLocaleDateString("el-GR", { timeZone: "Europe/Athens" })})`));
 
@@ -501,6 +516,10 @@ export async function splitBooking(body: any) {
       rollaway: current.rollaway,
       other: current.bedOther,
     });
+  }
+  if (!OTA.has(current.channel)) {
+    await syncClimateFee(current.id, firstNights);
+    await syncClimateFee(secondId, secondNights);
   }
   const detail = `${roomLabel(current.room)} ${current.checkin}→${splitDate} · ${roomLabel(newRoom)} ${splitDate}→${originalCheckout}`;
   await logHistory(current.id, "Split stay", `${detail} · συνέχεια #${secondId}`, "ok");

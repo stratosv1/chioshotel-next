@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { PlanBooking, PlanCell } from "@/lib/pyrgos/plan";
-import { PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
+import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
 
 // ---------- helpers ----------
 
@@ -754,7 +754,8 @@ function BookingPanel({
   const nights = diffDays(form.checkin, form.checkout);
   const totalNum = Number(form.total) || 0;
   const depositNum = Number(form.deposit) || 0;
-  const grandTotal = form.total || b.chargesTotal ? Math.round((totalNum + b.chargesTotal) * 100) / 100 : null;
+  const climateFee = nights > 0 ? nights * CLIMATE_FEE_PER_NIGHT : 0;
+  const grandTotal = form.total || b.chargesTotal ? Math.round((totalNum + climateFee + b.chargesTotal) * 100) / 100 : null;
   const balance = grandTotal !== null ? Math.round((grandTotal - depositNum) * 100) / 100 : null;
   const style = channelStyle(b);
   const digits = (b.phone || "").replace(/\D/g, "");
@@ -923,7 +924,7 @@ function BookingPanel({
           {b.masterId ? (
             <>
               <p className="text-sm text-[#5b6b80]">Μέρος group: η τιμή και η πληρωμή είναι στην κύρια κράτηση #{b.masterId}. Οι χρεώσεις που προσθέτεις εδώ πάνε εκεί.</p>
-              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={null} />
+              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={null} nights={b.nights} stayTotal={null} />
             </>
           ) : (
             <>
@@ -942,7 +943,7 @@ function BookingPanel({
                   <div className={`text-lg font-black ${form.paid ? "text-[#14532d]" : ""}`}>{form.paid ? "Πληρωμένη ✓" : euro(balance)}</div>
                 </div>
               </div>
-              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={grandTotal} />
+              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={grandTotal} nights={nights} stayTotal={form.total ? totalNum : null} nightPrice={form.priceMode === "night" && form.night ? Number(form.night) : null} />
               <label className="flex min-h-11 items-center gap-2 text-sm font-bold">
                 <input type="checkbox" className="h-5 w-5" checked={form.paid} onChange={(e) => set({ paid: e.target.checked })} /> Πληρωμένη
                 {b.paidAt ? <span className="text-xs font-normal text-[#5b6b80]">({b.paidAt})</span> : null}
@@ -956,7 +957,7 @@ function BookingPanel({
                   onClick={() => {
                     const to = (form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")).trim();
                     if (!to) return setError("Γράψε το email του πελάτη (πεδίο «Email επιβεβαίωσης προς» πιο κάτω).");
-                    const remaining = b.totalPrice !== null || b.beds24Price !== null ? Math.max((b.totalPrice ?? b.beds24Price ?? 0) + b.chargesTotal - (b.deposit ?? 0), 0) : null;
+                    const remaining = b.totalPrice !== null || b.beds24Price !== null ? Math.max((b.totalPrice ?? b.beds24Price ?? 0) + b.nights * CLIMATE_FEE_PER_NIGHT + b.chargesTotal - (b.deposit ?? 0), 0) : null;
                     setConfirm({
                       title: "Email για την προκαταβολή",
                       lines: [`Προς: ${to}`, `Λάβαμε προκαταβολή ${euro(b.deposit)}`, remaining !== null ? `Υπόλοιπο ${euro(remaining)}` : "Χωρίς σύνολο τιμής"],
@@ -1318,16 +1319,45 @@ function GuestCrm({ booking: b, setConfirm, onToast }: { booking: PlanBooking; s
 
 const CHARGE_PRESETS = ["Πρωινό", "Ράντζο", "Κούνια", "Μεταφορά", "Late check-out", "Μίνι μπαρ", "Πλυντήριο"];
 
+function AutoLines({ nights, stayTotal, nightPrice }: { nights: number; stayTotal: number | null; nightPrice?: number | null }) {
+  if (nights <= 0) return null;
+  const night = nightPrice ? nightPrice : stayTotal !== null ? Math.round((stayTotal / nights) * 100) / 100 : null;
+  return (
+    <ul className="divide-y divide-[#eef2f6] border-b border-[#eef2f6] text-sm">
+      <li className="flex items-center justify-between gap-2 py-1.5">
+        <span>
+          <span className="font-semibold">Διαμονή</span>
+          <span className="text-xs text-[#5b6b80]"> · {nights} {nights === 1 ? "βράδυ" : "βράδια"} × {night !== null ? euro(night) : "—"}</span>
+        </span>
+        <strong className="pr-10">{stayTotal !== null ? euro(stayTotal) : "—"}</strong>
+      </li>
+      <li className="flex items-center justify-between gap-2 py-1.5">
+        <span>
+          <span className="font-semibold">{CLIMATE_FEE_LABEL}</span>
+          <span className="text-xs text-[#5b6b80]"> · {nights} × {euro(CLIMATE_FEE_PER_NIGHT)}</span>
+        </span>
+        <strong className="pr-10">{euro(nights * CLIMATE_FEE_PER_NIGHT)}</strong>
+      </li>
+    </ul>
+  );
+}
+
 function Charges({
   booking: b,
   setConfirm,
   run,
   grandTotal,
+  nights,
+  stayTotal,
+  nightPrice,
 }: {
   booking: PlanBooking;
   setConfirm: (c: ConfirmState) => void;
   run: (body: Record<string, unknown>, okText: string) => Promise<void>;
   grandTotal: number | null;
+  nights: number;
+  stayTotal: number | null;
+  nightPrice?: number | null;
 }) {
   const [desc, setDesc] = useState("");
   const [qty, setQty] = useState("1");
@@ -1338,8 +1368,9 @@ function Charges({
     <div className="space-y-2 rounded-lg bg-white p-3">
       <div className="flex items-center justify-between">
         <span className="text-xs font-black uppercase tracking-wide text-[#5b6b80]">Χρεώσεις διαμονής</span>
-        {b.charges.length > 0 && <span className="text-xs font-bold">{euro(b.chargesTotal)}</span>}
+        {grandTotal !== null && <span className="text-xs font-bold">{euro(grandTotal)}</span>}
       </div>
+      {!b.masterId && <AutoLines nights={nights} stayTotal={stayTotal} nightPrice={nightPrice} />}
       {b.charges.length === 0 && <p className="text-xs text-[#5b6b80]">Καμία επιπλέον χρέωση.</p>}
       <ul className="divide-y divide-[#eef2f6] text-sm">
         {b.charges.map((c) => (
@@ -1402,8 +1433,8 @@ function Charges({
       >
         + Προσθήκη χρέωσης{amount > 0 ? ` (${euro(amount)})` : ""}
       </button>
-      {grandTotal !== null && b.chargesTotal > 0 && (
-        <p className="text-xs text-[#3d4b5e]">Γενικό σύνολο (διαμονή + χρεώσεις): <strong>{euro(grandTotal)}</strong></p>
+      {grandTotal !== null && (
+        <p className="text-xs text-[#3d4b5e]">Γενικό σύνολο (διαμονή + φόρος + χρεώσεις): <strong>{euro(grandTotal)}</strong></p>
       )}
     </div>
   );
@@ -1412,9 +1443,15 @@ function Charges({
 function NewCharges({
   charges,
   onChange,
+  nights,
+  rooms,
+  stayTotal,
 }: {
   charges: { description: string; qty: number; unitPrice: number }[];
   onChange: (c: { description: string; qty: number; unitPrice: number }[]) => void;
+  nights: number;
+  rooms: number;
+  stayTotal: number | null;
 }) {
   const [desc, setDesc] = useState("");
   const [qty, setQty] = useState("1");
@@ -1424,6 +1461,7 @@ function NewCharges({
   return (
     <div className="space-y-2 rounded-lg border border-[#e3e9f0] p-3">
       <div className="text-xs font-black uppercase tracking-wide text-[#5b6b80]">Χρεώσεις διαμονής</div>
+      <AutoLines nights={nights * rooms} stayTotal={stayTotal} />
       {charges.map((c, i) => (
         <div key={i} className="flex items-center justify-between text-sm">
           <span>{c.description} · {c.qty} × {euro(c.unitPrice)}</span>
@@ -1458,6 +1496,12 @@ function NewCharges({
       >
         + Προσθήκη χρέωσης{q * pr > 0 ? ` (${euro(q * pr)})` : ""}
       </button>
+      {nights > 0 && (
+        <p className="text-xs text-[#3d4b5e]">
+          Γενικό σύνολο (διαμονή + φόρος + χρεώσεις):{" "}
+          <strong>{euro((stayTotal ?? 0) + nights * rooms * CLIMATE_FEE_PER_NIGHT + charges.reduce((sum, c) => sum + c.qty * c.unitPrice, 0))}</strong>
+        </p>
+      )}
     </div>
   );
 }
@@ -1625,6 +1669,7 @@ function NewBookingDialog({
         `${rooms.map((r) => roomLabel(r)).join(", ")} · ${dm(f.checkin)} → ${dm(f.checkout)} · ${nights} νύχτες`,
         `Σύνολο ${f.total ? euro(Number(f.total)) : "χωρίς τιμή"}${rooms.length > 1 ? " για όλο το group" : ""}${f.deposit ? ` · προκαταβολή ${euro(Number(f.deposit))}` : ""}`,
         ...(rooms.length > 1 ? [`Group: ${rooms.length} κρατήσεις στο Beds24, η τιμή στην πρώτη (${roomLabel(rooms[0])}).`, "Τα άτομα ισχύουν για κάθε δωμάτιο."] : []),
+        `${CLIMATE_FEE_LABEL}: ${nights * rooms.length} × ${euro(CLIMATE_FEE_PER_NIGHT)} = ${euro(nights * rooms.length * CLIMATE_FEE_PER_NIGHT)} (μπαίνει στο τιμολόγιο Beds24)`,
         [f.breakfast ? "Πρωινό" : "", f.cot ? "Κούνια" : "", f.rollaway ? "Ράντζο" : ""].filter(Boolean).join(" · ") || "Χωρίς πρωινό / κούνια / ράντζο",
         ...(f.guestNote.trim() ? [`Σημείωση στην επιβεβαίωση: «${f.guestNote.trim().slice(0, 120)}»`] : []),
         ...(f.charges.length
@@ -1728,7 +1773,13 @@ function NewBookingDialog({
               <label className="text-xs font-bold">Προκαταβολή<input inputMode="decimal" value={f.deposit} onChange={(e) => set({ deposit: e.target.value.replace(",", ".") })} className={input} /></label>
               <label className="flex min-h-11 items-center gap-2 text-sm font-bold"><input type="checkbox" className="h-5 w-5" checked={f.paid} onChange={(e) => set({ paid: e.target.checked })} /> Πληρωμένη</label>
             </div>
-            <NewCharges charges={f.charges} onChange={(charges) => set({ charges })} />
+            <NewCharges
+              charges={f.charges}
+              onChange={(charges) => set({ charges })}
+              nights={nights}
+              rooms={f.group ? Math.max(f.rooms.length, 1) : 1}
+              stayTotal={f.total ? Number(f.total) : null}
+            />
           </div>
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">

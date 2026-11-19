@@ -1,6 +1,6 @@
 import "server-only";
 import { getBeds24WriteToken } from "@/lib/crm/booking-notes";
-import { roomByNumber } from "./rooms";
+import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, roomByNumber } from "./rooms";
 
 // Writes bookings to Beds24 for the control tower: create, modify (dates, room, guest,
 // price) and cancel. Availability is never touched (owner rule: it feeds the channels).
@@ -172,4 +172,35 @@ export async function cancelBeds24Booking(id: string) {
 /** Adds a charge line to the Beds24 booking invoice (a negative amount reverses an earlier line). */
 export async function addBeds24Charge(id: string, description: string, qty: number, unitPrice: number) {
   await post({ id: Number(id), invoiceItems: [{ type: "charge", description, qty, amount: unitPrice }] });
+}
+
+const FEE_LINE = /κλιματ|climate|resilience|ΤΑΚΚ|τακκ|iklim/i;
+
+/**
+ * Makes the Beds24 invoice carry exactly nights × €2 of climate fee (ΤΑΚΚ): adds a line when
+ * none exists, or a correcting line when the nights changed. Never touches other lines.
+ */
+export async function ensureClimateFee(id: string, nights: number) {
+  const token = process.env.BEDS24_API_TOKEN?.trim() || (await getBeds24WriteToken());
+  const url = new URL(`${API}/bookings`);
+  url.searchParams.set("id", id);
+  url.searchParams.set("includeInvoiceItems", "true");
+  const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
+  if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
+  const payload = (await response.json().catch(() => null)) as any;
+  const booking = (Array.isArray(payload?.data) ? payload.data : []).find((b: any) => text(b?.id) === id);
+  if (!booking) throw new Error("Η κράτηση δεν βρέθηκε στο Beds24.");
+  const current = (Array.isArray(booking.invoiceItems) ? booking.invoiceItems : [])
+    .filter((item: any) => !/payment/i.test(text(item.type)) && FEE_LINE.test(text(item.description)))
+    .reduce((sum: number, item: any) => sum + (Number(item.qty) || 1) * (Number(item.amount) || 0), 0);
+  const wanted = Math.max(nights, 0) * CLIMATE_FEE_PER_NIGHT;
+  const diff = Math.round((wanted - current) * 100) / 100;
+  if (Math.abs(diff) < 0.01) return "exists";
+  const qty = Math.round(diff / CLIMATE_FEE_PER_NIGHT);
+  if (qty !== 0 && Math.abs(qty * CLIMATE_FEE_PER_NIGHT - diff) < 0.01) {
+    await addBeds24Charge(id, CLIMATE_FEE_LABEL, Math.abs(qty), qty > 0 ? CLIMATE_FEE_PER_NIGHT : -CLIMATE_FEE_PER_NIGHT);
+  } else {
+    await addBeds24Charge(id, CLIMATE_FEE_LABEL, 1, diff);
+  }
+  return current ? "adjusted" : "added";
 }

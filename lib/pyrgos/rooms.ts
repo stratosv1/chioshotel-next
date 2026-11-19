@@ -42,3 +42,7 @@ export function isCategoryChange(from: number | null | undefined, to: number | n
   const b = roomByNumber(to);
   return Boolean(a && b && a.category !== b.category);
 }
+
+/** Climate resilience fee (ΤΑΚΚ) per room per night, owner 2026-11-19. */
+export const CLIMATE_FEE_PER_NIGHT = 2;
+export const CLIMATE_FEE_LABEL = "Φόρος διαμονής (ΤΑΚΚ)";
