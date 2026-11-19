@@ -1866,7 +1866,7 @@ function NewBookingDialog({
                   checked={f.hold}
                   onChange={(e) => set({ hold: e.target.checked, sendConfirmation: e.target.checked ? false : f.sendConfirmation })}
                 />
-                ⏳ Σε αναμονή <span className="text-xs font-normal text-[#5b6b80]">· δεν έχει επιβεβαιωθεί ακόμα</span>
+                <span>⏳ Σε αναμονή <span className="text-xs font-normal text-[#5b6b80]">· δεν έχει επιβεβαιωθεί ακόμα</span></span>
               </label>
               {f.hold && (
                 <div className="mt-1 grid gap-2 sm:grid-cols-2">
@@ -1883,7 +1883,7 @@ function NewBookingDialog({
             </div>
             <label className="flex min-h-11 items-center gap-2 text-sm font-semibold">
               <input type="checkbox" className="h-5 w-5" checked={f.sendConfirmation} onChange={(e) => set({ sendConfirmation: e.target.checked })} />
-              Αποστολή email επιβεβαίωσης {f.email ? "" : <span className="text-xs font-normal text-[#5b6b80]">(χρειάζεται email)</span>}
+              <span>Αποστολή email επιβεβαίωσης {f.email ? "" : <span className="text-xs font-normal text-[#5b6b80]">(χρειάζεται email)</span>}</span>
             </label>
           </div>
         </div>
