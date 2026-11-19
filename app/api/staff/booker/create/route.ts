@@ -252,6 +252,13 @@ export async function POST(request: NextRequest) {
       : cleanNumber(body.price, NaN);
     const comments = cleanString(body.comments);
     const notes = cleanString(body.notes);
+    // Staff-only override (owner, 2026-11-19): Stratos closes rooms in Beds24
+    // (availability 0) precisely so he can enter group/direct bookings himself
+    // without OTA bookings coming in. For those he may book a closed room: the
+    // Booking Core availability check is skipped, but the live Beds24 overlap
+    // check against real bookings below still runs, so no double booking.
+    // Beds24 availability itself is never touched.
+    const overrideAvailability = body.overrideAvailability === true;
 
     if (!propertyId) return json({ message: "Missing Beds24 property id." }, 503);
     if (!hasRefreshWriteCredential() && !hasDirectWriteCredential()) {
@@ -269,8 +276,10 @@ export async function POST(request: NextRequest) {
     if (guests < 1 || guests > 5) return json({ message: "This booking must contain between 1 and 5 guests." }, 400);
     if (price !== null && (!Number.isFinite(price) || price < 0)) return json({ message: "Invalid total price." }, 400);
 
-    const availability = await verifyAvailability({ arrival, departure, guests, roomId, unitId });
-    if (!availability.ok) return json({ message: availability.message }, availability.status);
+    if (!overrideAvailability) {
+      const availability = await verifyAvailability({ arrival, departure, guests, roomId, unitId });
+      if (!availability.ok) return json({ message: availability.message }, availability.status);
+    }
 
     const token = await getBeds24Token();
 
@@ -306,7 +315,9 @@ export async function POST(request: NextRequest) {
       message: comments,
       notes,
       nights,
-      apiMessage: "Voulamandis Staff AI Booking Assistant",
+      apiMessage: overrideAvailability
+        ? "Voulamandis Staff AI Booking Assistant (closed room, availability check skipped by staff)"
+        : "Voulamandis Staff AI Booking Assistant",
       refererEditable: "Staff Direct",
     };
 

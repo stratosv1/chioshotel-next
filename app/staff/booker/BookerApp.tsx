@@ -72,6 +72,50 @@ type Capability = {
 type AwaitingField = "checkin" | "checkout" | "adults" | "children" | "firstName" | "lastName" | "email" | "phone" | "language" | "price" | null;
 type Mode = "collecting" | "rooms" | "details" | "review" | "done";
 
+// All units, for staff bookings into rooms he closed in Beds24 (owner, 2026-11-19).
+// Same room/unit mapping as app/api/staff/booker/create.
+const STAFF_ROOMS = [
+  { roomId: 267788, unitId: 1, roomNumber: 1, name: "Δωμάτιο 1", category: "First Floor" },
+  { roomId: 268803, unitId: 1, roomNumber: 2, name: "Δωμάτιο 2", category: "Economy" },
+  { roomId: 267788, unitId: 2, roomNumber: 3, name: "Δωμάτιο 3", category: "First Floor" },
+  { roomId: 267788, unitId: 3, roomNumber: 4, name: "Δωμάτιο 4", category: "First Floor" },
+  { roomId: 626129, unitId: 1, roomNumber: 5, name: "Δωμάτιο 5", category: "Ground Floor" },
+  { roomId: 268803, unitId: 2, roomNumber: 6, name: "Δωμάτιο 6", category: "Economy" },
+  { roomId: 626129, unitId: 2, roomNumber: 7, name: "Δωμάτιο 7", category: "Ground Floor" },
+  { roomId: 265595, unitId: 1, roomNumber: 8, name: "Διαμέρισμα 8", category: "Family Apartment" },
+  { roomId: 265595, unitId: 2, roomNumber: 9, name: "Διαμέρισμα 9", category: "Family Apartment" },
+  { roomId: 265595, unitId: 3, roomNumber: 10, name: "Διαμέρισμα 10", category: "Family Apartment" },
+] as const;
+
+function manualOffer(roomNumber: number, nights: number): RoomOffer | null {
+  const room = STAFF_ROOMS.find((item) => item.roomNumber === roomNumber);
+  if (!room) return null;
+  return {
+    roomId: String(room.roomId),
+    unitId: String(room.unitId),
+    roomNumber: room.roomNumber,
+    name: room.name,
+    category: room.category,
+    floor: "",
+    maxGuests: 5,
+    features: [],
+    image: "/images/welcome/voulamandis-welcome-hero.webp",
+    nights,
+    originalTotal: 0,
+    directTotal: 0,
+    saving: 0,
+  };
+}
+
+// "βάλε την κράτηση στο δωμάτιο 6", "δωμάτιο 6", "room 6", "διαμέρισμα 9"
+function requestedRoomNumber(text: string): number | null {
+  if (text.length > 80) return null;
+  const match = /(?:δωμ[άα]τιο|δωμ\.?|διαμ[έε]ρισμα|room|apt|apartment)\s*(?:no\.?\s*)?(\d{1,2})\b/i.exec(text);
+  if (!match) return null;
+  const number = Number(match[1]);
+  return number >= 1 && number <= 10 ? number : null;
+}
+
 const copy = ROOM_FINDER_COPY.el;
 
 // Customer details are collected in one form card (not one chat question each).
@@ -214,8 +258,9 @@ function mergeIntake(current: Draft, result: IntakeResult) {
   assignString("checkin", fields.checkin);
   assignString("checkout", fields.checkout);
   assignNumber("nights", fields.nights);
-  assignNumber("totalGuests", fields.totalGuests);
-  assignNumber("adults", fields.adults);
+  // The interpreter sometimes returns 0 for "not mentioned"; a booking always has ≥1 adult.
+  if (fields.totalGuests === null || fields.totalGuests === undefined || Number(fields.totalGuests) >= 1) assignNumber("totalGuests", fields.totalGuests);
+  if (fields.adults === null || fields.adults === undefined || Number(fields.adults) >= 1) assignNumber("adults", fields.adults);
   assignNumber("children", fields.children);
   assignString("firstName", fields.firstName);
   assignString("lastName", fields.lastName);
@@ -380,14 +425,14 @@ function DatePick({ min, onPick, label = "📅 Ημερολόγιο" }: { min: s
 
 type DetailsValues = Pick<Draft, "firstName" | "lastName" | "email" | "phone" | "language" | "totalPrice" | "comments">;
 
-function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit }: { draft: Draft; suggestedPrice: number; summary: string; canBook: boolean; saving: boolean; onSubmit: (values: DetailsValues) => void }) {
+function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit }: { draft: Draft; suggestedPrice: number | null; summary: string; canBook: boolean; saving: boolean; onSubmit: (values: DetailsValues) => void }) {
   const [firstName, setFirstName] = useState(draft.firstName);
   const [lastName, setLastName] = useState(draft.lastName);
   const [email, setEmail] = useState(draft.email);
   const [phone, setPhone] = useState(draft.phone);
   const [language, setLanguage] = useState(draft.language || guessLanguageFromPhone(draft.phone) || "");
   const [languageTouched, setLanguageTouched] = useState(Boolean(draft.language));
-  const [price, setPrice] = useState(String(draft.totalPrice ?? suggestedPrice));
+  const [price, setPrice] = useState(draft.totalPrice !== null ? String(draft.totalPrice) : suggestedPrice !== null ? String(suggestedPrice) : "");
   const [comments, setComments] = useState(draft.comments);
   const parsedPrice = parsePrice(price);
   const ready = Boolean(firstName.trim() && lastName.trim() && language && parsedPrice !== null);
@@ -437,7 +482,7 @@ function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit
       <p className="mt-3 text-xs font-bold text-[#8a7f72]">Συνολική τιμή (€) *</p>
       <div className="mt-1.5 flex items-center gap-2">
         <input aria-label="Συνολική τιμή" inputMode="decimal" value={price} onChange={(event) => setPrice(event.target.value)} className={`${input} flex-1`} />
-        {parsePrice(price) !== suggestedPrice && <Chip label={`Προτεινόμενη ${money(suggestedPrice)}`} onClick={() => setPrice(String(suggestedPrice))} />}
+        {suggestedPrice !== null && parsePrice(price) !== suggestedPrice && <Chip label={`Προτεινόμενη ${money(suggestedPrice)}`} onClick={() => setPrice(String(suggestedPrice))} />}
       </div>
       <textarea aria-label="Σχόλια" placeholder="Σχόλια (π.χ. ώρα άφιξης)" rows={2} value={comments} onChange={(event) => setComments(event.target.value)} className={`${input} mt-3 resize-none py-2.5`} />
       <p className="mt-3 rounded-2xl bg-[#f8f5f0] px-3 py-2.5 text-sm font-bold text-[#4a443c]">{summary} · {parsedPrice !== null ? money(parsedPrice) : "—"}</p>
@@ -465,6 +510,9 @@ export default function BookerApp() {
   const [emailSkipped, setEmailSkipped] = useState(false);
   const [phoneSkipped, setPhoneSkipped] = useState(false);
   const [withChildren, setWithChildren] = useState(false);
+  // Staff-only: book a room even though Booking Core shows it unavailable (closed in Beds24).
+  const [overrideRoom, setOverrideRoom] = useState(false);
+  const [showClosedRooms, setShowClosedRooms] = useState(false);
   const [capability, setCapability] = useState<Capability | null>(null);
   const [result, setResult] = useState<BookingResult | null>(null);
   const shellRef = useRef<HTMLElement>(null);
@@ -592,6 +640,8 @@ export default function BookerApp() {
     setEmailSkipped(false);
     setPhoneSkipped(false);
     setWithChildren(false);
+    setOverrideRoom(false);
+    setShowClosedRooms(false);
     setResult(null);
   }
 
@@ -610,6 +660,8 @@ export default function BookerApp() {
     setMode("collecting");
     setOffers([]);
     setSelectedOffer(null);
+    setOverrideRoom(false);
+    setShowClosedRooms(false);
     push(assistant("Ελέγχω διαθεσιμότητα και τιμές…"));
 
     const query = new URLSearchParams({
@@ -641,8 +693,9 @@ export default function BookerApp() {
 
     const nextOffers = (data.offers || []) as RoomOffer[];
     if (!nextOffers.length) {
-      push(assistant("Δεν υπάρχει διαθέσιμο δωμάτιο για όλη τη διαμονή. Διάλεξε άλλη ημερομηνία άφιξης."));
+      push(assistant("Δεν υπάρχει ελεύθερο δωμάτιο στο Beds24 για όλη τη διαμονή. Αν το δωμάτιο το έχεις κλείσει εσύ, διάλεξέ το παρακάτω και θα καταχωρηθεί χωρίς έλεγχο διαθεσιμότητας — ή άλλαξε ημερομηνία."));
       setOffers([]);
+      setShowClosedRooms(true);
       setAwaiting("checkin");
       setMode("collecting");
       return;
@@ -737,6 +790,14 @@ export default function BookerApp() {
       return;
     }
 
+    // "Βάλε την κράτηση στο δωμάτιο 6" once dates and guests are known → that room, even if closed.
+    const roomAsked = !image && !selectedOffer ? requestedRoomNumber(text) : null;
+    if (roomAsked && draft.checkin && draft.checkout && draft.adults !== null && draft.children !== null && (draft.adults + draft.children) >= 1) {
+      setComposer("");
+      chooseClosedRoom(roomAsked, text);
+      return;
+    }
+
     if (image) {
       push(user(`📎 Screenshot: ${image.name}`));
     } else {
@@ -802,7 +863,35 @@ export default function BookerApp() {
     await advance(nextDraft, changed, nextEmailSkipped, nextPhoneSkipped);
   }
 
+  function chooseClosedRoom(roomNumber: number, label?: string) {
+    const offer = manualOffer(roomNumber, nights);
+    if (!offer) return;
+    // If the room is actually free, take the normal offer (with its price).
+    const live = offers.find((item) => item.roomNumber === roomNumber);
+    if (live) {
+      if (label) push(user(label));
+      chooseOffer(live);
+      return;
+    }
+    setOverrideRoom(true);
+    setShowClosedRooms(false);
+    setSelectedOffer(offer);
+    setOffers([]);
+    push(user(label || `${offer.name} (κλειστό)`));
+    push(assistant(`${offer.name}: θα καταχωρηθεί χωρίς έλεγχο διαθεσιμότητας. Ελέγχω μόνο ζωντανά στο Beds24 ότι δεν υπάρχει ήδη άλλη κράτηση στο ίδιο δωμάτιο.`));
+    const missing = nextMissing(draft, true, emailSkipped, phoneSkipped);
+    if (missing) {
+      ask(missing);
+    } else {
+      setAwaiting(null);
+      setMode("review");
+      push(assistant("Έλεγξε τη σύνοψη και πάτησε «Καταχώρηση στο Beds24»."));
+    }
+  }
+
   function chooseOffer(offer: RoomOffer) {
+    setOverrideRoom(false);
+    setShowClosedRooms(false);
     setSelectedOffer(offer);
     setOffers([]);
     push(user(`${offer.name} · ${money(offer.directTotal)}`));
@@ -841,7 +930,9 @@ export default function BookerApp() {
     const ready = values ? Boolean(capability?.apiReady && capability?.propertyReady && values.firstName && values.lastName && values.language && values.totalPrice !== null) : bookingReady;
     if (!ready || !selectedOffer || saving) return;
     setSaving(true);
-    push(assistant("Ελέγχω ξανά τη διαθεσιμότητα και καταχωρώ την κράτηση στο Beds24…"));
+    push(assistant(overrideRoom
+      ? "Καταχωρώ την κράτηση στο Beds24 (κλειστό δωμάτιο, χωρίς έλεγχο διαθεσιμότητας)…"
+      : "Ελέγχω ξανά τη διαθεσιμότητα και καταχωρώ την κράτηση στο Beds24…"));
 
     let response: Response;
     try {
@@ -864,6 +955,7 @@ export default function BookerApp() {
           price: booking.totalPrice,
           comments: booking.comments,
           notes: booking.notes,
+          overrideAvailability: overrideRoom,
         }),
       });
     } catch {
@@ -972,6 +1064,23 @@ export default function BookerApp() {
               </div>
             )}
 
+            {mode === "rooms" && offers.length > 0 && !busy && !showClosedRooms && (
+              <div className="msg ml-10 flex flex-wrap gap-2">
+                <Chip label="🔒 Κλειστό δωμάτιο…" onClick={() => setShowClosedRooms(true)} />
+              </div>
+            )}
+
+            {showClosedRooms && !busy && (mode === "collecting" || mode === "rooms") && draft.checkin && draft.checkout && (
+              <div className="msg ml-10 rounded-2xl border border-dashed border-amber-300 bg-amber-50/60 p-3">
+                <p className="mb-2 text-xs font-bold text-amber-800">Καταχώρηση σε κλειστό δωμάτιο (χωρίς έλεγχο διαθεσιμότητας):</p>
+                <div className="flex flex-wrap gap-2">
+                  {STAFF_ROOMS.map((room) => (
+                    <Chip key={room.roomNumber} label={String(room.roomNumber)} onClick={() => chooseClosedRoom(room.roomNumber, `${room.name} (κλειστό)`)} />
+                  ))}
+                </div>
+              </div>
+            )}
+
             {mode === "collecting" && !busy && awaiting === "checkin" && (
               <div className="msg ml-10 flex flex-wrap items-center gap-2">
                 <Chip label="Σήμερα" onClick={() => pickCheckin(today)} />
@@ -1010,7 +1119,7 @@ export default function BookerApp() {
               <DetailsForm
                 key={detailsKey}
                 draft={draft}
-                suggestedPrice={selectedOffer.directTotal}
+                suggestedPrice={overrideRoom ? null : selectedOffer.directTotal}
                 summary={`${prettyDate(draft.checkin)} → ${prettyDate(draft.checkout)} · ${nights} ${nights === 1 ? "νύχτα" : "νύχτες"} · ${totalGuests} ${totalGuests === 1 ? "άτομο" : "άτομα"} · ${selectedOffer.name}`}
                 canBook={Boolean(capability?.apiReady && capability?.propertyReady)}
                 saving={saving}
@@ -1028,7 +1137,7 @@ export default function BookerApp() {
                 <div className="grid gap-2 p-4 sm:grid-cols-2">
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Διαμονή</span><strong className="mt-1 block text-sm">{prettyDate(draft.checkin)} → {prettyDate(draft.checkout)} · {nights} νύχτες</strong></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επισκέπτες</span><strong className="mt-1 block text-sm">{draft.adults} ενήλικες · {draft.children} παιδιά</strong></div>
-                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Δωμάτιο</span><strong className="mt-1 block text-sm">{selectedOffer.name}</strong></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Δωμάτιο</span><strong className="mt-1 block text-sm">{selectedOffer.name}</strong>{overrideRoom && <span className="mt-1 block text-xs font-bold text-amber-700">Κλειστό δωμάτιο · χωρίς έλεγχο διαθεσιμότητας</span>}</div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Συνολική τιμή</span><strong className="mt-1 block text-lg text-[#5f7448]">{money(draft.totalPrice || 0)}</strong></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Πελάτης</span><strong className="mt-1 block text-sm">{draft.firstName} {draft.lastName}</strong><span className="mt-1 block text-xs text-[#746b60]">Γλώσσα: {languageLabel(draft.language)}</span></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επικοινωνία</span><strong className="mt-1 block break-all text-sm">{draft.email || "Χωρίς email"}</strong><span className="mt-1 block text-sm">{draft.phone || "Χωρίς τηλέφωνο"}</span></div>
