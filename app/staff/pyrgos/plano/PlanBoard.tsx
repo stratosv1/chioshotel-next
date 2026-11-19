@@ -921,7 +921,10 @@ function BookingPanel({
         <section className="space-y-2 rounded-xl bg-[#f4f7fa] p-3">
           <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Τιμή & πληρωμή</h3>
           {b.masterId ? (
-            <p className="text-sm text-[#5b6b80]">Μέρος group: η τιμή και η πληρωμή είναι στην κύρια κράτηση #{b.masterId}.</p>
+            <>
+              <p className="text-sm text-[#5b6b80]">Μέρος group: η τιμή και η πληρωμή είναι στην κύρια κράτηση #{b.masterId}. Οι χρεώσεις που προσθέτεις εδώ πάνε εκεί.</p>
+              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={null} />
+            </>
           ) : (
             <>
               <PriceFields
@@ -1406,6 +1409,59 @@ function Charges({
   );
 }
 
+function NewCharges({
+  charges,
+  onChange,
+}: {
+  charges: { description: string; qty: number; unitPrice: number }[];
+  onChange: (c: { description: string; qty: number; unitPrice: number }[]) => void;
+}) {
+  const [desc, setDesc] = useState("");
+  const [qty, setQty] = useState("1");
+  const [price, setPrice] = useState("");
+  const q = Number(qty.replace(",", ".")) || 0;
+  const pr = Number(price.replace(",", ".")) || 0;
+  return (
+    <div className="space-y-2 rounded-lg border border-[#e3e9f0] p-3">
+      <div className="text-xs font-black uppercase tracking-wide text-[#5b6b80]">Χρεώσεις διαμονής</div>
+      {charges.map((c, i) => (
+        <div key={i} className="flex items-center justify-between text-sm">
+          <span>{c.description} · {c.qty} × {euro(c.unitPrice)}</span>
+          <span className="flex items-center gap-2">
+            <strong>{euro(c.qty * c.unitPrice)}</strong>
+            <button type="button" aria-label={`Αφαίρεση ${c.description}`} onClick={() => onChange(charges.filter((_, j) => j !== i))} className="h-8 w-8 rounded-full hover:bg-[#f4f7fa]">×</button>
+          </span>
+        </div>
+      ))}
+      <div className="flex flex-wrap gap-1">
+        {CHARGE_PRESETS.map((preset) => (
+          <button key={preset} type="button" onClick={() => setDesc(preset)} className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${desc === preset ? "border-[#5443c9] bg-[#ece9fd]" : "border-[#dbe3ec]"}`}>
+            {preset}
+          </button>
+        ))}
+      </div>
+      <div className="grid grid-cols-[1fr_4rem_5.5rem] gap-2">
+        <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Περιγραφή" aria-label="Περιγραφή χρέωσης" className={`${input} mt-0`} />
+        <input inputMode="decimal" value={qty} onChange={(e) => setQty(e.target.value)} aria-label="Ποσότητα" className={`${input} mt-0`} />
+        <input inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="€" aria-label="Τιμή μονάδας" className={`${input} mt-0`} />
+      </div>
+      <button
+        type="button"
+        disabled={!desc.trim() || q <= 0 || pr <= 0}
+        onClick={() => {
+          onChange([...charges, { description: desc.trim(), qty: q, unitPrice: pr }]);
+          setDesc("");
+          setQty("1");
+          setPrice("");
+        }}
+        className="min-h-11 w-full rounded-full border border-[#cfd9e4] text-sm font-bold disabled:opacity-50"
+      >
+        + Προσθήκη χρέωσης{q * pr > 0 ? ` (${euro(q * pr)})` : ""}
+      </button>
+    </div>
+  );
+}
+
 // ---------- split stay ----------
 
 function SplitStay({ booking: b, setConfirm, onDone }: { booking: PlanBooking; setConfirm: (c: ConfirmState) => void; onDone: (text: string) => void }) {
@@ -1519,6 +1575,7 @@ function NewBookingDialog({
     bedOther: "",
     breakfast: false,
     guestNote: "",
+    charges: [] as { description: string; qty: number; unitPrice: number }[],
     notes: "",
     sendConfirmation: true,
   });
@@ -1570,6 +1627,9 @@ function NewBookingDialog({
         ...(rooms.length > 1 ? [`Group: ${rooms.length} κρατήσεις στο Beds24, η τιμή στην πρώτη (${roomLabel(rooms[0])}).`, "Τα άτομα ισχύουν για κάθε δωμάτιο."] : []),
         [f.breakfast ? "Πρωινό" : "", f.cot ? "Κούνια" : "", f.rollaway ? "Ράντζο" : ""].filter(Boolean).join(" · ") || "Χωρίς πρωινό / κούνια / ράντζο",
         ...(f.guestNote.trim() ? [`Σημείωση στην επιβεβαίωση: «${f.guestNote.trim().slice(0, 120)}»`] : []),
+        ...(f.charges.length
+          ? [`Χρεώσεις: ${f.charges.map((c: any) => `${c.description} ${euro(c.qty * c.unitPrice)}`).join(", ")}`]
+          : []),
         f.sendConfirmation && f.email ? `Email επιβεβαίωσης στο ${f.email}` : "Χωρίς email επιβεβαίωσης",
         "Θα καταχωρηθεί στο Beds24.",
       ],
@@ -1599,6 +1659,7 @@ function NewBookingDialog({
           bedOther: f.bedOther,
           breakfast: f.breakfast,
           guestNote: f.guestNote,
+          charges: f.charges,
           notes: f.notes,
           sendConfirmation: f.sendConfirmation,
         });
@@ -1667,6 +1728,7 @@ function NewBookingDialog({
               <label className="text-xs font-bold">Προκαταβολή<input inputMode="decimal" value={f.deposit} onChange={(e) => set({ deposit: e.target.value.replace(",", ".") })} className={input} /></label>
               <label className="flex min-h-11 items-center gap-2 text-sm font-bold"><input type="checkbox" className="h-5 w-5" checked={f.paid} onChange={(e) => set({ paid: e.target.checked })} /> Πληρωμένη</label>
             </div>
+            <NewCharges charges={f.charges} onChange={(charges) => set({ charges })} />
           </div>
           <div className="space-y-2">
             <div className="grid grid-cols-2 gap-2">

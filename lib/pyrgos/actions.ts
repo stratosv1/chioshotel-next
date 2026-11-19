@@ -137,6 +137,13 @@ export async function createBooking(body: any) {
     .filter(Boolean)
     .join(" · ");
   if (extrasLine) await noteToBeds24(id, extrasLine);
+  for (const charge of Array.isArray(body.charges) ? body.charges.slice(0, 20) : []) {
+    try {
+      await addCharge({ id, description: charge?.description, qty: charge?.qty, unitPrice: charge?.unitPrice });
+    } catch (error) {
+      console.error("[pyrgos] charge on new booking failed", error);
+    }
+  }
   await saveMoney({
     bookingId: id,
     priceMode: mode,
