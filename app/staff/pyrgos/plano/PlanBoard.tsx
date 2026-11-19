@@ -431,8 +431,9 @@ export default function PlanBoard() {
                       const startIdx = diffDays(start, b.checkin) + (preview?.edge === "start" ? preview.delta : 0);
                       const endIdx = diffDays(start, b.checkout) + (preview?.edge === "end" ? preview.delta : 0);
                       const resizable = b.status !== "black" && !OTA.has(b.channel);
-                      const left = startIdx < 0 ? 0 : startIdx + 0.5;
-                      const right = endIdx >= days.length ? days.length : endIdx + 0.5;
+                      // Full check-in day cell, nothing of the check-out day (owner, 2026-11-19).
+                      const left = Math.max(startIdx, 0);
+                      const right = Math.min(endIdx, days.length);
                       const width = Math.max((right - left) * W - 4, 18);
                       const style = channelStyle(b);
                       return (
