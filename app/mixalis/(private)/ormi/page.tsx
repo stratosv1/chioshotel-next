@@ -10,6 +10,7 @@ import { TripolitisClient } from "@/components/mixalis/tripolitis/TripolitisClie
 import { TrapezaOrmi } from "@/components/mixalis/ormi/trapeza/TrapezaOrmi";
 import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/PosterCells";
 import { OrmiLawTrainer } from "@/components/mixalis/ormi/OrmiLawTrainer";
+import { OrmiPhaseQuiz } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -92,6 +93,7 @@ export default function OrmiPage() {
               ▶ Το μάθημα με κίνηση (κεφ. 2) ↓
             </a>
             <a href="#epilogi-nomou" className="rounded-full bg-[#1f6f5c] px-4 py-1.5 text-white hover:bg-[#185747]">ΑΔΟ ή μεταβολή ορμής; · Τεστ επιλογής ↓</a>
+            <a href="#fases" className="rounded-full bg-[#6b4fa0] px-4 py-1.5 text-white hover:bg-[#583f86]">Σύνθετες: σπάσε σε φάσεις · Quiz ↓</a>
             <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Λυμένες ασκήσεις Τριπολίτη ↓
             </a>
@@ -126,6 +128,8 @@ export default function OrmiPage() {
         </section>
 
         <OrmiLawTrainer />
+
+        <OrmiPhaseQuiz />
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="mb-4 rounded-2xl border border-black/10 bg-[#fbf8f3] p-3 sm:hidden">
@@ -167,6 +171,7 @@ export default function OrmiPage() {
               Ασκήσεις Τριπολίτη
             </a>
             <a href="#epilogi-nomou" className="shrink-0 rounded-full bg-[#1f6f5c] px-3 py-1.5 text-white">ΑΔΟ ή Δp; · Τεστ</a>
+            <a href="#fases" className="shrink-0 rounded-full bg-[#6b4fa0] px-3 py-1.5 text-white">Φάσεις · Quiz</a>
             <a href="#trapeza" className="shrink-0 rounded-full bg-[#c9822f] px-3 py-1.5 text-white hover:bg-[#a96b22]">
               Τράπεζα Θεμάτων
             </a>
