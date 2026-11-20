@@ -987,7 +987,7 @@ function BookingPanel({
                   title={b.deposit ? "" : "Αποθήκευσε πρώτα την προκαταβολή"}
                   onClick={() => {
                     const to = (form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")).trim();
-                    if (!to) return setError("Γράψε το email του πελάτη (πεδίο «Email επιβεβαίωσης προς» πιο κάτω).");
+                    if (!to) return setError("Γράψε το email του πελάτη (πεδίο «Email πελάτη» πιο κάτω).");
                     const remaining = b.totalPrice !== null || b.beds24Price !== null ? Math.max((b.totalPrice ?? b.beds24Price ?? 0) + b.nights * CLIMATE_FEE_PER_NIGHT + b.chargesTotal - (b.deposit ?? 0), 0) : null;
                     setConfirm({
                       title: "Email για την προκαταβολή",
@@ -1046,7 +1046,7 @@ function BookingPanel({
           </button>
           <div className="flex flex-wrap items-end gap-2 rounded-xl bg-[#f4f7fa] p-3">
             <label className="min-w-0 flex-1 text-xs font-bold">
-              Email επιβεβαίωσης προς
+              Email πελάτη (για το email προκαταβολής)
               <input
                 type="email"
                 value={form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")}
@@ -1055,22 +1055,14 @@ function BookingPanel({
                 className={input}
               />
             </label>
-            <button
-              type="button"
-              onClick={() => {
-                const to = (form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")).trim();
-                if (!to) return setError("Γράψε το email του πελάτη.");
-                setConfirm({
-                  title: "Αποστολή email επιβεβαίωσης",
-                  lines: [`Προς: ${to}`, "Με πρωινό/κούνια/ράντζο και τη σημείωση που έχουν αποθηκευτεί.", "Αν άλλαξες κάτι πιο πάνω, πάτα πρώτα «Αποθήκευση»."],
-                  confirmLabel: "Αποστολή",
-                  onConfirm: () => run({ action: "confirm", id: b.id, to }, `Το email επιβεβαίωσης στάλθηκε στο ${to}`),
-                });
-              }}
-              className="min-h-11 rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]"
+            <a
+              href={`/staff/crm/?tab=confirmation&booking=${encodeURIComponent(b.id)}`}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex min-h-11 items-center rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]"
             >
-              Αποστολή επιβεβαίωσης
-            </button>
+              Preview επιβεβαίωσης ↗
+            </a>
           </div>
         </section>
 
@@ -1652,7 +1644,7 @@ function NewBookingDialog({
     guestNote: "",
     charges: [] as { description: string; qty: number; unitPrice: number }[],
     notes: "",
-    sendConfirmation: true,
+    sendConfirmation: false,
     hold: false,
     holdRemindOn: addDays(athensToday(), 2),
     holdNote: "",
@@ -1709,7 +1701,7 @@ function NewBookingDialog({
         ...(f.charges.length
           ? [`Χρεώσεις: ${f.charges.map((c: any) => `${c.description} ${euro(c.qty * c.unitPrice)}`).join(", ")}`]
           : []),
-        f.sendConfirmation && f.email ? `Email επιβεβαίωσης στο ${f.email}` : "Χωρίς email επιβεβαίωσης",
+        "Email επιβεβαίωσης: δεν φεύγει αυτόματα — preview και αποστολή από το CRM.",
         ...(f.hold ? [`⏳ Σε αναμονή · υπενθύμιση με email στις ${dm(f.holdRemindOn)}${f.holdNote.trim() ? ` · ${f.holdNote.trim()}` : ""}`] : []),
         "Θα καταχωρηθεί στο Beds24 ως κανονική κράτηση (κλείνει διαθεσιμότητα).",
       ],
@@ -1741,7 +1733,6 @@ function NewBookingDialog({
           guestNote: f.guestNote,
           charges: f.charges,
           notes: f.notes,
-          sendConfirmation: f.sendConfirmation,
           hold: f.hold ? { remindOn: f.holdRemindOn, note: f.holdNote } : null,
         });
         if (!json.ok) {
@@ -1872,10 +1863,6 @@ function NewBookingDialog({
                 </div>
               )}
             </div>
-            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold">
-              <input type="checkbox" className="h-5 w-5" checked={f.sendConfirmation} onChange={(e) => set({ sendConfirmation: e.target.checked })} />
-              <span>Αποστολή email επιβεβαίωσης {f.email ? "" : <span className="text-xs font-normal text-[#5b6b80]">(χρειάζεται email)</span>}</span>
-            </label>
           </div>
         </div>
         <div className="mt-4 flex justify-end gap-2">

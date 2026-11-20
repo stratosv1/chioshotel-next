@@ -46,6 +46,9 @@ export default function ConfirmationPanel() {
 
   useEffect(() => {
     loadList().catch((reason) => setError(reason.message));
+    const linked = new URLSearchParams(window.location.search).get("booking")?.trim();
+    if (linked && /^\d{4,12}$/.test(linked)) void open(linked);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const open = async (bookingId: string) => {

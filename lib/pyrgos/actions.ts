@@ -171,8 +171,10 @@ export async function createBooking(body: any) {
   });
   if (money(body.deposit)) await noteToBeds24(id, `Προκαταβολή: €${money(body.deposit)}`);
 
+  // Owner (2026-11-20): the confirmation email is never sent automatically —
+  // always previewed in the CRM and sent by hand.
   let email = "skipped";
-  if (body.sendConfirmation && guest.email) {
+  if (false as boolean) {
     try {
       const loaded = await loadConfirmation(id);
       if (loaded) {
@@ -375,6 +377,8 @@ export async function updateBeds(body: any) {
 
 /** (Re)send the booking confirmation email from the booking panel. */
 export async function sendConfirmationEmail(body: any) {
+  // Disabled (owner, 2026-11-20): only preview + manual send from the CRM.
+  throw new ActionError("Η επιβεβαίωση στέλνεται μόνο από το CRM, μετά από preview.");
   const id = clean(body.id, 20);
   const to = clean(body.to, 160).toLowerCase();
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) throw new ActionError("Μη έγκυρο email.");

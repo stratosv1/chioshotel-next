@@ -154,6 +154,10 @@ function BucketList({ title, buckets, format }: { title: string; buckets: Bucket
 
 export default function CrmApp() {
   const [tab, setTab] = useState<Tab>("attention");
+  // Deep link from the control tower: /staff/crm/?tab=confirmation&booking=ID opens the preview.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("tab") === "confirmation") setTab("confirmation" as Tab);
+  }, []);
   const [summary, setSummary] = useState<Summary | null>(null);
   const [guests, setGuests] = useState<Guest[] | null>(null);
   const [pending, setPending] = useState<PendingBooking[] | null>(null);
