@@ -727,7 +727,7 @@ function BookingPanel({
   planBookings: PlanBooking[];
   setConfirm: (c: ConfirmState) => void;
 }) {
-  const [data, setData] = useState<{ booking: PlanBooking; history: any[]; group: { id: string; room: number }[] } | null>(null);
+  const [data, setData] = useState<{ booking: PlanBooking; history: any[]; group: { id: string; room: number }[]; initial: any } | null>(null);
   const [error, setError] = useState("");
   const [form, setForm] = useState<any>(null);
 
@@ -737,9 +737,8 @@ function BookingPanel({
       setError(json.error || "Δεν φόρτωσε η κράτηση.");
       return;
     }
-    setData(json);
     const b: PlanBooking = json.booking;
-    setForm({
+    const next = {
       room: b.room ?? 0,
       checkin: b.checkin,
       checkout: b.checkout,
@@ -760,9 +759,10 @@ function BookingPanel({
       bedOther: b.bedOther,
       breakfast: b.breakfast,
       guestNote: b.guestNote,
-      confirmTo: "",
       note: "",
-    });
+    };
+    setData({ ...json, initial: next });
+    setForm(next);
   }, [id]);
 
   useEffect(() => {
@@ -788,7 +788,6 @@ function BookingPanel({
   const grandTotal = form.total || b.chargesTotal ? Math.round((totalNum + climateFee + b.chargesTotal) * 100) / 100 : null;
   const balance = grandTotal !== null ? Math.round((grandTotal - depositNum) * 100) / 100 : null;
   const style = channelStyle(b);
-  const digits = (b.phone || "").replace(/\D/g, "");
   const set = (patch: Record<string, unknown>) => setForm({ ...form, ...patch });
 
   async function run(body: Record<string, unknown>, okText: string) {
@@ -803,90 +802,109 @@ function BookingPanel({
     await reload();
   }
 
-  function saveStay() {
-    const changes: string[] = [];
-    if (Number(form.room) !== b.room) changes.push(`Δωμάτιο: ${roomLabel(b.room)} → ${roomLabel(Number(form.room))}`);
-    if (form.checkin !== b.checkin || form.checkout !== b.checkout) changes.push(`Ημερομηνίες: ${dm(b.checkin)}–${dm(b.checkout)} → ${dm(form.checkin)}–${dm(form.checkout)}`);
-    if (Number(form.adults) !== b.adults || Number(form.children) !== (b.children ?? 0)) changes.push(`Άτομα: ${people(b)} → ${form.children ? `${form.adults}+${form.children}` : form.adults}`);
-    if (form.firstName !== b.firstName || form.lastName !== b.lastName) changes.push(`Όνομα: ${form.firstName} ${form.lastName}`);
-    if (form.email !== b.email) changes.push(`Email: ${form.email || "—"}`);
-    if (form.phone !== b.phone) changes.push(`Τηλέφωνο: ${form.phone || "—"}`);
-    if (!changes.length) {
-      setError("Δεν άλλαξε τίποτα.");
-      return;
+  // ---- one form, one save (owner, 2026-11-20): every change is collected and saved together ----
+  const initial = data.initial;
+  const changed = (keys: string[]) => keys.some((k) => String(form[k] ?? "") !== String(initial[k] ?? ""));
+  const STAY_KEYS = ["room", "checkin", "checkout", "adults", "children", "firstName", "lastName", "email", "phone"];
+  const MONEY_KEYS = ["priceMode", "night", "total", "deposit", "paid"];
+  const BEDS_KEYS = ["bedSetup", "cot", "rollaway", "bedOther", "breakfast", "guestNote"];
+  const stayDirty = changed(STAY_KEYS);
+  const moneyDirty = !b.masterId && changed(MONEY_KEYS);
+  const bedsDirty = changed(BEDS_KEYS);
+  const dirty = stayDirty || moneyDirty || bedsDirty;
+  const roomWarning = Number(form.room) !== b.room ? categoryWarning(b, Number(form.room)) : undefined;
+
+  function changeLines() {
+    const lines: string[] = [];
+    if (Number(form.room) !== b.room) lines.push(`Δωμάτιο: ${roomLabel(b.room)} → ${roomLabel(Number(form.room))}`);
+    if (form.checkin !== b.checkin || form.checkout !== b.checkout) lines.push(`Ημερομηνίες: ${dm(b.checkin)}–${dm(b.checkout)} → ${dm(form.checkin)}–${dm(form.checkout)}`);
+    if (Number(form.adults) !== Number(initial.adults) || Number(form.children) !== Number(initial.children)) lines.push(`Άτομα: ${people(b)} → ${Number(form.children) ? `${form.adults}+${form.children}` : form.adults}`);
+    if (form.firstName !== initial.firstName || form.lastName !== initial.lastName) lines.push(`Όνομα: ${form.firstName} ${form.lastName}`);
+    if (form.email !== initial.email) lines.push(`Email: ${form.email || "—"}`);
+    if (form.phone !== initial.phone) lines.push(`Τηλέφωνο: ${form.phone || "—"}`);
+    if (moneyDirty) {
+      lines.push(`Τιμή: ${form.total ? euro(Number(form.total)) : "—"}${form.priceMode === "night" && form.night ? ` (${euro(Number(form.night))}/βραδιά)` : ""} · προκαταβολή ${form.deposit ? euro(Number(form.deposit)) : "—"} · ${form.paid ? "πληρωμένη ✓" : `υπόλοιπο ${euro(balance)}`}`);
     }
-    const warning = Number(form.room) !== b.room ? categoryWarning(b, Number(form.room)) : undefined;
+    if (bedsDirty) {
+      const bed = BED_OPTIONS.find((o) => o.value === form.bedSetup)?.label;
+      lines.push(`Κρεβάτια/πρωινό: ${[bed, form.breakfast ? "Πρωινό" : "", form.cot ? "Κούνια" : "", form.rollaway ? "Ράντζο" : "", form.bedOther].filter(Boolean).join(" · ") || "—"}`);
+      if (form.guestNote !== initial.guestNote) lines.push(form.guestNote.trim() ? `Σημείωση επιβεβαίωσης: «${form.guestNote.trim().slice(0, 120)}»` : "Σημείωση επιβεβαίωσης: —");
+    }
+    return lines;
+  }
+
+  function saveAll() {
+    if (!dirty) return;
     setConfirm({
       title: "Αποθήκευση αλλαγών",
-      lines: [...changes, "Θα γραφτεί και στο Beds24."],
-      warning,
-      requireCheck: warning ? "Ναι, θέλω αλλαγή κατηγορίας" : undefined,
-      onConfirm: () =>
-        run(
-          {
-            action: "update",
-            id: b.id,
-            room: Number(form.room),
-            checkin: form.checkin,
-            checkout: form.checkout,
-            adults: Number(form.adults),
-            children: Number(form.children),
-            firstName: form.firstName,
-            lastName: form.lastName,
-            email: form.email,
-            phone: form.phone,
-            confirmCategory: Boolean(warning),
-          },
-          "Αποθηκεύτηκε · Beds24 ✓",
-        ),
+      lines: [...changeLines(), "Θα γραφτούν και στο Beds24."],
+      warning: roomWarning,
+      requireCheck: roomWarning ? "Ναι, θέλω αλλαγή κατηγορίας" : undefined,
+      onConfirm: async () => {
+        const failed: string[] = [];
+        const steps: Record<string, unknown>[] = [];
+        if (stayDirty)
+          steps.push({
+            action: "update", id: b.id, room: Number(form.room), checkin: form.checkin, checkout: form.checkout,
+            adults: Number(form.adults), children: Number(form.children), firstName: form.firstName, lastName: form.lastName,
+            email: form.email, phone: form.phone, confirmCategory: Boolean(roomWarning),
+          });
+        if (moneyDirty) steps.push({ action: "money", id: b.id, priceMode: form.priceMode, nightPrice: form.night, totalPrice: form.total, deposit: form.deposit, paid: form.paid });
+        if (bedsDirty) steps.push({ action: "beds", id: b.id, bedSetup: form.bedSetup, cot: form.cot, rollaway: form.rollaway, bedOther: form.bedOther, breakfast: form.breakfast, guestNote: form.guestNote });
+        for (const step of steps) {
+          const json = await post(step);
+          if (!json.ok && json.code !== "category") failed.push(json.error || `Απέτυχε: ${step.action}`);
+        }
+        if (failed.length) setError(failed.join(" · "));
+        else setError("");
+        onChanged(failed.length ? "Κάποιες αλλαγές δεν αποθηκεύτηκαν" : "Αποθηκεύτηκε · Beds24 ✓");
+        await reload();
+      },
     });
   }
 
-  function saveMoneyClick() {
-    setConfirm({
-      title: "Αποθήκευση πληρωμής",
-      lines: [
-        `Σύνολο: ${form.total ? euro(Number(form.total)) : "—"}${form.night ? ` (${euro(Number(form.night))}/βραδιά)` : ""}`,
-        `Προκαταβολή: ${form.deposit ? euro(Number(form.deposit)) : "—"}`,
-        form.paid ? "Πληρωμένη ✓" : `Υπόλοιπο: ${euro(balance)}`,
-      ],
-      onConfirm: () =>
-        run(
-          { action: "money", id: b.id, priceMode: form.priceMode, nightPrice: form.night, totalPrice: form.total, deposit: form.deposit, paid: form.paid },
-          "Η πληρωμή αποθηκεύτηκε",
-        ),
-    });
-  }
+  const section = "space-y-2 rounded-2xl border border-[#e3e9f0] p-3";
+  const h3 = "text-sm font-black uppercase tracking-wide text-[#5b6b80]";
+  const actionBtn = "min-h-11 rounded-full border border-[#cfd9e4] bg-white px-4 text-sm font-bold text-[#334155] disabled:opacity-50";
+  const otherOverlapping = planBookings.filter(
+    (o) => o.id !== b.id && o.room && o.room !== b.room && o.status !== "black" && o.checkin < b.checkout && o.checkout > b.checkin,
+  );
 
   return (
-    <aside className="fixed inset-y-0 right-0 z-[60] w-full max-w-md overflow-y-auto bg-white shadow-2xl" aria-labelledby="bk-title">
-      <div className="sticky top-0 z-10 border-b border-[#eef2f6] bg-white p-4">
+    <aside className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-md flex-col bg-white shadow-2xl" aria-labelledby="bk-title">
+      {/* 1. Header */}
+      <div className="border-b border-[#eef2f6] bg-white p-4">
         <div className="flex items-start justify-between gap-2">
           <div>
             <span className={`rounded-md px-2 py-0.5 text-xs font-bold ${style.chip}`}>{style.label} · #{b.id}</span>
             <h2 id="bk-title" className="mt-1 text-xl font-black">{`${b.firstName} ${b.lastName}`.trim() || "Χωρίς όνομα"}</h2>
             <p className="text-sm text-[#5b6b80]">{roomLabel(b.room)} · {dm(b.checkin)} → {dm(b.checkout)} · {b.nights} νύχτες · {people(b)} άτομα</p>
+            {!b.masterId && (
+              <p className="text-sm font-bold">
+                {b.totalPrice !== null || b.beds24Price !== null ? euro(b.totalPrice ?? b.beds24Price) : "Χωρίς τιμή"}
+                <span className={`ml-2 font-semibold ${b.paid ? "text-[#14532d]" : "text-[#92400e]"}`}>{b.paid ? "Πληρωμένη ✓" : balance !== null ? `υπόλοιπο ${euro(balance)}` : ""}</span>
+              </p>
+            )}
             {data.group.length > 1 && (
               <p className="text-xs font-semibold text-[#3b2f8a]">🔗 Group: {data.group.map((g) => roomLabel(g.room)).join(", ")}{b.masterId ? " · η τιμή είναι στην κύρια κράτηση" : ""}</p>
             )}
           </div>
-          <button type="button" onClick={onClose} aria-label="Κλείσιμο" className="h-10 w-10 rounded-full bg-[#f4f7fa] text-xl">×</button>
+          <button type="button" onClick={onClose} aria-label="Κλείσιμο" className="h-10 w-10 shrink-0 rounded-full bg-[#f4f7fa] text-xl">×</button>
         </div>
       </div>
 
-      <div className="space-y-5 p-4">
+      <div className="flex-1 space-y-4 overflow-y-auto p-4">
         {error && <p className="rounded-xl bg-[#fff4dc] px-3 py-2 text-sm font-semibold text-[#92400e]">{error}</p>}
-        <HoldSection b={b} onDone={async (text) => { await reload(); onChanged(text); }} setError={setError} />
+        {b.hold && <HoldSection b={b} onDone={async (text) => { await reload(); onChanged(text); }} setError={setError} />}
         {ota && (
           <p className="rounded-xl bg-[#fff8e8] px-3 py-2 text-xs font-semibold text-[#92400e]">
             Κράτηση {b.channel}: ημερομηνίες, τιμή και ακύρωση αλλάζουν μόνο από το {b.channel}. Εδώ μπορείς να αλλάξεις δωμάτιο, άτομα και στοιχεία.
           </p>
         )}
 
-        <GuestCrm booking={b} setConfirm={setConfirm} onToast={onChanged} />
-
-        <section className="space-y-2">
-          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Διαμονή</h3>
+        {/* 2. Stay */}
+        <section className={section}>
+          <h3 className={h3}>Διαμονή</h3>
           <label className="block text-xs font-bold">
             Δωμάτιο
             <select value={form.room} onChange={(e) => set({ room: Number(e.target.value) })} className={input}>
@@ -895,63 +913,47 @@ function BookingPanel({
               ))}
             </select>
           </label>
-          {Number(form.room) !== b.room && categoryWarning(b, Number(form.room)) && (
-            <p className="rounded-lg border-2 border-[#f87171] bg-[#fef2f2] px-3 py-2 text-xs font-bold text-[#991b1b]">⚠️ {categoryWarning(b, Number(form.room))}</p>
-          )}
+          {roomWarning && <p className="rounded-lg border-2 border-[#f87171] bg-[#fef2f2] px-3 py-2 text-xs font-bold text-[#991b1b]">⚠️ {roomWarning}</p>}
           <div className="grid grid-cols-2 gap-2">
             <label className="text-xs font-bold">Check-in<input type="date" disabled={ota} value={form.checkin} onChange={(e) => set({ checkin: e.target.value })} className={input} /></label>
             <label className="text-xs font-bold">Check-out<input type="date" disabled={ota} value={form.checkout} onChange={(e) => set({ checkout: e.target.value })} className={input} /></label>
             <label className="text-xs font-bold">Ενήλικες<input type="number" min={1} max={8} value={form.adults} onChange={(e) => set({ adults: e.target.value })} className={input} /></label>
             <label className="text-xs font-bold">Παιδιά<input type="number" min={0} max={6} value={form.children} onChange={(e) => set({ children: e.target.value })} className={input} /></label>
           </div>
-          <h3 className="pt-2 text-sm font-black uppercase tracking-wide text-[#5b6b80]">Πελάτης</h3>
+          <p className="text-xs text-[#5b6b80]">{nights > 0 ? `${nights} νύχτες` : "Έλεγξε τις ημερομηνίες"}</p>
+        </section>
+
+        {/* 3. Guest */}
+        <section className={section}>
+          <h3 className={h3}>Πελάτης</h3>
           <div className="grid grid-cols-2 gap-2">
             <label className="text-xs font-bold">Όνομα<input value={form.firstName} onChange={(e) => set({ firstName: e.target.value })} className={input} /></label>
             <label className="text-xs font-bold">Επώνυμο<input value={form.lastName} onChange={(e) => set({ lastName: e.target.value })} className={input} /></label>
             <label className="col-span-2 text-xs font-bold">Email<input type="email" value={form.email} onChange={(e) => set({ email: e.target.value })} className={input} /></label>
             <label className="col-span-2 text-xs font-bold">Τηλέφωνο<input type="tel" value={form.phone} onChange={(e) => set({ phone: e.target.value })} className={input} /></label>
           </div>
-          <div className="flex flex-wrap gap-2 pt-1">
-            <button type="button" onClick={saveStay} className="min-h-11 rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]">Αποθήκευση αλλαγών</button>
-            <select
-              aria-label="Γρήγορη μετακίνηση"
-              value=""
-              onChange={(e) => e.target.value && onMove(b, Number(e.target.value))}
-              className="min-h-11 rounded-full border border-[#cfd9e4] bg-white px-3 text-sm font-bold"
-            >
-              <option value="">Μετακίνηση σε…</option>
-              {PYRGOS_ROOMS.filter((r) => r.number !== b.room).map((r) => (
-                <option key={r.number} value={r.number}>{r.label} — {r.categoryLabel}</option>
-              ))}
-            </select>
-            {(() => {
-              const others = planBookings.filter(
-                (o) => o.id !== b.id && o.room && o.room !== b.room && o.status !== "black" && o.checkin < b.checkout && o.checkout > b.checkin,
-              );
-              return others.length ? (
-                <select
-                  aria-label="Αντιμετάθεση με άλλη κράτηση"
-                  value=""
-                  onChange={(e) => {
-                    const other = others.find((o) => o.id === e.target.value);
-                    if (other) onSwap(b, other);
-                  }}
-                  className="min-h-11 rounded-full border border-[#cfd9e4] bg-white px-3 text-sm font-bold"
-                >
-                  <option value="">Αντιμετάθεση με…</option>
-                  {others.map((o) => (
-                    <option key={o.id} value={o.id}>{roomLabel(o.room)} · {o.firstName} {o.lastName} ({dm(o.checkin)}–{dm(o.checkout)})</option>
-                  ))}
-                </select>
-              ) : null;
-            })()}
-          </div>
         </section>
 
-        {b.nights >= 2 && b.status !== "black" && <SplitStay booking={b} setConfirm={setConfirm} onDone={(text) => { onChanged(text); reload(); }} />}
+        {/* 4. Room setup */}
+        <section className={section}>
+          <h3 className={h3}>Κρεβάτια & πρωινό</h3>
+          <select value={form.bedSetup} onChange={(e) => set({ bedSetup: e.target.value })} className={input} aria-label="Κρεβάτι">
+            <option value="">Κρεβάτι: —</option>
+            {BED_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+          <div className="flex flex-wrap gap-x-4">
+            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.breakfast} onChange={(e) => set({ breakfast: e.target.checked })} /> Πρωινό περιλαμβάνεται</label>
+            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.cot} onChange={(e) => set({ cot: e.target.checked })} /> Κούνια</label>
+            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.rollaway} onChange={(e) => set({ rollaway: e.target.checked })} /> Ράντζο</label>
+          </div>
+          <input value={form.bedOther} onChange={(e) => set({ bedOther: e.target.value })} placeholder="Άλλο (π.χ. επιπλέον μαξιλάρια)" aria-label="Άλλο εξοπλισμός" className={input} />
+        </section>
 
-        <section className="space-y-2 rounded-xl bg-[#f4f7fa] p-3">
-          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Τιμή & πληρωμή</h3>
+        {/* 5. Price & payment */}
+        <section className={`${section} bg-[#f8fafc]`}>
+          <h3 className={h3}>Τιμή & πληρωμή</h3>
           {b.masterId ? (
             <>
               <p className="text-sm text-[#5b6b80]">Μέρος group: η τιμή και η πληρωμή είναι στην κύρια κράτηση #{b.masterId}. Οι χρεώσεις που προσθέτεις εδώ πάνε εκεί.</p>
@@ -974,100 +976,27 @@ function BookingPanel({
                   <div className={`text-lg font-black ${form.paid ? "text-[#14532d]" : ""}`}>{form.paid ? "Πληρωμένη ✓" : euro(balance)}</div>
                 </div>
               </div>
-              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={grandTotal} nights={nights} stayTotal={form.total ? totalNum : null} nightPrice={form.priceMode === "night" && form.night ? Number(form.night) : null} />
               <label className="flex min-h-11 items-center gap-2 text-sm font-bold">
                 <input type="checkbox" className="h-5 w-5" checked={form.paid} onChange={(e) => set({ paid: e.target.checked })} /> Πληρωμένη
                 {b.paidAt ? <span className="text-xs font-normal text-[#5b6b80]">({b.paidAt})</span> : null}
               </label>
-              <div className="flex flex-wrap gap-2">
-                <button type="button" onClick={saveMoneyClick} className="min-h-11 rounded-full bg-[#d2f3f6] px-4 text-sm font-bold text-[#0b4d55]">Αποθήκευση πληρωμής</button>
-                <button
-                  type="button"
-                  disabled={!b.deposit}
-                  title={b.deposit ? "" : "Αποθήκευσε πρώτα την προκαταβολή"}
-                  onClick={() => {
-                    const to = (form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")).trim();
-                    if (!to) return setError("Γράψε το email του πελάτη (πεδίο «Email πελάτη» πιο κάτω).");
-                    const remaining = b.totalPrice !== null || b.beds24Price !== null ? Math.max((b.totalPrice ?? b.beds24Price ?? 0) + b.nights * CLIMATE_FEE_PER_NIGHT + b.chargesTotal - (b.deposit ?? 0), 0) : null;
-                    setConfirm({
-                      title: "Email για την προκαταβολή",
-                      lines: [`Προς: ${to}`, `Λάβαμε προκαταβολή ${euro(b.deposit)}`, remaining !== null ? `Υπόλοιπο ${euro(remaining)}` : "Χωρίς σύνολο τιμής"],
-                      confirmLabel: "Αποστολή",
-                      onConfirm: () => run({ action: "deposit_email", id: b.id, to }, `Στάλθηκε email προκαταβολής στο ${to}`),
-                    });
-                  }}
-                  className="min-h-11 rounded-full border border-[#9fe3ea] bg-white px-4 text-sm font-bold text-[#0b4d55] disabled:opacity-50"
-                >
-                  Email για την προκαταβολή
-                </button>
-              </div>
+              <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={grandTotal} nights={nights} stayTotal={form.total ? totalNum : null} nightPrice={form.priceMode === "night" && form.night ? Number(form.night) : null} />
             </>
           )}
         </section>
 
-        <section className="space-y-2">
-          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Κρεβάτια, πρωινό & επιβεβαίωση</h3>
-          <select value={form.bedSetup} onChange={(e) => set({ bedSetup: e.target.value })} className={input} aria-label="Κρεβάτι">
-            <option value="">—</option>
-            {BED_OPTIONS.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
-            ))}
-          </select>
-          <div className="flex flex-wrap gap-x-4">
-            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.breakfast} onChange={(e) => set({ breakfast: e.target.checked })} /> Πρωινό περιλαμβάνεται</label>
-            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.cot} onChange={(e) => set({ cot: e.target.checked })} /> Κούνια</label>
-            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.rollaway} onChange={(e) => set({ rollaway: e.target.checked })} /> Ράντζο</label>
-          </div>
-          <input value={form.bedOther} onChange={(e) => set({ bedOther: e.target.value })} placeholder="Άλλο (π.χ. επιπλέον μαξιλάρια)" aria-label="Άλλο εξοπλισμός" className={input} />
+        {/* 6. Confirmation note */}
+        <section className={section}>
+          <h3 className={h3}>Επιβεβαίωση προς τον πελάτη</h3>
           <label className="block text-xs font-bold">
-            Σημείωση για τον πελάτη <span className="font-normal text-[#5443c9]">· φαίνεται στην επιβεβαίωση</span>
+            Σημείωση για τον πελάτη <span className="font-normal text-[#5443c9]">· φαίνεται στο email επιβεβαίωσης</span>
             <textarea rows={2} value={form.guestNote} onChange={(e) => set({ guestNote: e.target.value })} placeholder="π.χ. Συμφωνήσαμε late check-out στις 13:00" className={input} />
           </label>
-          <button
-            type="button"
-            onClick={() =>
-              setConfirm({
-                title: "Αποθήκευση",
-                lines: [
-                  [form.breakfast ? "Πρωινό" : "", form.cot ? "Κούνια" : "", form.rollaway ? "Ράντζο" : ""].filter(Boolean).join(" · ") || "Χωρίς πρωινό / κούνια / ράντζο",
-                  form.guestNote.trim() ? `Σημείωση στην επιβεβαίωση: «${form.guestNote.trim().slice(0, 120)}»` : "Χωρίς σημείωση στην επιβεβαίωση",
-                  "Θα γραφτεί και στις σημειώσεις του Beds24.",
-                ],
-                onConfirm: () =>
-                  run(
-                    { action: "beds", id: b.id, bedSetup: form.bedSetup, cot: form.cot, rollaway: form.rollaway, bedOther: form.bedOther, breakfast: form.breakfast, guestNote: form.guestNote },
-                    "Αποθηκεύτηκε",
-                  ),
-              })
-            }
-            className="min-h-11 rounded-full border border-[#cfd9e4] px-4 text-sm font-bold"
-          >
-            Αποθήκευση
-          </button>
-          <div className="flex flex-wrap items-end gap-2 rounded-xl bg-[#f4f7fa] p-3">
-            <label className="min-w-0 flex-1 text-xs font-bold">
-              Email πελάτη (για το email προκαταβολής)
-              <input
-                type="email"
-                value={form.confirmTo || (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "")}
-                onChange={(e) => set({ confirmTo: e.target.value })}
-                placeholder="email πελάτη"
-                className={input}
-              />
-            </label>
-            <a
-              href={`/staff/crm/?tab=confirmation&booking=${encodeURIComponent(b.id)}`}
-              target="_blank"
-              rel="noopener"
-              className="inline-flex min-h-11 items-center rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]"
-            >
-              Preview επιβεβαίωσης ↗
-            </a>
-          </div>
         </section>
 
-        <section className="space-y-2">
-          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Σημειώσεις</h3>
+        {/* 7. Internal notes */}
+        <section className={section}>
+          <h3 className={h3}>Εσωτερικές σημειώσεις</h3>
           {b.notes ? <p className="whitespace-pre-line rounded-lg bg-[#fff8e8] p-3 text-sm">{b.notes}</p> : <p className="text-sm text-[#5b6b80]">Καμία σημείωση.</p>}
           <div className="flex gap-2">
             <input value={form.note} onChange={(e) => set({ note: e.target.value })} placeholder="Νέα σημείωση" aria-label="Νέα σημείωση" className={`${input} mt-0`} />
@@ -1082,8 +1011,107 @@ function BookingPanel({
           </div>
         </section>
 
-        <section className="space-y-1">
-          <h3 className="text-sm font-black uppercase tracking-wide text-[#5b6b80]">Ιστορικό</h3>
+        {/* 8. Communication */}
+        <GuestCrm booking={b} setConfirm={setConfirm} onToast={onChanged} />
+
+        {/* 9. All actions in one place */}
+        <section className={`${section} border-[#cfc6fb] bg-[#f7f5ff]`}>
+          <h3 className={h3}>Ενέργειες</h3>
+          <div className="flex flex-wrap gap-2">
+            <a
+              href={`/staff/crm/?tab=confirmation&booking=${encodeURIComponent(b.id)}`}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex min-h-11 items-center rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]"
+            >
+              Preview επιβεβαίωσης ↗
+            </a>
+            {!b.masterId && (
+              <button
+                type="button"
+                disabled={!b.deposit}
+                title={b.deposit ? "" : "Αποθήκευσε πρώτα την προκαταβολή"}
+                onClick={() => {
+                  const to = (b.email && !/guest\.booking\.com|expedia/i.test(b.email) ? b.email : "").trim();
+                  if (!to) return setError("Η κράτηση δεν έχει πραγματικό email πελάτη — συμπλήρωσέ το στο «Πελάτης» και αποθήκευσε.");
+                  const remaining = b.totalPrice !== null || b.beds24Price !== null ? Math.max((b.totalPrice ?? b.beds24Price ?? 0) + b.nights * CLIMATE_FEE_PER_NIGHT + b.chargesTotal - (b.deposit ?? 0), 0) : null;
+                  setConfirm({
+                    title: "Email για την προκαταβολή",
+                    lines: [`Προς: ${to}`, `Λάβαμε προκαταβολή ${euro(b.deposit)}`, remaining !== null ? `Υπόλοιπο ${euro(remaining)}` : "Χωρίς σύνολο τιμής"],
+                    confirmLabel: "Αποστολή",
+                    onConfirm: () => run({ action: "deposit_email", id: b.id, to }, `Στάλθηκε email προκαταβολής στο ${to}`),
+                  });
+                }}
+                className={actionBtn}
+              >
+                Email προκαταβολής
+              </button>
+            )}
+            <select
+              aria-label="Μετακίνηση σε άλλο δωμάτιο"
+              value=""
+              onChange={(e) => e.target.value && onMove(b, Number(e.target.value))}
+              className={actionBtn}
+            >
+              <option value="">Μετακίνηση σε…</option>
+              {PYRGOS_ROOMS.filter((r) => r.number !== b.room).map((r) => (
+                <option key={r.number} value={r.number}>{r.label} — {r.categoryLabel}</option>
+              ))}
+            </select>
+            {otherOverlapping.length > 0 && (
+              <select
+                aria-label="Αντιμετάθεση με άλλη κράτηση"
+                value=""
+                onChange={(e) => {
+                  const other = otherOverlapping.find((o) => o.id === e.target.value);
+                  if (other) onSwap(b, other);
+                }}
+                className={actionBtn}
+              >
+                <option value="">Αντιμετάθεση με…</option>
+                {otherOverlapping.map((o) => (
+                  <option key={o.id} value={o.id}>{roomLabel(o.room)} · {o.firstName} {o.lastName} ({dm(o.checkin)}–{dm(o.checkout)})</option>
+                ))}
+              </select>
+            )}
+          </div>
+          {!b.hold && <HoldSection b={b} onDone={async (text) => { await reload(); onChanged(text); }} setError={setError} />}
+          {b.nights >= 2 && b.status !== "black" && (
+            <details className="rounded-xl border border-[#eef2f6] bg-white px-3 py-2 text-sm">
+              <summary className="cursor-pointer font-semibold text-[#5b6b80]">↔ Split stay (αλλαγή δωματίου στη μέση)</summary>
+              <div className="mt-2"><SplitStay booking={b} setConfirm={setConfirm} onDone={(text) => { onChanged(text); reload(); }} /></div>
+            </details>
+          )}
+          {!ota && (
+            <button
+              type="button"
+              onClick={() =>
+                setConfirm({
+                  title: "Ακύρωση κράτησης",
+                  lines: [`${b.firstName} ${b.lastName}`, `${roomLabel(b.room)} · ${dm(b.checkin)}–${dm(b.checkout)}`, "Θα ακυρωθεί και στο Beds24."],
+                  danger: true,
+                  confirmLabel: "Ακύρωση κράτησης",
+                  onConfirm: async () => {
+                    const json = await post({ action: "cancel", id: b.id });
+                    if (!json.ok) {
+                      setError(json.error || "Η ακύρωση απέτυχε.");
+                      return;
+                    }
+                    onChanged("Η κράτηση ακυρώθηκε");
+                    onClose();
+                  },
+                })
+              }
+              className="min-h-11 w-full rounded-full border border-[#f3c4c4] bg-white text-sm font-bold text-[#b42318]"
+            >
+              Ακύρωση κράτησης
+            </button>
+          )}
+        </section>
+
+        {/* 10. History */}
+        <details className={section}>
+          <summary className={`${h3} cursor-pointer`}>Ιστορικό ({data.history.length})</summary>
           {data.history.length === 0 && <p className="text-sm text-[#5b6b80]">Καμία αλλαγή από τον πύργο ελέγχου ακόμα.</p>}
           <ul className="divide-y divide-[#eef2f6] text-sm">
             {data.history.map((h, i) => (
@@ -1094,33 +1122,29 @@ function BookingPanel({
               </li>
             ))}
           </ul>
-        </section>
+        </details>
+      </div>
 
-        {!ota && (
+      {/* Save bar: always there, active when something changed */}
+      <div className="border-t border-[#eef2f6] bg-white p-3">
+        <div className="flex items-center gap-2">
+          <p className="min-w-0 flex-1 text-xs font-semibold text-[#5b6b80]">
+            {dirty ? <span className="text-[#92400e]">Έχεις αλλαγές που δεν αποθηκεύτηκαν</span> : "Κάνε αλλαγές και πάτα Αποθήκευση"}
+          </p>
+          {dirty && (
+            <button type="button" onClick={() => setForm({ ...initial })} className="min-h-11 rounded-full border border-[#cfd9e4] px-4 text-sm font-bold text-[#4b5b70]">
+              Αναίρεση
+            </button>
+          )}
           <button
             type="button"
-            onClick={() =>
-              setConfirm({
-                title: "Ακύρωση κράτησης",
-                lines: [`${b.firstName} ${b.lastName}`, `${roomLabel(b.room)} · ${dm(b.checkin)}–${dm(b.checkout)}`, "Θα ακυρωθεί και στο Beds24."],
-                danger: true,
-                confirmLabel: "Ακύρωση κράτησης",
-                onConfirm: async () => {
-                  const json = await post({ action: "cancel", id: b.id });
-                  if (!json.ok) {
-                    setError(json.error || "Η ακύρωση απέτυχε.");
-                    return;
-                  }
-                  onChanged("Η κράτηση ακυρώθηκε");
-                  onClose();
-                },
-              })
-            }
-            className="min-h-11 w-full rounded-full border border-[#cfd9e4] text-sm font-bold text-[#4b5b70]"
+            disabled={!dirty}
+            onClick={saveAll}
+            className="min-h-11 rounded-full bg-[#3b2f8a] px-5 text-sm font-bold text-white disabled:bg-[#cbd5e1]"
           >
-            Ακύρωση κράτησης
+            Αποθήκευση
           </button>
-        )}
+        </div>
       </div>
     </aside>
   );
