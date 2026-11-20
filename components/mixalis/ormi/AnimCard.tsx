@@ -70,7 +70,7 @@ export function AnimCard({
     }
   }, [mode, playing, t, stepEnd, setPlaying, setT]);
 
-  const tt = mode === "loop" ? t % data.period : Math.min(t, data.period - EPS);
+  const tt = mode === "loop" ? t % data.period : Math.min(t, stepEnd - EPS, data.period - EPS);
   const phaseIndex = Math.max(0, phases.findIndex((p) => tt < p.until));
   const phase = phases[phaseIndex];
   const waiting = mode === "step" && !playing && t >= stepEnd - 2 * EPS;
@@ -201,13 +201,17 @@ export function AnimCard({
                     i === phaseIndex ? "text-[#1c2433]" : "text-[#9aa3b2] group-hover:text-[#5b6577]"
                   }`}
                 >
-                  {i + 1}. {p.label}
+                  {i + 1}
+                  <span className="hidden sm:inline">. {p.label}</span>
                 </span>
               </button>
             );
           })}
         </div>
-        <p className="mt-2 min-h-[4.5rem] text-[15px] leading-6 text-[#2c2825]" aria-live="polite">
+        <p className="mt-2 text-sm font-bold sm:hidden" style={{ color: accent }}>
+          Βήμα {phaseIndex + 1}/{phases.length} · {phase.label}
+        </p>
+        <p className="mt-1 min-h-[4.5rem] text-[15px] leading-6 text-[#2c2825] sm:mt-2" aria-live="polite">
           {rich(phase.say)}
         </p>
       </div>

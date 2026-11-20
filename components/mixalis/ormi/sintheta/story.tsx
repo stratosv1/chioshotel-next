@@ -91,7 +91,7 @@ export function makeCase(story: Story): Case {
     ...story.phases.map((p, i) => ({
       until: phaseStart + (i + 1) * T_PHASE,
       label: `Φάση ${i + 1}: ${p.name}`,
-      say: `${p.tool} — ${p.say}`,
+      say: `Εργαλείο: ${p.tool}. ${p.say}`,
     })),
     { until: period, label: "Σειρά λύσης", say: story.orderSay },
   ];
