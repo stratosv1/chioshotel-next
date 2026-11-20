@@ -213,7 +213,7 @@ export default function TodayBoard() {
                   </ul>
                 </section>
               ) : null}
-              <section aria-label="Σύνοψη ημέρας" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <section aria-label="Σύνοψη ημέρας" className="grid grid-cols-2 gap-3 lg:grid-cols-3 2xl:grid-cols-6">
                 <div className="rounded-2xl bg-[#ffe7bd] p-4 text-[#5a3a00]">
                   <div className="text-sm font-semibold opacity-85">Αφίξεις</div>
                   <div className="mt-1 text-3xl font-black">{data.arriving.length}</div>
@@ -237,6 +237,26 @@ export default function TodayBoard() {
                     {data.month.priced < data.month.bookings ? ` · ${data.month.bookings - data.month.priced} χωρίς τιμή` : ""}
                   </div>
                 </div>
+                {data.season ? (
+                  <div className="rounded-2xl bg-[#d9f2dd] p-4 text-[#1f5130]">
+                    <div className="text-sm font-semibold opacity-85">Έσοδα σεζόν {data.season.label}</div>
+                    <div className="mt-1 text-3xl font-black">{euro(data.season.net)}</div>
+                    <div className="text-xs opacity-85">
+                      καθαρά · μικτά {euro(data.season.gross)} · {data.season.bookings} κρατήσεις
+                      {data.season.priced < data.season.bookings ? ` · ${data.season.bookings - data.season.priced} χωρίς τιμή` : ""}
+                    </div>
+                  </div>
+                ) : null}
+                {data.ahead ? (
+                  <div className="rounded-2xl bg-[#fde4ec] p-4 text-[#6b1d3a]">
+                    <div className="text-sm font-semibold opacity-85">Έσοδα από σήμερα και μετά</div>
+                    <div className="mt-1 text-3xl font-black">{euro(data.ahead.net)}</div>
+                    <div className="text-xs opacity-85">
+                      καθαρά · μικτά {euro(data.ahead.gross)} · {data.ahead.bookings} κρατήσεις
+                      {data.ahead.priced < data.ahead.bookings ? ` · ${data.ahead.bookings - data.ahead.priced} χωρίς τιμή` : ""}
+                    </div>
+                  </div>
+                ) : null}
               </section>
 
               <div className="grid gap-5 xl:grid-cols-3">

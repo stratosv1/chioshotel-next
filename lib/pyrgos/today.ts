@@ -54,6 +54,9 @@ export type TodayData = {
   missing: MissingItem[];
   feed: FeedItem[];
   month: { label: string; gross: number; net: number; bookings: number; priced: number };
+  // Owner (2026-11-20): next to the month — the season (March–October) and everything from today on.
+  season: { label: string; gross: number; net: number; bookings: number; priced: number };
+  ahead: { gross: number; net: number; bookings: number; priced: number };
   holds: HoldListItem[];
 };
 
@@ -113,11 +116,26 @@ export async function getToday(day: string): Promise<TodayData> {
   const all = [...roomDay.arriving, ...roomDay.leaving, ...roomDay.staying];
   const ids = [...new Set(all.map((stay) => stay.bookingId))];
   const month = day.slice(0, 7);
+  // Season = March–October. From November on, the coming season is next year's.
+  const dayYear = Number(day.slice(0, 4));
+  const seasonYear = Number(day.slice(5, 7)) > 10 ? dayYear + 1 : dayYear;
+  const seasonFrom = `${seasonYear}-03-01`;
+  const seasonTo = `${seasonYear}-11-01`;
 
   const holdsPromise = listOpenHolds().catch((error) => {
     console.error("[pyrgos] holds failed", error);
     return [] as HoldListItem[];
   });
+  const seasonPromise = ensureBookingsTable().then(
+    () =>
+      sql`select channel, price, commission from public.pyrgos_bookings
+        where status in ('confirmed', 'new') and checkin >= ${seasonFrom}::date and checkin < ${seasonTo}::date` as Promise<any[]>,
+  );
+  const aheadPromise = ensureBookingsTable().then(
+    () =>
+      sql`select channel, price, commission from public.pyrgos_bookings
+        where status in ('confirmed', 'new') and checkin >= ${day}::date` as Promise<any[]>,
+  );
   const [bookingRows, extras, housekeeping, attention, monthRows, feedRows] = await Promise.all([
     ids.length
       ? (sql`select booking_id, email, phone, price from public.beds24_bookings where booking_id = any(${ids}::text[])` as Promise<any[]>)
@@ -214,12 +232,17 @@ export async function getToday(day: string): Promise<TodayData> {
     .filter((item) => item.missing.length > 0)
     .slice(0, 8);
 
-  const monthGross = monthRows.reduce((sum, row) => sum + (toNumber(row.price) ?? 0), 0);
-  const monthNet = monthRows.reduce((sum, row) => {
-    const price = toNumber(row.price) ?? 0;
-    const commission = toNumber(row.commission) ?? price * (COMMISSION_RATE[row.channel as PyrgosChannel] ?? 0);
-    return sum + price - commission;
-  }, 0);
+  const revenue = (rows: any[]) => ({
+    gross: Math.round(rows.reduce((sum, row) => sum + (toNumber(row.price) ?? 0), 0)),
+    net: Math.round(rows.reduce((sum, row) => {
+      const price = toNumber(row.price) ?? 0;
+      const commission = toNumber(row.commission) ?? price * (COMMISSION_RATE[row.channel as PyrgosChannel] ?? 0);
+      return sum + price - commission;
+    }, 0)),
+    bookings: rows.length,
+    priced: rows.filter((row) => toNumber(row.price)).length,
+  });
+  const [seasonRows, aheadRows] = await Promise.all([seasonPromise, aheadPromise]);
 
   const feed: FeedItem[] = feedRows.map((row) => {
     const cancelled = /cancel/i.test(String(row.status ?? ""));
@@ -244,12 +267,8 @@ export async function getToday(day: string): Promise<TodayData> {
     missing,
     feed,
     holds: await holdsPromise,
-    month: {
-      label: monthLabel,
-      gross: Math.round(monthGross),
-      net: Math.round(monthNet),
-      bookings: monthRows.length,
-      priced: monthRows.filter((row) => toNumber(row.price)).length,
-    },
+    month: { label: monthLabel, ...revenue(monthRows) },
+    season: { label: `03–10/${seasonYear}`, ...revenue(seasonRows) },
+    ahead: revenue(aheadRows),
   };
 }
