@@ -151,12 +151,19 @@ export async function getToday(day: string): Promise<TodayData> {
         sql`select channel, price, commission from public.pyrgos_bookings
           where status in ('confirmed', 'new') and to_char(checkin, 'YYYY-MM') = ${month}` as Promise<any[]>,
     ),
-    sql`select booking_id, status, firstname, lastname, room,
-          to_char(checkin, 'DD/MM') as checkin, to_char(checkout, 'DD/MM') as checkout, email,
-          to_char(updated_at at time zone 'Europe/Athens', 'DD/MM HH24:MI') as time
-        from public.beds24_bookings
-        where updated_at > now() - interval '3 days'
-        order by updated_at desc limit 10` as Promise<any[]>,
+    // Feed (owner, 2026-11-20): clear new / change / cancel, room number, year, price; up to 40, the board shows 5 and expands.
+    ensureBookingsTable().then(
+      () =>
+        sql`select b.booking_id, b.status, b.firstname, b.lastname, b.room, b.email, b.price,
+          p.room_number, p.price as p_price,
+          to_char(b.checkin, 'DD/MM/YY') as checkin, to_char(b.checkout, 'DD/MM/YY') as checkout,
+          to_char(b.updated_at at time zone 'Europe/Athens', 'DD/MM HH24:MI') as time,
+          (p.booking_id is null or p.booked_at > now() - interval '3 days') as is_new
+        from public.beds24_bookings b
+        left join public.pyrgos_bookings p on p.booking_id = b.booking_id
+        where b.updated_at > now() - interval '3 days'
+        order by b.updated_at desc limit 40` as Promise<any[]>,
+    ),
   ]);
 
   const byId = new Map(bookingRows.map((row) => [String(row.booking_id), row]));
@@ -247,11 +254,14 @@ export async function getToday(day: string): Promise<TodayData> {
   const feed: FeedItem[] = feedRows.map((row) => {
     const cancelled = /cancel/i.test(String(row.status ?? ""));
     const name = `${row.firstname ?? ""} ${row.lastname ?? ""}`.trim() || "Χωρίς όνομα";
+    const kind = cancelled ? "Ακύρωση" : row.is_new ? "Νέα κράτηση" : "Αλλαγή";
+    const room = row.room_number ? (Number(row.room_number) === 11 ? "Apt 11" : `Δωμ. ${row.room_number}`) : String(row.room ?? "").trim();
+    const price = toNumber(row.p_price) ?? toNumber(row.price);
     return {
       time: row.time,
-      title: cancelled ? `Ακύρωση · ${channelFromEmail(row.email)}` : `Κράτηση / αλλαγή · ${channelFromEmail(row.email)}`,
-      detail: `${name} · ${row.room ?? ""} · ${row.checkin}–${row.checkout}`,
-      tone: cancelled ? "cancel" : "new",
+      title: `${kind} · ${channelFromEmail(row.email)}`,
+      detail: [name, room, `${row.checkin} → ${row.checkout}`, price ? `€${Math.round(price)}` : ""].filter(Boolean).join(" · "),
+      tone: cancelled ? "cancel" : row.is_new ? "new" : "change",
     };
   });
 
