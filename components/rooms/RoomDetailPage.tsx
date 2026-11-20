@@ -602,7 +602,7 @@ export function RoomDetailPage({ data, fromPriceLabel }: RoomDetailPageProps) {
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" aria-labelledby="rd-amenities-title">
         <header className="mx-auto max-w-3xl text-center"><span className="inline-flex text-[11px] font-black uppercase tracking-[0.28em] text-amber-800">{data.amenities.kicker}</span><h2 id="rd-amenities-title" className="mt-4 text-balance text-3xl font-black tracking-[-0.04em] text-[#2f261f] sm:text-4xl"><MarkerText>{data.amenities.title}</MarkerText></h2></header>
         <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          {data.amenities.items.map((item) => <article data-reveal="" className="min-w-0 break-words rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(47,38,31,0.08)] hyphens-auto" key={item.label}><div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-lg grayscale contrast-125" aria-hidden="true">{item.icon}</div><h3 className="mt-3 text-sm font-black text-[#2f261f] sm:text-base">{localizeRoomText(item.label, language)}</h3><p className="mt-2 text-xs leading-5 text-[#574b3f] sm:text-sm">{item.text}</p></article>)}
+          {data.amenities.items.map((item) => <article data-reveal="" className="min-w-0 break-words rounded-2xl bg-white p-4 shadow-[0_12px_32px_rgba(47,38,31,0.08)] hyphens-auto" key={item.label}><div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-lg" aria-hidden="true">{item.icon}</div><h3 className="mt-3 text-sm font-black text-[#2f261f] sm:text-base">{localizeRoomText(item.label, language)}</h3><p className="mt-2 text-xs leading-5 text-[#574b3f] sm:text-sm">{item.text}</p></article>)}
         </div>
       </section>
 

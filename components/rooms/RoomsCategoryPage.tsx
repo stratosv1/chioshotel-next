@@ -350,7 +350,7 @@ export async function RoomsCategoryPage({ data }: RoomsCategoryPageProps) {
 
         <div className="mt-10 flex flex-col gap-4 rounded-[28px] border border-amber-900/10 bg-[#fffdfa] p-5 shadow-[0_18px_45px_rgba(47,38,31,0.08)] sm:flex-row sm:items-center sm:p-6">
           <div className="flex min-w-0 flex-1 items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-xl text-stone-700 shadow-inner [filter:grayscale(1)]" aria-hidden="true">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-xl shadow-inner" aria-hidden="true">
               {tip.icon}
             </div>
             <div>
