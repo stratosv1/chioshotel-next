@@ -1,5 +1,6 @@
 import "server-only";
 import { neon } from "@neondatabase/serverless";
+import { isAlexandriaGuestStay } from "@/lib/alexandria/config";
 import { guestCountry, guestLanguage, guestPhone } from "@/lib/crm/beds24-contacts";
 import {
   buildConfirmationEmail,
@@ -180,6 +181,11 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
   ];
   const hostNote = [...new Set(towerExtras.map((row) => text(row.guest_note)).filter(Boolean))].join("\n\n");
 
+  // Alexandria Institute: dates from Beds24 when the stored row is missing them.
+  const agencyFromRooms = rooms.some((room) => room.checkin && room.checkout && isAlexandriaGuestStay({ room: room.room, checkin: room.checkin, checkout: room.checkout }));
+  const agencyPaid = agencyFromRooms || (await agencyPaidIds(activeIds)).length > 0;
+  if (agencyPaid) warnings.push("Alexandria Institute: πληρώνει το πρακτορείο — το email δεν δείχνει τιμές, σύνολα ούτε IBAN.");
+
   const sum = (key: string) => bookings.reduce((total: number, row: any) => total + (Number(row[key]) || 0), 0);
   const names = [...new Set((bookings.length ? bookings : [self]).map((row: any) => `${text(row.firstName ?? row.firstname)} ${text(row.lastName ?? row.lastname)}`.trim()).filter(Boolean))];
 
@@ -207,12 +213,28 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
       // Only the guest's own comments. Beds24 "notes" are internal and stay out.
       comments: guestComments.comments,
       prepaidVia,
+      agencyPaid,
     },
   };
 }
 
+/** Booking ids (from the given ones) that are Alexandria Institute stays — agency-paid, so no prices in emails. */
+export async function agencyPaidIds(ids: string[]): Promise<string[]> {
+  if (!ids.length) return [];
+  const rows = (await getSql()`
+    select booking_id, room, to_char(checkin, 'YYYY-MM-DD') as checkin, to_char(checkout, 'YYYY-MM-DD') as checkout,
+      (raw_json::text ilike '%alexandria%') as marked
+    from public.beds24_bookings where booking_id = any(${ids}::text[])
+  `) as any[];
+  return rows
+    .filter((row) => row.checkin && row.checkout && isAlexandriaGuestStay({ room: row.room, checkin: row.checkin, checkout: row.checkout, marker: row.marked ? "alexandria" : "" }))
+    .map((row) => String(row.booking_id));
+}
+
 export async function sendConfirmation(data: ConfirmationData, recipient: string, mode: "live" | "test") {
   const sql = getSql();
+  // Enforced on the server too, whatever the editor sent.
+  if (!data.agencyPaid && (await agencyPaidIds(data.bookingIds)).length) data = { ...data, agencyPaid: true };
   const email = buildConfirmationEmail(data, await getBankDetails());
   const subject = mode === "test" ? `[ΔΟΚΙΜΗ] ${email.subject}` : email.subject;
   await deliverEmail(recipient, subject, email.html, email.text);

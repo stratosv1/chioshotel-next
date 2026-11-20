@@ -19,6 +19,7 @@ type Booking = {
   lastName: string;
   country: string;
   phone: string;
+  email: string;
   notes: string;
 };
 
@@ -58,6 +59,7 @@ function emptyDraft(room: string, checkin: string, period: AlexandriaPeriod): Dr
     lastName: "",
     country: "",
     phone: "",
+    email: "",
     notes: "",
   };
 }
@@ -441,6 +443,17 @@ export default function AndreasCalendar() {
                   type="tel"
                   value={draft.phone}
                   onChange={(e) => setDraft({ ...draft, phone: e.target.value })}
+                  className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base"
+                  autoComplete="off"
+                />
+              </label>
+              <label className="col-span-2 text-sm font-semibold">
+                Email <span className="font-normal text-stone-500">(του φοιτητή, για τα μηνύματα πριν και κατά τη διαμονή)</span>
+                <input
+                  type="email"
+                  inputMode="email"
+                  value={draft.email ?? ""}
+                  onChange={(e) => setDraft({ ...draft, email: e.target.value })}
                   className="mt-1 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-base"
                   autoComplete="off"
                 />

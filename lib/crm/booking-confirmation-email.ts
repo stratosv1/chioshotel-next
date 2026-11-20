@@ -42,6 +42,8 @@ export type ConfirmationData = {
   extras?: string[];
   /** Note we agreed with the guest, printed on the confirmation (control tower). */
   hostNote?: string;
+  /** Alexandria Institute (owner, 2026-11-20): the agency pays us, so no prices, totals or bank details. */
+  agencyPaid?: boolean;
 };
 
 export const BREAKFAST_INCLUDED: Record<EmailLanguage, string> = { el: "Περιλαμβάνεται", en: "Included", tr: "Dahil" };
@@ -178,7 +180,8 @@ export function buildConfirmationEmail(data: ConfirmationData, bank: BankDetails
   ]);
   const prepaidVia = (data.prepaidVia ?? "").trim();
   // A prepaid booking must not show bank details: guests may think they have to pay again.
-  const bankRows = bank && !prepaidVia ? detailRows([
+  const agencyPaid = Boolean(data.agencyPaid);
+  const bankRows = bank && !prepaidVia && !agencyPaid ? detailRows([
     { label: t.iban, value: esc(bank.iban) },
     { label: t.holder, value: esc(bank.holder) },
     { label: t.bank, value: esc(bank.bank) },
@@ -189,10 +192,10 @@ export function buildConfirmationEmail(data: ConfirmationData, bank: BankDetails
   const body = p(`${t.dear} <strong>${esc(fullName)}</strong>,`) + p(t.intro)
     + stayTicket(language, data.rooms, "")
     + sectionTitle(t.details) + details
-    + sectionTitle(t.billing) + billingTable(data, t)
+    + (agencyPaid ? "" : sectionTitle(t.billing) + billingTable(data, t))
     + (data.hostNote?.trim() ? callout(t.hostNote, esc(data.hostNote.trim()).replace(/\n/g, "<br>")) : "")
     + (data.comments ? callout(t.comments, esc(data.comments).replace(/\n/g, "<br>")) : "")
-    + (prepaidVia ? callout(t.prepaidTitle, esc(t.prepaidBody.replace("{channel}", prepaidVia))) : "")
+    + (prepaidVia && !agencyPaid ? callout(t.prepaidTitle, esc(t.prepaidBody.replace("{channel}", prepaidVia))) : "")
     + (bankRows ? sectionTitle(t.payment) + bankRows : "")
     + `<p style="margin:22px 0 0;text-align:center"><img src="${STAMP_IMAGE}" width="170" alt="Voulamandis House" style="width:170px;height:auto;border:0"></p>`
     + button(FAQ_URL[language], t.faq);

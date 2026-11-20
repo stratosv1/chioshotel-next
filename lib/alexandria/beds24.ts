@@ -32,6 +32,7 @@ type StayFields = {
   lastName: string;
   country: string;
   phone: string;
+  email?: string;
   notes: string;
 };
 
@@ -106,6 +107,7 @@ function bookingBody(stay: StayFields) {
     lastName: stay.lastName,
     ...(stay.phone ? { mobile: stay.phone, phone: stay.phone } : {}),
     ...(stay.country ? { country: stay.country } : {}),
+    ...(stay.email ? { email: stay.email } : {}),
     numAdult: 1,
     numChild: 0,
     notes,

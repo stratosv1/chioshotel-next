@@ -11,6 +11,7 @@ export type AlexandriaBooking = {
   lastName: string;
   country: string;
   phone: string;
+  email: string;
   notes: string;
   updatedAt: string;
   beds24Id: string;
@@ -25,6 +26,7 @@ type Row = {
   last_name: string;
   country: string;
   phone: string;
+  email: string | null;
   notes: string | null;
   updated_at: string;
   beds24_id: string | null;
@@ -68,6 +70,11 @@ async function ensureTable() {
        WHERE table_schema = 'public' AND table_name = 'alexandria_bookings' AND column_name = 'beds24_id'`) as unknown[];
     if (cols.length === 0) await sql`ALTER TABLE alexandria_bookings ADD COLUMN IF NOT EXISTS beds24_id TEXT`;
   }
+  // Column added 2026-11-20: student email, so the guest emails (without prices) reach them.
+  const emailCol = (await sql`
+    SELECT 1 FROM information_schema.columns
+     WHERE table_schema = 'public' AND table_name = 'alexandria_bookings' AND column_name = 'email'`) as unknown[];
+  if (emailCol.length === 0) await sql`ALTER TABLE alexandria_bookings ADD COLUMN IF NOT EXISTS email TEXT`;
   tableReady = true;
 }
 
@@ -81,6 +88,7 @@ function mapRow(row: Row): AlexandriaBooking {
     lastName: row.last_name,
     country: row.country,
     phone: row.phone,
+    email: row.email ?? "",
     notes: row.notes ?? "",
     updatedAt: row.updated_at,
     beds24Id: row.beds24_id ?? "",
@@ -88,7 +96,7 @@ function mapRow(row: Row): AlexandriaBooking {
 }
 
 const columns = `id, room, to_char(checkin, 'YYYY-MM-DD') AS checkin, to_char(checkout, 'YYYY-MM-DD') AS checkout,
-  first_name, last_name, country, phone, notes, updated_at, beds24_id`;
+  first_name, last_name, country, phone, email, notes, updated_at, beds24_id`;
 
 export async function listBookings() {
   await ensureTable();
@@ -129,9 +137,9 @@ export async function setBeds24Id(id: string, beds24Id: string) {
 export async function createBooking(input: BookingInput) {
   await ensureTable();
   const rows = (await getSql().query(
-    `INSERT INTO alexandria_bookings (room, checkin, checkout, first_name, last_name, country, phone, notes)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING ${columns}`,
-    [input.room, input.checkin, input.checkout, input.firstName, input.lastName, input.country, input.phone, input.notes],
+    `INSERT INTO alexandria_bookings (room, checkin, checkout, first_name, last_name, country, phone, notes, email)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING ${columns}`,
+    [input.room, input.checkin, input.checkout, input.firstName, input.lastName, input.country, input.phone, input.notes, input.email || null],
   )) as Row[];
   return mapRow(rows[0]);
 }
@@ -140,9 +148,9 @@ export async function updateBooking(id: string, input: BookingInput) {
   await ensureTable();
   const rows = (await getSql().query(
     `UPDATE alexandria_bookings SET room = $2, checkin = $3, checkout = $4, first_name = $5, last_name = $6,
-       country = $7, phone = $8, notes = $9, updated_at = now()
+       country = $7, phone = $8, notes = $9, email = $10, updated_at = now()
      WHERE id = $1 AND deleted_at IS NULL RETURNING ${columns}`,
-    [Number(id), input.room, input.checkin, input.checkout, input.firstName, input.lastName, input.country, input.phone, input.notes],
+    [Number(id), input.room, input.checkin, input.checkout, input.firstName, input.lastName, input.country, input.phone, input.notes, input.email || null],
   )) as Row[];
   return rows[0] ? mapRow(rows[0]) : null;
 }
@@ -176,6 +184,7 @@ function describe(b: AlexandriaBooking) {
     ["Επώνυμο", b.lastName],
     ["Χώρα", b.country || "-"],
     ["Τηλέφωνο", b.phone || "-"],
+    ["Email", b.email || "-"],
     ["Σημειώσεις", b.notes || "-"],
   ] as const;
 }

@@ -43,6 +43,7 @@ function parseInput(body: Record<string, unknown>): { input?: BookingInput; erro
     lastName: clean(body.lastName, 80),
     country: clean(body.country, 60),
     phone: clean(body.phone, 40),
+    email: clean(body.email, 120).toLowerCase(),
     notes: String(body.notes ?? "").trim().slice(0, 500),
   };
   if (!isAlexandriaRoom(input.room)) return { error: "Διάλεξε δωμάτιο." };
@@ -51,6 +52,7 @@ function parseInput(body: Record<string, unknown>): { input?: BookingInput; erro
   if (!periodForStay(input.checkin, input.checkout))
     return { error: "Οι ημερομηνίες πρέπει να είναι μέσα στο διάστημα του Ιουνίου ή του Σεπτεμβρίου που φαίνεται στο ημερολόγιο." };
   if (!input.firstName || !input.lastName) return { error: "Συμπλήρωσε όνομα και επώνυμο." };
+  if (input.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.email)) return { error: "Το email δεν είναι σωστό." };
   return { input };
 }
 

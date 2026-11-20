@@ -50,6 +50,19 @@ export const ALEXANDRIA_ROOMS: AlexandriaRoom[] = [
   { id: "10", label: "Διαμέρισμα 10", type: "Με κουζίνα" },
 ];
 
+/**
+ * Owner (2026-11-20): Alexandria Institute guests are paid for by the agency,
+ * so their guest emails must never show prices or payment details. All rooms
+ * 1–10 are closed for the group during the programme, so any stay in them that
+ * overlaps a programme is a group stay (Apt 11 is the owner's own unit), and
+ * any booking marked "Alexandria" in Beds24 is one too.
+ */
+export function isAlexandriaGuestStay(stay: { checkin: string; checkout: string; room?: string | null; marker?: string | null }) {
+  if (/alexandria/i.test(stay.marker ?? "")) return true;
+  if (/apt\s*11|apartment\s*11/i.test(stay.room ?? "")) return false;
+  return ALEXANDRIA_PERIODS.some((period) => stay.checkin < period.programEnd && stay.checkout > period.programStart);
+}
+
 export function isAlexandriaRoom(value: string) {
   return ALEXANDRIA_ROOMS.some((room) => room.id === value);
 }

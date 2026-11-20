@@ -10,6 +10,7 @@ import {
   type EmailRoom,
   type EmailType,
 } from "@/lib/crm/guest-email-templates";
+import { isAlexandriaGuestStay } from "@/lib/alexandria/config";
 
 const REPLY_TO = "vhouse.reservations@gmail.com";
 const VIRTUAL_EMAIL = "@([a-z0-9-]+[.])*(booking[.]com|expedia[.]com|expediapartnercentral[.]com)$";
@@ -102,6 +103,7 @@ export type DueEmail = {
   rooms: EmailRoom[];
   checkin: string;
   stayDay: number;
+  agencyPaid: boolean;
 };
 
 export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> {
@@ -110,7 +112,8 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
     select s.booking_id, s.firstname, s.lastname, s.room, s.country, s.guest_language,
       lower(trim(coalesce(nullif(c.real_email, ''), s.email))) as email,
       o.language as override_language, o.country as override_country,
-      to_char(s.checkin, 'YYYY-MM-DD') as checkin, to_char(s.checkout, 'YYYY-MM-DD') as checkout
+      to_char(s.checkin, 'YYYY-MM-DD') as checkin, to_char(s.checkout, 'YYYY-MM-DD') as checkout,
+      (s.raw_json::text ilike '%alexandria%') as alexandria_marked
     from public.beds24_bookings s
     left join public.crm_booking_contacts c using (booking_id)
     left join public.crm_guest_overrides o on o.email = lower(trim(coalesce(nullif(c.real_email, ''), s.email)))
@@ -139,10 +142,12 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
       // Never two arrival emails in one morning: the pre-arrival goes first.
       if ((type === "arrival_time" || type === "chios_info") && awaitingArrival) continue;
       const room = { room: row.room ?? "", checkin: row.checkin, checkout: row.checkout };
+      const agencyPaid = isAlexandriaGuestStay({ ...room, marker: row.alexandria_marked ? "alexandria" : "" });
       const existing = due.get(key);
       if (existing) {
         existing.bookingIds.push(row.booking_id);
         existing.rooms.push(room);
+        existing.agencyPaid ||= agencyPaid;
         continue;
       }
       due.set(key, {
@@ -157,6 +162,7 @@ export async function listDueEmails(today = athensToday()): Promise<DueEmail[]> 
         rooms: [room],
         checkin: row.checkin,
         stayDay: now - dayNumber(row.checkin),
+        agencyPaid,
       });
     }
   }
@@ -185,8 +191,8 @@ export async function deliverEmail(to: string, subject: string, html: string, te
   });
 }
 
-async function contextFor(item: Pick<DueEmail, "type" | "name" | "lastName" | "bookingIds" | "rooms" | "stayDay" | "language">, date: string, preview = false): Promise<EmailContext | null> {
-  const ctx: EmailContext = { firstName: item.name, lastName: item.lastName, bookingIds: item.bookingIds, rooms: item.rooms };
+async function contextFor(item: Pick<DueEmail, "type" | "name" | "lastName" | "bookingIds" | "rooms" | "stayDay" | "language"> & { agencyPaid?: boolean }, date: string, preview = false): Promise<EmailContext | null> {
+  const ctx: EmailContext = { firstName: item.name, lastName: item.lastName, bookingIds: item.bookingIds, rooms: item.rooms, agencyPaid: Boolean(item.agencyPaid) };
   if (item.type !== "daily") return ctx;
   const seaDay = await loadTodaySeaDay(date, preview);
   const suggestion = seaDay ? buildDailySuggestion(seaDay, date, item.stayDay, item.language) : null;
