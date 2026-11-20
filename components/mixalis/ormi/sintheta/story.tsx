@@ -37,11 +37,12 @@ const T_ORDER = 3;
 const TOOL_COLOR = "#6b4fa0";
 
 function Banner({ s, color = TOOL_COLOR }: { s: string; color?: string }) {
-  const w = Math.min(W - 12, s.length * 7.6 + 20);
+  const size = s.length > 48 ? 9.5 : 11;
+  const w = Math.min(W - 12, s.length * (size * 0.69) + 20);
   return (
     <g>
       <rect x={6} y={5} width={w} height={19} rx={9.5} fill={color} opacity={0.95} />
-      <T x={15} y={18.5} s={s} size={11} color="#ffffff" anchor="start" />
+      <T x={15} y={18.5} s={s} size={size} color="#ffffff" anchor="start" />
     </g>
   );
 }
@@ -56,7 +57,7 @@ function OrderOverlay({ story }: { story: Story }) {
       {lines.map((line, i) => (
         <g key={i}>
           <rect x={18} y={top + 14 + i * 30} width={W - 36} height={24} rx={12} fill={i === 0 ? TOOL_COLOR : "#f1edf8"} />
-          <T x={30} y={top + 30 + i * 30} s={line} size={10.5} color={i === 0 ? "#ffffff" : C.ink} anchor="start" />
+          <T x={30} y={top + 30 + i * 30} s={line} size={line.length > 52 ? 9 : line.length > 44 ? 9.8 : 10.5} color={i === 0 ? "#ffffff" : C.ink} anchor="start" />
           {i < lines.length - 1 ? <T x={W / 2} y={top + 46 + i * 30} s="↓" size={10} color={TOOL_COLOR} /> : null}
         </g>
       ))}

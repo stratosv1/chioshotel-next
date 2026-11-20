@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { StudyMark } from "@/components/mixalis/study/StudyMark";
+import { EXTRA_SCENARIOS } from "./sintheta/extra-quiz";
 
 /**
  * Quiz «Σπάσε το σε φάσεις» (owner, 2026-11-20).
@@ -11,7 +12,7 @@ import { StudyMark } from "@/components/mixalis/study/StudyMark";
  * 3) διαλέγει από ποια φάση ξεκινά τη λύση.
  */
 
-type Tool = "ado" | "dpdt" | "q" | "thmke" | "adme" | "kin" | "bolh" | "kentro";
+export type Tool = "ado" | "dpdt" | "q" | "thmke" | "adme" | "kin" | "bolh" | "kentro" | "rate";
 
 const TOOLS: { id: Tool; label: string; hint: string }[] = [
   { id: "ado", label: "ΑΔΟ", hint: "Κρούση / έκρηξη / πήδημα: p_ολ πριν = p_ολ μετά" },
@@ -22,10 +23,11 @@ const TOOLS: { id: Tool; label: string; hint: string }[] = [
   { id: "kin", label: "Κινηματική / Δp = ΣF·Δt", hint: "Χρόνος, ή κίνηση με σταθερή επιτάχυνση" },
   { id: "bolh", label: "Οριζόντια βολή", hint: "Φεύγει οριζόντια από ύψος: t = √(2H/g), x = V·t" },
   { id: "kentro", label: "Κεντρομόλος", hint: "Τάση νήματος, κυκλική, ανακύκλωση" },
+  { id: "rate", label: "Ρυθμός μεταβολής", hint: "Σε μια θέση: dp/dt = ΣF, dK/dt = ΣF·υ" },
 ];
 
-type Phase = { label: string; best: Tool[]; ok?: Tool[]; why: string; eq: string };
-type Scenario = {
+export type QPhase = { label: string; best: Tool[]; ok?: Tool[]; why: string; eq: string };
+export type Scenario = {
   id: string;
   title: string;
   /** Κομμάτια της εκφώνησης· οι τομές μπαίνουν ανάμεσά τους. */
@@ -33,14 +35,14 @@ type Scenario = {
   /** Σωστές τομές: i σημαίνει «τομή μετά το κομμάτι i». */
   cuts: number[];
   ask: string;
-  phases: Phase[];
+  phases: QPhase[];
   /** Σωστές φάσεις εκκίνησης (index). */
   start: number[];
   startWhy: string;
   like: string;
 };
 
-const SCENARIOS: Scenario[] = [
+const BASE_SCENARIOS: Scenario[] = [
   {
     id: "bullet-floor",
     title: "Βλήμα σε ξύλο που γλιστράει",
@@ -593,6 +595,8 @@ const SCENARIOS: Scenario[] = [
   },
 ];
 
+const SCENARIOS: Scenario[] = [...BASE_SCENARIOS, ...EXTRA_SCENARIOS];
+
 type Record_ = { cuts: boolean; tools: boolean; start: boolean };
 const KEY = "mixalis-ormi-phase-quiz-v1";
 
@@ -614,7 +618,7 @@ function phasesOf(s: Scenario) {
   return groups;
 }
 
-function toolOk(phase: Phase, picked: Set<Tool>) {
+function toolOk(phase: QPhase, picked: Set<Tool>) {
   const allowed = new Set([...phase.best, ...(phase.ok ?? [])]);
   return phase.best.every((t) => picked.has(t)) && [...picked].every((t) => allowed.has(t));
 }
@@ -725,7 +729,8 @@ export function OrmiPhaseQuiz() {
               <li>• απόσταση με τριβή → <b>ΘΜΚΕ</b> · χρόνος με τριβή → <b>Δp = −T·Δt</b> ή κινηματική</li>
               <li>• ύψος / γωνία νήματος χωρίς τριβή → <b>ΑΔΜΕ</b> (ποτέ μέσα από πλαστική κρούση!)</li>
               <li>• φεύγει οριζόντια από ύψος → <b>οριζόντια βολή</b> (ο χρόνος μόνο από το ύψος)</li>
-              <li>• τάση νήματος, «αμέσως μετά» σε νήμα, ανακύκλωση → <b>κεντρομόλος</b> (οριακή με νήμα: υ_κορ = √(gℓ))</li>
+              <li>• τάση νήματος, «αμέσως μετά» σε νήμα, ανακύκλωση → <b>κεντρομόλος</b> (οριακή με νήμα: υ_κορ = √(gℓ), με ράβδο: υ_κορ = 0)</li>
+              <li>• «ρυθμός μεταβολής ορμής / κινητικής» σε μια θέση → <b>dp/dt = ΣF</b>, <b>dK/dt = ΣF·υ</b> εκεί</li>
             </ul>
           </div>
         ) : null}

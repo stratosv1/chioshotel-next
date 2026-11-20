@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimCard } from "../AnimCard";
-import { SINTHETA_CASES } from "./stories";
+import { SINTHETA_CASES } from "./all";
 
 const ACCENT = "#6b4fa0";
 

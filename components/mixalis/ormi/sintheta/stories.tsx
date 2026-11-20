@@ -1,16 +1,16 @@
 "use client";
 
 import { Ball, Box, Bullet, Burst, C, Cart, Ground, Heat, StickPerson, T, Vec, Wall, bump, clamp, lerp, seg } from "../kit";
-import { Ask, makeCase, type Story } from "./story";
+import { Ask, type Story } from "./story";
 
 /* ───────── helpers ───────── */
 
 /** Uniform deceleration to a stop: position fraction for time fraction k. */
-const decel = (k: number) => 1 - (1 - k) * (1 - k);
+export const decel = (k: number) => 1 - (1 - k) * (1 - k);
 /** Point of a pendulum bob. θ = 0 hangs straight down, θ > 0 to the right. */
-const pend = (px: number, py: number, L: number, th: number) => ({ x: px + L * Math.sin(th), y: py + L * Math.cos(th) });
+export const pend = (px: number, py: number, L: number, th: number) => ({ x: px + L * Math.sin(th), y: py + L * Math.cos(th) });
 
-function Pivot({ x, y }: { x: number; y: number }) {
+export function Pivot({ x, y }: { x: number; y: number }) {
   return (
     <g>
       <rect x={x - 26} y={y - 6} width={52} height={6} fill={C.edge} opacity={0.5} />
@@ -19,7 +19,7 @@ function Pivot({ x, y }: { x: number; y: number }) {
   );
 }
 
-function Hbar({ x1, x2, y, s, color = C.p }: { x1: number; x2: number; y: number; s: string; color?: string }) {
+export function Hbar({ x1, x2, y, s, color = C.p }: { x1: number; x2: number; y: number; s: string; color?: string }) {
   return (
     <g>
       <line x1={x1} y1={y} x2={x2} y2={y} stroke={color} strokeWidth={1.5} />
@@ -30,7 +30,7 @@ function Hbar({ x1, x2, y, s, color = C.p }: { x1: number; x2: number; y: number
   );
 }
 
-function Vbar({ x, y1, y2, s, color = C.p, side = "right" }: { x: number; y1: number; y2: number; s: string; color?: string; side?: "left" | "right" }) {
+export function Vbar({ x, y1, y2, s, color = C.p, side = "right" }: { x: number; y1: number; y2: number; s: string; color?: string; side?: "left" | "right" }) {
   return (
     <g>
       <line x1={x} y1={y1} x2={x} y2={y2} stroke={color} strokeWidth={1.5} strokeDasharray="3 3" />
@@ -1248,6 +1248,5 @@ const s17: Story = {
   },
 };
 
-export const STORIES: Story[] = [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17];
-export const SINTHETA_CASES = STORIES.map(makeCase);
+export const BASE_STORIES: Story[] = [s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16, s17];
 
