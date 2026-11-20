@@ -11,6 +11,7 @@ import { TrapezaOrmi } from "@/components/mixalis/ormi/trapeza/TrapezaOrmi";
 import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/PosterCells";
 import { OrmiLawTrainer } from "@/components/mixalis/ormi/OrmiLawTrainer";
 import { OrmiPhaseQuiz } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
+import { SinthetaPresentationsClient } from "@/components/mixalis/ormi/sintheta/SinthetaPresentationsClient";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -94,6 +95,7 @@ export default function OrmiPage() {
             </a>
             <a href="#epilogi-nomou" className="rounded-full bg-[#1f6f5c] px-4 py-1.5 text-white hover:bg-[#185747]">ΑΔΟ ή μεταβολή ορμής; · Τεστ επιλογής ↓</a>
             <a href="#fases" className="rounded-full bg-[#6b4fa0] px-4 py-1.5 text-white hover:bg-[#583f86]">Σύνθετες: σπάσε σε φάσεις · Quiz ↓</a>
+            <a href="#parousiaseis" className="rounded-full bg-[#6b4fa0] px-4 py-1.5 text-white hover:bg-[#583f86]">▶ Σύνθετες: πώς σκέφτομαι (παρουσιάσεις) ↓</a>
             <a href="#askiseis" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
               Λυμένες ασκήσεις Τριπολίτη ↓
             </a>
@@ -130,6 +132,8 @@ export default function OrmiPage() {
         <OrmiLawTrainer />
 
         <OrmiPhaseQuiz />
+
+        <SinthetaPresentationsClient />
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="mb-4 rounded-2xl border border-black/10 bg-[#fbf8f3] p-3 sm:hidden">
@@ -172,6 +176,7 @@ export default function OrmiPage() {
             </a>
             <a href="#epilogi-nomou" className="shrink-0 rounded-full bg-[#1f6f5c] px-3 py-1.5 text-white">ΑΔΟ ή Δp; · Τεστ</a>
             <a href="#fases" className="shrink-0 rounded-full bg-[#6b4fa0] px-3 py-1.5 text-white">Φάσεις · Quiz</a>
+            <a href="#parousiaseis" className="shrink-0 rounded-full bg-[#6b4fa0] px-3 py-1.5 text-white">▶ Παρουσιάσεις</a>
             <a href="#trapeza" className="shrink-0 rounded-full bg-[#c9822f] px-3 py-1.5 text-white hover:bg-[#a96b22]">
               Τράπεζα Θεμάτων
             </a>

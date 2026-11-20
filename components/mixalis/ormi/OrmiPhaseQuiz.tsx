@@ -761,7 +761,12 @@ export function OrmiPhaseQuiz() {
           <p className="text-xs font-bold uppercase tracking-wider text-[#857261]">
             Φαινόμενο {index + 1} από {SCENARIOS.length} · {s.title}
           </p>
-          <p className="text-xs text-[#857261]">Μοιάζει με: {s.like}</p>
+          <p className="text-xs text-[#857261]">
+            Μοιάζει με: {s.like} ·{" "}
+            <a href={`#s${index + 1}`} className="font-bold text-[#6b4fa0] underline underline-offset-2">
+              ▶ Δες την παρουσίαση
+            </a>
+          </p>
         </div>
 
         {/* Step indicator */}
@@ -955,6 +960,9 @@ export function OrmiPhaseQuiz() {
               <p className="w-full text-sm font-bold text-[#1c2433]">
                 Αποτέλεσμα: φάσεις {records[s.id]?.cuts ? "✓" : "✗"} · εργαλεία {records[s.id]?.tools ? "✓" : "✗"} · εκκίνηση {records[s.id]?.start ? "✓" : "✗"}
               </p>
+              <a href={`#s${index + 1}`} className={`${btn} border border-[#6b4fa0] text-[#6b4fa0]`}>
+                ▶ Δες την παρουσίαση με κίνηση
+              </a>
               <button type="button" onClick={() => reset(index)} className={`${btn} border border-black/10 text-[#3d4452]`}>
                 Ξανά αυτό
               </button>

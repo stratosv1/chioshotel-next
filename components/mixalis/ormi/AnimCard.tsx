@@ -38,7 +38,18 @@ const LEGEND = {
 
 const EPS = 0.001;
 
-export function AnimCard({ data, accent, study }: { data: Case; accent: string; study?: { lesson: string; path: string } }) {
+export function AnimCard({
+  data,
+  accent,
+  study,
+  idPrefix = "k",
+}: {
+  data: Case;
+  accent: string;
+  study?: { lesson: string; path: string };
+  /** Anchor prefix, so other card sets (e.g. the composite presentations) do not clash with #k1…#k43. */
+  idPrefix?: string;
+}) {
   const [playing, setPlaying] = usePlaying(true);
   const [slow, setSlow] = useState(false);
   // "step": each phase plays once and waits, so there is time to read. "loop": plays non-stop.
@@ -120,9 +131,9 @@ export function AnimCard({ data, accent, study }: { data: Case; accent: string; 
 
   return (
     <article
-      id={`k${data.n}`}
+      id={`${idPrefix}${data.n}`}
       data-study-lesson={study?.lesson}
-      data-study-id={study ? `k${data.n}` : undefined}
+      data-study-id={study ? `${idPrefix}${data.n}` : undefined}
       ref={ref}
       className="scroll-mt-24 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm"
     >
@@ -268,7 +279,7 @@ export function AnimCard({ data, accent, study }: { data: Case; accent: string; 
         )}
       </div>
       {study ? (
-        <StudyMark lesson={study.lesson} id={`k${data.n}`} title={`${data.n}. ${data.title}`} path={study.path} className="border-t border-black/5 px-4 py-3 sm:px-5" />
+        <StudyMark lesson={study.lesson} id={`${idPrefix}${data.n}`} title={`${data.n}. ${data.title}`} path={study.path} className="border-t border-black/5 px-4 py-3 sm:px-5" />
       ) : null}
     </article>
   );
