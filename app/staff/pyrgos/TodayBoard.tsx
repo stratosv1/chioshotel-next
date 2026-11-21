@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useBeds24Sync } from "./useBeds24Sync";
 import type { HousekeepingTask, TodayData, TodayStay } from "@/lib/pyrgos/today";
+import PyrgosNav from "./PyrgosNav";
 
 type BedSetup = "double" | "twin" | "double_single" | "double_two_singles";
 type Status = HousekeepingTask["status"];
@@ -142,19 +143,7 @@ export default function TodayBoard() {
   return (
     <div className="min-h-screen bg-[#eef3f7] text-[#1f2a3c]">
       <div className="flex flex-wrap">
-        <nav aria-label="Μενού πύργου ελέγχου" className="flex w-full flex-wrap gap-1 border-b border-[#e3e9f0] bg-white p-3 lg:min-h-screen lg:w-56 lg:flex-col lg:flex-nowrap lg:border-b-0 lg:border-r lg:p-4">
-          <div className="hidden px-3 pb-4 lg:block">
-            <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#5443c9]">Voulamandis House</div>
-            <div className="text-lg font-black">Πύργος ελέγχου</div>
-          </div>
-          <a href="/staff/pyrgos" aria-current="page" className="rounded-xl bg-[#e9e4fe] px-3 py-2.5 text-sm font-bold text-[#3b2f8a]">Σήμερα</a>
-          <a href="/staff/pyrgos/plano" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Πλάνο</a>
-          <a href="/staff/crm" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Πελάτες (CRM)</a>
-          <a href="#katharismos" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Καθαριότητα</a>
-          <a href="/staff/statistics" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Στατιστικά</a>
-          <a href="/staff/expenses" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Έξοδα</a>
-          <a href="/staff" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa] lg:mt-auto">← Παλιό staff</a>
-        </nav>
+        <PyrgosNav wide="lg" />
 
         <main className="min-w-0 flex-1 space-y-5 p-4 sm:p-6 lg:p-8">
           <header className="flex flex-wrap items-center justify-between gap-3">

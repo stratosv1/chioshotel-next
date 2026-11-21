@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import RoomFinderInboxLoader from "./RoomFinderInboxLoader";
+import PyrgosShell from "../pyrgos/PyrgosShell";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -14,5 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function AiRoomFinderStaffPage() {
-  return <RoomFinderInboxLoader />;
+  return (
+    <PyrgosShell>
+      <RoomFinderInboxLoader />
+    </PyrgosShell>
+  );
 }

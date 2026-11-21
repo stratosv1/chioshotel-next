@@ -1,5 +1,6 @@
 ﻿import type { Metadata } from "next";
 import PayrollApp from "./PayrollApp";
+import PyrgosShell from "../pyrgos/PyrgosShell";
 
 export const metadata: Metadata = {
   title: "Μισθοδοσία | Staff Area",
@@ -14,5 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function StaffPayrollPage() {
-  return <PayrollApp />;
+  return (
+    <PyrgosShell>
+      <PayrollApp />
+    </PyrgosShell>
+  );
 }

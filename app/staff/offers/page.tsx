@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import OffersApp from "./OffersApp";
+import PyrgosShell from "../pyrgos/PyrgosShell";
 
 export const metadata: Metadata = {
   title: "Προσφορές & Newsletter | Staff",
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function OffersPage() {
-  return <OffersApp />;
+  return (
+    <PyrgosShell>
+      <OffersApp />
+    </PyrgosShell>
+  );
 }
