@@ -1277,4 +1277,98 @@ const s35: Story = {
   },
 };
 
-export const EXTRA_STORIES: Story[] = [s18, s19, s20, s21, s22, s23, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35];
+/* ───────── 36. Πύραυλος που χωρίζεται στα δύο (Τυροπάνης 27) ───────── */
+const s36: Story = {
+  n: 36,
+  title: "Πύραυλος που χωρίζεται στα δύο",
+  what: "Πύραυλος από δύο ίσα τμήματα ανεβαίνει με σταθερή ταχύτητα. Ξαφνικά το πάνω τμήμα αποκολλάται και φεύγει πιο γρήγορα. Τι κάνει το κάτω;",
+  given: "Δύο τμήματα μάζας m το καθένα, κοινή ταχύτητα υ προς τα πάνω, μετά την αποκόλληση το πάνω έχει 3υ/2 προς τα πάνω.",
+  ask: "Μετά από πόσο χρόνο Δt το κάτω τμήμα σταματά στιγμιαία για πρώτη φορά;",
+  playSay: "Κοινή άνοδος, αποκόλληση (στιγμιαία), μετά κάθε τμήμα μόνο του με το βάρος. Μας ενδιαφέρει το κάτω: 2 φάσεις.",
+  askSay: "Ζητούν χρόνο ⇒ στο τέλος κινηματική. Χρειάζομαι όμως την ταχύτητα του κάτω τμήματος ΑΜΕΣΩΣ μετά την αποκόλληση: αυτή τη δίνει η ΑΔΟ.",
+  phases: [
+    {
+      name: "Αποκόλληση",
+      tool: "ΑΔΟ",
+      range: [0.22, 0.42],
+      say: "«Ακαριαία αποκόλληση» = έκρηξη ⇒ ΑΔΟ. Πριν: 2m·υ. Μετά: m·3υ/2 + m·υ₂. Άρα υ₂ = 2υ − 3υ/2 = υ/2, θετική: το κάτω ΣΥΝΕΧΙΖΕΙ προς τα πάνω, πιο αργά.",
+    },
+    {
+      name: "Άνοδος του κάτω τμήματος",
+      tool: "Κινηματική",
+      range: [0.4, 0.8],
+      say: "Τώρα δρα μόνο το βάρος ⇒ επιβράδυνση g. Σταματά όταν υ = 0: 0 = υ/2 − g·Δt ⇒ Δt = υ/(2g).",
+    },
+  ],
+  order: [0, 1],
+  orderSay: "ΑΔΟ → υ₂ = υ/2. Κινηματική → Δt = υ/(2g). Σωστό το (β).",
+  solve: (
+    <>
+      2m·υ = m·(3υ/2) + m·υ₂ ⇒ <b>υ₂ = υ/2</b> (προς τα πάνω). 0 = υ/2 − g·Δt ⇒ <b>Δt = υ/(2g)</b>. Π.χ. υ = 20 m/s ⇒ Δt = 1 s.
+    </>
+  ),
+  trap: "Η ΑΔΟ ισχύει μόνο τη στιγμή της αποκόλλησης. Μετά κάθε κομμάτι κινείται μόνο του με το βάρος: t = υ₀/g με υ₀ = υ/2, όχι υ.",
+  draw: (tau, ctx) => {
+    const cx = 200;
+    const floor = 202;
+    const tSep = 0.32;
+    const tStop = 0.76;
+    const S = 100; // px ανά υ²/g
+    const y0 = 130; // διεπιφάνεια τη στιγμή της αποκόλλησης
+    const tp = (0.5 * (tau - tSep)) / (tStop - tSep); // χρόνος σε μονάδες υ/g
+    const before = tau < tSep;
+    const yLow = before ? y0 + (0.5 * (tSep - tau) * S) / (tStop - tSep) : y0 - S * (0.5 * tp - 0.5 * tp * tp);
+    const yUp = before ? yLow : y0 - S * (1.5 * tp - 0.5 * tp * tp);
+    const vLow = before ? 1 : 0.5 - tp;
+    const vUp = before ? 1 : 1.5 - tp;
+    const sc = 30;
+    const stopped = !before && Math.abs(tp - 0.5) < 0.06;
+    const hStop = y0 - S * 0.125;
+    return (
+      <g>
+        <Ground y={floor} />
+        <line x1={cx} y1={y0} x2={cx} y2={floor} stroke={C.faint} strokeDasharray="2 4" />
+        {/* κάτω τμήμα */}
+        <Box cx={cx} y={yLow + 22} w={26} h={22} label="m" fill={C.b2} />
+        <path d={`M ${cx - 13} ${yLow + 22} l -7 6 l 7 -12 Z M ${cx + 13} ${yLow + 22} l 7 6 l -7 -12 Z`} fill={C.edge} />
+        {/* πάνω τμήμα με μύτη */}
+        <Box cx={cx} y={yUp} w={26} h={22} label="m" fill={C.b1} />
+        <path d={`M ${cx - 13} ${yUp - 22} L ${cx} ${yUp - 36} L ${cx + 13} ${yUp - 22} Z`} fill={C.b1} stroke={C.edge} strokeWidth={1.3} />
+        <Burst cx={cx} cy={y0} k={seg(tau, tSep, tSep + 0.08)} />
+        {before ? (
+          <Vec x={cx + 26} y={yLow + 10} dx={0} dy={-sc} label="υ (κοινή)" labelSide="right" />
+        ) : (
+          <g>
+            {vUp * sc > 4 ? <Vec x={cx + 26} y={yUp - 8} dx={0} dy={-vUp * sc} label={tau < tSep + 0.1 ? "3υ/2" : undefined} labelSide="right" /> : null}
+            {vLow > 0.08 ? <Vec x={cx + 26} y={yLow + 14} dx={0} dy={-vLow * sc} label={tau < tSep + 0.1 ? "υ/2" : undefined} labelSide="right" /> : null}
+            {vLow < -0.08 ? <Vec x={cx + 26} y={yLow + 8} dx={0} dy={-vLow * sc} /> : null}
+          </g>
+        )}
+        {ctx.mode === "phase" && ctx.phase === 0 ? (
+          <g>
+            <T x={14} y={60} s="ΑΔΟ τη στιγμή της αποκόλλησης:" size={10} color={C.muted} anchor="start" />
+            <T x={14} y={78} s="2m·υ = m·(3υ/2) + m·υ₂" size={11} color={C.p} anchor="start" />
+            <T x={14} y={96} s="υ₂ = υ/2  ↑" size={12} color={C.p} anchor="start" />
+          </g>
+        ) : null}
+        {ctx.mode === "phase" && ctx.phase === 1 ? (
+          <g>
+            <Vec x={cx - 26} y={yLow + 4} dx={0} dy={26} color={C.F} label="mg" labelSide="left" />
+            <T x={14} y={60} s="Μόνο βάρος ⇒ επιβράδυνση g" size={10} color={C.muted} anchor="start" />
+            <T x={14} y={78} s="0 = υ/2 − g·Δt" size={11} color={C.p} anchor="start" />
+            <T x={14} y={96} s="Δt = υ/(2g)" size={12} color={C.p} anchor="start" />
+          </g>
+        ) : null}
+        {stopped || (tau > tStop && tau < 0.9) ? (
+          <g>
+            <line x1={cx + 16} y1={hStop} x2={cx + 40} y2={hStop} stroke={C.p} strokeDasharray="3 3" />
+            <T x={cx + 44} y={hStop + 4} s="υ = 0" size={10} color={C.p} anchor="start" />
+          </g>
+        ) : null}
+        {ctx.mode === "ask" ? <Ask x={110} y={150} s="Δt ως υ = 0 ;" /> : null}
+      </g>
+    );
+  },
+};
+
+export const EXTRA_STORIES: Story[] = [s18, s19, s20, s21, s22, s23, s24, s25, s26, s27, s28, s29, s30, s31, s32, s33, s34, s35, s36];
