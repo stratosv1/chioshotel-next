@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import type { PlanBooking, PlanCell } from "@/lib/pyrgos/plan";
 import { useBeds24Sync } from "../useBeds24Sync";
 import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
@@ -706,7 +706,7 @@ function PriceFields({
   );
 }
 
-const input = "mt-1 w-full rounded-lg border border-[#cfd9e4] px-3 py-2.5 text-base font-normal disabled:bg-[#f4f7fa]";
+const input = "mt-1 w-full rounded-lg border border-[#cfd9e4] bg-white px-3 py-2.5 text-base font-normal disabled:bg-[#f4f7fa]";
 
 // ---------- booking panel ----------
 
@@ -1487,6 +1487,25 @@ function Charges({
   );
 }
 
+const SECTION_TONES = {
+  blue: { box: "border-[#cfe0fb] bg-[#f1f6ff]", title: "text-[#1e4fa3]" },
+  purple: { box: "border-[#ddd5fb] bg-[#f6f3ff]", title: "text-[#3b2f8a]" },
+  green: { box: "border-[#c5ecd6] bg-[#effbf4]", title: "text-[#17663f]" },
+  teal: { box: "border-[#bfe6e6] bg-[#eefafa]", title: "text-[#14636a]" },
+  pink: { box: "border-[#f4cfe0] bg-[#fdf2f7]", title: "text-[#9b2c5e]" },
+  slate: { box: "border-[#dbe2ea] bg-[#f6f8fb]", title: "text-[#3e4c5e]" },
+} as const;
+
+function FormSection({ tone, title, children }: { tone: keyof typeof SECTION_TONES; title: string; children: ReactNode }) {
+  const t = SECTION_TONES[tone];
+  return (
+    <section className={`space-y-2 rounded-xl border p-3 ${t.box}`}>
+      <div className={`text-[11px] font-black uppercase tracking-wide ${t.title}`}>{title}</div>
+      {children}
+    </section>
+  );
+}
+
 function NewCharges({
   charges,
   onChange,
@@ -1506,8 +1525,8 @@ function NewCharges({
   const q = Number(qty.replace(",", ".")) || 0;
   const pr = Number(price.replace(",", ".")) || 0;
   return (
-    <div className="space-y-2 rounded-lg border border-[#e3e9f0] p-3">
-      <div className="text-xs font-black uppercase tracking-wide text-[#5b6b80]">Χρεώσεις διαμονής</div>
+    <div className="space-y-2 rounded-xl border border-[#f6d6b8] bg-[#fff5ec] p-3">
+      <div className="text-[11px] font-black uppercase tracking-wide text-[#9a4b12]">Χρεώσεις διαμονής</div>
       <AutoLines nights={nights * rooms} stayTotal={stayTotal} />
       {charges.map((c, i) => (
         <div key={i} className="flex items-center justify-between text-sm">
@@ -1778,13 +1797,16 @@ function NewBookingDialog({
         </div>
         {error && <p className="mb-3 rounded-xl bg-[#fff4dc] px-3 py-2 text-sm font-semibold text-[#92400e]">{error}</p>}
         <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <FormSection tone="blue" title="📅 Ημερομηνίες & άτομα">
             <div className="grid grid-cols-2 gap-2">
               <label className="text-xs font-bold">Check-in<input type="date" value={f.checkin} onChange={(e) => set({ checkin: e.target.value, checkout: e.target.value >= f.checkout ? addDays(e.target.value, 1) : f.checkout })} className={input} /></label>
               <label className="text-xs font-bold">Check-out<input type="date" value={f.checkout} min={addDays(f.checkin, 1)} onChange={(e) => set({ checkout: e.target.value })} className={input} /></label>
               <label className="text-xs font-bold">Ενήλικες<input type="number" min={1} max={8} value={f.adults} onChange={(e) => set({ adults: e.target.value })} className={input} /></label>
               <label className="text-xs font-bold">Παιδιά<input type="number" min={0} max={6} value={f.children} onChange={(e) => set({ children: e.target.value })} className={input} /></label>
             </div>
+            </FormSection>
+            <FormSection tone="purple" title="🛏️ Δωμάτιο">
             <div>
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold">{f.group ? `Δωμάτια (${f.rooms.length})` : "Δωμάτιο"} {free ? <span className="font-normal text-[#5b6b80]">· ελεύθερα: {free.length}</span> : null}</div>
@@ -1819,11 +1841,14 @@ function NewBookingDialog({
                 })}
               </div>
             </div>
+            </FormSection>
+            <FormSection tone="green" title="💶 Τιμή & πληρωμή">
             <PriceFields nights={nights} mode={f.priceMode} night={f.night} total={f.total} onChange={(v) => set({ priceMode: v.mode, night: v.night, total: v.total })} />
             <div className="grid grid-cols-2 items-end gap-2">
               <label className="text-xs font-bold">Προκαταβολή<input inputMode="decimal" value={f.deposit} onChange={(e) => set({ deposit: e.target.value.replace(",", ".") })} className={input} /></label>
               <label className="flex min-h-11 items-center gap-2 text-sm font-bold"><input type="checkbox" className="h-5 w-5" checked={f.paid} onChange={(e) => set({ paid: e.target.checked })} /> Πληρωμένη</label>
             </div>
+            </FormSection>
             <NewCharges
               charges={f.charges}
               onChange={(charges) => set({ charges })}
@@ -1832,7 +1857,8 @@ function NewBookingDialog({
               stayTotal={f.total ? Number(f.total) : null}
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
+            <FormSection tone="teal" title="👤 Στοιχεία πελάτη">
             <div className="grid grid-cols-2 gap-2">
               <label className="text-xs font-bold">Όνομα<input value={f.firstName} onChange={(e) => set({ firstName: e.target.value })} className={input} /></label>
               <label className="text-xs font-bold">Επώνυμο<input value={f.lastName} onChange={(e) => set({ lastName: e.target.value })} className={input} /></label>
@@ -1842,6 +1868,8 @@ function NewBookingDialog({
               <label className="text-xs font-bold">Κινητό<input type="tel" value={f.phone} onChange={(e) => set({ phone: e.target.value })} placeholder="+30 69…" className={input} /></label>
               <label className="text-xs font-bold">Χώρα<input value={f.country} maxLength={2} onChange={(e) => set({ country: e.target.value.toUpperCase() })} placeholder="GR" title="Κωδικός χώρας με λατινικά, π.χ. GR, DE, IT" className={input} /></label>
             </div>
+            </FormSection>
+            <FormSection tone="pink" title="🧺 Κρεβάτια & πρωινό">
             <label className="block text-xs font-bold">
               Κρεβάτια
               <select value={f.bedSetup} onChange={(e) => set({ bedSetup: e.target.value })} className={input}>
@@ -1856,6 +1884,8 @@ function NewBookingDialog({
               <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={f.cot} onChange={(e) => set({ cot: e.target.checked })} /> Κούνια</label>
               <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={f.rollaway} onChange={(e) => set({ rollaway: e.target.checked })} /> Ράντζο</label>
             </div>
+            </FormSection>
+            <FormSection tone="slate" title="📝 Σημειώσεις">
             <label className="block text-xs font-bold">
               Σημείωση για τον πελάτη <span className="font-normal text-[#5443c9]">· φαίνεται στην επιβεβαίωση</span>
               <textarea rows={2} value={f.guestNote} onChange={(e) => set({ guestNote: e.target.value })} placeholder="π.χ. Συμφωνήσαμε δωρεάν μεταφορά από το αεροδρόμιο" className={input} />
@@ -1864,6 +1894,7 @@ function NewBookingDialog({
               Εσωτερικές σημειώσεις <span className="font-normal text-[#5b6b80]">· μόνο για εμάς</span>
               <textarea rows={2} value={f.notes} onChange={(e) => set({ notes: e.target.value })} className={input} />
             </label>
+            </FormSection>
             <div className="rounded-xl border border-[#fde3a7] bg-[#fff8e8] p-3">
               <label className="flex min-h-11 items-center gap-2 text-sm font-semibold">
                 <input
