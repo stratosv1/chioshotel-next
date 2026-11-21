@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, 
 import type { PlanBooking, PlanCell } from "@/lib/pyrgos/plan";
 import { useBeds24Sync } from "../useBeds24Sync";
 import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
+import PyrgosNav from "../PyrgosNav";
 
 // ---------- helpers ----------
 
@@ -151,6 +152,26 @@ export default function PlanBoard() {
     if (q.get("open")) setOpenId(q.get("open"));
   }, []);
   const [newBooking, setNewBooking] = useState<{ room: number; checkin: string } | null>(null);
+  // Open faults / jobs per room (Βλάβες & εργασίες) for a 🔧 badge next to the room name.
+  const [roomTasks, setRoomTasks] = useState<Map<number, { count: number; urgent: boolean; titles: string[] }>>(new Map());
+  useEffect(() => {
+    fetch("/api/staff/pyrgos/tasks", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.ok) return;
+        const map = new Map<number, { count: number; urgent: boolean; titles: string[] }>();
+        for (const t of json.tasks as { room: number | null; status: string; priority: string; title: string }[]) {
+          if (t.status !== "open" || t.room === null) continue;
+          const entry = map.get(t.room) ?? { count: 0, urgent: false, titles: [] };
+          entry.count += 1;
+          entry.urgent = entry.urgent || t.priority === "urgent";
+          entry.titles.push(t.title);
+          map.set(t.room, entry);
+        }
+        setRoomTasks(map);
+      })
+      .catch(() => undefined);
+  }, []);
   const [dragOver, setDragOver] = useState<number | null>(null);
   const dragged = useRef<PlanBooking | null>(null);
   const [resize, setResize] = useState<{ b: PlanBooking; edge: "start" | "end"; x: number; delta: number } | null>(null);
@@ -337,19 +358,7 @@ export default function PlanBoard() {
   return (
     <div className="min-h-screen bg-[#eef3f7] text-[#1f2a3c]">
       <div className="flex flex-wrap">
-        <nav aria-label="Μενού πύργου ελέγχου" className="flex w-full flex-wrap gap-1 border-b border-[#e3e9f0] bg-white p-3 xl:min-h-screen xl:w-52 xl:flex-col xl:flex-nowrap xl:border-b-0 xl:border-r xl:p-4">
-          <div className="hidden px-3 pb-4 xl:block">
-            <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#5443c9]">Voulamandis House</div>
-            <div className="text-lg font-black">Πύργος ελέγχου</div>
-          </div>
-          <a href="/staff/pyrgos" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Σήμερα</a>
-          <a href="/staff/pyrgos/plano" aria-current="page" className="rounded-xl bg-[#e9e4fe] px-3 py-2.5 text-sm font-bold text-[#3b2f8a]">Πλάνο</a>
-          <a href="/staff/crm" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Πελάτες (CRM)</a>
-          <a href="/staff/pyrgos#katharismos" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Καθαριότητα</a>
-          <a href="/staff/statistics" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Στατιστικά</a>
-          <a href="/staff/expenses" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa]">Έξοδα</a>
-          <a href="/staff" className="rounded-xl px-3 py-2.5 text-sm text-[#4b5b70] hover:bg-[#f4f7fa] xl:mt-auto">← Παλιό staff</a>
-        </nav>
+        <PyrgosNav wide="xl" />
 
         <main className="min-w-0 flex-1 space-y-4 p-4 lg:p-6">
           <header className="flex flex-wrap items-center justify-between gap-3">
@@ -432,7 +441,19 @@ export default function PlanBoard() {
                     }}
                   >
                     <div style={{ width: ROOM_COL }} className={`sticky left-0 z-10 flex flex-col justify-center border-r border-[#e3e9f0] px-3 ${economy ? "bg-[#dff0fb]" : "bg-white"}`}>
-                      <span className="text-sm font-black leading-tight">{room.label}</span>
+                      <span className="flex items-center gap-1 text-sm font-black leading-tight">
+                        {room.label}
+                        {roomTasks.get(room.number) && (
+                          <a
+                            href={`/staff/pyrgos/ergasies?room=${room.number}`}
+                            title={roomTasks.get(room.number)!.titles.join("\n")}
+                            aria-label={`${roomTasks.get(room.number)!.count} ανοιχτές εργασίες στο ${room.label}`}
+                            className={`rounded-full px-1.5 text-[11px] font-bold ${roomTasks.get(room.number)!.urgent ? "bg-[#fee2e2] text-[#991b1b]" : "bg-[#fef3c7] text-[#92400e]"}`}
+                          >
+                            🔧{roomTasks.get(room.number)!.count}
+                          </a>
+                        )}
+                      </span>
                       <span className={`text-[11px] ${economy ? "font-bold uppercase tracking-wide text-[#0c4a6e]" : "text-[#5b6b80]"}`}>{room.categoryLabel}</span>
                     </div>
                     {days.map((d) => {

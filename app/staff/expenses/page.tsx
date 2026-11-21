@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ExpensesApp from "./ExpensesApp";
+import PyrgosShell from "../pyrgos/PyrgosShell";
 
 export const metadata: Metadata = {
   title: "Έξοδα | Staff Area",
@@ -14,5 +15,9 @@ export const metadata: Metadata = {
 };
 
 export default function StaffExpensesPage() {
-  return <ExpensesApp />;
+  return (
+    <PyrgosShell>
+      <ExpensesApp />
+    </PyrgosShell>
+  );
 }

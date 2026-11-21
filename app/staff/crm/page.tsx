@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CrmApp from "./CrmApp";
+import PyrgosShell from "../pyrgos/PyrgosShell";
 
 export const metadata: Metadata = {
   title: "Πελάτες & CRM | Staff",
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function CrmPage() {
-  return <CrmApp />;
+  return (
+    <PyrgosShell>
+      <CrmApp />
+    </PyrgosShell>
+  );
 }
