@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import type { PlanBooking, PlanCell } from "@/lib/pyrgos/plan";
 import { useBeds24Sync } from "../useBeds24Sync";
 import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
@@ -1650,6 +1650,8 @@ function SplitStay({ booking: b, setConfirm, onDone }: { booking: PlanBooking; s
 
 // ---------- new booking ----------
 
+const STEPS = ["Διαμονή", "Τιμή", "Πελάτης"];
+
 function NewBookingDialog({
   initial,
   onClose,
@@ -1694,8 +1696,10 @@ function NewBookingDialog({
   });
   const [free, setFree] = useState<number[] | null>(null);
   const [error, setError] = useState("");
+  const [step, setStep] = useState(0);
   const set = (patch: Record<string, unknown>) => setF((cur: any) => ({ ...cur, ...patch }));
   const nights = diffDays(f.checkin, f.checkout);
+  const selectedRooms: number[] = f.group ? f.rooms : f.room ? [Number(f.room)] : [];
 
   useEffect(() => {
     if (!f.checkin || !f.checkout || nights <= 0) return;
@@ -1788,15 +1792,67 @@ function NewBookingDialog({
     });
   }
 
+  const stepValid = [step0Error() === "", true, true];
+  function step0Error() {
+    if (nights <= 0) return "Έλεγξε τις ημερομηνίες.";
+    if (!selectedRooms.length) return "Διάλεξε δωμάτιο.";
+    if (free && selectedRooms.some((r) => !free.includes(r))) return "Κάποιο δωμάτιο δεν είναι ελεύθερο αυτές τις μέρες.";
+    return "";
+  }
+  function goTo(target: number) {
+    if (target > step) {
+      const msg = step0Error();
+      if (msg) return setError(msg);
+    }
+    setError("");
+    setStep(target);
+  }
+  function next() {
+    if (step < STEPS.length - 1) goTo(step + 1);
+    else submit();
+  }
+  function onKeyDown(e: KeyboardEvent) {
+    if (e.key !== "Enter" || e.shiftKey) return;
+    const tag = (e.target as HTMLElement).tagName;
+    if (tag === "TEXTAREA" || tag === "BUTTON" || tag === "SELECT") return;
+    e.preventDefault();
+    next();
+  }
+  const people = Number(f.children) ? `${f.adults}+${f.children} άτ.` : `${f.adults} άτ.`;
+  const summary = [
+    nights > 0 ? `${dm(f.checkin)}–${dm(f.checkout)} · ${nights} ${nights === 1 ? "νύχτα" : "νύχτες"}` : "",
+    selectedRooms.length ? selectedRooms.map((r) => roomLabel(r)).join(", ") : "χωρίς δωμάτιο",
+    people,
+    f.total ? euro(Number(f.total)) : "",
+    [f.firstName, f.lastName].filter(Boolean).join(" "),
+  ].filter(Boolean);
+  const visibleRooms = PYRGOS_ROOMS.filter((r) => !free || free.includes(r.number) || selectedRooms.includes(r.number));
+
   return (
     <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-[#1f2a3c]/40 p-4" role="dialog" aria-modal="true" aria-labelledby="nb-title">
-      <div className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl">
+      <div className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl" onKeyDown={onKeyDown}>
         <div className="mb-3 flex items-center justify-between">
           <h2 id="nb-title" className="text-xl font-black">Νέα κράτηση</h2>
           <button type="button" onClick={onClose} aria-label="Κλείσιμο" className="h-10 w-10 rounded-full bg-[#f4f7fa] text-xl">×</button>
         </div>
+        <ol className="mb-3 grid grid-cols-3 gap-1.5" aria-label="Βήματα">
+          {STEPS.map((label, i) => (
+            <li key={label}>
+              <button
+                type="button"
+                onClick={() => goTo(i)}
+                aria-current={step === i ? "step" : undefined}
+                className={`flex min-h-11 w-full items-center gap-2 rounded-xl border px-3 text-left text-sm font-bold ${step === i ? "border-[#5443c9] bg-[#e9e4fe] text-[#3b2f8a]" : i < step ? "border-[#c5ecd6] bg-[#effbf4] text-[#17663f]" : "border-[#e3e9f0] bg-white text-[#5b6b80]"}`}
+              >
+                <span className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs ${step === i ? "bg-[#5443c9] text-white" : i < step ? "bg-[#17663f] text-white" : "bg-[#eef2f6]"}`}>{i < step ? "✓" : i + 1}</span>
+                {label}
+              </button>
+            </li>
+          ))}
+        </ol>
+        <div className="mb-3 rounded-xl bg-[#f4f7fa] px-3 py-2 text-sm font-semibold text-[#1f2a3c]" aria-live="polite">{summary.join(" · ")}</div>
         {error && <p className="mb-3 rounded-xl bg-[#fff4dc] px-3 py-2 text-sm font-semibold text-[#92400e]">{error}</p>}
-        <div className="grid gap-4 md:grid-cols-2">
+        {step === 0 && (
           <div className="space-y-3">
             <FormSection tone="blue" title="📅 Ημερομηνίες & άτομα">
             <div className="grid grid-cols-2 gap-2">
@@ -1807,7 +1863,6 @@ function NewBookingDialog({
             </div>
             </FormSection>
             <FormSection tone="purple" title="🛏️ Δωμάτιο">
-            <div>
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold">{f.group ? `Δωμάτια (${f.rooms.length})` : "Δωμάτιο"} {free ? <span className="font-normal text-[#5b6b80]">· ελεύθερα: {free.length}</span> : null}</div>
                 <label className="flex items-center gap-1.5 text-xs font-bold text-[#3b2f8a]">
@@ -1815,33 +1870,40 @@ function NewBookingDialog({
                   Group (πολλά δωμάτια)
                 </label>
               </div>
-              <div className="mt-1 grid grid-cols-3 gap-1.5">
-                {PYRGOS_ROOMS.map((r) => {
-                  const isFree = !free || free.includes(r.number);
-                  return (
-                    <button
-                      key={r.number}
-                      type="button"
-                      disabled={!isFree}
-                      aria-pressed={f.group ? f.rooms.includes(r.number) : Number(f.room) === r.number}
-                      onClick={() =>
-                        f.group
-                          ? set({
-                              rooms: f.rooms.includes(r.number) ? f.rooms.filter((x: number) => x !== r.number) : [...f.rooms, r.number],
-                              room: f.rooms.includes(r.number) ? f.rooms.filter((x: number) => x !== r.number)[0] ?? 0 : f.room || r.number,
-                            })
-                          : set({ room: r.number, rooms: [r.number], night: "", total: "", priceMode: null })
-                      }
-                      className={`rounded-lg border px-2 py-2 text-left text-xs ${(f.group ? f.rooms.includes(r.number) : Number(f.room) === r.number) ? "border-[#5443c9] bg-[#e9e4fe] font-black text-[#3b2f8a]" : isFree ? "border-[#cfd9e4] bg-white" : "border-[#eef2f6] bg-[#f4f7fa] text-[#a3aebd] line-through"}`}
-                    >
-                      <span className="block font-bold">{r.label}</span>
-                      <span className="block text-[10px]">{r.categoryLabel}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+              {free && !visibleRooms.length ? (
+                <p className="rounded-lg bg-white px-3 py-3 text-sm font-semibold text-[#92400e]">Κανένα ελεύθερο δωμάτιο αυτές τις μέρες.</p>
+              ) : (
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                  {visibleRooms.map((r) => {
+                    const selected = f.group ? f.rooms.includes(r.number) : Number(f.room) === r.number;
+                    const isFree = !free || free.includes(r.number);
+                    return (
+                      <button
+                        key={r.number}
+                        type="button"
+                        aria-pressed={selected}
+                        onClick={() =>
+                          f.group
+                            ? set({
+                                rooms: f.rooms.includes(r.number) ? f.rooms.filter((x: number) => x !== r.number) : [...f.rooms, r.number],
+                                room: f.rooms.includes(r.number) ? f.rooms.filter((x: number) => x !== r.number)[0] ?? 0 : f.room || r.number,
+                              })
+                            : set({ room: r.number, rooms: [r.number], night: "", total: "", priceMode: null })
+                        }
+                        className={`min-h-14 rounded-xl border px-3 py-2 text-left ${selected ? "border-[#5443c9] bg-[#e9e4fe] text-[#3b2f8a] ring-2 ring-[#5443c9]" : "border-[#cfd9e4] bg-white hover:border-[#5443c9]"}`}
+                      >
+                        <span className="block text-sm font-black">{r.label}</span>
+                        <span className={`block text-xs ${isFree ? "text-[#5b6b80]" : "font-bold text-[#b45309]"}`}>{isFree ? r.categoryLabel : "δεν είναι ελεύθερο"}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </FormSection>
+          </div>
+        )}
+        {step === 1 && (
+          <div className="space-y-3">
             <FormSection tone="green" title="💶 Τιμή & πληρωμή">
             <PriceFields nights={nights} mode={f.priceMode} night={f.night} total={f.total} onChange={(v) => set({ priceMode: v.mode, night: v.night, total: v.total })} />
             <div className="grid grid-cols-2 items-end gap-2">
@@ -1857,7 +1919,10 @@ function NewBookingDialog({
               stayTotal={f.total ? Number(f.total) : null}
             />
           </div>
-          <div className="space-y-3">
+        )}
+        {step === 2 && (
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-3">
             <FormSection tone="teal" title="👤 Στοιχεία πελάτη">
             <div className="grid grid-cols-2 gap-2">
               <label className="text-xs font-bold">Όνομα<input value={f.firstName} onChange={(e) => set({ firstName: e.target.value })} className={input} /></label>
@@ -1869,6 +1934,8 @@ function NewBookingDialog({
               <label className="text-xs font-bold">Χώρα<input value={f.country} maxLength={2} onChange={(e) => set({ country: e.target.value.toUpperCase() })} placeholder="GR" title="Κωδικός χώρας με λατινικά, π.χ. GR, DE, IT" className={input} /></label>
             </div>
             </FormSection>
+            </div>
+            <div className="space-y-3">
             <FormSection tone="pink" title="🧺 Κρεβάτια & πρωινό">
             <label className="block text-xs font-bold">
               Κρεβάτια
@@ -1918,11 +1985,20 @@ function NewBookingDialog({
                 </div>
               )}
             </div>
+            </div>
           </div>
-        </div>
-        <div className="mt-4 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="min-h-11 rounded-full px-4 text-sm font-bold text-[#4b5b70]">Άκυρο</button>
-          <button type="button" onClick={submit} className="min-h-11 rounded-full bg-[#e9e4fe] px-6 text-sm font-bold text-[#3b2f8a]">Συνέχεια</button>
+        )}
+        <div className="mt-4 flex items-center justify-between gap-2">
+          <button type="button" onClick={step === 0 ? onClose : () => goTo(step - 1)} className="min-h-11 rounded-full px-4 text-sm font-bold text-[#4b5b70]">
+            {step === 0 ? "Άκυρο" : "← Πίσω"}
+          </button>
+          <button
+            type="button"
+            onClick={next}
+            className={`min-h-11 rounded-full px-6 text-sm font-bold ${stepValid[step] ? "bg-[#5443c9] text-white" : "bg-[#e9e4fe] text-[#3b2f8a] opacity-70"}`}
+          >
+            {step < STEPS.length - 1 ? "Επόμενο →" : "Συνέχεια"}
+          </button>
         </div>
       </div>
     </div>
