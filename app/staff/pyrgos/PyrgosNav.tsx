@@ -12,6 +12,7 @@ const groups: { title: string; items: NavItem[] }[] = [
       { href: "/staff/pyrgos/plano", label: "Πλάνο κρατήσεων", match: "/staff/pyrgos/plano" },
       { href: "/staff/rooms", label: "Αφίξεις & δωμάτια", match: "/staff/rooms" },
       { href: "/staff/pyrgos#katharismos", label: "Καθαριότητα" },
+      { href: "/staff/pyrgos/ergasies", label: "Βλάβες & εργασίες", match: "/staff/pyrgos/ergasies" },
     ],
   },
   {

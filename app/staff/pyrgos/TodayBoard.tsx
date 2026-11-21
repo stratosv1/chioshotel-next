@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useBeds24Sync } from "./useBeds24Sync";
 import type { HousekeepingTask, TodayData, TodayStay } from "@/lib/pyrgos/today";
 import PyrgosNav from "./PyrgosNav";
+import OpenTasksCard from "./OpenTasksCard";
 
 type BedSetup = "double" | "twin" | "double_single" | "double_two_singles";
 type Status = HousekeepingTask["status"];
@@ -407,6 +408,7 @@ export default function TodayBoard() {
                   )}
                 </section>
               </div>
+              <OpenTasksCard />
               <HistoryCard onDone={() => load(day)} />
             </>
           )}

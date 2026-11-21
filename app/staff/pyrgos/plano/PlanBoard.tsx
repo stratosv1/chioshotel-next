@@ -152,6 +152,26 @@ export default function PlanBoard() {
     if (q.get("open")) setOpenId(q.get("open"));
   }, []);
   const [newBooking, setNewBooking] = useState<{ room: number; checkin: string } | null>(null);
+  // Open faults / jobs per room (Βλάβες & εργασίες) for a 🔧 badge next to the room name.
+  const [roomTasks, setRoomTasks] = useState<Map<number, { count: number; urgent: boolean; titles: string[] }>>(new Map());
+  useEffect(() => {
+    fetch("/api/staff/pyrgos/tasks", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((json) => {
+        if (!json.ok) return;
+        const map = new Map<number, { count: number; urgent: boolean; titles: string[] }>();
+        for (const t of json.tasks as { room: number | null; status: string; priority: string; title: string }[]) {
+          if (t.status !== "open" || t.room === null) continue;
+          const entry = map.get(t.room) ?? { count: 0, urgent: false, titles: [] };
+          entry.count += 1;
+          entry.urgent = entry.urgent || t.priority === "urgent";
+          entry.titles.push(t.title);
+          map.set(t.room, entry);
+        }
+        setRoomTasks(map);
+      })
+      .catch(() => undefined);
+  }, []);
   const [dragOver, setDragOver] = useState<number | null>(null);
   const dragged = useRef<PlanBooking | null>(null);
   const [resize, setResize] = useState<{ b: PlanBooking; edge: "start" | "end"; x: number; delta: number } | null>(null);
@@ -421,7 +441,19 @@ export default function PlanBoard() {
                     }}
                   >
                     <div style={{ width: ROOM_COL }} className={`sticky left-0 z-10 flex flex-col justify-center border-r border-[#e3e9f0] px-3 ${economy ? "bg-[#dff0fb]" : "bg-white"}`}>
-                      <span className="text-sm font-black leading-tight">{room.label}</span>
+                      <span className="flex items-center gap-1 text-sm font-black leading-tight">
+                        {room.label}
+                        {roomTasks.get(room.number) && (
+                          <a
+                            href={`/staff/pyrgos/ergasies?room=${room.number}`}
+                            title={roomTasks.get(room.number)!.titles.join("\n")}
+                            aria-label={`${roomTasks.get(room.number)!.count} ανοιχτές εργασίες στο ${room.label}`}
+                            className={`rounded-full px-1.5 text-[11px] font-bold ${roomTasks.get(room.number)!.urgent ? "bg-[#fee2e2] text-[#991b1b]" : "bg-[#fef3c7] text-[#92400e]"}`}
+                          >
+                            🔧{roomTasks.get(room.number)!.count}
+                          </a>
+                        )}
+                      </span>
                       <span className={`text-[11px] ${economy ? "font-bold uppercase tracking-wide text-[#0c4a6e]" : "text-[#5b6b80]"}`}>{room.categoryLabel}</span>
                     </div>
                     {days.map((d) => {
