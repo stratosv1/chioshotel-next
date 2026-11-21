@@ -771,6 +771,14 @@ export function OrmiPhaseQuiz() {
             <a href={`#s${index + 1}`} className="font-bold text-[#6b4fa0] underline underline-offset-2">
               ▶ Δες την παρουσίαση
             </a>
+            {s.id === "bounce" ? (
+              <>
+                {" · "}
+                <a href="#anapidisi" className="font-bold text-[#6b4fa0] underline underline-offset-2">
+                  Πάμε παραπέρα: 3 αναπηδήσεις
+                </a>
+              </>
+            ) : null}
           </p>
         </div>
 

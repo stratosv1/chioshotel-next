@@ -12,6 +12,7 @@ import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/Poste
 import { OrmiLawTrainer } from "@/components/mixalis/ormi/OrmiLawTrainer";
 import { OrmiPhaseQuiz } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
 import { SinthetaPresentationsClient } from "@/components/mixalis/ormi/sintheta/SinthetaPresentationsClient";
+import { BounceDeep } from "@/components/mixalis/ormi/sintheta/BounceDeep";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -135,6 +136,8 @@ export default function OrmiPage() {
 
         <SinthetaPresentationsClient />
 
+        <BounceDeep />
+
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="mb-4 rounded-2xl border border-black/10 bg-[#fbf8f3] p-3 sm:hidden">
             <h3 className="text-base font-bold">Το τυπολόγιο ανά ενότητα</h3>
@@ -177,6 +180,7 @@ export default function OrmiPage() {
             <a href="#epilogi-nomou" className="shrink-0 rounded-full bg-[#1f6f5c] px-3 py-1.5 text-white">ΑΔΟ ή Δp; · Τεστ</a>
             <a href="#fases" className="shrink-0 rounded-full bg-[#6b4fa0] px-3 py-1.5 text-white">Φάσεις · Quiz</a>
             <a href="#parousiaseis" className="shrink-0 rounded-full bg-[#6b4fa0] px-3 py-1.5 text-white">▶ Παρουσιάσεις</a>
+            <a href="#anapidisi" className="shrink-0 rounded-full bg-[#6b4fa0] px-3 py-1.5 text-white">Αναπηδήσεις</a>
             <a href="#trapeza" className="shrink-0 rounded-full bg-[#c9822f] px-3 py-1.5 text-white hover:bg-[#a96b22]">
               Τράπεζα Θεμάτων
             </a>
