@@ -12,7 +12,6 @@ import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/Poste
 import { OrmiLawTrainer } from "@/components/mixalis/ormi/OrmiLawTrainer";
 import { OrmiPhaseQuiz } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
 import { SinthetaPresentationsClient } from "@/components/mixalis/ormi/sintheta/SinthetaPresentationsClient";
-import { BounceDeep } from "@/components/mixalis/ormi/sintheta/BounceDeep";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -135,8 +134,6 @@ export default function OrmiPage() {
         <OrmiPhaseQuiz />
 
         <SinthetaPresentationsClient />
-
-        <BounceDeep />
 
         <section className="rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="mb-4 rounded-2xl border border-black/10 bg-[#fbf8f3] p-3 sm:hidden">

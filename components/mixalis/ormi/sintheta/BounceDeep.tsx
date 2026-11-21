@@ -49,13 +49,13 @@ function fmt(x: number) {
   return String(r).replace(".", ",").replace("-", "−");
 }
 
-const SEGS = buildSegs();
-const ANIM_TOTAL = SEGS.reduce((s, x) => s + x.anim, 0);
-const REAL_TOTAL = SEGS.reduce((s, x) => s + x.real, 0);
+export const SEGS = buildSegs();
+export const ANIM_TOTAL = SEGS.reduce((s, x) => s + x.anim, 0);
+export const REAL_TOTAL = SEGS.reduce((s, x) => s + x.real, 0);
 
 type State = { real: number; y: number; v: number; seg: number; f: number };
 
-function atAnim(a: number): State {
+export function atAnim(a: number): State {
   let acc = 0;
   let racc = 0;
   for (let i = 0; i < SEGS.length; i++) {
@@ -311,8 +311,8 @@ export function BounceDeep() {
 
   return (
     <section id="anapidisi" className="scroll-mt-20 rounded-3xl border border-[#6b4fa0] bg-white p-4 shadow-sm sm:p-6">
-      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6b4fa0]">Πάμε παραπέρα · σύνθετη 5</p>
-      <h2 className="mt-1 text-2xl font-semibold tracking-tight text-[#1c2433] sm:text-3xl">Μπάλα με 3 αναπηδήσεις</h2>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#6b4fa0]">Σύνθετη 5 · πάμε παραπέρα</p>
+      <h3 className="mt-1 text-xl font-semibold tracking-tight text-[#1c2433] sm:text-2xl">Μπάλα με 3 αναπηδήσεις: σχέδιο, διάγραμμα p–t και ερωτήματα</h3>
       <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">
         Μπάλα <b>0,2 kg</b> αφήνεται από <b>1,8 m</b>. Κάθε επαφή με το έδαφος κρατά <b>0,05 s</b> και η μπάλα φεύγει με τα <b>2/3</b> της ταχύτητας που
         ήρθε (η 1η φορά ανεβαίνει ως 0,8 m). Δες τη μπάλα και δίπλα το διάγραμμα <b>ορμής–χρόνου</b> να σχεδιάζεται. Θετική φορά: προς τα πάνω.
@@ -421,7 +421,7 @@ export function BounceDeep() {
         </div>
       </div>
 
-      <h3 className="mt-6 text-lg font-bold text-[#1c2433]">Ερωτήματα, με τη σειρά</h3>
+      <h4 className="mt-6 text-lg font-bold text-[#1c2433]">Ερωτήματα, με τη σειρά</h4>
       <p className="mt-1 text-sm leading-6 text-[#5b6577]">
         Λύσε κάθε ερώτημα στο τετράδιο πρώτα. Το «Δείξε τη στιγμή» πηγαίνει το σχέδιο εκεί που αφορά το ερώτημα.
       </p>

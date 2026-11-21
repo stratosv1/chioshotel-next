@@ -189,8 +189,8 @@ export function AnimCard({
                 type="button"
                 key={p.label}
                 onClick={() => goTo(i)}
-                className="group min-w-0 text-left"
-                style={{ flexGrow: share, flexBasis: 0, minWidth: "3.2rem" }}
+                className="group min-w-[1.4rem] text-left sm:min-w-[3.2rem]"
+                style={{ flexGrow: share, flexBasis: 0 }}
                 title={`Πήγαινε στο βήμα: ${p.label}`}
               >
                 <span className="block h-1.5 overflow-hidden rounded-full bg-black/10">

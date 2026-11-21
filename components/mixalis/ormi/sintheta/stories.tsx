@@ -2,6 +2,7 @@
 
 import { Ball, Box, Bullet, Burst, C, Cart, Ground, Heat, StickPerson, T, Vec, Wall, bump, clamp, lerp, seg } from "../kit";
 import { Ask, type Story } from "./story";
+import { ANIM_TOTAL, SEGS, atAnim } from "./BounceDeep";
 
 /* ───────── helpers ───────── */
 
@@ -329,71 +330,145 @@ const s4: Story = {
   },
 };
 
-/* ───────── 5. Μπάλα που αναπηδά ───────── */
+/* ───────── 5. Μπάλα που αναπηδά (3 αναπηδήσεις) ───────── */
+// Χρονολόγιο κοινό με το «πάμε παραπέρα» (BounceDeep): 0 πτώση, 1 κρούση, 2 άνοδος, 3 κάθοδος, 4 κρούση, 5 άνοδος, 6 κάθοδος, 7 κρούση, 8 άνοδος.
+const B_AT = (() => {
+  const out: number[] = [];
+  let acc = 0;
+  for (const sg of SEGS) {
+    out.push(acc / ANIM_TOTAL);
+    acc += sg.anim;
+  }
+  out.push(1);
+  return out;
+})();
+const B_GX0 = 112;
+const B_GX1 = 350;
+const B_P0 = 96;
+const B_PS = 48;
+const bpx = (t: number) => B_GX0 + (t * (B_GX1 - B_GX0)) / 2.05;
+const bpy = (p: number) => B_P0 - p * B_PS;
+const B_PATH = (() => {
+  const pts: string[] = [];
+  for (let k = 0; k <= 700; k++) {
+    const st = atAnim((k / 700) * ANIM_TOTAL);
+    pts.push(`${k ? "L" : "M"}${bpx(st.real).toFixed(1)},${bpy(0.2 * st.v).toFixed(1)}`);
+  }
+  return pts.join(" ");
+})();
+const E5 = 0.004;
+
 const s5: Story = {
   n: 5,
   title: "Μπάλα που αναπηδά",
-  what: "Μπάλα πέφτει, χτυπά στο έδαφος και ανεβαίνει σε μικρότερο ύψος.",
-  given: "m = 0,2 kg, h₁ = 1,8 m, h₂ = 0,8 m, επαφή Δt = 0,05 s, g = 10 m/s².",
-  ask: "Τη μέση δύναμη N που ασκεί το έδαφος στη μπάλα.",
-  playSay: "Τρεις φάσεις: πτώση (βάρος), επαφή με το έδαφος (πολύ μεγάλη δύναμη για λίγο χρόνο), άνοδος (βάρος).",
-  askSay: "Ζητούν δύναμη ΜΕΣΑ στην επαφή, για ΕΝΑ σώμα (τη μπάλα). Για να τη βρω θέλω την ταχύτητα πριν και μετά την επαφή, που βγαίνουν από τις άλλες δύο φάσεις.",
+  what: "Μπάλα αφήνεται από ύψος, χτυπά στο έδαφος και αναπηδά τρεις φορές, κάθε φορά πιο χαμηλά.",
+  given: "m = 0,2 kg, h₁ = 1,8 m, 1η αναπήδηση ως 0,8 m, κάθε επαφή Δt = 0,05 s, σε κάθε κρούση φεύγει με τα 2/3 της ταχύτητας, g = 10 m/s².",
+  ask: "Τη μέση δύναμη N του εδάφους σε κάθε κρούση, την ενέργεια που χάνεται και τα ύψη της 2ης και 3ης αναπήδησης.",
+  playSay:
+    "Δες όλη την κίνηση και πού αλλάζει κάτι: κάθε φορά που ακουμπά το έδαφος εμφανίζεται μια τεράστια δύναμη για ελάχιστο χρόνο (κρούση), ενώ στον αέρα δρα μόνο το βάρος. Άρα εναλλάσσονται φάσεις «αέρας» και «κρούση». Δεξιά σχεδιάζεται η ορμή: ευθείες στον αέρα, άλματα στις κρούσεις.",
+  askSay:
+    "Ζητούν δύναμη ΜΕΣΑ σε κάθε κρούση, για ΕΝΑ σώμα (τη μπάλα) → θα χρειαστώ Δp/Δt, άρα την ταχύτητα αμέσως πριν και αμέσως μετά κάθε κρούση. Αυτές βγαίνουν από τις φάσεις στον αέρα. Θετική φορά: προς τα πάνω.",
   phases: [
     {
       name: "Πτώση",
       tool: "ΑΔΜΕ",
-      range: [0, 0.39],
-      say: "Ελεύθερη πτώση από ύψος ⇒ ΑΔΜΕ (ή κινηματική): υ₁ = √(2gh₁) = 6 m/s προς τα κάτω.",
+      range: [0, B_AT[1] - E5],
+      say: "Μόνο βάρος, δίνεται ύψος ⇒ ΑΔΜΕ: υ₁ = √(2gh₁) = 6 m/s προς τα κάτω, άρα p = −1,2 kg·m/s. Στο διάγραμμα: ευθεία με κλίση −mg = −2 (ρυθμός μεταβολής ορμής = ΣF = βάρος).",
     },
     {
-      name: "Επαφή",
+      name: "1η κρούση",
       tool: "ΣF = Δp/Δt",
-      range: [0.37, 0.53],
-      say: "Ζητείται δύναμη σε ΕΝΑ σώμα με γνωστό Δt ⇒ ΣF = Δp/Δt. Πρώτα θετική φορά: προς τα πάνω. p_πριν = 0,2·(−6) = −1,2, p_μετά = 0,2·(+4) = +0,8 ⇒ Δp = 0,8 − (−1,2) = +2 kg·m/s (οι ταχύτητες «προστίθενται» γιατί αλλάζει φορά). ΣF = 40 N είναι η ΣΥΝΙΣΤΑΜΕΝΗ: N − mg = 40 ⇒ N = 42 N. Το βάρος είναι μικρό, αλλά δεν το παραλείπουμε.",
+      range: [B_AT[1], B_AT[2]],
+      say: "Η ταχύτητα αμέσως μετά βγαίνει από το ύψος 0,8 m (ΑΔΜΕ): 4 m/s πάνω. Πρόσημα: p_πριν = −1,2, p_μετά = +0,8 ⇒ Δp = +2 (αλλάζει φορά, γι' αυτό «προστίθενται»). ΣF = 2/0,05 = 40 N = N − mg ⇒ N = 42 N, 21 φορές το βάρος. Χάθηκαν 3,6 − 1,6 = 2 J (≈ 56%).",
     },
     {
-      name: "Άνοδος",
+      name: "Άνοδος και κάθοδος",
       tool: "ΑΔΜΕ",
-      range: [0.5, 0.92],
-      say: "Ανεβαίνει σε ύψος h₂ ⇒ ΑΔΜΕ για την ταχύτητα αμέσως μετά: υ₂ = √(2gh₂) = 4 m/s προς τα πάνω.",
+      range: [B_AT[2], B_AT[4] - E5],
+      say: "Πάλι μόνο βάρος ⇒ ΑΔΜΕ: ανεβαίνει ως 0,8 m και ξαναπέφτει, φτάνοντας κάτω με τα ίδια 4 m/s που έφυγε. Ίδια κλίση −2 στο διάγραμμα, και στην άνοδο και στην κάθοδο.",
+    },
+    {
+      name: "2η κρούση",
+      tool: "ΣF = Δp/Δt",
+      range: [B_AT[4], B_AT[5]],
+      say: "Φεύγει με τα 2/3: 4 → 2,67 m/s. Δp = 0,2·(2,67 + 4) = 1,33 ⇒ ΣF = 26,7 N ⇒ N = 28,7 N. Ίδιο εργαλείο, μικρότερη ταχύτητα ⇒ μικρότερη δύναμη.",
+    },
+    {
+      name: "Άνοδος και κάθοδος",
+      tool: "ΑΔΜΕ",
+      range: [B_AT[5], B_AT[7] - E5],
+      say: "ΑΔΜΕ: h = υ²/(2g) = 2,67²/20 ≈ 0,36 m. Κάθε φορά το ύψος γίνεται × (2/3)² = × 4/9, γιατί το ύψος πάει με το τετράγωνο της ταχύτητας.",
+    },
+    {
+      name: "3η κρούση",
+      tool: "ΣF = Δp/Δt",
+      range: [B_AT[7], B_AT[8]],
+      say: "2,67 → 1,78 m/s. Δp = 0,2·(1,78 + 2,67) = 0,89 ⇒ ΣF = 17,8 N ⇒ N = 19,8 N. Σε κάθε κρούση χάνεται το ίδιο ΠΟΣΟΣΤΟ (56%) της κινητικής, αλλά όλο λιγότερα joule.",
+    },
+    {
+      name: "3η άνοδος",
+      tool: "ΑΔΜΕ",
+      range: [B_AT[8], 1],
+      say: "ΑΔΜΕ: h = 1,78²/20 ≈ 0,16 m. Ύψη: 1,8 → 0,8 → 0,36 → 0,16 m.",
     },
   ],
-  order: [0, 2, 1],
-  orderSay: "Πρώτα οι δύο άκρες (πτώση → υ₁, άνοδος → υ₂), γιατί έχουν από έναν άγνωστο. Τελευταία η επαφή, που τις χρειάζεται και τις δύο.",
+  order: [0, 2, 1, 3, 4, 5, 6],
+  orderSay:
+    "Σε κάθε κρούση: πρώτα οι φάσεις στον αέρα δίπλα της (ΑΔΜΕ → ταχύτητα πριν και μετά), μετά η κρούση (Δp/Δt). Το ίδιο μοτίβο επαναλαμβάνεται τρεις φορές. Πιο κάτω: τα ερωτήματα α–ι με το διάγραμμα.",
   solve: (
     <>
-      υ₁ = 6 m/s, υ₂ = 4 m/s. Δp = 0,2·(4 + 6) = 2 kg·m/s ⇒ ΣF = 2/0,05 = 40 N ⇒ <b>N = 40 + 2 = 42 N</b>.
+      Ταχύτητες: 6 → 4 → 2,67 → 1,78 m/s. <b>N = 42 N → 28,7 N → 19,8 N</b>. Χαμένη ενέργεια: <b>2 J → 0,89 J → 0,40 J</b> (κάθε φορά ≈ 56%). Ύψη:{" "}
+      <b>0,8 → 0,36 → 0,16 m</b>.
     </>
   ),
-  trap: "Το Δp/Δt δίνει τη συνισταμένη. Η δύναμη του εδάφους είναι N = ΣF + mg.",
+  trap: "Δp με πρόσημα: η μπάλα αλλάζει φορά, άρα Δp = m(υ_μετά + υ_πριν). Και N = ΣF + mg: το βάρος δεν παραλείπεται.",
   draw: (tau, ctx) => {
-    const x = 190;
-    const floor = 180;
-    const top = 40;
-    const h2y = floor - 140 * (0.8 / 1.8);
-    let y = floor - 10;
-    let squash = 0;
-    if (tau < 0.4) y = top + (floor - 10 - top) * Math.pow(seg(tau, 0, 0.4), 2);
-    else if (tau < 0.5) squash = 0.35 * bump(tau, 0.4, 0.5);
-    else y = floor - 10 - (floor - 10 - h2y) * decel(seg(tau, 0.5, 0.9));
-    const contact = tau >= 0.4 && tau < 0.5;
+    const st = atAnim(clamp(tau) * ANIM_TOTAL);
+    const sg = SEGS[st.seg];
+    const contact = sg.kind === "contact";
+    const floor = 186;
+    const HS5 = 76;
+    const bx = 56;
+    const sq = contact ? 0.4 * Math.sin(Math.PI * st.f) : 0;
+    const by = floor - 8 - st.y * HS5;
+    const SF = contact ? (0.2 * (sg.v1 - sg.v0)) / 0.05 : -2;
     return (
       <g>
-        <Ground y={floor} />
-        <line x1={60} y1={top} x2={150} y2={top} stroke={C.faint} strokeDasharray="3 3" />
-        <line x1={60} y1={h2y} x2={150} y2={h2y} stroke={C.faint} strokeDasharray="3 3" />
-        <Vbar x={70} y1={top} y2={floor} s="h₁" side="right" />
-        <Vbar x={120} y1={h2y} y2={floor} s="h₂" side="right" />
-        <Ball cx={x} cy={contact ? floor - 10 * (1 - squash) : y} r={10} squash={squash} axis="y" />
-        {tau > 0.2 && tau < 0.4 ? <Vec x={x + 16} y={y - 10} dx={0} dy={34} label="υ₁" labelSide="right" /> : null}
-        {tau > 0.5 && tau < 0.62 ? <Vec x={x + 16} y={y + 10} dx={0} dy={-26} label="υ₂" labelSide="right" /> : null}
-        {contact || ctx.phase === 1 ? (
+        <Ground y={floor} x1={10} x2={100} />
+        {[1.8, 0.8, 0.36, 0.16].map((h, i) => (
+          <g key={h}>
+            <line x1={26} y1={floor - h * HS5} x2={96} y2={floor - h * HS5} stroke={C.faint} strokeDasharray="2 4" />
+            <T x={24} y={floor - h * HS5 + 3} s={["1,8", "0,8", "0,36", "0,16"][i]} size={8} color={C.muted} anchor="end" bold={false} />
+          </g>
+        ))}
+        <Ball cx={bx} cy={contact ? floor - 8 * (1 - sq) : by} r={8} squash={sq} axis="y" />
+        {contact ? (
+          <Vec x={bx + 12} y={floor - 14} dx={0} dy={-Math.min(70, SF * 1.6)} color={C.F} label="N" labelSide="right" />
+        ) : Math.abs(st.v) > 0.4 ? (
+          <Vec x={bx + 12} y={by} dx={0} dy={-st.v * 5} label="υ" labelSide="right" />
+        ) : null}
+        {/* p–t */}
+        <line x1={B_GX0} y1={30} x2={B_GX0} y2={164} stroke={C.edge} strokeWidth={1} />
+        <line x1={B_GX0} y1={B_P0} x2={B_GX1 + 4} y2={B_P0} stroke={C.edge} strokeWidth={1} />
+        <T x={B_GX0 + 3} y={36} s="p" size={10} color={C.ink} anchor="start" />
+        <T x={B_GX1 + 2} y={B_P0 - 5} s="t" size={10} color={C.ink} anchor="end" />
+        <T x={B_GX0 - 3} y={bpy(0.8) + 3} s="0,8" size={8} color={C.muted} anchor="end" bold={false} />
+        <T x={B_GX0 - 3} y={bpy(-1.2) + 3} s="−1,2" size={8} color={C.muted} anchor="end" bold={false} />
+        <line x1={B_GX0} y1={bpy(0.8)} x2={B_GX1} y2={bpy(0.8)} stroke={C.faint} strokeDasharray="2 5" />
+        <line x1={B_GX0} y1={bpy(-1.2)} x2={B_GX1} y2={bpy(-1.2)} stroke={C.faint} strokeDasharray="2 5" />
+        <clipPath id="s5-reveal">
+          <rect x={B_GX0 - 2} y={0} width={Math.max(0, bpx(st.real) - B_GX0 + 2)} height={200} />
+        </clipPath>
+        <path d={B_PATH} fill="none" stroke={C.faint} strokeDasharray="2 4" strokeWidth={1} />
+        <path d={B_PATH} fill="none" stroke={C.p} strokeWidth={2} clipPath="url(#s5-reveal)" />
+        <circle cx={bpx(st.real)} cy={bpy(0.2 * st.v)} r={3.5} fill={C.p} stroke="#fff" strokeWidth={1.2} />
+        <T x={B_GX1} y={182} s={`ΣF = ${String(Math.round(SF * 10) / 10).replace(".", ",").replace("-", "−")} N`} size={10} color={C.F} anchor="end" />
+        {ctx.mode === "ask" ? (
           <g>
-            <Vec x={x} y={floor - 22} dx={0} dy={-56} color={C.F} label="N" labelSide="right" />
-            <Vec x={x - 18} y={floor - 14} dx={0} dy={12} color={C.F} label="mg" labelSide="left" />
+            <Ask x={230} y={140} s="N σε κάθε κρούση = ?" />
+            <Ask x={230} y={60} s="ύψη, ενέργεια = ?" />
           </g>
         ) : null}
-        {ctx.mode === "ask" ? <Ask x={270} y={110} s="N = ?" /> : null}
       </g>
     );
   },

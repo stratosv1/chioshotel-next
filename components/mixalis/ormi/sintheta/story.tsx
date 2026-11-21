@@ -49,16 +49,17 @@ function Banner({ s, color = TOOL_COLOR }: { s: string; color?: string }) {
 
 function OrderOverlay({ story }: { story: Story }) {
   const lines = story.order.map((p, k) => `${k + 1}ο → Φάση ${p + 1} (${story.phases[p].name}): ${story.phases[p].tool}`);
-  const top = 40;
+  const top = lines.length > 4 ? 26 : 40;
+  const rowH = Math.min(30, (H - top - 22) / lines.length);
   return (
     <g>
       <rect x={0} y={0} width={W} height={H} fill="#ffffff" opacity={0.86} />
       <T x={W / 2} y={top} s="Με ποια σειρά λύνω;" size={13} color={C.ink} />
       {lines.map((line, i) => (
         <g key={i}>
-          <rect x={18} y={top + 14 + i * 30} width={W - 36} height={24} rx={12} fill={i === 0 ? TOOL_COLOR : "#f1edf8"} />
-          <T x={30} y={top + 30 + i * 30} s={line} size={line.length > 52 ? 9 : line.length > 44 ? 9.8 : 10.5} color={i === 0 ? "#ffffff" : C.ink} anchor="start" />
-          {i < lines.length - 1 ? <T x={W / 2} y={top + 46 + i * 30} s="↓" size={10} color={TOOL_COLOR} /> : null}
+          <rect x={18} y={top + 14 + i * rowH} width={W - 36} height={rowH - 5} rx={(rowH - 5) / 2} fill={i === 0 ? TOOL_COLOR : "#f1edf8"} />
+          <T x={30} y={top + 14 + i * rowH + (rowH - 5) / 2 + 3.5} s={line} size={line.length > 52 ? 9 : line.length > 44 ? 9.8 : 10.5} color={i === 0 ? "#ffffff" : C.ink} anchor="start" />
+          {i < lines.length - 1 && rowH >= 28 ? <T x={W / 2} y={top + 14 + (i + 1) * rowH - 0.5} s="↓" size={9} color={TOOL_COLOR} /> : null}
         </g>
       ))}
     </g>
