@@ -25,7 +25,11 @@
 .sx-reveal.is-in { opacity: 1; transform: none; }
 .sx-seg { transition: background-color 0.35s ease, width 0.45s ease, fill 0.35s ease; }
 
+/* ── Φυσική: εκκρεμές με περίοδο 2 s (Α → Γ → Α) ── */
+@keyframes sx-swing { 0%, 100% { transform: rotate(28deg); } 50% { transform: rotate(-28deg); } }
+.sx-swing { animation: sx-swing 2s ease-in-out infinite; }
+
 @media (prefers-reduced-motion: reduce) {
-  .sx-pop, .sx-shake, .sx-float, .sx-flip, .sx-bounce, .sx-key { animation: none; }
+  .sx-pop, .sx-shake, .sx-float, .sx-flip, .sx-bounce, .sx-key, .sx-swing { animation: none; }
   .sx-reveal { opacity: 1; transform: none; transition: none; }
 }

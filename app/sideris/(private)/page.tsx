@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MATH_CHAPTERS } from "@/lib/sideris/math";
+import { PHYSICS_CHAPTERS } from "@/lib/sideris/physics";
 
 type SubLink = { label: string; href: string };
 type Lesson = {
@@ -31,6 +32,19 @@ const SUBJECTS: Subject[] = [
       subtitle: c.summary,
       href: `/sideris/mathimatika/${c.slug}`,
       links: c.sections.map((s) => ({ label: `${s.code} ${s.title}`, href: `/sideris/mathimatika/${c.slug}#${s.id}` })),
+    })),
+  },
+  {
+    key: "fysiki",
+    name: "Φυσική",
+    badge: "⚛",
+    accent: "bg-[#6b3fa0] text-white",
+    soft: "bg-[#f1eafa] text-[#55307f]",
+    lessons: PHYSICS_CHAPTERS.map((c) => ({
+      title: `Κεφάλαιο ${c.number}: ${c.title}`,
+      subtitle: c.summary,
+      href: `/sideris/fysiki/${c.slug}`,
+      links: c.sections.map((s) => ({ label: s.title, href: `/sideris/fysiki/${c.slug}#${s.id}` })),
     })),
   },
   {
