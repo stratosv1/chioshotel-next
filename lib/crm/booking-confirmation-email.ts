@@ -6,6 +6,7 @@ import {
   emailShell,
   esc,
   htmlToText,
+  nightsBetween,
   paragraph as p,
   sectionTitle,
   stayTicket,
@@ -227,7 +228,13 @@ function billingTable(data: ConfirmationData, t: (typeof TEXT)["en"]) {
   const row = (label: string, value: string, strong = false) => `<tr>
     <td style="padding:10px 12px 10px 0;border-bottom:1px solid #e8e3da;font-size:15px;color:${strong ? "#1d2b25" : "#4a5550"};font-weight:${strong ? 700 : 400}">${label}</td>
     <td align="right" style="padding:10px 0;border-bottom:1px solid #e8e3da;font-size:15px;color:#1d2b25;font-weight:${strong ? 700 : 600};white-space:nowrap">${value}</td></tr>`;
-  const charges = data.charges.map((item) => row(`${esc(localizeLabel(item.description, data.language))}${(Number(item.qty) || 1) > 1 ? ` <span style="color:#7a847f;white-space:nowrap">· ${item.qty} × ${money(Number(item.amount) || 0)}</span>` : ""}`, money((Number(item.qty) || 1) * (Number(item.amount) || 0)))).join("");
+  const stayNights = data.rooms.reduce((sum, room) => sum + (nightsBetween(room.checkin, room.checkout) || 0), 0);
+  const nightWord = { el: ["διανυκτέρευση", "διανυκτερεύσεις"], en: ["night", "nights"], tr: ["gece", "gece"] }[data.language];
+  const perUnit = (qty: number, amount: number) => {
+    const unit = qty === stayNights || data.rooms.some((room) => nightsBetween(room.checkin, room.checkout) === qty) ? ` ${nightWord[qty === 1 ? 0 : 1]}` : "";
+    return `${qty}${unit} × ${money(amount)}`;
+  };
+  const charges = data.charges.map((item) => row(`${esc(localizeLabel(item.description, data.language))}${(Number(item.qty) || 1) > 1 ? ` <span style="color:#7a847f;white-space:nowrap">· ${perUnit(Number(item.qty), Number(item.amount) || 0)}</span>` : ""}`, money((Number(item.qty) || 1) * (Number(item.amount) || 0)))).join("");
   const total = chargesTotal(data.charges);
   const paid = paymentsTotal(data.payments);
   const payments = data.payments.map((item) => row(esc(localizeLabel(item.description, data.language) || t.paid), `−${money(Number(item.amount) || 0)}`)).join("");
