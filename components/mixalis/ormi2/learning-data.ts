@@ -134,6 +134,27 @@ export const NUMERIC_STEP_SKILLS: Record<string, Record<string, SkillId[]>> = {
     u: ["mechanical"], v1: ["elastic", "signs"],
     v2: ["elastic"], x: ["mechanical", "bridge"],
   },
+  "collision-rough-ramp": {
+    V: ["momentum"], d: ["work", "mechanical", "bridge"],
+    h: ["bridge"], W: ["work", "loss"],
+  },
+  "double-collision-spring": {
+    V: ["momentum"], v12: ["elastic", "signs", "bridge"],
+    v3: ["elastic", "bridge"], x: ["mechanical", "bridge"],
+  },
+  "penetration-capture": {
+    V1: ["mechanical", "strategy"], V2: ["work", "bridge"],
+    uout: ["momentum", "bridge"], uin: ["momentum", "strategy", "bridge"],
+  },
+  "collision-pendulum-tension": {
+    V: ["mechanical", "strategy"], u: ["momentum", "bridge"],
+    T: ["bridge"], cos: ["mechanical"],
+  },
+  "wall-rebound-catch": {
+    v1: ["elastic", "signs"], v2: ["elastic"],
+    wall: ["impulse", "signs"], V: ["momentum", "bridge"],
+    s: ["work", "bridge"], Q: ["loss"],
+  },
 };
 
 export type StepEvidence = {
