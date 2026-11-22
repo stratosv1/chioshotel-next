@@ -595,7 +595,7 @@ const BASE_SCENARIOS: Scenario[] = [
   },
 ];
 
-const SCENARIOS: Scenario[] = [...BASE_SCENARIOS, ...EXTRA_SCENARIOS];
+export const SCENARIOS: Scenario[] = [...BASE_SCENARIOS, ...EXTRA_SCENARIOS];
 
 type Record_ = { cuts: boolean; tools: boolean; start: boolean };
 const KEY = "mixalis-ormi-phase-quiz-v1";
