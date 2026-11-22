@@ -40,7 +40,7 @@ export type HousekeepingTask = {
   bedsText: string;
 };
 
-export type FeedItem = { time: string; title: string; detail: string; tone: "new" | "cancel" | "change" | "clean" };
+export type FeedItem = { time: string; title: string; detail: string; tone: "new" | "cancel" | "change" | "clean"; bookingId?: string; from?: string };
 
 export type MissingItem = { bookingIds: string[]; name: string; checkin: string; channel: string; missing: string[] };
 
@@ -157,6 +157,7 @@ export async function getToday(day: string): Promise<TodayData> {
         sql`select b.booking_id, b.status, b.firstname, b.lastname, b.room, b.email, b.price,
           p.room_number, p.price as p_price,
           to_char(b.checkin, 'DD/MM/YY') as checkin, to_char(b.checkout, 'DD/MM/YY') as checkout,
+          to_char(b.checkin, 'YYYY-MM-DD') as checkin_iso,
           to_char(b.updated_at at time zone 'Europe/Athens', 'DD/MM HH24:MI') as time,
           (p.booking_id is null or p.booked_at > now() - interval '3 days') as is_new
         from public.beds24_bookings b
@@ -262,6 +263,8 @@ export async function getToday(day: string): Promise<TodayData> {
       title: `${kind} · ${channelFromEmail(row.email)}`,
       detail: [name, room, `${row.checkin} → ${row.checkout}`, price ? `€${Math.round(price)}` : ""].filter(Boolean).join(" · "),
       tone: cancelled ? "cancel" : row.is_new ? "new" : "change",
+      bookingId: row.booking_id ? String(row.booking_id) : undefined,
+      from: row.checkin_iso ?? undefined,
     };
   });
 

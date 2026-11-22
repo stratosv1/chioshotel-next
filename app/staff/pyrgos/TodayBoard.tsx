@@ -392,12 +392,31 @@ export default function TodayBoard() {
                   {data.feed.length === 0 && <p className="text-sm text-[#5b6b80]">Καμία αλλαγή.</p>}
                   <ul className={`divide-y divide-[#eef2f6] ${feedOpen ? "max-h-[28rem] overflow-y-auto pr-1" : ""}`}>
                     {(feedOpen ? data.feed : data.feed.slice(0, FEED_PREVIEW)).map((item, i) => (
-                      <li key={i} className="grid grid-cols-[4.75rem_minmax(0,1fr)] gap-2 py-2 text-sm">
-                        <span className="pt-0.5 text-xs font-semibold text-[#5b6b80]">{item.time}</span>
-                        <span className="min-w-0">
-                          <strong className={item.tone === "cancel" ? "text-[#92400e]" : item.tone === "new" ? "text-[#1f6b3a]" : ""}>{item.title}</strong>
-                          <span className="block truncate text-xs text-[#4b5b70]" title={item.detail}>{item.detail}</span>
-                        </span>
+                      <li key={i}>
+                        {(() => {
+                          const body = (
+                            <>
+                              <span className="pt-0.5 text-xs font-semibold text-[#5b6b80]">{item.time}</span>
+                              <span className="min-w-0">
+                                <strong className={item.tone === "cancel" ? "text-[#92400e]" : item.tone === "new" ? "text-[#1f6b3a]" : ""}>{item.title}</strong>
+                                <span className="block truncate text-xs text-[#4b5b70]" title={item.detail}>{item.detail}</span>
+                              </span>
+                              {item.bookingId ? <span aria-hidden="true" className="self-center text-lg text-[#8a97a8]">›</span> : <span />}
+                            </>
+                          );
+                          const grid = "grid grid-cols-[4.75rem_minmax(0,1fr)_1rem] gap-2 py-2 text-sm";
+                          return item.bookingId ? (
+                            <a
+                              href={`/staff/pyrgos/plano?open=${encodeURIComponent(item.bookingId)}${item.from ? `&from=${item.from}` : ""}`}
+                              className={`${grid} -mx-2 rounded-xl px-2 hover:bg-[#f4f7fa] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#5443c9]`}
+                              aria-label={`Άνοιγμα κράτησης: ${item.title}, ${item.detail}`}
+                            >
+                              {body}
+                            </a>
+                          ) : (
+                            <div className={grid}>{body}</div>
+                          );
+                        })()}
                       </li>
                     ))}
                   </ul>
