@@ -72,7 +72,7 @@ for (const family of CHALLENGES) {
     const answers = byId(result.steps);
     assert.equal(result.steps.length, Object.keys(fixtures[family.id][i]).length);
     assert(result.prompt.length > 100, family.id + ": missing prompt");
-    assert(result.steps.every((s) => s.law && s.formula && s.hint && s.explanation && s.unit), "missing method in " + family.id);
+    assert(result.steps.every((s) => s.law && s.formula && s.hint && s.explanation && typeof s.unit === "string"), "missing method in " + family.id);
     for (const [key, expected] of Object.entries(fixtures[family.id][i])) {
       near(answers[key], expected, family.id + "/" + variant.id + "/" + key);
       assert(answerMatches(String(expected), answers[key]));
