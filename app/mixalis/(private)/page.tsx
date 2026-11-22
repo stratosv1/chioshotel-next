@@ -88,6 +88,18 @@ const SUBJECTS: Subject[] = [
         ],
         pdf: "/mixalis/ormi-typologio-A4.pdf",
       },
+      {
+        title: "Ορμή 2 · σύνθετες ασκήσεις",
+        subtitle: "Μαθαίνεις να λύνεις μόνος σου ασκήσεις πολλών φάσεων: 36 σενάρια με κίνηση, 13 αριθμητικές προκλήσεις, τα 5 δυνατά κόλπα και χάρτης προόδου.",
+        href: "/mixalis/ormi2",
+        study: "ormi2",
+        links: [
+          { label: "Φάσεις & νόμοι", href: "/mixalis/ormi2" },
+          { label: "Αριθμητικές προκλήσεις", href: "/mixalis/ormi2/prokliseis" },
+          { label: "Τα 5 κόλπα", href: "/mixalis/ormi2/kolpa" },
+          { label: "Χάρτης προόδου", href: "/mixalis/ormi2/proodos" },
+        ],
+      },
     ],
   },
   {

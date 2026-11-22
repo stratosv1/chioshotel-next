@@ -53,9 +53,9 @@ export function AdvancedMotionScene({ family, phase, variant }: Props) {
   const at = Math.max(0, Math.min(phase, family.phases.length - 1));
   const rough = (p.mu ?? 0) > 0;
   return (
-    <svg viewBox="0 0 600 245" className="block w-full" role="img"
+    <svg viewBox="0 0 600 245" className="o2-cv" fontFamily="Commissioner, 'Segoe UI', system-ui, sans-serif" role="img"
       aria-label={"Σχηματική απεικόνιση: "+family.phases[at]} xmlns="http://www.w3.org/2000/svg">
-      <rect x="3" y="3" width="594" height="239" rx={17} fill="#f3f9f6"/>
+      <rect x="3" y="3" width="594" height="239" rx={17} fill="#f7f4ec"/>
       <text x="22" y="25" fontSize={13} fontWeight="700" fill="#276b52">{at+1}/{family.phases.length} · {family.phases[at]}</text>
 
       {id === "collision-rough-ramp" && <>

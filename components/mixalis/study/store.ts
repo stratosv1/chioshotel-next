@@ -12,6 +12,7 @@ export const STUDY_EVENT = "mixalis-study";
 
 export const STUDY_LESSONS: Record<string, string> = {
   ormi: "Ορμή και κρούσεις",
+  ormi2: "Ορμή 2 · σύνθετες ασκήσεις",
   pedio: "Ηλεκτρικό πεδίο",
   ergo: "Έργο, ενέργεια, ισχύς",
   organiki1: "Οργανική χημεία",

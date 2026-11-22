@@ -100,89 +100,54 @@ export function Ormi2MotionScene({ scenario }: { scenario: Scenario }) {
   }
 
   if (!story) {
-    return <p role="alert" className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
-      Δεν βρέθηκε το κινούμενο σχήμα για αυτή την άσκηση.
-    </p>;
+    return <p role="alert" className="o2-fb warn">Δεν βρέθηκε το κινούμενο σχήμα για αυτή την άσκηση.</p>;
   }
 
   const displayPercent = Math.round(progress * 100);
 
   return (
-    <div ref={stageRef} className="mt-5 overflow-hidden rounded-2xl border border-[#cbded2] bg-[#f7faf7]">
-      <div className="flex flex-wrap items-start justify-between gap-2 px-4 pb-1 pt-4 sm:px-5">
-        <div className="max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#237357]">
-            Κινούμενη αναπαράσταση · Σενάριο {story.n}/36
-          </p>
-          <p className="mt-1 text-sm leading-6 text-[#3d5f4f]">
-            {story.what}
-          </p>
-        </div>
-        <span className="rounded-full bg-[#e3f1e7] px-3 py-1 text-xs font-semibold text-[#2a654c]">
-          {playing ? "Σε κίνηση" : hasAutoPlayed ? "Σε παύση" : "Έτοιμο για αναπαραγωγή"}
-        </span>
+    <div ref={stageRef} className="o2-bench">
+      <div className="o2-bench-head">
+        <span><b>Το φαινόμενο</b> · {story.what}</span>
+        <span>{playing ? "Σε κίνηση" : hasAutoPlayed ? "Σε παύση" : "Έτοιμο"}</span>
       </div>
-
-      <div className="mx-2 my-2 overflow-hidden rounded-xl border border-[#e4e9e3] bg-[#fbfaf7] sm:mx-4">
-        <svg
-          viewBox={"0 0 " + W + " " + H}
-          className="block w-full"
-          role="img"
-          aria-label={"Κινούμενο φυσικό σχήμα: " + scenario.title + ", σημείο " + displayPercent + "%"}
-          fontFamily="Inter, 'Segoe UI', Roboto, Arial, sans-serif"
-        >
-          {story.draw(progress, { mode: "play", phase: -1 })}
-        </svg>
-      </div>
-
-      <div className="px-4 pb-4 sm:px-5">
-        <label htmlFor={"ormi2-motion-" + scenario.id} className="flex items-center justify-between gap-3 text-xs font-semibold text-[#476e5a]">
-          <span>Χρονογραμμή κίνησης — σύρε για να εξετάσεις κάθε στιγμή</span>
-          <span className="shrink-0 tabular-nums">{displayPercent}%</span>
-        </label>
+      <svg
+        viewBox={"0 0 " + W + " " + H}
+        className="o2-cv"
+        role="img"
+        aria-label={"Κινούμενο φυσικό σχήμα: " + scenario.title + ", σημείο " + displayPercent + "%"}
+        fontFamily="Commissioner, 'Segoe UI', Roboto, Arial, sans-serif"
+      >
+        {story.draw(progress, { mode: "play", phase: -1 })}
+      </svg>
+      <div className="o2-ctrls">
+        <button type="button" onClick={togglePlayback} className="o2-btn pri">
+          {playing ? <Pause size={16} /> : <Play size={16} />}
+          {playing ? "Παύση" : progress >= 1 ? "Ξανά" : "Κίνηση"}
+        </button>
         <input
           id={"ormi2-motion-" + scenario.id}
           type="range"
           min="0" max="1000" step="1"
           value={Math.round(progress * 1000)}
           onChange={(event) => { setPlaying(false); seek(Number(event.target.value) / 1000); }}
-          className="mt-2 h-2 w-full cursor-pointer accent-[#24765b]"
           aria-label={"Στιγμή κίνησης για " + scenario.title}
         />
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <button type="button" onClick={togglePlayback}
-            className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#206a52] px-4 py-2 text-sm font-semibold text-white hover:bg-[#19523e]">
-            {playing ? <Pause size={17} /> : <Play size={17} />}
-            {playing ? "Παύση" : progress >= 1 ? "Δες ξανά την κίνηση" : "Κίνηση"}
-          </button>
+        <output htmlFor={"ormi2-motion-" + scenario.id}>{displayPercent}%</output>
+        <span className="o2-seg">
           <button type="button" onClick={() => { setPlaying(false); seek(progressRef.current - 0.1); }}
-            aria-label="Δέκα τοις εκατό πίσω στην κίνηση"
-            className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-[#ccd9ce] bg-white px-3 py-2 text-xs font-semibold text-[#425c4d]">
-            <SkipBack size={17}/> Πίσω
-          </button>
+            aria-label="Δέκα τοις εκατό πίσω στην κίνηση" className="o2-btn sm"><SkipBack size={15}/></button>
           <button type="button" onClick={() => { setPlaying(false); seek(progressRef.current + 0.1); }}
-            aria-label="Δέκα τοις εκατό μπροστά στην κίνηση"
-            className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-[#ccd9ce] bg-white px-3 py-2 text-xs font-semibold text-[#425c4d]">
-            <SkipForward size={17}/> Μπροστά
-          </button>
-          <button type="button" onClick={restart}
-            className="inline-flex min-h-11 items-center gap-1 rounded-xl border border-[#ccd9ce] bg-white px-3 py-2 text-xs font-semibold text-[#425c4d]">
-            <RotateCcw size={16}/> Αρχή
-          </button>
-          <button type="button" aria-pressed={slow} onClick={() => setSlow((v) => !v)}
-            className={"inline-flex min-h-11 items-center gap-1 rounded-xl border px-3 py-2 text-xs font-semibold " +
-              (slow ? "border-[#206a52] bg-[#e1f2e8] text-[#14523d]" : "border-[#ccd9ce] bg-white text-[#425c4d]")}>
-            <Turtle size={16}/> Αργά
-          </button>
-        </div>
-        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-[#637b6c]">
-          <span><span className="mr-1 inline-block h-[3px] w-5 align-middle" style={{backgroundColor:C.v}}/>Ταχύτητα</span>
-          <span><span className="mr-1 inline-block h-[3px] w-5 align-middle" style={{backgroundColor:C.F}}/>Δύναμη</span>
-          <span><span className="mr-1 inline-block h-[3px] w-5 align-middle" style={{backgroundColor:C.p}}/>Ορμή</span>
-        </div>
-        <p className="mt-2 text-xs leading-5 text-[#688071]">
-          Το σχήμα δείχνει τη φυσική εξέλιξη της συγκεκριμένης άσκησης, όχι κίνηση σε ακριβή χρονική κλίμακα. Οι νόμοι και η στρατηγική παραμένουν δική σου επιλογή στα επόμενα βήματα.
-        </p>
+            aria-label="Δέκα τοις εκατό μπροστά στην κίνηση" className="o2-btn sm"><SkipForward size={15}/></button>
+          <button type="button" onClick={restart} aria-label="Από την αρχή" className="o2-btn sm"><RotateCcw size={15}/></button>
+          <button type="button" aria-pressed={slow} onClick={() => setSlow((v) => !v)} className="o2-btn sm"><Turtle size={15}/> ½×</button>
+        </span>
+      </div>
+      <div className="o2-readout">
+        <span style={{ color: C.v }}>━ ταχύτητα</span>{"   "}
+        <span style={{ color: C.F }}>━ δύναμη</span>{"   "}
+        <span style={{ color: C.p }}>━ ορμή</span>
+        <span className="o2-muted"> · σχηματικό, όχι σε χρονική κλίμακα. Οι νόμοι είναι δική σου επιλογή.</span>
       </div>
     </div>
   );
