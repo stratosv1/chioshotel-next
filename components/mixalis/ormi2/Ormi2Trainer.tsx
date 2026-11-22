@@ -330,7 +330,7 @@ export function Ormi2Trainer() {
           <div className="max-w-2xl">
             <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-[#307b55]"><Trophy size={16}/> Νέο · Επίπεδο 2 · Αριθμητική επίλυση</span>
             <h2 className="mt-2 text-xl font-bold sm:text-2xl">Εργαστήριο δύσκολων προκλήσεων</h2>
-            <p className="mt-2 text-sm leading-7">8 οικογένειες, 16 παραλλαγές: βρες τις ενδιάμεσες ταχύτητες, σύνδεσε τους νόμους, έλεγξε κάθε αποτέλεσμα και δοκίμασε τη διαφορετική συνθήκη χωρίς βοήθεια.</p>
+            <p className="mt-2 text-sm leading-7">13 οικογένειες, 26 παραλλαγές: βρες τις ενδιάμεσες ταχύτητες, σύνδεσε τους νόμους, έλεγξε κάθε αποτέλεσμα και δοκίμασε τη διαφορετική συνθήκη χωρίς βοήθεια.</p>
           </div>
           <span className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-[#245d45] px-5 py-3 text-sm font-semibold text-white group-hover:bg-[#194631]">Ξεκίνα τις προκλήσεις <ArrowRight size={17}/></span>
         </Link>

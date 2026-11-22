@@ -162,7 +162,7 @@ export function Ormi2ProgressDashboard() {
           </section>
           <section className="rounded-3xl border border-black/10 bg-white p-5 sm:p-6">
             <div className="flex items-center gap-2"><Target className="text-[#246b50]" size={20}/><h2 className="text-lg font-semibold">Εργαστήριο προκλήσεων</h2></div>
-            <p className="mt-2 text-3xl font-semibold tabular-nums">{numericTried} <span className="text-base font-medium text-[#8c847b]">/ 16</span></p>
+            <p className="mt-2 text-3xl font-semibold tabular-nums">{numericTried} <span className="text-base font-medium text-[#8c847b]">/ {CHALLENGES.length * 2}</span></p>
             <p className="mt-1 text-sm text-[#6c655c]">Αριθμητικές παραλλαγές · {numericIndependent} με σωστά αποτελέσματα χωρίς βοήθεια</p>
             <Link href="/mixalis/ormi2/prokliseis" className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-[#227356]">Πήγαινε στις προκλήσεις <ArrowRight size={16}/></Link>
           </section>
