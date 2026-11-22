@@ -268,7 +268,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
   // what the guest compares (room type, price per night, total) up front.
   return <section className="msg relative -mr-3.5 ml-10 sm:mr-0">
     {staffRequestedUnavailable && <div className="mb-3 mr-3.5 rounded-2xl border border-[#e3cda9] bg-[#fff8ea] px-4 py-3 text-sm font-semibold text-[#765d3b] sm:mr-0">Το Δωμάτιο {staffRequestedUnavailable} που ζήτησες δεν είναι διαθέσιμο για όλη τη διαμονή. Παρακάτω είναι οι διαθέσιμες επιλογές.</div>}
-    <div ref={scrollerRef} className="-mb-4 -mt-2 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-6 pr-3.5 pt-2 [scrollbar-width:none] sm:pr-0 [&::-webkit-scrollbar]:hidden">
+    <div ref={scrollerRef} className="-mb-4 -mt-2 flex items-start snap-x snap-mandatory gap-3 overflow-x-auto pb-6 pr-3.5 pt-2 [scrollbar-width:none] sm:pr-0 [&::-webkit-scrollbar]:hidden">
       {offers.map((offer) => {
         const key=`${offer.roomId}:${offer.unitId}:${offer.alternativeCheckin||""}`;
         const pending=selectingOfferKey===key;
