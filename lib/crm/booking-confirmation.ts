@@ -9,6 +9,7 @@ import {
   BREAKFAST_INCLUDED,
   DEFAULT_BREAKFAST,
   EXTRA_LABELS,
+  FEE_NAMES,
   ROOM_TYPE_NAMES,
   type BankDetails,
   type ConfirmationCharge,
@@ -77,6 +78,8 @@ async function fetchBooking(id: string) {
   return rows.find((row: any) => text(row?.id) === id) ?? rows[0] ?? null;
 }
 
+const ACCOMMODATION: Record<EmailLanguage, string> = { el: "Διαμονή", en: "Accommodation", tr: "Konaklama" };
+
 const GENERIC_CHANNEL: Record<EmailLanguage, string> = { el: "της πλατφόρμας κράτησης", en: "the booking platform", tr: "rezervasyon platformu" };
 
 function channelName(api: any, stored: any, language: EmailLanguage) {
@@ -144,18 +147,30 @@ export async function loadConfirmation(bookingId: string): Promise<{ data: Confi
   const seen = new Set<string>();
   bookings.forEach((booking: any, index: number) => {
     const context = rooms[index] ?? rooms[0];
+    let roomLineFound = false;
     for (const item of Array.isArray(booking.invoiceItems) ? booking.invoiceItems : []) {
       const key = text(item.id);
       if (key && seen.has(key)) continue;
       if (key) seen.add(key);
       const amount = Number(item.amount) || 0;
       if (/payment/i.test(text(item.type))) payments.push({ description: text(item.description), amount: Math.abs(amount) });
-      else charges.push({ description: cleanChargeDescription(text(item.description), language, context), qty: Number(item.qty) || 1, amount });
+      else {
+        const description = cleanChargeDescription(text(item.description), language, context);
+        charges.push({ description, qty: Number(item.qty) || 1, amount });
+        if (description !== FEE_NAMES[language]) roomLineFound = true;
+      }
+    }
+    // Owner, 2026-11-22: bookings entered by hand had only the climate-fee line in the Beds24 invoice,
+    // so the email showed €28 instead of the stay. Add the room price when no room line exists.
+    const roomPrice = Number(String(booking.price ?? storedById.get(text(booking.id))?.price ?? "").replace(/[^\d.]/g, "")) || 0;
+    if (!roomLineFound && roomPrice > 0) {
+      charges.push({ description: context?.room || ACCOMMODATION[language], qty: 1, amount: roomPrice });
+      warnings.push(`Στο Beds24 δεν υπήρχε γραμμή τιμής δωματίου για την ${text(booking.id)}. Προστέθηκε η τιμή κράτησης €${roomPrice}. Έλεγξέ την.`);
     }
   });
   if (!charges.length) {
     const price = Number(String(primary?.price ?? self?.price ?? "").replace(/[^\d.]/g, "")) || 0;
-    charges.push({ description: rooms[0]?.room || "Accommodation", qty: 1, amount: price });
+    charges.push({ description: rooms[0]?.room || ACCOMMODATION[language], qty: 1, amount: price });
     warnings.push("Δεν βρέθηκαν γραμμές τιμολογίου. Έλεγξε τα οικονομικά.");
   }
 

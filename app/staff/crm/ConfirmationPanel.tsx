@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   buildConfirmationEmail,
+  foreignTextInEmail,
   DEFAULT_BREAKFAST,
   type BankDetails,
   type ConfirmationData,
@@ -70,6 +71,8 @@ export default function ConfirmationPanel() {
 
   const send = async (action: "send" | "test") => {
     if (!data) return;
+    const leftovers = foreignTextInEmail(data);
+    if (action === "send" && leftovers.length && !window.confirm(`Το email δεν είναι όλο στη γλώσσα του πελάτη:\n${leftovers.join("\n")}\n\nΝα σταλεί έτσι;`)) return;
     if (action === "send" && !window.confirm(`Να σταλεί η επιβεβαίωση στο ${data.email};`)) return;
     setBusy(true);
     setError("");
@@ -92,6 +95,7 @@ export default function ConfirmationPanel() {
   };
 
   const email = useMemo(() => (data ? buildConfirmationEmail(data, bank) : null), [data, bank]);
+  const foreign = useMemo(() => (data ? foreignTextInEmail(data) : []), [data]);
   const set = (patch: Partial<ConfirmationData>) => setData((current) => (current ? { ...current, ...patch } : current));
   const alreadySent = data ? bookings?.find((item) => data.bookingIds.includes(item.bookingId) && item.sentAt)?.sentAt : null;
   const relayEmail = data && /@([a-z0-9-]+\.)*(booking\.com|expedia\.com|expediapartnercentral\.com)$/i.test(data.email);
@@ -140,6 +144,12 @@ export default function ConfirmationPanel() {
             {warnings.map((warning) => <p key={warning} className="rounded-xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-900">{warning}</p>)}
             {alreadySent ? <p className="rounded-xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-900">Έχει ήδη σταλεί επιβεβαίωση στις {alreadySent}.</p> : null}
             {relayEmail ? <p className="rounded-xl bg-amber-100 px-3 py-2 text-sm font-bold text-amber-900">Αυτό είναι email Booking/Expedia, όχι το πραγματικό του πελάτη.</p> : null}
+            {foreign.length ? (
+              <div role="alert" className="rounded-xl bg-red-100 px-3 py-2 text-sm font-bold text-red-900">
+                Ελληνικά σε email που δεν είναι ελληνικό — γράψ’ τα στη γλώσσα του πελάτη:
+                <ul className="mt-1 list-disc pl-5 font-semibold">{foreign.map((item) => <li key={item}>{item}</li>)}</ul>
+              </div>
+            ) : null}
 
             <div>
               <label htmlFor="crm-conf-language" className={labelClass}>Γλώσσα email</label>

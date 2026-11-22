@@ -62,7 +62,7 @@ export const ROOM_TYPE_NAMES: Record<string, Record<EmailLanguage, string>> = {
   "265595": { en: "Family Apartment", el: "Οικογενειακό Διαμέρισμα", tr: "Aile Dairesi" },
 };
 
-const FEE_NAMES: Record<EmailLanguage, string> = {
+export const FEE_NAMES: Record<EmailLanguage, string> = {
   el: "Τέλος ανθεκτικότητας στην κλιματική κρίση",
   en: "Climate resilience fee",
   tr: "İklim krizi direnç vergisi",
@@ -75,7 +75,7 @@ const FEE_NAMES: Record<EmailLanguage, string> = {
  */
 export function cleanChargeDescription(raw: string, language: EmailLanguage, context: { room: string; checkin: string; checkout: string }) {
   let value = String(raw ?? "").trim();
-  if (/περιβαλλοντικ|ανθεκτικ|climate|resilience/i.test(value)) return FEE_NAMES[language];
+  if (/περιβαλλοντικ|ανθεκτικ|climate|resilience|τακκ|\btakk\b|φόρος διαμονής|φορος διαμονης/i.test(value)) return FEE_NAMES[language];
   if (/\[[A-Z0-9_]+\]/.test(value)) {
     const day = (iso: string) => (iso ? dateLabel(iso, language, true) : "");
     value = value
@@ -89,6 +89,75 @@ export function cleanChargeDescription(raw: string, language: EmailLanguage, con
       .trim();
   }
   return value || context.room;
+}
+
+const GREEK = /[Ͱ-Ͽἀ-῿]/;
+
+/** Common invoice / payment words that Beds24 or staff type in one language, in all three. */
+const TERMS: { match: RegExp; text: Record<EmailLanguage, string> }[] = [
+  { match: /^(τακκ|takk|ταkk|φόρος διαμονής|φορος διαμονης|τέλος διαμονής|τελος διαμονης|τέλος ανθεκτικότητας.*|climate resilience fee|tax|taxes|stay tax|tourist tax|city tax|climate tax|φόρος|φορος|vergi|konaklama vergisi|iklim krizi direnç vergisi)(\s*\((τακκ|takk)\))?$/i, text: FEE_NAMES },
+  { match: /^(διαμονή|διαμονη|κατάλυμα|δωμάτιο|accommodation|accomodation|acommodation|accommodations|room|stay|konaklama)$/i, text: { el: "Διαμονή", en: "Accommodation", tr: "Konaklama" } },
+  { match: /^(πρωινό|πρωινο|breakfast|kahvaltı)$/i, text: { el: "Πρωινό", en: "Breakfast", tr: "Kahvaltı" } },
+  { match: /^(έκπτωση|εκπτωση|discount|indirim)$/i, text: { el: "Έκπτωση", en: "Discount", tr: "İndirim" } },
+  { match: /^(προκαταβολή|προκαταβολη|deposit|kapora|ön ödeme)$/i, text: { el: "Προκαταβολή", en: "Deposit", tr: "Kapora" } },
+  { match: /^(πληρωμή|πληρωμη|payment|ödeme)$/i, text: { el: "Πληρωμή", en: "Payment", tr: "Ödeme" } },
+  { match: /^(μετρητά|μετρητα|cash|nakit)$/i, text: { el: "Μετρητά", en: "Cash", tr: "Nakit" } },
+  { match: /^(κάρτα|καρτα|πιστωτική κάρτα|card|credit card|kredi kartı)$/i, text: { el: "Κάρτα", en: "Card", tr: "Kredi kartı" } },
+  { match: /^(τραπεζική κατάθεση|τραπεζικη καταθεση|κατάθεση|έμβασμα|bank transfer|bank deposit|havale)$/i, text: { el: "Τραπεζική κατάθεση", en: "Bank transfer", tr: "Banka havalesi" } },
+  { match: /^(ίρις|iris)$/i, text: { el: "IRIS", en: "IRIS", tr: "IRIS" } },
+  { match: /^(βρεφική κούνια|κούνια|baby cot|cot|bebek beşiği)$/i, text: EXTRA_LABELS.cot },
+  { match: /^(επιπλέον κρεβάτι.*|ράντζο|extra bed.*|rollaway|ek yatak)$/i, text: EXTRA_LABELS.rollaway },
+];
+
+/** Room-type names in every language, so a name loaded in one language can be shown in another. */
+function translateRoomNames(value: string, language: EmailLanguage) {
+  let out = value;
+  for (const names of Object.values(ROOM_TYPE_NAMES)) {
+    for (const lang of Object.keys(names) as EmailLanguage[]) {
+      if (lang !== language && names[lang] && out.includes(names[lang])) out = out.split(names[lang]).join(names[language]);
+    }
+  }
+  return out;
+}
+
+/**
+ * Puts a charge / payment / extra label into the email language (owner, 2026-11-22: an English
+ * email must be all English, including the invoice lines). Unknown text is left as typed.
+ */
+export function localizeLabel(raw: string, language: EmailLanguage) {
+  const value = String(raw ?? "").trim();
+  if (!value) return value;
+  if (/περιβαλλοντικ|ανθεκτικ|climate|resilience|τακκ|\btakk\b|φόρος διαμονής|φορος διαμονης/i.test(value)) return FEE_NAMES[language];
+  for (const term of TERMS) if (term.match.test(value)) return term.text[language];
+  return translateRoomNames(value, language);
+}
+
+/** Bank "IRIS" field is stored once ("VAT: …, Mobile: …"); label words follow the email language. */
+export function localizeIris(raw: string, language: EmailLanguage) {
+  const words = { el: { vat: "ΑΦΜ", mobile: "Κινητό" }, en: { vat: "VAT", mobile: "Mobile" }, tr: { vat: "Vergi no", mobile: "Cep" } }[language];
+  return String(raw ?? "")
+    .replace(/\b(VAT|ΑΦΜ|Α\.Φ\.Μ\.|Vergi no)\s*:/gi, `${words.vat}:`)
+    .replace(/(Mobile|Κινητό|Κινητο|Cep)\s*:/gi, `${words.mobile}:`);
+}
+
+/** Everything in the email that is still written in another language — shown to staff before sending. */
+export function foreignTextInEmail(data: ConfirmationData): string[] {
+  if (data.language === "el") return [];
+  const out: string[] = [];
+  const check = (label: string, value: string | undefined) => {
+    if (value && GREEK.test(value)) out.push(`${label}: «${value.length > 60 ? `${value.slice(0, 60)}…` : value}»`);
+  };
+  data.rooms.forEach((room) => check("Δωμάτιο", translateRoomNames(room.room, data.language)));
+  if (!data.agencyPaid) {
+    data.charges.forEach((item) => check("Χρέωση", localizeLabel(item.description, data.language)));
+    data.payments.forEach((item) => check("Πληρωμή", localizeLabel(item.description, data.language)));
+  }
+  check("Πρωινό", localizeBreakfast(data.breakfast, data.language));
+  (data.extras ?? []).forEach((extra) => check("Επιπλέον", localizeLabel(extra, data.language)));
+  check("Σημείωση από εμάς", data.hostNote);
+  check("Όνομα", data.guestsNames);
+  check("Προπληρωμένο μέσω", data.prepaidVia);
+  return out;
 }
 
 /** Booking.com / Expedia system lines that are meant for us, not for the guest. */
@@ -106,6 +175,14 @@ export const DEFAULT_BREAKFAST: Record<EmailLanguage, string> = {
   en: "Not included, unless noted in comments",
   tr: "Yorumlarda belirtilmedikçe dahil değildir",
 };
+
+/** Breakfast text from the standard choices follows the email language; free text stays as typed. */
+export function localizeBreakfast(value: string, language: EmailLanguage) {
+  const v = String(value ?? "").trim();
+  if (Object.values(DEFAULT_BREAKFAST).includes(v)) return DEFAULT_BREAKFAST[language];
+  if (Object.values(BREAKFAST_INCLUDED).includes(v)) return BREAKFAST_INCLUDED[language];
+  return localizeLabel(v, language);
+}
 
 const STAMP_IMAGE = "https://media.xmlcal.com/pic/p0011/7813/39.png";
 const FAQ_URL: Record<EmailLanguage, string> = {
@@ -150,10 +227,10 @@ function billingTable(data: ConfirmationData, t: (typeof TEXT)["en"]) {
   const row = (label: string, value: string, strong = false) => `<tr>
     <td style="padding:10px 12px 10px 0;border-bottom:1px solid #e8e3da;font-size:15px;color:${strong ? "#1d2b25" : "#4a5550"};font-weight:${strong ? 700 : 400}">${label}</td>
     <td align="right" style="padding:10px 0;border-bottom:1px solid #e8e3da;font-size:15px;color:#1d2b25;font-weight:${strong ? 700 : 600};white-space:nowrap">${value}</td></tr>`;
-  const charges = data.charges.map((item) => row(`${esc(item.description)}${(Number(item.qty) || 1) > 1 ? ` × ${item.qty}` : ""}`, money((Number(item.qty) || 1) * (Number(item.amount) || 0)))).join("");
+  const charges = data.charges.map((item) => row(`${esc(localizeLabel(item.description, data.language))}${(Number(item.qty) || 1) > 1 ? ` <span style="color:#7a847f;white-space:nowrap">· ${item.qty} × ${money(Number(item.amount) || 0)}</span>` : ""}`, money((Number(item.qty) || 1) * (Number(item.amount) || 0)))).join("");
   const total = chargesTotal(data.charges);
   const paid = paymentsTotal(data.payments);
-  const payments = data.payments.map((item) => row(esc(item.description || t.paid), `−${money(Number(item.amount) || 0)}`)).join("");
+  const payments = data.payments.map((item) => row(esc(localizeLabel(item.description, data.language) || t.paid), `−${money(Number(item.amount) || 0)}`)).join("");
   const channel = (data.prepaidVia ?? "").trim();
   if (channel && !paid) {
     const prepaidRow = row(esc(t.prepaid.replace("{channel}", channel)), `−${money(total)}`);
@@ -174,8 +251,8 @@ export function buildConfirmationEmail(data: ConfirmationData, bank: BankDetails
     { label: t.children, value: String(data.children) },
     { label: t.phone, value: esc(data.phone) },
     { label: t.email, value: esc(data.email) },
-    { label: t.breakfast, value: esc(data.breakfast) },
-    { label: t.extras, value: esc((data.extras ?? []).join(", ")) },
+    { label: t.breakfast, value: esc(localizeBreakfast(data.breakfast, language)) },
+    { label: t.extras, value: esc((data.extras ?? []).map((extra) => localizeLabel(extra, language)).join(", ")) },
     { label: t.login, value: esc(data.guestLogin) },
   ]);
   const prepaidVia = (data.prepaidVia ?? "").trim();
@@ -186,11 +263,11 @@ export function buildConfirmationEmail(data: ConfirmationData, bank: BankDetails
     { label: t.holder, value: esc(bank.holder) },
     { label: t.bank, value: esc(bank.bank) },
     { label: t.swift, value: esc(bank.swift) },
-    { label: t.iris, value: esc(bank.iris) },
+    { label: t.iris, value: esc(localizeIris(bank.iris, language)) },
     { label: t.methods, value: esc(t.methodsValue) },
   ]) : "";
   const body = p(`${t.dear} <strong>${esc(fullName)}</strong>,`) + p(t.intro)
-    + stayTicket(language, data.rooms, "")
+    + stayTicket(language, data.rooms.map((room) => ({ ...room, room: translateRoomNames(room.room, language) })), "")
     + sectionTitle(t.details) + details
     + (agencyPaid ? "" : sectionTitle(t.billing) + billingTable(data, t))
     + (data.hostNote?.trim() ? callout(t.hostNote, esc(data.hostNote.trim()).replace(/\n/g, "<br>")) : "")
