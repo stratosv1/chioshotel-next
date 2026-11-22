@@ -755,11 +755,13 @@ function testCalendarButton() {
   assert(/finder\.step === "checkin" \|\| \(finder\.step === "checkout" && finder\.checkin\)/.test(production), "the calendar button is not limited to the date questions");
   assert(/addDaysToIsoDate\(finder\.checkin, 1\)/.test(production), "check-out can be picked on or before check-in");
   assert(/type: "set_stay_dates", \[field\]: iso/.test(hook), "a picked date does not use the normal booking flow");
-  assert(/type="date"/.test(picker) && /showPicker/.test(picker), "the calendar button does not open the native date picker");
-  // Desktop Chrome fires "input" (React onChange) when the open calendar
-  // only moves to another month; only the native "change" may send a date.
-  assert(/addEventListener\("change"/.test(picker) && !/onChange=/.test(picker), "moving the calendar to another month can send a date");
-
+  // Our own month grid, not the native <input type="date">: the native picker
+  // sent dates the guest never chose (month arrow on desktop, "Set" on Android).
+  assert(!/<input\b/.test(picker) && !/\.showPicker\(/.test(picker), "the calendar still uses the native date picker");
+  assert(/aria-label=\{labels\.next\}[\s\S]{0,200}onClick=\{\(\) => setView\(/.test(picker), "the next-month arrow does more than change the view");
+  assert(/iso < min \|\| iso > maxIso/.test(picker), "days before the earliest date can be picked");
+  assert(/checkin=\{finder\.checkin\}/.test(production), "the departure calendar does not know the arrival");
+  assert(/trackRoomFinderBack\(\)/.test(hook), "Back is not shown in the staff inbox");
   // The picked dates flow through the deterministic booking flow.
   const picked = resolveAssistantTurn(createInitialBookingFlowState(), command([{ type: "set_stay_dates", checkin: "2030-06-10" }]));
   assert(picked.outcome.kind === "prompt" && picked.outcome.field === "checkout", "a picked check-in did not move on to check-out");

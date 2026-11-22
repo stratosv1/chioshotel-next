@@ -48,6 +48,7 @@ import {
   getRoomFinderSessionId,
   restoreRoomFinderTracking,
   setRoomFinderTrackingFacts,
+  trackRoomFinderBack,
   type ChatItem,
   type MessageKind,
   type Reaction,
@@ -968,6 +969,7 @@ export function useRoomFinder(language: RoomFinderLanguage) {
     const previousStep = step;
     const nextFlow = bookingFlowReducer(flow, { type: "go_back" });
     if (nextFlow === flow) return;
+    trackRoomFinderBack();
 
     if (previousStep === "breakfast") {
       const lastChoice = choices[choices.length - 1];

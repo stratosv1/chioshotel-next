@@ -1176,6 +1176,7 @@ export function RoomFinderProduction({
                 field={finder.step === "checkout" ? "checkout" : "checkin"}
                 language={language}
                 min={finder.step === "checkout" ? addDaysToIsoDate(finder.checkin, 1) || todayInAthensIso() : todayInAthensIso()}
+                checkin={finder.checkin}
                 onPick={iso => {
                   if (lastAssistantMessageId) setHiddenQuickReplyPromptId(lastAssistantMessageId);
                   void finder.chooseDate(iso);

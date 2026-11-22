@@ -147,6 +147,21 @@ function welcomeLanguage(content: string): RoomFinderLanguage | null {
   return match ? match[0] as RoomFinderLanguage : null;
 }
 
+/**
+ * The guest's "← Back" is a client-only rewind: the earlier question is shown
+ * again but the staff inbox keeps every message. Without a marker the inbox
+ * looked like the same question was asked twice in a row.
+ */
+export function trackRoomFinderBack() {
+  trackRoomFinderMessage({
+    id: `back-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+    role: "user",
+    content: "← Back",
+    staffContent: "← Πίσω (ο επισκέπτης γύρισε στο προηγούμενο βήμα)",
+    kind: "normal",
+  });
+}
+
 function trackRoomFinderMessage(message: ChatItem) {
   if (typeof window === "undefined") return;
 
