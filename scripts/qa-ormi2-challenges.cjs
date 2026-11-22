@@ -60,6 +60,7 @@ const fixtures = {
 
 assert.equal(CHALLENGES.length, 13, "expected thirteen families");
 assert.equal(new Set(CHALLENGES.map((c) => c.id)).size, 13, "duplicate family ids");
+assert(answerMatches("−2,5", -2.5), "accept Unicode minus and Greek decimal comma");
 let variants = 0;
 let checks = 0;
 for (const family of CHALLENGES) {
