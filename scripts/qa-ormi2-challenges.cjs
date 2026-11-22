@@ -35,10 +35,31 @@ const fixtures = {
   "bounce-force": [{ down: 6, up: 4, F: 42 }, { down: 8, up: 6, F: 63 }],
   "spring-explosion": [{ v2: 2, v1: -6, V: 1.5, Q: 1.5 }, { v2: 3, v1: -9, V: 2.25, Q: 3.375 }],
   "pendulum-elastic-spring": [{ u: 4, v1: -2, v2: 2, x: 0.4 }, { u: 5, v1: -2.5, v2: 2.5, x: 0.5 }],
+
+  "collision-rough-ramp": [
+    { V: 2, d: 1/3, h: 0.2, W: 0 },
+    { V: 2, d: 0.25, h: 0.15, W: 1 },
+  ],
+  "double-collision-spring": [
+    { V: 6, v12: -2, v3: 4, x: 0.8 },
+    { V: 6, v12: 2, v3: 8, x: 1 },
+  ],
+  "penetration-capture": [
+    { V1: 2, V2: Math.sqrt(2), uout: 10*Math.sqrt(2), uin: 40 + 10*Math.sqrt(2) },
+    { V1: 3, V2: Math.sqrt(8), uout: 10*Math.sqrt(8), uin: 60 + 10*Math.sqrt(8) },
+  ],
+  "collision-pendulum-tension": [
+    { V: 2, u: 10, T: 12, cos: 0.9 },
+    { V: 3, u: 15, T: 16, cos: 0.7 },
+  ],
+  "wall-rebound-catch": [
+    { v1: -6, v2: 4, wall: 6, V: 4.4, s: 2.42, Q: 1.6 },
+    { v1: -8, v2: 4, wall: 8, V: 14/3, s: 196/90, Q: 20/3 },
+  ],
 };
 
-assert.equal(CHALLENGES.length, 8, "expected eight families");
-assert.equal(new Set(CHALLENGES.map((c) => c.id)).size, 8, "duplicate family ids");
+assert.equal(CHALLENGES.length, 13, "expected thirteen families");
+assert.equal(new Set(CHALLENGES.map((c) => c.id)).size, 13, "duplicate family ids");
 let variants = 0;
 let checks = 0;
 for (const family of CHALLENGES) {
@@ -95,6 +116,48 @@ for (const family of CHALLENGES) {
         near(p.m1*answers.u, p.m1*answers.v1+p.m2*answers.v2, "pendulum momentum");
         near(p.m1*answers.u**2, p.m1*answers.v1**2+p.m2*answers.v2**2, "pendulum elastic");
         near(p.m2*answers.v2**2, p.k*answers.x**2, "spring compression"); break;
+
+      case "collision-rough-ramp":
+        near(p.m*p.u, (p.m+p.M)*answers.V, "ramp collision momentum");
+        near(0.5*(p.m+p.M)*answers.V**2,
+          (p.m+p.M)*p.g*answers.h + answers.W, "ramp climb energy balance");
+        near(answers.h, answers.d*p.sn, "ramp height");
+        near(answers.W, p.mu*(p.M+p.m)*p.g*p.cs*answers.d, "ramp friction work");
+        if (p.mu === 0) assert.equal(answers.W, 0, "smooth slope must have zero friction");
+        break;
+      case "double-collision-spring": {
+        const mass=p.m1+p.m2;
+        near(p.m1*p.u, mass*answers.V, "double first plastic momentum");
+        near(mass*answers.V, mass*answers.v12+p.m3*answers.v3, "double elastic momentum");
+        near(mass*answers.V**2, mass*answers.v12**2+p.m3*answers.v3**2, "double elastic kinetic");
+        near(p.m3*answers.v3**2, p.k*answers.x**2, "double spring compression");
+        assert(Math.sign(answers.v12)===(i===0?-1:1), "variant must change the rebound direction");
+        break;
+      }
+      case "penetration-capture":
+        near(answers.V1**2, 2*p.g*p.h, "first block swing");
+        near(answers.V2**2, 2*p.mu*p.g*p.s, "second block slide");
+        near(p.m*answers.uout, (p.m+p.M2)*answers.V2, "capture momentum");
+        near(p.m*answers.uin, p.m*answers.uout+p.M1*answers.V1, "penetration momentum");
+        assert(answers.uin>answers.uout,"initial bullet speed > exit speed");
+        break;
+      case "collision-pendulum-tension":
+        near(p.m*answers.u,(p.m+p.M)*answers.V,"pendulum plastic momentum");
+        near(answers.V**2,2*p.g*p.h,"pendulum height conservation");
+        near(answers.T-(p.m+p.M)*p.g,(p.m+p.M)*answers.V**2/p.L,"centripetal radial balance");
+        near(p.h,p.L*(1-answers.cos),"pendulum geometry");
+        assert(answers.cos>0&&answers.cos<=1,"pendulum stays below horizontal");
+        break;
+      case "wall-rebound-catch":
+        near(p.m1*p.u,p.m1*answers.v1+p.m2*answers.v2,"first elastic momentum");
+        near(p.m1*p.u**2,p.m1*answers.v1**2+p.m2*answers.v2**2,"first elastic energy");
+        near(answers.wall,-answers.v1,"ideal wall reflects direction");
+        assert(answers.wall>answers.v2,"the first cart must catch the second");
+        near(p.m1*answers.wall+p.m2*answers.v2,(p.m1+p.m2)*answers.V,"second plastic momentum");
+        near(answers.V**2,2*p.mu*p.g*answers.s,"post collision friction");
+        near(answers.Q,0.5*p.m1*answers.wall**2+0.5*p.m2*answers.v2**2-0.5*(p.m1+p.m2)*answers.V**2,"loss at second cart collision");
+        assert(answers.Q>0,"positive plastic collision loss");
+        break;
       default: throw new Error("Unhandled family: "+family.id);
     }
     variants++;
