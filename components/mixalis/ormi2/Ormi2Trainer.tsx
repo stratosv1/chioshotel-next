@@ -5,7 +5,7 @@ import Link from "next/link";
 import {
   ArrowLeft, ArrowRight, BookOpen, BrainCircuit, CheckCircle2, ChevronRight,
   CircleHelp, ClipboardCheck, Eye, GitBranch, Lightbulb, RotateCcw,
-  Sparkles, Target, Trophy, XCircle,
+  Sparkles, Target, Trophy,
 } from "lucide-react";
 import { SCENARIOS, type Scenario, type Tool } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
 
@@ -143,6 +143,7 @@ export function Ormi2Trainer() {
   const [help, setHelp] = useState(0);
   const [plan, setPlan] = useState("");
   const [showSolution, setShowSolution] = useState(false);
+  const [viewedSolution, setViewedSolution] = useState(false);
   const [history, setHistory] = useState<History>({});
   const [ready, setReady] = useState(false);
   const [filter, setFilter] = useState<"all" | "basic" | "advanced" | "review">("all");
@@ -186,6 +187,7 @@ export function Ormi2Trainer() {
     setHelp(0);
     setPlan("");
     setShowSolution(false);
+    setViewedSolution(false);
     setSavedThisRound(false);
   }
 
@@ -219,7 +221,7 @@ export function Ormi2Trainer() {
   function finish() {
     if (savedThisRound) return;
     const points = [first.cuts, first.laws, first.start].filter(Boolean).length;
-    const clean = points === 3 && help === 0 && !showSolution && plan.trim().length >= 20;
+    const clean = points === 3 && help === 0 && !viewedSolution && plan.trim().length >= 20;
     setHistory((old) => {
       const current = old[s.id] ?? { attempts: 0, bestDecisions: 0, cleanPlans: 0, needsReview: true, last: 0 };
       return {
@@ -436,7 +438,7 @@ export function Ormi2Trainer() {
                   <div className="rounded-2xl border border-black/10 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div><h4 className="font-semibold">Αναλυτική μεθοδολογία</h4><p className="mt-1 text-xs text-[#73695e]">Αν την ανοίξεις, η προσπάθεια θα καταγραφεί ως εξάσκηση με λύση.</p></div>
-                      <button type="button" disabled={plan.trim().length < 20} onClick={() => setShowSolution((old) => !old)}
+                      <button type="button" disabled={plan.trim().length < 20} onClick={() => { if (!showSolution) setViewedSolution(true); setShowSolution((old) => !old); }}
                         className="min-h-10 rounded-xl bg-[#262f2c] px-4 py-2 text-sm font-semibold text-white disabled:opacity-40">{showSolution ? "Κρύψε τη λύση" : "Δες τη μεθοδολογία"}</button>
                     </div>
                     {showSolution && <div className="mt-4 space-y-3">
