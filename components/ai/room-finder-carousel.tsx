@@ -24,6 +24,10 @@ import {
 import { AmenityIcon, GuestsIcon } from "@/components/rooms/RoomCard";
 import { amenityLabels, roomCategoryFacts } from "@/lib/room-category-facts";
 
+// Cards show the first few amenities plus a "+N" chip so every card stays
+// short; the info (i) button lists them all.
+const CARD_AMENITY_LIMIT = 4;
+
 // Fridge / A/C already appear as amenity chips, so the room-specific line skips them.
 const AMENITY_FEATURE_PATTERN = /ψυγ|κλιματ|fridge|air cond|kühlschrank|klima|réfrig|climatis|frigo|aria condiz|nevera|frigor|aire acond|buzdolab/iu;
 
@@ -295,7 +299,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
                 : null;
         const selectLabel=pending ? SELECTING_LABEL[language] : isSplit ? SELECT_SOLUTION_LABEL[language] : selectionGuests ? copy.selectForGuests(selectionGuests) : copy.select;
         return <article data-room-card key={key} className="flex w-[80%] max-w-[300px] shrink-0 snap-start flex-col overflow-hidden rounded-[22px] border border-[#eadfce] bg-white p-2 shadow-[0_8px_24px_rgba(70,55,35,.08)] sm:w-[290px]">
-          <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} className="relative block aspect-[16/10] w-full shrink-0 overflow-hidden rounded-[16px] bg-[#efe8de] text-left">
+          <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} className="relative block aspect-[2/1] w-full shrink-0 overflow-hidden rounded-[16px] bg-[#efe8de] text-left">
             {isSplit ? <div className="grid h-full w-full" style={{gridTemplateColumns:`repeat(${Math.min(splitVisuals.length,3)},minmax(0,1fr))`}}>
               {splitVisuals.slice(0,3).map((roomVisual,visualIndex) => <div key={`${roomVisual.name}:${visualIndex}`} className="relative min-w-0 overflow-hidden border-r border-white/70 last:border-r-0">
                 <Image src={roomVisual.image} alt="" fill sizes="(min-width: 640px) 140px, 38vw" className="object-cover"/>
@@ -306,7 +310,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
               <span aria-hidden="true">{ribbon.icon}</span> {ribbon.label}
             </span>}
           </button>
-          <div className="flex flex-1 flex-col px-1.5 pb-1 pt-3">
+          <div className="flex flex-1 flex-col px-1.5 pb-1 pt-2.5">
             {offer.alternativeCheckin && offer.alternativeCheckout && <p className="mb-2 w-fit rounded-full bg-[#fbf4e8] px-2.5 py-1 text-[11px] font-bold text-[#765d3b]">
               {ALTERNATIVE_LABEL[language]} · {shortDate(offer.alternativeCheckin,language)}–{shortDate(offer.alternativeCheckout,language)}
             </p>}
@@ -319,15 +323,16 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
             </div>}
             {!isSplit && highlights && <p className="mt-1.5 line-clamp-1 text-[13px] leading-[18px] text-[#625b52]">{highlights}</p>}
             {facts && <ul className="mt-2 flex flex-wrap gap-1.5">
-              {facts.amenities.map(amenity => <li key={amenity} className="inline-flex min-h-6 items-center gap-1 rounded-full bg-[#f7f1e8] px-2 text-[11px] text-[#4a3b30]">
+              {facts.amenities.slice(0,CARD_AMENITY_LIMIT).map(amenity => <li key={amenity} className="inline-flex min-h-6 items-center gap-1 rounded-full bg-[#f7f1e8] px-2 text-[11px] text-[#4a3b30]">
                 <span className="text-[#7a5f4b]"><AmenityIcon amenity={amenity} /></span>
                 {amenityLabels[amenity][language]}
               </li>)}
+              {facts.amenities.length > CARD_AMENITY_LIMIT && <li className="inline-flex min-h-6 items-center rounded-full bg-[#f7f1e8] px-2 text-[11px] font-semibold text-[#4a3b30]">+{facts.amenities.length-CARD_AMENITY_LIMIT}</li>}
             </ul>}
             {perPerson > 0 && <p className="mt-1.5 text-[13px] font-semibold text-[#27500a]">{perPersonLabel(language,money(perPerson,language))}</p>}
             {cardBadges.onlyOne && <p className="mt-1.5 text-[13px] font-semibold text-[#a32d2d]"><span aria-hidden="true">⚠ </span>{ONLY_ONE_LABEL[language]}</p>}
-            <div className="mt-auto pt-3">
-              <div className="flex items-center justify-between gap-2 border-t border-[#f0e7da] pt-3 [font-variant-numeric:tabular-nums]">
+            <div className="mt-auto pt-2.5">
+              <div className="flex items-center justify-between gap-2 border-t border-[#f0e7da] pt-2.5 [font-variant-numeric:tabular-nums]">
                 {saving > 0 ? <span className="shrink-0 rounded-lg bg-[#3b6d11] px-2.5 py-1.5 text-[12px] font-semibold leading-tight text-white">
                   {YOU_SAVE_LABEL[language]}<span className="block text-[15px] font-bold">{money(saving,language)}</span>
                 </span> : <span />}
@@ -340,7 +345,7 @@ export function RoomCarousel({ offers, copy, language, money, onDetails, onSelec
                   <p className="text-[12px] leading-4 text-[#746b60]">{money(perNight,language)} {PER_NIGHT_LABEL[language]}</p>
                 </div>
               </div>
-              <div className="mt-2.5 flex gap-2">
+              <div className="mt-2 flex gap-2">
                 <button type="button" onClick={() => onDetails(offer)} aria-label={`${copy.details}: ${title}`} title={copy.details} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-[#d8cec1] text-[#514a42] transition hover:bg-[#fbf8f3] active:scale-[.97]"><Info className="h-5 w-5" aria-hidden="true" /></button>
                 <button
                   type="button"
