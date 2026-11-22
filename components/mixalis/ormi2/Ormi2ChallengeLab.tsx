@@ -11,6 +11,7 @@ import {
   CHALLENGES, answerMatches, formatAnswer, solveChallenge,
   type ChallengeFamily, type ChallengeVariant, type SolutionStep,
 } from "./challenges-data";
+import { appendSkillEvents, numericSkillEvents } from "./learning-data";
 
 type Attempt = {
   attempts: number;
@@ -136,6 +137,7 @@ export function Ormi2ChallengeLab() {
   const [input, setInput] = useState("");
   const [stepPassed, setStepPassed] = useState(false);
   const [wrong, setWrong] = useState(0);
+  const [wrongByStep, setWrongByStep] = useState<Record<number, number>>({});
   const [hints, setHints] = useState<Record<number, number>>({});
   const [history, setHistory] = useState<History>({});
   const [ready, setReady] = useState(false);
@@ -143,7 +145,14 @@ export function Ormi2ChallengeLab() {
   const [rating, setRating] = useState<Rating>("all");
   const [errorText, setErrorText] = useState("");
 
-  useEffect(() => { setHistory(loadHistory()); setReady(true); }, []);
+  useEffect(() => {
+    setHistory(loadHistory());
+    const query = new URLSearchParams(window.location.search);
+    const requestedIndex = CHALLENGES.findIndex((family) => family.id === query.get("family"));
+    if (requestedIndex >= 0) setSelected(requestedIndex);
+    if (query.get("variant") === "b") setVariantId("b");
+    setReady(true);
+  }, []);
   useEffect(() => {
     if (ready) { try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(history)); } catch { /* optional */ } }
   }, [history, ready]);
@@ -169,6 +178,7 @@ export function Ormi2ChallengeLab() {
     setInput("");
     setStepPassed(false);
     setWrong(0);
+    setWrongByStep({});
     setHints({});
     setErrorText("");
     setCompleted(false);
@@ -183,6 +193,7 @@ export function Ormi2ChallengeLab() {
       setStepPassed(true);
     } else {
       setWrong((x) => x + 1);
+      setWrongByStep((old) => ({ ...old, [stepIndex]: (old[stepIndex] ?? 0) + 1 }));
       setErrorText("Δεν συμφωνεί με το αποτέλεσμα. Έλεγξε μονάδες, πρόσημα και το μέγεθος που μετέφερες από την προηγούμενη φάση.");
     }
   }
@@ -211,6 +222,17 @@ export function Ormi2ChallengeLab() {
         },
       };
     });
+    appendSkillEvents(numericSkillEvents(family.id, variant.id,
+      solved.steps.map((step) => {
+        const i = solved.steps.findIndex((candidate) => candidate.id === step.id);
+        return {
+          stepId: step.id,
+          mistakes: wrongByStep[i] ?? 0,
+          hints: hints[i] ?? 0,
+          revealed: (hints[i] ?? 0) >= 3,
+          correct: true,
+        };
+      }), Date.now()));
     setCompleted(true);
   }
 
@@ -248,6 +270,16 @@ export function Ormi2ChallengeLab() {
             </div>
           </div>
         </header>
+
+        <Link href="/mixalis/ormi2/proodos"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#aacbbc] bg-white px-5 py-4 text-[#245b48] hover:bg-[#e8f3ea]">
+          <span>
+            <span className="block text-xs font-bold uppercase tracking-wider text-[#317e5b]">Προσωπική πρόοδος</span>
+            <span className="mt-1 block text-lg font-semibold">Ποιοι τύποι ασκήσεων χρειάζονται ενίσχυση;</span>
+            <span className="mt-1 block text-sm text-[#668072]">Η εφαρμογή καταγράφει σε ποιο ενδιάμεσο αποτέλεσμα χρειάστηκες βοήθεια.</span>
+          </span>
+          <span className="rounded-xl bg-[#245e4a] px-4 py-2.5 text-sm font-semibold text-white">Χάρτης προόδου →</span>
+        </Link>
 
         <div className="grid items-start gap-5 lg:grid-cols-[292px_minmax(0,1fr)]">
           <aside className="rounded-3xl border border-black/10 bg-white p-4 lg:sticky lg:top-4">
