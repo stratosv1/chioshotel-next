@@ -88,6 +88,7 @@ export function appendSkillEvents(next: SkillEvent[]): void {
 export function phaseSkillEvents(
   scenario: string,
   result: Record<"cuts" | "laws" | "start", boolean | null>,
+  firstResult: Record<"cuts" | "laws" | "start", boolean | null>,
   hintLevels: Record<"cuts" | "laws" | "start", number>,
   timestamp: number,
 ): SkillEvent[] {
@@ -98,8 +99,8 @@ export function phaseSkillEvents(
   ] as const).map(([key, skill]) => ({
     v: 1 as const, source: "phases" as const, item: scenario,
     skill, correct: result[key] === true,
-    independent: result[key] === true && hintLevels[key] === 0,
-    hints: hintLevels[key], mistakes: result[key] === false ? 1 : 0,
+    independent: result[key] === true && firstResult[key] === true && hintLevels[key] === 0,
+    hints: hintLevels[key], mistakes: firstResult[key] === false ? 1 : 0,
     at: timestamp,
   }));
 }
