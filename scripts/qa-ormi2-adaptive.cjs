@@ -41,7 +41,7 @@ assert.equal(data.summarizeSkills([]).every((s) => s.state === "not-started"), t
 const skills = data.NUMERIC_STEP_SKILLS;
 for (const family of challenges.CHALLENGES) {
   const known = skills[family.id] || {};
-  assert.deepEqual(Object.keys(known).sort(), challenges.solveChallenge(family, family.variants[0]).steps.map((s) => s.id).sort(), "Incomplete skills mapping for " + family.id);
+  assert.equal(Object.keys(known).sort().join(","), challenges.solveChallenge(family, family.variants[0]).steps.map((s) => s.id).sort().join(","), "Incomplete skills mapping for " + family.id);
   for (const ids of Object.values(known)) {
     assert(ids.length);
     assert(ids.every((id) => data.SKILLS.some((s) => s.id === id)));
