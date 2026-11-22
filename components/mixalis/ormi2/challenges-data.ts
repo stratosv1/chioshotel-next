@@ -510,7 +510,7 @@ export function solveChallenge(family: ChallengeFamily, variant: ChallengeVarian
 }
 
 export function answerMatches(input: string, expected: number): boolean {
-  const value = Number(input.trim().replace(",", "."));
+  const value = Number(input.trim().replace(/−/g, "-").replace(",", "."));
   return input.trim().length > 0 && Number.isFinite(value) &&
     Math.abs(value - expected) <= Math.max(0.015, Math.abs(expected) * 0.005);
 }
