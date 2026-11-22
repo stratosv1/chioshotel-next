@@ -80,14 +80,22 @@ function isoFromParts(day: number, month: number, year: number) {
   return isStrictIsoDate(value) ? value : "";
 }
 
-function normalizeYear(rawYear: string | undefined, day: number, month: number, today: string) {
-  const currentYear = Number(today.slice(0, 4));
+/**
+ * Year of a date written without one: the first occurrence on or after
+ * `from` (today, or the arrival for a departure: "28/12 – 3/1"). Up to four
+ * years ahead so 29/2 finds the next leap year.
+ */
+function normalizeYear(rawYear: string | undefined, day: number, month: number, from: string) {
+  const startYear = Number(from.slice(0, 4));
   if (rawYear) {
     const parsed = Number(rawYear);
     return rawYear.length === 2 ? 2000 + parsed : parsed;
   }
-  const thisYear = isoFromParts(day, month, currentYear);
-  return thisYear && thisYear >= today ? currentYear : currentYear + 1;
+  for (let year = startYear; year <= startYear + 4; year += 1) {
+    const candidate = isoFromParts(day, month, year);
+    if (candidate && candidate >= from) return year;
+  }
+  return startYear + 1;
 }
 
 function normalizeText(value: string) {
@@ -147,9 +155,11 @@ function extractStayDestination(text: string, context: RoomFinderConversationCon
 const WORD_START = "(?<![\\p{L}\\p{N}])";
 const WORD_END = "(?![\\p{L}\\p{N}])";
 
+type FoundDate = { value: string; index: number; explicitYear?: boolean };
+
 function extractNamedDates(text: string, today: string) {
   const normalized = normalizeText(text);
-  const values: Array<{ value: string; index: number }> = [];
+  const values: FoundDate[] = [];
   const occupied: Array<[number, number]> = [];
   const rangePattern = new RegExp(
     `${WORD_START}(\\d{1,2})\\.?\\s*(?:-|–|—|εως|to|bis|au|al|hasta|a|ile)\\s*(\\d{1,2})\\.?\\s*(?:de\\s+)?(${MONTH_PATTERN})(?:\\s+(?:de\\s+)?(\\d{4}))?${WORD_END}`,
@@ -165,7 +175,8 @@ function extractNamedDates(text: string, today: string) {
     const checkout = isoFromParts(secondDay, month, year);
     if (checkin && checkout) {
       const index = match.index ?? 0;
-      values.push({ value: checkin, index }, { value: checkout, index: index + match[0].length - 1 });
+      const explicitYear = Boolean(match[4]);
+      values.push({ value: checkin, index, explicitYear }, { value: checkout, index: index + match[0].length - 1, explicitYear });
       occupied.push([index, index + match[0].length]);
     }
   }
@@ -181,15 +192,44 @@ function extractNamedDates(text: string, today: string) {
     const month = MONTH_ALIASES[match[2]];
     const year = normalizeYear(match[3], day, month, today);
     const value = isoFromParts(day, month, year);
-    if (value) values.push({ value, index });
+    if (value) values.push({ value, index, explicitYear: Boolean(match[3]) });
   }
 
   return values;
 }
 
-function extractDates(text: string, today: string) {
-  const values: Array<{ value: string; index: number }> = [];
+// "2027-08-29"
+const ISO_TOKEN = /\b(\d{4})-(\d{1,2})-(\d{1,2})\b/g;
+
+/** "August 29, 2027" / "Aug 29" (month first, as written in English). */
+function extractMonthFirstDates(text: string, today: string) {
+  const normalized = normalizeText(text);
+  const values: FoundDate[] = [];
+  const pattern = new RegExp(
+    `${WORD_START}(${MONTH_PATTERN})\\.?\\s+(\\d{1,2})(?:st|nd|rd|th)?(?:,?\\s+(\\d{4}))?${WORD_END}`,
+    "giu",
+  );
+  for (const match of normalized.matchAll(pattern)) {
+    const month = MONTH_ALIASES[match[1]];
+    const day = Number(match[2]);
+    const year = normalizeYear(match[3], day, month, today);
+    const value = isoFromParts(day, month, year);
+    if (value) values.push({ value, index: match.index ?? 0, explicitYear: Boolean(match[3]) });
+  }
+  return values;
+}
+
+function extractDates(text: string, today: string, arrival = "") {
+  const values: FoundDate[] = [];
+  const isoSpans: Array<[number, number]> = [];
+  for (const match of text.matchAll(ISO_TOKEN)) {
+    const value = isoFromParts(Number(match[3]), Number(match[2]), Number(match[1]));
+    const index = match.index ?? 0;
+    isoSpans.push([index, index + match[0].length]);
+    if (value) values.push({ value, index, explicitYear: true });
+  }
   for (const match of text.matchAll(DATE_TOKEN)) {
+    if (isoSpans.some(([start, end]) => (match.index ?? 0) >= start && (match.index ?? 0) < end)) continue;
     // "7-8 άτομα" or "2-3 nights" is a count range, not 7 August.
     const after = text.slice((match.index ?? 0) + match[0].length, (match.index ?? 0) + match[0].length + 24);
     if (COUNT_AFTER_TOKEN.test(after)) continue;
@@ -197,12 +237,31 @@ function extractDates(text: string, today: string) {
     const month = Number(match[2]);
     const year = normalizeYear(match[3], day, month, today);
     const value = isoFromParts(day, month, year);
-    if (value) values.push({ value, index: match.index ?? 0 });
+    if (value) values.push({ value, index: match.index ?? 0, explicitYear: Boolean(match[3]) });
   }
   values.push(...extractNamedDates(text, today));
-  return values
+  const named = new Set(values.map(date => date.index));
+  for (const date of extractMonthFirstDates(text, today)) {
+    if (!named.has(date.index)) values.push(date);
+  }
+  const sorted = values
     .sort((left, right) => left.index - right.index)
     .filter((date, index, dates) => index === 0 || date.value !== dates[index - 1].value || date.index !== dates[index - 1].index);
+
+  // A departure written without a year belongs after its arrival
+  // ("28/12 – 3/1", or "3/1" answering the check-out question after a
+  // 28 December arrival), not merely after today.
+  const reference = sorted.length >= 2 ? sorted[0].value : arrival;
+  if (reference) {
+    for (let index = sorted.length >= 2 ? 1 : 0; index < sorted.length; index += 1) {
+      while (!sorted[index].explicitYear && sorted[index].value < reference) {
+        const next = `${Number(sorted[index].value.slice(0, 4)) + 1}${sorted[index].value.slice(4)}`;
+        if (!isStrictIsoDate(next) || Number(next.slice(0, 4)) > Number(reference.slice(0, 4)) + 1) break;
+        sorted[index] = { ...sorted[index], value: next };
+      }
+    }
+  }
+  return sorted;
 }
 
 const RANGE_SEPARATOR = "(?:-|–|—|/|ή|η|or|oder|ou|o|y|veya|bis|à|a|έως|εως|to)";
@@ -328,7 +387,7 @@ export function fallbackRoomFinderCommand(
   }
 
   const today = todayInAthensIso();
-  const parsedDates = extractDates(text, today);
+  const parsedDates = extractDates(text, today, context.currentStep === "checkout" ? context.checkin || "" : "");
   // A rescue parser must never reinterpret a partly past range as a different future stay.
   const dates = parsedDates.some(date => date.value < today) ? [] : parsedDates;
   const actions: RoomFinderAction[] = [];
@@ -407,4 +466,53 @@ export function fallbackRoomFinderCommand(
   const normalized = uniqueActions(actions);
   if (!normalized.length) return null;
   return { language, replyMode: "execute", actions: normalized };
+}
+
+// Words that may surround dates in a plain date answer ("from 29/8 to 2/9",
+// "Κυριακή 29 Αυγούστου", "29. August bis 2. September").
+const DATE_ANSWER_FILLERS = new Set([
+  "from", "to", "till", "until", "the", "of", "on", "st", "nd", "rd", "th",
+  "απο", "εως", "μεχρι", "στις", "στη", "την", "τον",
+  "vom", "von", "ab", "bis", "zum", "am",
+  "du", "au", "le", "jusqu", "dal", "al", "il", "fino", "del", "desde", "hasta", "el", "ile",
+  "mon", "tue", "tues", "wed", "thu", "thur", "thurs", "fri", "sat", "sun",
+  "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+  "δευ", "τρι", "τετ", "πεμ", "παρ", "σαβ", "κυρ",
+  "δευτερα", "τριτη", "τεταρτη", "πεμπτη", "παρασκευη", "σαββατο", "κυριακη",
+  "mo", "di", "mi", "do", "fr", "sa", "so",
+  "montag", "dienstag", "mittwoch", "donnerstag", "freitag", "samstag", "sonntag",
+]);
+
+/**
+ * A message that is nothing but one or two dates, answering the check-in or
+ * check-out question ("29.08.2027", "29/8 - 2/9", "Sun, 29 August 2027").
+ * The app applies it directly: no wait for the AI interpreter, and the date
+ * goes to the field that was asked. Past dates are kept so the booking flow
+ * can ask "did you mean next year?". Anything else returns null.
+ */
+export function plainDateAnswerCommand(
+  message: string,
+  context: RoomFinderConversationContext = {},
+): RoomFinderCommand | null {
+  const step = context.currentStep;
+  if (step !== "checkin" && step !== "checkout") return null;
+  const text = message.trim();
+  if (!text || text.length > 80) return null;
+
+  const leftover = normalizeText(text)
+    .replace(new RegExp(`${WORD_START}(?:${MONTH_PATTERN})${WORD_END}`, "gu"), " ")
+    .replace(/[\d\s\/.,\-–—:'’()]+/gu, " ")
+    .split(/\s+/)
+    .filter(word => word && !DATE_ANSWER_FILLERS.has(word));
+  if (leftover.length) return null;
+
+  const dates = extractDates(text, todayInAthensIso(), step === "checkout" ? context.checkin || "" : "");
+  const language = context.language || "en";
+  if (dates.length === 2) {
+    return { language, replyMode: "execute", actions: [{ type: "set_stay_dates", checkin: dates[0].value, checkout: dates[1].value }] };
+  }
+  if (dates.length === 1) {
+    return { language, replyMode: "execute", actions: [{ type: "set_stay_dates", [step]: dates[0].value }] };
+  }
+  return null;
 }

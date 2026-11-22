@@ -156,7 +156,7 @@ STAY DESTINATION
 DATES
 - Normalize each exact resolved date to YYYY-MM-DD.
 - This is a European accommodation flow: 10/10 means 10 October; 28/8 means 28 August unless the customer explicitly indicates another convention.
-- If year is omitted, use the nearest occurrence that is today or in the future. “Today” is supplied by the application in Europe/Athens local date.
+- If year is omitted, use the nearest occurrence that is today or in the future. For a check-out (or the second date of a range) use the nearest occurrence AFTER the check-in instead: context.checkin=2027-12-28 and “3/1” means 2028-01-03, never 2027-01-03. Never change a year the customer wrote. “Today” is supplied by the application in Europe/Athens local date.
 - Exact forms such as 10/10, 10 October, 10 Οκτωβρίου, tomorrow, and an unambiguous weekday are not ambiguous.
 - When currentStep=checkin, a standalone exact date is check-in unless explicitly labelled departure/check-out.
 - When currentStep=checkout, a standalone exact date is check-out unless explicitly labelled arrival/check-in.

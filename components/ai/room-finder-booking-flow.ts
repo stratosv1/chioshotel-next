@@ -686,6 +686,21 @@ export function resolveAssistantTurn(current: BookingFlowState, command: RoomFin
     };
   }
 
+  // The guest moved only the arrival, to on/after the departure they gave
+  // before: that departure no longer applies. Ask for a new one instead of
+  // saying "check-out must be after check-in" about a date they did not type.
+  if (
+    incomingCheckin
+    && !incomingCheckout
+    && !incomingNights
+    && current.draft.checkout
+    && draft.checkout === current.draft.checkout
+    && nightsBetween(draft.checkin, draft.checkout) < 1
+  ) {
+    draft.checkout = "";
+    draft.statedNights = null;
+  }
+
   if (draft.checkin && draft.checkout && nightsBetween(draft.checkin, draft.checkout) < 1) {
     draft.checkout = "";
     const invalidChanged = !draftsEqual(current.draft, draft);

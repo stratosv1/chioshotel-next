@@ -84,7 +84,7 @@ const {
   resolveAssistantTurn,
 } = flow;
 const { feasibleOffersForGroup, hasDistinctOfferPlan, roomOfferKey } = offerPlan;
-const { fallbackRoomFinderCommand } = fallback;
+const { fallbackRoomFinderCommand, plainDateAnswerCommand } = fallback;
 const { detectRoomInfoRequest } = executeCommonJs(transpile(roomInfoIntentPath));
 const { avoidRepeatedQuestion } = executeCommonJs(transpile(repeatGuardPath));
 const { mentionsEarlyMorningArrival, nightBefore } = executeCommonJs(transpile(earlyArrivalPath));
@@ -1004,6 +1004,64 @@ function testNoAvailabilityIsOneShortCard() {
   assert(lead.includes("watchMissingEmail"), "the alert can be requested without an email");
 }
 
+// Check-in / check-out audit (22/11/2026): every way a guest gives dates.
+function testCheckinCheckoutAudit() {
+  const today = dateUtils.todayInAthensIso();
+  const year = Number(today.slice(0, 4));
+  const plus = days => dateUtils.addDaysToIsoDate(today, days);
+  const dates = c => (c?.actions || []).filter(a => a.type === "set_stay_dates")[0] || {};
+
+  // Moving only the arrival past the old departure asks for a new departure,
+  // instead of "check-out must be after check-in" about a date never typed.
+  const moved = resolveAssistantTurn(
+    { step: "rooms", draft: { ...createInitialBookingFlowState().draft, checkin: plus(10), checkout: plus(13) } },
+    command([{ type: "set_stay_dates", checkin: plus(20) }]),
+  );
+  assert(moved.outcome.kind === "prompt" && moved.outcome.field === "checkout" && !moved.state.draft.checkout,
+    "a later arrival than the old departure did not ask for a new check-out");
+  const bad = resolveAssistantTurn(
+    { step: "checkout", draft: { ...createInitialBookingFlowState().draft, checkin: plus(10) } },
+    command([{ type: "set_stay_dates", checkout: plus(10) }]),
+  );
+  assert(bad.outcome.kind === "invalid_checkout", "a same-day check-out was accepted");
+
+  // Typed dates: years, ranges, formats.
+  assert(dates(fallbackRoomFinderCommand("3/1", { language: "en", currentStep: "checkout", checkin: `${year + 1}-12-28` })).checkout === `${year + 2}-01-03`,
+    "a departure without a year landed before its 28 December arrival");
+  assert(dates(fallbackRoomFinderCommand("28/12 - 3/1", { language: "en", currentStep: "checkin" })).checkout === `${year + 1}-01-03`,
+    "a range across the new year was read wrongly");
+  assert(dates(fallbackRoomFinderCommand("29/2", { language: "en", currentStep: "checkin" })).checkin === "2028-02-29",
+    "29/2 without a year did not find the next leap year");
+  assert(dates(fallbackRoomFinderCommand("August 29, 2027", { language: "en", currentStep: "checkin" })).checkin === "2027-08-29",
+    "a month-first English date was not read");
+  assert(dates(fallbackRoomFinderCommand("2027-08-29", { language: "en", currentStep: "checkin" })).checkin === "2027-08-29",
+    "an ISO date was not read");
+  assert(dates(fallbackRoomFinderCommand("29/8/2027 - 2/9/2026", { language: "en", currentStep: "checkin" })).checkout !== "2027-09-02",
+    "a year the guest wrote was changed");
+
+  // Plain date answers skip the AI and go to the field that was asked.
+  const plain = (text, step, extra = {}) => plainDateAnswerCommand(text, { language: "en", currentStep: step, ...extra });
+  assert(dates(plain("29.08.2027", "checkin")).checkin === "2027-08-29", "a typed arrival was not applied directly");
+  assert(dates(plain("29.08.2027", "checkout", { checkin: "2027-08-20" })).checkout === "2027-08-29", "a typed departure was not applied directly");
+  assert(dates(plain("Sun, 29 August 2027", "checkin")).checkin === "2027-08-29", "a weekday + date was not applied directly");
+  assert(dates(plain("Κυριακή 29 Αυγούστου 2027", "checkin")).checkin === "2027-08-29", "a Greek date was not applied directly");
+  const range = dates(plain("from 29/8 to 2/9", "checkin"));
+  assert(range.checkin && range.checkout, "a typed range was not applied directly");
+  assert(dates(plain("10/5/2026", "checkin")).checkin === "2026-05-10", "a past typed date did not reach the 'did you mean next year?' question");
+  for (const text of ["3 nights", "2", "no, 29/8", "29/8 with 2 people", "29/8 or 30/8?", "29/8 and 30/8", "τι δωμάτια έχετε"]) {
+    assert(plain(text, "checkin") === null, `"${text}" must go to the AI interpreter, not the plain-date path`);
+  }
+  assert(plain("29/8", "rooms") === null, "a bare date outside the date questions must not be applied directly");
+
+  // Back: the question we return to shows its calendar/buttons again, and is
+  // asked if it was never shown on its own.
+  const production = fs.readFileSync(productionPath, "utf8");
+  const hook = fs.readFileSync(hookPath, "utf8");
+  assert(/setHiddenQuickReplyPromptId\(null\);\s*finder\.goBack\(\)/.test(production), "Back keeps the calendar/buttons hidden");
+  assert(/rewindOrAsk\(tone\.checkout\)/.test(hook), "Back to check-out does not ask the question when it was never shown");
+  assert(/plainDateAnswerCommand\(value/.test(hook), "typed plain dates still wait for the AI interpreter");
+}
+
 function main() {
   testStrictDates();
   testChildrenThanksAndCorrections();
@@ -1012,6 +1070,7 @@ function main() {
   testArrivalTimeReachesReception();
   testSecondAuditScenarios();
   testCalendarButton();
+  testCheckinCheckoutAudit();
   testPreferencesAreConfirmed();
   testNeverTheSameQuestionTwice();
   testPerRoomGuestAnswerNeverLoops();

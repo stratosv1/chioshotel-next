@@ -8,6 +8,7 @@ import {
   type RoomFinderOfferSnapshot,
 } from "@/lib/ai-assistant/room-finder-offer-tracking";
 import type { RoomFinderCommand, RoomFinderPreference } from "@/lib/ai-assistant/room-finder-types";
+import { plainDateAnswerCommand } from "@/lib/ai-assistant/room-finder-fallback";
 import type { RoomFinderLanguage } from "./room-finder-copy";
 import { ROOM_FINDER_COPY } from "./room-finder-copy";
 import { ROOM_FINDER_TONE } from "./room-finder-tone";
@@ -842,6 +843,15 @@ export function useRoomFinder(language: RoomFinderLanguage) {
   const rewindConversation = (...promptContents: string[]) =>
     setMessages(current => rewindToAssistantPrompt(current, promptContents));
 
+  // Back to a question that was never shown on its own (e.g. both dates were
+  // typed at once, so there was no check-out question): ask it now, so the
+  // chat never shows "How many rooms?" while the calendar asks for check-out.
+  const rewindOrAsk = (prompt: string, ...alsoMatch: string[]) =>
+    setMessages(current => {
+      const rewound = rewindToAssistantPrompt(current, [prompt, ...alsoMatch]);
+      return rewound !== current ? rewound : [...current, { id: rid(), role: "assistant", content: prompt }];
+    });
+
   function clearSearchSelectionState() {
     searchSeq.current += 1;
     setStayExtension(null);
@@ -1004,16 +1014,16 @@ export function useRoomFinder(language: RoomFinderLanguage) {
 
     switch (nextFlow.step) {
       case "checkin":
-        rewindConversation(tone.invalidDate, copy.welcome);
+        rewindOrAsk(tone.invalidDate, copy.welcome);
         return;
       case "checkout":
-        rewindConversation(tone.checkout);
+        rewindOrAsk(tone.checkout);
         return;
       case "rooms":
-        rewindConversation(tone.rooms);
+        rewindOrAsk(tone.rooms);
         return;
       case "guests":
-        rewindConversation(guestsPrompt(nextFlow.draft, nextMissingGuestRoom(nextFlow.draft) || 1));
+        rewindOrAsk(guestsPrompt(nextFlow.draft, nextMissingGuestRoom(nextFlow.draft) || 1));
         return;
       default:
         return;
@@ -1954,6 +1964,24 @@ export function useRoomFinder(language: RoomFinderLanguage) {
         }
         return;
       }
+    }
+
+    // A plain date answering the check-in / check-out question ("29.08.2027",
+    // "29/8 - 2/9") is applied directly, like a date picked in the calendar:
+    // no wait for the AI interpreter and no chance of it landing on the
+    // wrong field.
+    const plainDates = plainDateAnswerCommand(value, { language, currentStep: current, checkin });
+    if (plainDates) {
+      if (!await beginUserTurn(value, "date", "👍")) return;
+      try {
+        await applyCommand(plainDates, value);
+      } catch (error) {
+        console.error("Room Finder could not apply the typed date", error);
+        add("assistant", INTERPRETER_UNAVAILABLE[language], "lead");
+      } finally {
+        endUserTurn();
+      }
+      return;
     }
 
     // Ref 18: an existing booking, a request for a person or for a better
