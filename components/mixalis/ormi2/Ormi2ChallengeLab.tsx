@@ -193,7 +193,7 @@ export function Ormi2ChallengeLab() {
   function verify() {
     if (!activeStep || stepPassed) return;
     if (!input.trim()) { setErrorText("Γράψε μια αριθμητική απάντηση πριν από τον έλεγχο."); return; }
-    if (!Number.isFinite(Number(input.replace(",", ".")))) { setErrorText("Χρειάζεται αριθμός. Μπορείς να γράψεις δεκαδικό με κόμμα ή τελεία."); return; }
+    if (!Number.isFinite(Number(input.replace(/−/g, "-").replace(",", ".")))) { setErrorText("Χρειάζεται αριθμός. Μπορείς να γράψεις δεκαδικό με κόμμα ή τελεία."); return; }
     if (answerMatches(input, activeStep.answer)) {
       setErrorText("");
       setStepPassed(true);
