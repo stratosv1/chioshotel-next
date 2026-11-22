@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { SCENARIOS, type Scenario, type Tool } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
 import { appendSkillEvents, phaseSkillEvents } from "@/components/mixalis/ormi2/learning-data";
+import { getThinkingTrick } from "@/components/mixalis/ormi2/thinking-tricks-data";
 
 const Ormi2MotionScene = dynamic(() => import("./Ormi2MotionScene").then((m) => m.Ormi2MotionScene), {
   ssr: false,
@@ -127,6 +128,7 @@ export function Ormi2Trainer() {
   const [savedThisRound, setSavedThisRound] = useState(false);
 
   const s = SCENARIOS[index];
+  const featuredTrick = getThinkingTrick(s.id);
   const grouped = useMemo(() => groupsFor(s), [s]);
   const total = SCENARIOS.length;
 
@@ -255,6 +257,15 @@ export function Ormi2Trainer() {
           <p className="mt-4 text-[11px] text-[#b6d5c4]">*Καταγράφεται η ανεξάρτητη μεθοδολογική προσπάθεια, όχι αυτόματη βαθμολόγηση των αριθμητικών πράξεων.</p>
         </header>
 
+        <Link href="/mixalis/ormi2/kolpa" className="group flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#b8cda8] bg-[#fff8e8] px-5 py-5 text-[#5c4b2d] shadow-sm transition-colors hover:bg-[#f8efd8] sm:px-7">
+          <span className="max-w-2xl">
+            <span className="block text-xs font-bold uppercase tracking-[0.17em] text-[#9b7038]">Νέο · 5 δυνατά κόλπα Φυσικής</span>
+            <span className="mt-1 block text-xl font-bold sm:text-2xl">Μάθε τη διαδρομή της σκέψης, όχι έτοιμους τύπους</span>
+            <span className="mt-2 block text-sm leading-6 text-[#79694e]">5 δύσκολες ασκήσεις · ανάλυση δυνάμεων · 20 εναλλακτικά ζητούμενα με αναλυτικές λύσεις</span>
+          </span>
+          <span className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#806335] px-5 py-2.5 text-sm font-semibold text-white">Μάθε τα 5 κόλπα <ArrowRight size={16}/></span>
+        </Link>
+
         <Link href="/mixalis/ormi2/proodos"
           className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#abcbb8] bg-white px-5 py-4 text-[#255c47] hover:bg-[#e9f4ed]">
           <span>
@@ -314,7 +325,13 @@ export function Ormi2Trainer() {
                 <span className="rounded-full bg-[#f0ede7] px-3 py-1 text-xs font-semibold text-[#6b6053]">{s.phases.length} φάσεις</span>
               </div>
               <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">{s.title}</h2>
-              <p className="mt-3 text-sm leading-7 text-[#5b554e]"><strong>Ζητούμενο:</strong> {s.ask}</p>
+              <div className="mt-4 rounded-2xl border border-[#bdd8c3] bg-[#edf7ee] p-4 sm:p-5">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.13em] text-[#286c4c]">
+                  <Target size={18} /> Η αποστολή μας — Τι ψάχνουμε;
+                </div>
+                <p className="mt-2 text-lg font-semibold leading-8 text-[#244735]">{s.ask}</p>
+                <p className="mt-2 text-xs leading-6 text-[#617968]">Θυμήσου αυτό το ζητούμενο ενώ παρακολουθείς το φαινόμενο. Μην ψάχνεις ακόμη τον νόμο — πρώτα κατάλαβε τι θέλεις να βρεις.</p>
+              </div>
               <div className="mt-5 grid grid-cols-5 gap-1.5" aria-label="Στάδια επίλυσης">
                 {STEPS.map((item, pos) => {
                   const active = item.id === step;
@@ -450,6 +467,13 @@ export function Ormi2Trainer() {
                   </div>
                   {savedThisRound ? <div role="status" className="rounded-xl bg-[#e2f3e9] p-4 text-sm font-semibold text-[#1f694d]">Η προσπάθεια καταγράφηκε σε αυτή τη συσκευή. Δοκίμασε τώρα μία συγγενική άσκηση με διαφορετικές συνθήκες.</div> :
                     <button type="button" disabled={plan.trim().length < 20} onClick={finish} className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#1f6f5c] px-6 py-3 font-semibold text-white disabled:opacity-40"><CheckCircle2 size={19} /> Καταχώριση προσπάθειας</button>}
+                  {featuredTrick && <div className="rounded-2xl border border-[#aacdaf] bg-[#e8f5ea] p-4 sm:p-5">
+                    <p className="text-xs font-bold uppercase tracking-wider text-[#26724c]">Μία από τις 5 ιδιαίτερα δύσκολες περιπτώσεις</p>
+                    <h4 className="mt-2 text-lg font-bold text-[#23593c]">{featuredTrick.memorable}</h4>
+                    <p className="mt-2 text-sm leading-7 text-[#476b52]">Δες την ειδική ανάλυση δυνάμεων και 4 άλλα ζητούμενα με την πλήρη διαδρομή σκέψης.</p>
+                    <Link href={"/mixalis/ormi2/kolpa?scenario="+encodeURIComponent(s.id)}
+                      className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#276c4c] px-4 py-2.5 text-sm font-semibold text-white">Εξήγησέ μου την πονηριά <ArrowRight size={16}/></Link>
+                  </div>}
                   <p className="text-xs leading-5 text-[#887f74]">Η εφαρμογή ελέγχει τη διάκριση φάσεων, τους νόμους και τη στρατηγική. Δεν ισχυρίζεται ότι διόρθωσε τις πράξεις που έγιναν στο τετράδιο.</p>
                 </div>
               )}
