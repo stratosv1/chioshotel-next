@@ -63,7 +63,7 @@ export function ThinkingForceDiagram({ id }: { id: string }) {
         {ball(270,126,blue,21)}
         <Arrow x1={270} y1={106} x2={270} y2={31} color={green} name="N" tx={286} ty={43}/>
         <Arrow x1={288} y1={137} x2={288} y2={172} color={brown} name="mg" tx={312} ty={151}/>
-        <Arrow x1={199} y1={126} x2={125} y2={126} color={red} name="uᵧ πριν = −4" tx={117} ty={105}/>
+        <Arrow x1={226} y1={103} x2={226} y2={157} color={red} name="uᵧ πριν = −4" tx={170} ty={103}/>
         <Arrow x1={342} y1={126} x2={423} y2={126} color={blue} name="uₓ = 3" tx={437} ty={109}/>
         {label(27,34,"Προς τα πάνω: +y",true)}
         {label(328,49,"Δpᵧ > 0",true)}
