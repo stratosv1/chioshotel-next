@@ -28,8 +28,18 @@
 /* ── Φυσική: εκκρεμές με περίοδο 2 s (Α → Γ → Α) ── */
 @keyframes sx-swing { 0%, 100% { transform: rotate(28deg); } 50% { transform: rotate(-28deg); } }
 .sx-swing { animation: sx-swing 2s ease-in-out infinite; }
+@keyframes sx-sand-top { 0% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
+@keyframes sx-sand-bot { 0% { transform: scaleY(0); } 100% { transform: scaleY(1); } }
+@keyframes sx-sand-stream { to { stroke-dashoffset: -12; } }
+@keyframes sx-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.75; } }
+.sx-sand-top { transform-box: fill-box; transform-origin: 50% 100%; animation: sx-sand-top 8s linear forwards; }
+.sx-sand-bot { transform-box: fill-box; transform-origin: 50% 100%; animation: sx-sand-bot 8s linear forwards; }
+.sx-sand-stream { animation: sx-sand-stream 0.4s linear 20 forwards; }
+.sx-pulse { animation: sx-pulse 2.4s ease-in-out infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .sx-pop, .sx-shake, .sx-float, .sx-flip, .sx-bounce, .sx-key, .sx-swing { animation: none; }
+  .sx-pop, .sx-shake, .sx-float, .sx-flip, .sx-bounce, .sx-key, .sx-swing, .sx-sand-stream, .sx-pulse { animation: none; }
+  .sx-sand-top { animation: none; transform: scaleY(0.5); }
+  .sx-sand-bot { animation: none; transform: scaleY(0.5); }
   .sx-reveal { opacity: 1; transform: none; transition: none; }
 }

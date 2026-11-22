@@ -1,41 +1,136 @@
 import type { ReactNode } from "react";
-import { Block, Eq, F, Hook, KeyIdea, M, Rule, Section } from "../../math/ui";
-import { FinalTest, MiniQuiz, Pendulum, ReactionGame, UnitConverter } from "../interactive";
+import { F } from "../../math/ui";
+import { FinalTest, MiniQuiz } from "../interactive";
+import {
+  BikeTimeline,
+  FastClock,
+  Flashcards,
+  Hourglass,
+  Pendulum,
+  PhotoFinish,
+  PlanTracker,
+  Predict,
+  ReactionGame,
+  SectionDone,
+  Stepper,
+  Sundial,
+  UnitStairs,
+} from "../visuals";
 
 // Φυσική Α΄ Γυμνασίου — Κεφάλαιο 2: Μετρήσεις χρόνου – Η ακρίβεια.
-// Κορμός: η φωτοτυπία του καθηγητή. Συμπλήρωμα: βοήθημα Σαββάλα (σελ. 43–74).
-// Περίοδος/εκκρεμές μόνο σε απλή παρουσίαση, όπως ζήτησε ο γονιός.
+// Πρότυπο: docs/lesson-build-prompt-sideris.md. Κορμός: η φωτοτυπία του καθηγητή.
+// Συμπλήρωμα: βοήθημα Σαββάλα (σελ. 43–74). Περίοδος/εκκρεμές μόνο σε απλή παρουσίαση.
 
 const f = (n: ReactNode, d: ReactNode) => <F n={n} d={d} />;
 
-/** Άσκηση του βοηθήματος με τον αριθμό του βιβλίου και κρυφή λύση. */
+// ───────────────────────────── μικρά δομικά κομμάτια ─────────────────────────────
+function PSection({ id, code, title, minutes, children }: { id: string; code: string; title: string; minutes?: number; children: ReactNode }) {
+  return (
+    <section id={id} className="scroll-mt-20">
+      <div className="mb-4 flex items-center gap-3">
+        <span className="grid h-12 min-w-[3rem] shrink-0 place-items-center rounded-2xl bg-[#6b3fa0] px-3 text-lg font-black text-white shadow-md">
+          {code}
+        </span>
+        <div>
+          <h2 className="text-2xl font-bold leading-tight tracking-tight">{title}</h2>
+          {minutes ? <p className="text-sm text-[#857a70]">περίπου {minutes} λεπτά</p> : null}
+        </div>
+      </div>
+      <div className="space-y-5">{children}</div>
+    </section>
+  );
+}
+
+/** «Τι κρατάμε»: ο κανόνας όπως τον λέει η φωτοτυπία / το βιβλίο. */
+function Keep({ children }: { children: ReactNode }) {
+  return (
+    <div className="sx-key rounded-3xl p-[3px] shadow-md">
+      <div className="rounded-[calc(1.5rem-3px)] bg-white p-5 sm:p-6">
+        <p className="mb-2 text-sm font-black uppercase tracking-[0.16em] text-[#6b3fa0]">
+          <span className="sx-float">📌</span> Τι κρατάμε
+        </p>
+        <div className="space-y-2 text-[17px] leading-8">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+/** «📖 Τι σημαίνει»: εξήγηση νέας λέξης. */
+function Means({ word, children }: { word: string; children: ReactNode }) {
+  return (
+    <p className="rounded-2xl border border-[#1d5a8c]/15 bg-[#eef5fb] px-4 py-3 text-[16px] leading-7">
+      <span className="font-bold text-[#1d5a8c]">📖 Τι σημαίνει «{word}»;</span> {children}
+    </p>
+  );
+}
+
+function Trap({ wrong, right, why }: { wrong: ReactNode; right: ReactNode; why: ReactNode }) {
+  return (
+    <div className="rounded-3xl border-2 border-[#d64545]/35 bg-[repeating-linear-gradient(135deg,#fff8f6_0_14px,#fff1ee_14px_28px)] p-5">
+      <p className="mb-2 text-sm font-black uppercase tracking-[0.12em] text-[#b33a3a]">
+        <span className="sx-float">⚠️</span> Παγίδα!
+      </p>
+      <p className="text-[16px] leading-8">
+        <span className="mr-2 rounded-md bg-[#fdecec] px-2 py-0.5 text-sm font-bold text-[#b33a3a]">✗</span>
+        <span className="text-[#9b2c2c] [text-decoration-line:line-through]">{wrong}</span>
+      </p>
+      <p className="text-[16px] leading-8">
+        <span className="mr-2 rounded-md bg-[#e7f3e4] px-2 py-0.5 text-sm font-bold text-[#24522a]">✓</span>
+        <b className="text-[#24522a]">{right}</b>
+      </p>
+      <p className="mt-1 text-[15px] leading-7 text-[#4d4138]">👉 {why}</p>
+    </div>
+  );
+}
+
+/** Άσκηση με κρυφή λύση. teacher = άσκηση του καθηγητή (μπλε κύκλος, όπως στα Μαθηματικά). */
 function Ask({ n, q, teacher, children }: { n: string; q: ReactNode; teacher?: boolean; children: ReactNode }) {
   return (
     <div className="rounded-2xl border border-black/10 bg-white p-4">
       <div className="flex items-start gap-3">
         <span
-          className={`grid h-9 min-w-[3rem] shrink-0 place-items-center rounded-full px-2 text-sm font-bold ${
-            teacher ? "border-2 border-[#c2185b] text-[#c2185b]" : "bg-[#f1eafa] text-[#6b3fa0]"
+          className={`grid h-10 min-w-[2.5rem] shrink-0 place-items-center rounded-full px-2 text-sm font-bold ${
+            teacher ? "border-[3px] border-[#2f4f9a] text-[#2f4f9a]" : "bg-[#f1eafa] text-[#6b3fa0]"
           }`}
         >
           {n}
         </span>
-        <div className="min-w-0 flex-1 pt-1">
+        <div className="min-w-0 flex-1 pt-1.5">
           {teacher ? (
-            <span className="mb-1 mr-2 inline-block rounded-full bg-[#fce4ec] px-2 py-0.5 text-xs font-semibold text-[#c2185b]">
-              Από τη φωτοτυπία του καθηγητή
+            <span className="mb-1 mr-2 inline-block rounded-full bg-[#e8edf9] px-2 py-0.5 text-xs font-semibold text-[#2f4f9a]">
+              Της φωτοτυπίας του καθηγητή
             </span>
           ) : null}
-          <div className="text-[15px] leading-7 sm:text-base">{q}</div>
+          <div className="text-[16px] leading-7">{q}</div>
         </div>
       </div>
       <details className="group mt-3">
-        <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-xl border border-black/10 bg-[#f7f4ef] px-3 py-1.5 text-sm font-semibold text-[#4d4138] transition hover:bg-[#ece4da]">
+        <summary className="inline-flex min-h-[44px] cursor-pointer list-none items-center gap-1 rounded-xl border border-black/10 bg-[#f7f4ef] px-4 text-sm font-semibold text-[#4d4138] transition hover:bg-[#ece4da]">
           <span className="group-open:hidden">Δείξε τη λύση ▾</span>
           <span className="hidden group-open:inline">Κρύψε τη λύση ▴</span>
         </summary>
-        <div className="mt-3 space-y-2 border-l-4 border-[#b79ad6] pl-4 text-[15px] leading-7 sm:text-base">{children}</div>
+        <div className="mt-3 space-y-2 border-l-4 border-[#b79ad6] pl-4 text-[16px] leading-7">{children}</div>
       </details>
+    </div>
+  );
+}
+
+/** Λύση προβλήματος σε 4 βήματα: Τι μου δίνουν → Τι ψάχνω → Ποιος τύπος → Λύνω. */
+function Solve({ given, find, rule, work }: { given: ReactNode; find: ReactNode; rule: ReactNode; work: ReactNode }) {
+  const rows: [string, string, ReactNode][] = [
+    ["🎁", "Τι μου δίνουν", given],
+    ["🔎", "Τι ψάχνω", find],
+    ["🧰", "Ποιος κανόνας", rule],
+    ["✍️", "Λύνω", work],
+  ];
+  return (
+    <div className="space-y-1.5">
+      {rows.map(([e, l, v]) => (
+        <p key={l}>
+          <span className="mr-1">{e}</span>
+          <b className="text-[#6b3fa0]">{l}:</b> {v}
+        </p>
+      ))}
     </div>
   );
 }
@@ -55,551 +150,510 @@ function L({ items }: { items: ReactNode[] }) {
 
 const ok = <b className="text-[#24522a]">Σωστό ✓</b>;
 const no = <b className="text-[#b33a3a]">Λάθος ✗</b>;
+const big = "font-bold text-[#1d5a8c]";
+
+const PLAN = [
+  { id: "fotocopia", title: "Η φωτοτυπία του καθηγητή", minutes: 5, important: true },
+  { id: "2-1", title: "1 · Μονάδες χρόνου", minutes: 10, important: true },
+  { id: "2-2", title: "2 · Στιγμή και διάρκεια", minutes: 8, important: true },
+  { id: "2-3", title: "3 · Αναλογικά και ψηφιακά", minutes: 8, important: true },
+  { id: "2-4", title: "4 · Ακρίβεια και μέση τιμή", minutes: 10, important: true },
+  { id: "2-5", title: "5 · Το εκκρεμές (απλά)", minutes: 5 },
+  { id: "askiseis", title: "Ασκήσεις βοηθήματος", minutes: 20 },
+  { id: "kartes", title: "Κάρτες αποστήθισης", minutes: 5 },
+  { id: "test", title: "Τελικό διαγώνισμα", minutes: 15 },
+];
 
 export function Kefalaio2Fysiki() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-14">
+      {/* ───────────────────────────── ΠΛΑΝΟ ───────────────────────────── */}
+      <PSection id="plano" code="📋" title="Το πλάνο σου">
+        <div className="rounded-3xl bg-gradient-to-br from-[#6b3fa0] to-[#3a2a6b] p-6 text-white shadow-lg">
+          <p className="text-2xl font-black">
+            Γεια σου Σιδέρη! <span className="sx-float">👋</span>
+          </p>
+          <p className="mt-2 text-[17px] leading-8">
+            Η Φυσική είναι η επιστήμη που ρωτάει «γιατί;» και «πόσο;». Σήμερα ξεκινάμε με κάτι που χρησιμοποιείς κάθε μέρα χωρίς να το
+            σκέφτεσαι: <b>τον χρόνο</b>. Πόσο κρατάει το διάλειμμα; Ποιος έτρεξε πιο γρήγορα; Πώς ήξεραν την ώρα πριν υπάρξουν ρολόγια;
+          </p>
+          <p className="mt-3 text-[15px] leading-7 text-white/85">
+            Κάθε ενότητα είναι μικρή: πρώτα <b>μαντεύεις</b>, μετά <b>παίζεις</b> με το σχέδιο, κρατάς τον κανόνα και κάνεις ένα τεστάκι.
+            Όταν τελειώσεις μια ενότητα, πάτα «✓ Το έμαθα».
+          </p>
+        </div>
+        <PlanTracker items={PLAN} />
+      </PSection>
+
       {/* ───────────────────────────── ΦΩΤΟΤΥΠΙΑ ───────────────────────────── */}
-      <Section id="fotocopia" code="📄" title="Η φωτοτυπία του καθηγητή">
-        <p className="text-[15px] leading-7 text-[#4d4138]">
-          Αυτά είναι <b>όσα ζητάει ο καθηγητής</b>. Αν τα ξέρεις απέξω και καταλαβαίνεις τι σημαίνουν, είσαι έτοιμος. Τα υπόλοιπα
-          κομμάτια της σελίδας τα εξηγούν πιο αναλυτικά.
+      <PSection id="fotocopia" code="📄" title="Η φωτοτυπία του καθηγητή" minutes={5}>
+        <p className="text-[16px] leading-7 text-[#4d4138]">
+          Σιδέρη, αυτά είναι <b>όσα ζητάει ο καθηγητής σου</b>. Τα εξηγούμε ένα-ένα παρακάτω με σχέδια. Στο τέλος ξαναγύρνα εδώ και
+          δες αν τα θυμάσαι όλα.
         </p>
-        <KeyIdea title="τα 8 βασικά">
+        <Keep>
           <ol className="list-decimal space-y-2 pl-6">
             <li>
               Η διεθνής <b>μονάδα μέτρησης του χρόνου</b> είναι το <b>δευτερόλεπτο (s)</b>.
             </li>
             <li>
-              Μεγαλύτερες μονάδες (πολλαπλάσια): <M>1 min = 60 s</M> και <M>1 h = 60 min = 3.600 s</M>.
+              Μεγαλύτερες μονάδες: <span className={big}>1 min = 60 s</span> και <span className={big}>1 h = 60 min = 3.600 s</span>.
             </li>
             <li>
-              <b>Αναλογικά όργανα</b> είναι αυτά που χρησιμοποιούν αναλογίες: ρολόι με δείκτες, ηλιακό ρολόι, κλεψύδρα.
+              <b>Αναλογικά όργανα:</b> χρησιμοποιούν αναλογίες, όπως το ρολόι με δείκτες, το ηλιακό ρολόι και η κλεψύδρα.
             </li>
             <li>
-              <b>Ψηφιακά όργανα</b> είναι αυτά που έχουν μόνο ψηφία.
+              <b>Ψηφιακά όργανα:</b> έχουν μόνο ψηφία.
             </li>
             <li>
-              <b>Ακρίβεια:</b> μεγαλύτερη ακρίβεια έχουμε με τη <b>μικρότερη μονάδα μέτρησης</b>. Ανάμεσα σε εκατοστά και χιλιοστά του
-              δευτερολέπτου, πιο ακριβή είναι τα χιλιοστά.
+              <b>Ακρίβεια:</b> μεγαλύτερη ακρίβεια έχουμε με τη <b>μικρότερη μονάδα μέτρησης</b>, π.χ. τα χιλιοστά είναι πιο ακριβή από τα
+              εκατοστά του δευτερολέπτου.
             </li>
             <li>
-              Το ακριβέστερο όργανο στον κόσμο σήμερα είναι το <b>ατομικό ρολόι</b>.
+              Το ακριβέστερο όργανο στον κόσμο είναι το <b>ατομικό ρολόι</b>.
             </li>
             <li>
-              <b>Χρονική στιγμή</b> είναι η ένδειξη του ρολογιού που μας δείχνει <b>πότε</b> συμβαίνει ένα γεγονός. Για παράδειγμα, ένα
-              αυτοκίνητο ξεκινά τη χρονική στιγμή <M>t = 0 s</M>.
+              <b>Χρονική στιγμή:</b> η ένδειξη του ρολογιού που δείχνει <b>πότε</b> συμβαίνει κάτι (π.χ. το αυτοκίνητο ξεκινά τη στιγμή
+              t = 0 s).
             </li>
             <li>
-              <b>Χρονική διάρκεια</b> είναι ο χρόνος που μεσολαβεί ανάμεσα σε δύο γεγονότα (ή δύο χρονικές στιγμές). Δηλαδή μετράμε
-              πόσος χρόνος πέρασε από την αρχή μέχρι το τέλος.
+              <b>Χρονική διάρκεια:</b> ο χρόνος ανάμεσα σε δύο γεγονότα (ή δύο χρονικές στιγμές), από την αρχή μέχρι το τέλος.
             </li>
           </ol>
-        </KeyIdea>
-
-        <Block title="Το πείραμα της τάξης: 10 ταλαντώσεις με πλαστελίνη" tone="theory">
-          <p>
-            Δένουμε μια πλαστελίνη στην άκρη ενός νήματος και την άλλη άκρη σε σταθερό σημείο. <b>Εκτρέπουμε</b> (απομακρύνουμε) την
-            πλαστελίνη από τη θέση ισορροπίας, την αφήνουμε να ταλαντωθεί και ταυτόχρονα πατάμε το χρονόμετρο.
-          </p>
-          <p>
-            Μία ταλάντωση είναι όταν η πλαστελίνη <b>ξαναγυρίσει στην ακραία θέση</b> από την οποία ξεκίνησε. Όταν γυρίσει για{" "}
-            <b>δέκατη φορά</b>, σταματάμε το χρονόμετρο. Επαναλαμβάνουμε <b>5 φορές</b> και βρίσκουμε τον <b>μέσο όρο</b>.
-          </p>
-          <p className="text-sm text-[#6b625b]">
-            Γιατί 10 ταλαντώσεις και όχι 1; Η μία είναι πολύ γρήγορη και το λάθος του χεριού μας θα ήταν μεγάλο. Με 10, το λάθος
-            «μοιράζεται» και η μέτρηση βγαίνει πιο σωστή.
-          </p>
-        </Block>
-
+        </Keep>
         <Ask
           teacher
           n="α"
           q={
             <>
-              Μετράμε τον χρόνο δέκα ταλαντώσεων με <b>ψηφιακό</b> ρολόι και βρίσκουμε <M>8,94 s</M>, και με <b>αναλογικό</b> και
-              βρίσκουμε <M>9 s</M>. Ποιο όργανο μάς έδωσε μεγαλύτερη ακρίβεια;
+              Μετράμε τον χρόνο δέκα ταλαντώσεων με <b>ψηφιακό</b> ρολόι και βρίσκουμε <b>8,94 s</b>, και με <b>αναλογικό</b> και
+              βρίσκουμε <b>9 s</b>. Ποιο όργανο μάς έδωσε μεγαλύτερη ακρίβεια;
             </>
           }
         >
-          <p>
-            Το ψηφιακό μέτρησε <M>8,94 s</M>, δηλαδή μέχρι <b>εκατοστά του δευτερολέπτου</b>. Το αναλογικό μέτρησε <M>9 s</M>, δηλαδή
-            μόνο σε <b>ολόκληρα δευτερόλεπτα</b>.
-          </p>
-          <p>
-            Το εκατοστό του δευτερολέπτου είναι μικρότερη μονάδα. <b>Μεγαλύτερη ακρίβεια μάς έδωσε το ψηφιακό ρολόι.</b>
-          </p>
+          <Solve
+            given="ψηφιακό: 8,94 s (μετράει εκατοστά του s) · αναλογικό: 9 s (μετράει ολόκληρα s)"
+            find="ποιο είναι πιο ακριβές"
+            rule="μικρότερη μονάδα μέτρησης = μεγαλύτερη ακρίβεια"
+            work={
+              <>
+                Το εκατοστό του δευτερολέπτου είναι πιο μικρό κομμάτι από το δευτερόλεπτο. <b>Μεγαλύτερη ακρίβεια μάς έδωσε το ψηφιακό
+                ρολόι.</b>
+              </>
+            }
+          />
         </Ask>
         <Ask
           teacher
           n="β"
           q={
             <>
-              Μετράμε τον χρόνο δέκα ταλαντώσεων και παίρνουμε τις τιμές <M>8,4 s, 8,5 s, 8,7 s, 9 s, 9 s</M>. Να υπολογίσετε τη μέση
+              Μετράμε τον χρόνο δέκα ταλαντώσεων και παίρνουμε τις τιμές <b>8,4 s, 8,5 s, 8,7 s, 9 s, 9 s</b>. Να υπολογίσετε τη μέση
               τιμή του χρόνου δέκα ταλαντώσεων.
             </>
           }
         >
-          <Eq>Μέση τιμή = {f("άθροισμα", "πλήθος")}</Eq>
-          <p>Άθροισμα: 8,4 + 8,5 + 8,7 + 9 + 9 = 43,6 s. Πλήθος: 5 μετρήσεις.</p>
-          <Eq>
-            t̄ = {f("43,6", "5")} = 8,72 s
-          </Eq>
-          <p className="font-semibold">Απάντηση: η μέση τιμή είναι 8,72 s.</p>
+          <Solve
+            given="5 μετρήσεις: 8,4 · 8,5 · 8,7 · 9 · 9 (σε s)"
+            find="τη μέση τιμή"
+            rule={<>μέση τιμή = {f("άθροισμα", "πλήθος")}</>}
+            work={
+              <>
+                Άθροισμα: 8,4 + 8,5 + 8,7 + 9 + 9 = 43,6 s. Πλήθος: 5. Μέση τιμή = 43,6 : 5 = <b>8,72 s</b>.
+              </>
+            }
+          />
         </Ask>
-      </Section>
+        <SectionDone id="fotocopia" />
+      </PSection>
 
       {/* ───────────────────────────── 1. ΜΟΝΑΔΕΣ ───────────────────────────── */}
-      <Section id="2-1" code="1" title="Μονάδες χρόνου και μετατροπές">
-        <Hook emoji="⏱️">
-          Ένας αγώνας ποδοσφαίρου κρατάει <b>90 λεπτά</b>, ένα διάλειμμα <b>10 λεπτά</b>, μια μέρα <b>24 ώρες</b>. Ο χρόνος μετριέται
-          σε πολλές μονάδες, αλλά η βασική είναι μία: το <b>δευτερόλεπτο</b>.
-        </Hook>
-        <Block title="Οι μονάδες" tone="theory">
-          <Rule ex={<M>s</M>}>
-            Βασική (διεθνής) μονάδα: το <b>δευτερόλεπτο (s)</b>.
-          </Rule>
-          <Rule ex={<M>1 min = 60 s</M>}>
-            Το <b>λεπτό (min)</b>.
-          </Rule>
-          <Rule ex={<M>1 h = 60 min = 3600 s</M>}>
-            Η <b>ώρα (h)</b>.
-          </Rule>
-          <Rule ex={<M>1 d = 24 h = 86.400 s</M>}>
-            Η <b>ημέρα (d)</b>. Το έτος έχει 365 ημέρες.
-          </Rule>
-          <Rule ex={<M>1 s = 1000 ms</M>}>
-            Από το βοήθημα: το <b>χιλιοστό του δευτερολέπτου (ms)</b>, που διαβάζεται «μιλισεκόντ». Υπάρχει και το εκατομμυριοστό (μs),
-            αλλά στη φωτοτυπία του καθηγητή δεν υπάρχει.
-          </Rule>
-        </Block>
-
-        <Block title="Το κόλπο των μετατροπών">
-          <div className="overflow-x-auto">
-            <div className="flex min-w-max items-center gap-2 py-2 text-center font-semibold">
-              <span className="rounded-xl bg-[#6b3fa0] px-4 py-2 text-white">h</span>
-              <span className="text-sm text-[#6b3fa0]">
-                × 60 →<br />← : 60
-              </span>
-              <span className="rounded-xl bg-[#6b3fa0] px-4 py-2 text-white">min</span>
-              <span className="text-sm text-[#6b3fa0]">
-                × 60 →<br />← : 60
-              </span>
-              <span className="rounded-xl bg-[#6b3fa0] px-4 py-2 text-white">s</span>
-              <span className="text-sm text-[#6b3fa0]">
-                × 1000 →<br />← : 1000
-              </span>
-              <span className="rounded-xl bg-[#6b3fa0] px-4 py-2 text-white">ms</span>
-            </div>
-          </div>
+      <PSection id="2-1" code="1" title="Μονάδες χρόνου" minutes={10}>
+        <Predict
+          q="Μια ώρα μάθημα… πόσα δευτερόλεπτα είναι μία ώρα;"
+          choices={["60", "600", "3600"]}
+          answer={2}
+          reveal={
+            <>
+              1 ώρα = 60 λεπτά, και κάθε λεπτό = 60 δευτερόλεπτα. Άρα 60 · 60 = <b>3600 s</b>. Πολλά, ε; Δες το στο ρολόι 👇
+            </>
+          }
+        />
+        <FastClock />
+        <Keep>
           <p>
-            👉 Από <b>μεγάλη</b> μονάδα σε <b>μικρή</b> → <b>πολλαπλασιάζω</b>, γιατί βγαίνουν περισσότερα κομμάτια. Από <b>μικρή</b> σε{" "}
-            <b>μεγάλη</b> → <b>διαιρώ</b>.
-          </p>
-          <p className="text-sm text-[#6b625b]">
-            Έλεγχος λογικής: 2 ώρες είναι <i>πολλά</i> δευτερόλεπτα (7200). Αν σου βγει μικρός αριθμός, μάλλον διαίρεσες ενώ έπρεπε να
-            πολλαπλασιάσεις.
-          </p>
-        </Block>
-
-        <Block title="Λυμένα παραδείγματα">
-          <p>
-            <b>1.</b> 40 min σε s: <M>40 · 60 = 2400 s</M>
+            Βασική μονάδα: το <b>δευτερόλεπτο (s)</b>.
           </p>
           <p>
-            <b>2.</b> 2,1 h σε min: <M>2,1 · 60 = 126 min</M>
+            <span className={big}>1 min = 60 s</span> &nbsp;·&nbsp; <span className={big}>1 h = 60 min = 3600 s</span>
           </p>
-          <p>
-            <b>3.</b> 1800 s σε min: <M>1800 : 60 = 30 min</M>
+          <p className="text-[15px] text-[#6b625b]">
+            Για τους περίεργους (από το βοήθημα): 1 ημέρα = 24 h, και 1 s = 1000 ms (χιλιοστά του δευτερολέπτου).
           </p>
-          <p>
-            <b>4.</b> {f(1, 4)} h σε s: <M>{f(1, 4)} · 3600 = 3600 : 4 = 900 s</M>
-          </p>
-          <p>
-            <b>5.</b> 3600 ms σε s: <M>3600 : 1000 = 3,6 s</M>
-          </p>
-          <p>
-            <b>6.</b> Ποιο είναι μεγαλύτερο, 3 h ή 200 min; Τα κάνω ίδια μονάδα: <M>3 h = 180 min</M>, άρα <b>200 min &gt; 3 h</b>.
-          </p>
-        </Block>
-
-        <UnitConverter />
+        </Keep>
+        <Means word="πολλαπλάσια">
+          Μεγαλύτερες μονάδες που φτιάχνονται από πολλά δευτερόλεπτα μαζί: το λεπτό είναι 60 δευτερόλεπτα, η ώρα 3600.
+        </Means>
+        <UnitStairs />
+        <Stepper
+          title="Το διάλειμμα κρατάει 10 min. Πόσα δευτερόλεπτα είναι;"
+          steps={[
+            { label: "Τι μου δίνουν", body: "10 min" },
+            { label: "Τι ψάχνω", body: "πόσα s" },
+            { label: "Ποιος κανόνας", body: "από min σε s κατεβαίνω σκαλί, άρα × 60" },
+            { label: "Λύνω", body: <b>10 · 60 = 600 s 🎉</b> },
+          ]}
+        />
         <MiniQuiz id="2-1" />
-      </Section>
+        <Trap
+          wrong="2 h = 120 s"
+          right="2 h = 120 min = 7200 s"
+          why="Από ώρες σε δευτερόλεπτα είναι ΔΥΟ σκαλιά, άρα × 60 και ξανά × 60 (ή κατευθείαν × 3600)."
+        />
+        <SectionDone id="2-1" />
+      </PSection>
 
       {/* ───────────────────────────── 2. ΣΤΙΓΜΗ – ΔΙΑΡΚΕΙΑ ───────────────────────────── */}
-      <Section id="2-2" code="2" title="Χρονική στιγμή και χρονική διάρκεια">
-        <Block title="Δύο ερωτήσεις: «πότε;» και «πόσο κράτησε;»" tone="theory">
-          <Rule ex={<M>16:12:05</M>}>
-            <b>Χρονική στιγμή</b> (<M>t</M>): απαντά στο <b>ΠΟΤΕ</b> έγινε κάτι. Είναι μια ένδειξη του ρολογιού και δεν έχει διάρκεια.
-          </Rule>
-          <Rule ex={<M>14 s</M>}>
-            <b>Χρονική διάρκεια</b> ή χρονικό διάστημα (<M>Δt</M>): απαντά στο <b>ΠΟΣΟ ΚΡΑΤΗΣΕ</b>. Είναι ο χρόνος ανάμεσα σε δύο
-            χρονικές στιγμές.
-          </Rule>
-        </Block>
-        <Eq>Δt = t₂ − t₁ &nbsp; (τέλος − αρχή)</Eq>
-        <Block title="Παράδειγμα: ο σεισμός στη Ζάκυνθο">
+      <PSection id="2-2" code="2" title="Χρονική στιγμή και χρονική διάρκεια" minutes={8}>
+        <Predict
+          q="«Ο αγώνας άρχισε στις 6 και κράτησε 2 ώρες». Ποιο από τα δύο απαντά στο «ΠΟΤΕ;»"
+          choices={["στις 6", "2 ώρες"]}
+          answer={0}
+          reveal={
+            <>
+              Το «στις 6» λέει <b>πότε</b>: είναι <b>χρονική στιγμή</b>. Οι «2 ώρες» λένε <b>πόσο κράτησε</b>: είναι{" "}
+              <b>χρονική διάρκεια</b>.
+            </>
+          }
+        />
+        <BikeTimeline />
+        <Keep>
           <p>
-            Ο σεισμός <b>άρχισε</b> στις <M>t₁ = 16:12:05</M> και <b>τελείωσε</b> στις <M>t₂ = 16:12:19</M>.
+            🕙 <b>Χρονική στιγμή (t):</b> η ένδειξη του ρολογιού. Απαντά στο <b>ΠΟΤΕ</b>.
           </p>
           <p>
-            Διάρκεια: <M>Δt = 16:12:19 − 16:12:05 = 14 s</M>
+            ⏳ <b>Χρονική διάρκεια (Δt):</b> ο χρόνος ανάμεσα σε δύο στιγμές. Απαντά στο <b>ΠΟΣΟ ΚΡΑΤΗΣΕ</b>.
           </p>
-          <p className="text-sm text-[#6b625b]">
-            Το 16:12:05 είναι χρονική στιγμή (πότε). Τα 14 s είναι χρονική διάρκεια (πόσο κράτησε).
-          </p>
-        </Block>
-        <Block title="Προσοχή" tone="warn">
-          <p>• Αρνητική χρονική στιγμή ή αρνητική διάρκεια <b>δεν έχει νόημα</b>. Πάντα αφαιρούμε: τέλος − αρχή.</p>
-          <p>
-            • Αν ξεκινάμε να μετράμε από <M>t₀ = 0</M>, τότε η διάρκεια μέχρι τη στιγμή <M>t₁</M> είναι απλά <M>Δt = t₁</M>.
-          </p>
-        </Block>
+          <p className="text-center text-xl font-black text-[#3d6b3a]">Δt = t₂ − t₁ &nbsp;(τέλος − αρχή)</p>
+        </Keep>
+        <Means word="Δt">
+          Το Δ (δέλτα) στη Φυσική σημαίνει «διαφορά». Δt = η διαφορά δύο χρονικών στιγμών, δηλαδή πόσος χρόνος πέρασε.
+        </Means>
+        <Stepper
+          title="Ο σεισμός στη Ζάκυνθο άρχισε 16:12:05 και τελείωσε 16:12:19. Πόσο κράτησε;"
+          steps={[
+            { label: "Τι μου δίνουν", body: "t₁ = 16:12:05 (αρχή) και t₂ = 16:12:19 (τέλος)" },
+            { label: "Τι ψάχνω", body: "τη διάρκεια Δt" },
+            { label: "Ποιος κανόνας", body: "Δt = t₂ − t₁" },
+            { label: "Λύνω", body: <>Ώρες και λεπτά είναι ίδια, αλλάζουν μόνο τα δευτερόλεπτα: 19 − 5 = <b>14 s</b></> },
+          ]}
+        />
         <MiniQuiz id="2-2" />
-      </Section>
+        <Trap
+          wrong="Δt = t₁ − t₂ = −14 s"
+          right="Δt = t₂ − t₁ = 14 s"
+          why="Αφαιρούμε πάντα ΤΕΛΟΣ − ΑΡΧΗ. Αρνητικός χρόνος δεν υπάρχει!"
+        />
+        <SectionDone id="2-2" />
+      </PSection>
 
       {/* ───────────────────────────── 3. ΟΡΓΑΝΑ ───────────────────────────── */}
-      <Section id="2-3" code="3" title="Όργανα μέτρησης του χρόνου">
-        <div className="grid gap-3 sm:grid-cols-2">
-          {[
-            ["☀️", "Ηλιακό ρολόι", "Δείχνει την ώρα με τη σκιά μιας στήλης. Αρχαίο, πολύ μικρή ακρίβεια.", "Αναλογικό"],
-            ["⏳", "Κλεψύδρα (νερού ή άμμου)", "Ο χρόνος μετριέται όσο αδειάζει. Στην αρχαία Αθήνα μετρούσαν τις αγορεύσεις στα δικαστήρια. Σήμερα στο σκάκι.", "Αναλογικό"],
-            ["🕰️", "Ρολόι με δείκτες", "Ωροδείκτης (1 γύρος σε 12 h), λεπτοδείκτης (1 γύρος σε 1 h), δευτερολεπτοδείκτης (1 γύρος σε 1 min). Μπορεί να είναι μηχανικό, ηλεκτρικό ή χαλαζία.", "Αναλογικό"],
-            ["📟", "Ψηφιακό ρολόι / χρονόμετρο", "Δείχνει μόνο ψηφία, π.χ. 12:28:58.82, δηλαδή μέχρι εκατοστά του δευτερολέπτου. Πιο ακριβές από το αναλογικό.", "Ψηφιακό"],
-            ["⚛️", "Ατομικό ρολόι", "Το ακριβέστερο στον κόσμο (Καισίου 133). Χρησιμοποιείται στο GPS, στους τηλεοπτικούς σταθμούς και για τον συγχρονισμό των ρολογιών.", "Το πιο ακριβές"],
-          ].map(([e, t, d, tag]) => (
-            <div key={t} className="rounded-2xl border border-black/10 bg-white p-4 shadow-sm">
-              <p className="flex items-center gap-2 text-lg font-semibold">
-                <span className="text-2xl">{e}</span> {t}
-              </p>
-              <span
-                className={`mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-bold ${
-                  tag === "Αναλογικό" ? "bg-[#fff1e0] text-[#a2531f]" : tag === "Ψηφιακό" ? "bg-[#e6eef6] text-[#24496d]" : "bg-[#e7f3e4] text-[#24522a]"
-                }`}
-              >
-                {tag}
-              </span>
-              <p className="mt-2 text-[15px] leading-7 text-[#4d4138]">{d}</p>
-            </div>
-          ))}
+      <PSection id="2-3" code="3" title="Αναλογικά και ψηφιακά όργανα" minutes={8}>
+        <Predict
+          q="Πριν από 3000 χρόνια δεν υπήρχαν ρολόγια. Πώς ήξεραν οι άνθρωποι τι ώρα είναι;"
+          choices={["από τη σκιά του ήλιου", "δεν ήξεραν καθόλου", "από το κινητό 😄"]}
+          answer={0}
+          reveal={<>Από τη <b>σκιά</b> μιας στήλης: το <b>ηλιακό ρολόι</b>. Παίξε μαζί του 👇</>}
+        />
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Sundial />
+          <Hourglass />
         </div>
-        <Block title="Ποιο είναι πιο ακριβές; (από το λιγότερο στο περισσότερο)" tone="theory">
-          <p className="text-lg font-semibold">ηλιακό → αναλογικό → ψηφιακό → ατομικό</p>
-        </Block>
+        <Keep>
+          <p>
+            <b>Αναλογικά όργανα:</b> χρησιμοποιούν αναλογίες, όπως το <b>ρολόι με δείκτες</b>, το <b>ηλιακό ρολόι</b> και η{" "}
+            <b>κλεψύδρα</b>.
+          </p>
+          <p>
+            <b>Ψηφιακά όργανα:</b> έχουν <b>μόνο ψηφία</b>, όπως το χρονόμετρο του κινητού (12:28:58).
+          </p>
+          <p>
+            Το ακριβέστερο στον κόσμο: το <b>ατομικό ρολόι</b> ⚛️
+          </p>
+          <div className="mt-2 flex flex-wrap items-center gap-2 text-[15px] font-semibold">
+            <span className="rounded-full bg-[#fff1e0] px-3 py-1">☀️ ηλιακό</span>→<span className="rounded-full bg-[#fff1e0] px-3 py-1">🕰️ δείκτες</span>→
+            <span className="rounded-full bg-[#e6eef6] px-3 py-1">📟 ψηφιακό</span>→<span className="rounded-full bg-[#e7f3e4] px-3 py-1">⚛️ ατομικό</span>
+            <span className="text-sm font-normal text-[#6b625b]">(όλο και πιο ακριβή)</span>
+          </div>
+        </Keep>
+        <Means word="αναλογικό">
+          Ο χρόνος φαίνεται από κάτι που κινείται ή αλλάζει σιγά-σιγά: ένας δείκτης που γυρίζει, μια σκιά, άμμος που πέφτει. Δεν
+          βλέπεις αριθμούς σαν το κινητό.
+        </Means>
+        <Means word="ατομικό ρολόι">
+          Ένα πολύ ειδικό ρολόι σε εργαστήρια, που χάνει μόνο 1 δευτερόλεπτο σε εκατομμύρια χρόνια! Χάρη σε αυτό δουλεύει το GPS
+          στο κινητό σου.
+        </Means>
         <MiniQuiz id="2-3" />
-      </Section>
+        <Trap
+          wrong="Το πιο ακριβές ρολόι στον κόσμο είναι το ψηφιακό."
+          right="Το πιο ακριβές είναι το ατομικό ρολόι."
+          why="Το ψηφιακό είναι πιο ακριβές από το αναλογικό, αλλά το ατομικό τα κερδίζει όλα."
+        />
+        <SectionDone id="2-3" />
+      </PSection>
 
       {/* ───────────────────────────── 4. ΑΚΡΙΒΕΙΑ ───────────────────────────── */}
-      <Section id="2-4" code="4" title="Ακρίβεια και μέση τιμή">
-        <Block title="Από τι εξαρτάται η ακρίβεια μιας μέτρησης" tone="theory">
-          <Rule ex={<span className="text-sm">ρολόι που «πάει πίσω»</span>}>
-            <b>Αντικειμενικός παράγοντας:</b> το <b>όργανο</b> και η ακρίβεια που μας δίνει.
-          </Rule>
-          <Rule ex={<span className="text-sm">πάτησα stop αργά</span>}>
-            <b>Υποκειμενικός παράγοντας:</b> ο <b>άνθρωπος</b> που μετράει, δηλαδή η προσοχή και τα αντανακλαστικά του.
-          </Rule>
+      <PSection id="2-4" code="4" title="Ακρίβεια και μέση τιμή" minutes={10}>
+        <Predict
+          q="Δύο αθλητές τερματίζουν σχεδόν μαζί. Ένα ρολόι που δείχνει μόνο δευτερόλεπτα γράφει «10 s» και για τους δύο. Ποιος κέρδισε;"
+          choices={["ο Α", "ο Β", "δεν μπορούμε να ξέρουμε"]}
+          answer={2}
+          reveal={<>Με ακρίβεια δευτερολέπτου <b>δεν ξέρουμε</b>! Χρειαζόμαστε μικρότερη μονάδα. Τρέξε τον αγώνα 👇</>}
+        />
+        <PhotoFinish />
+        <Keep>
           <p>
-            Για καλές μετρήσεις χρειάζονται <b>ακρίβεια, συνέπεια και προσοχή</b>.
+            Μεγαλύτερη <b>ακρίβεια</b> έχουμε με τη <b>μικρότερη μονάδα μέτρησης</b>: τα εκατοστά του δευτερολέπτου είναι πιο ακριβή
+            από τα δευτερόλεπτα, και τα χιλιοστά πιο ακριβή από τα εκατοστά.
           </p>
-        </Block>
-
-        <Block title="Ποια μονάδα διαλέγω; Ανάλογα με το τι μετράω">
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse text-left text-[15px]">
-              <tbody>
-                {[
-                  ["Αγώνας δρόμου 100 m / 200 m", "εκατοστά (ή χιλιοστά) του s"],
-                  ["Διδακτική ώρα", "λεπτό (min)"],
-                  ["Επόμενη επίσκεψη στον οδοντίατρο", "ημέρα (d) και ώρα (h)"],
-                  ["Δημιουργία ενός πετρώματος", "εκατομμύρια χρόνια"],
-                ].map(([a, b]) => (
-                  <tr key={a}>
-                    <td className="border border-black/10 bg-white px-3 py-2">{a}</td>
-                    <td className="border border-black/10 bg-[#f5effc] px-3 py-2 font-semibold text-[#6b3fa0]">{b}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Block>
-
-        <Block title="Μέση τιμή: γιατί μετράμε πολλές φορές" tone="theory">
-          <p>
-            Κάθε φορά που μετράμε, βγαίνει λίγο διαφορετικό αποτέλεσμα. Γι' αυτό μετράμε <b>πολλές φορές</b> και βρίσκουμε τη{" "}
-            <b>μέση τιμή</b>, που είναι πιο κοντά στην πραγματική τιμή.
-          </p>
-          <Eq>Μέση τιμή = {f("άθροισμα των μετρήσεων", "πλήθος των μετρήσεων")}</Eq>
-          <p className="text-sm text-[#6b625b]">
-            Στρογγυλοποίηση: αν μετρήσαμε σε ολόκληρα δευτερόλεπτα (π.χ. 14, 13, 12), η μέση τιμή γράφεται κι αυτή σε ολόκληρα
-            (13,2 → 13 s). Αν μετρήσαμε σε εκατοστά, κρατάμε εκατοστά (13,031 → 13,03 s).
-          </p>
-        </Block>
-
+        </Keep>
+        <Means word="ακρίβεια">
+          Πόσο κοντά στην αλήθεια είναι η μέτρησή μας. «Περίπου 10 s» είναι λίγη ακρίβεια. «10,52 s» είναι μεγάλη.
+        </Means>
         <ReactionGame />
-        <MiniQuiz id="2-4" />
-      </Section>
-
-      {/* ───────────────────────────── 5. ΕΚΚΡΕΜΕΣ ───────────────────────────── */}
-      <Section id="2-5" code="5" title="Περιοδικά φαινόμενα και εκκρεμές (απλά)">
-        <Block title="Τι είναι περιοδικό φαινόμενο" tone="theory">
-          <p>
-            <b>Περιοδικό</b> λέγεται ένα φαινόμενο που <b>επαναλαμβάνεται με τον ίδιο τρόπο σε ίσα χρονικά διαστήματα</b>. Με αυτά
-            μετράμε τον χρόνο!
-          </p>
-          <p>
-            Ο χρόνος μιας επανάληψης λέγεται <b>περίοδος (T)</b>.
-          </p>
-          <div className="grid gap-2 sm:grid-cols-2">
+        <Keep>
+          <p>Επειδή κάθε μέτρηση βγαίνει λίγο αλλιώς, μετράμε <b>πολλές φορές</b> και βρίσκουμε τη <b>μέση τιμή</b>:</p>
+          <p className="text-center text-xl font-black text-[#6b3fa0]">μέση τιμή = {f("άθροισμα", "πλήθος")}</p>
+        </Keep>
+        <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm">
+          <p className="mb-2 text-sm font-black uppercase tracking-[0.14em] text-[#a2531f]">🧪 Το πείραμα της τάξης</p>
+          <div className="grid gap-3 sm:grid-cols-4">
             {[
-              ["🌍 Η Γη γυρίζει γύρω από τον άξονά της", "T = 24 h (1 μέρα)"],
-              ["☀️ Η Γη γυρίζει γύρω από τον Ήλιο", "T = 365 μέρες (1 έτος)"],
-              ["🕐 Ο λεπτοδείκτης κάνει έναν γύρο", "T = 1 h"],
-              ["🕐 Ο ωροδείκτης κάνει έναν γύρο", "T = 12 h"],
-            ].map(([a, b]) => (
-              <div key={a} className="rounded-xl bg-white px-3 py-2">
-                {a}: <b className="text-[#6b3fa0]">{b}</b>
+              ["1", "Δένουμε πλαστελίνη σε νήμα και κρεμάμε την άλλη άκρη."],
+              ["2", "Την εκτρέπουμε (τη μετακινούμε στο πλάι), την αφήνουμε και πατάμε το χρονόμετρο."],
+              ["3", "Μετράμε 10 ταλαντώσεις και σταματάμε το χρονόμετρο."],
+              ["4", "Το κάνουμε 5 φορές και βρίσκουμε τη μέση τιμή."],
+            ].map(([n, t]) => (
+              <div key={n} className="rounded-2xl bg-[#fff7ef] p-3 text-[15px] leading-6">
+                <span className="mb-1 grid h-7 w-7 place-items-center rounded-full bg-[#c96a2b] text-sm font-bold text-white">{n}</span>
+                {t}
               </div>
             ))}
           </div>
-        </Block>
-        <Pendulum />
-        <Block title="Ένα απλό παράδειγμα">
-          <p>Ένα εκκρεμές κάνει 10 πλήρεις ταλαντώσεις σε 20 s. Πόσο κρατάει η μία;</p>
-          <Eq>
-            T = {f("χρόνος", "πλήθος ταλαντώσεων")} = {f("20 s", "10")} = 2 s
-          </Eq>
-          <p className="text-sm text-[#6b625b]">
-            Τόσο κρατάει το εκκρεμές του ρολογιού τοίχου που «χτυπάει» τα δευτερόλεπτα: κάθε φορά που περνάει από το Ο, «χτυπάει» ένα
-            δευτερόλεπτο.
+          <p className="mt-3 text-[15px] text-[#6b625b]">
+            Γιατί 10 ταλαντώσεις και όχι 1; Η μία είναι πολύ γρήγορη και το λάθος του χεριού μας μετράει πολύ. Με 10, το λάθος
+            «μοιράζεται».
           </p>
-        </Block>
+        </div>
+        <Stepper
+          title="Πέντε παιδιά μέτρησαν: 39 s, 41 s, 42 s, 38 s, 40 s. Ποια είναι η μέση τιμή;"
+          steps={[
+            { label: "Τι μου δίνουν", body: "5 μετρήσεις" },
+            { label: "Τι ψάχνω", body: "τη μέση τιμή" },
+            { label: "Ποιος κανόνας", body: <>μέση τιμή = {f("άθροισμα", "πλήθος")}</> },
+            { label: "Λύνω", body: <>39 + 41 + 42 + 38 + 40 = 200 · 200 : 5 = <b>40 s</b></> },
+          ]}
+        />
+        <MiniQuiz id="2-4" />
+        <Trap
+          wrong="Μέση τιμή του 8,4 · 8,5 · 8,7 · 9 · 9 = 43,6 s"
+          right="43,6 : 5 = 8,72 s"
+          why="Μην ξεχνάς να διαιρέσεις με το πλήθος! Το 43,6 είναι μόνο το άθροισμα."
+        />
+        <SectionDone id="2-4" />
+      </PSection>
+
+      {/* ───────────────────────────── 5. ΕΚΚΡΕΜΕΣ ───────────────────────────── */}
+      <PSection id="2-5" code="5" title="Το εκκρεμές (απλά)" minutes={5}>
+        <Predict
+          q="Κάνεις κούνια στην παιδική χαρά. Κάθε «πήγαινε-έλα» κρατάει περίπου τον ίδιο χρόνο;"
+          choices={["ναι, περίπου τον ίδιο", "όχι, κάθε φορά αλλιώς"]}
+          answer={0}
+          reveal={
+            <>
+              Ναι! Η κούνια και το εκκρεμές επαναλαμβάνουν την ίδια κίνηση σε <b>ίσους χρόνους</b>. Γι' αυτό τα παλιά ρολόγια τοίχου
+              είχαν εκκρεμές.
+            </>
+          }
+        />
+        <Pendulum />
+        <Keep>
+          <p>
+            Μία <b>ταλάντωση</b> = η πλαστελίνη ξεκινά από την άκρη και <b>ξαναγυρίζει στην ίδια άκρη</b> (Α → Ο → Γ → Ο → Α).
+          </p>
+          <p>
+            Χρόνος μίας ταλάντωσης = {f("χρόνος", "πλήθος ταλαντώσεων")}, π.χ. 10 ταλαντώσεις σε 20 s → 20 : 10 = <b>2 s</b> η καθεμία.
+          </p>
+        </Keep>
+        <Means word="εκτρέπω">Απομακρύνω κάτι λίγο από τη θέση του. Εδώ: τραβάω την πλαστελίνη στο πλάι.</Means>
+        <Means word="θέση ισορροπίας">Η θέση Ο, όπου κρέμεται ήσυχη η πλαστελίνη πριν την κουνήσουμε.</Means>
         <MiniQuiz id="2-5" />
-      </Section>
+        <SectionDone id="2-5" />
+      </PSection>
 
       {/* ───────────────────────────── ΑΣΚΗΣΕΙΣ ───────────────────────────── */}
-      <Section id="askiseis" code="✏️" title="Ασκήσεις από το βοήθημα">
-        <p className="text-[15px] leading-7 text-[#4d4138]">
-          Λύσε τες πρώτα στο τετράδιο και μετά πάτα «Δείξε τη λύση» για να ελέγξεις. Οι αριθμοί είναι οι ίδιοι με του βοηθήματος.
+      <PSection id="askiseis" code="✏️" title="Ασκήσεις από το βοήθημα" minutes={20}>
+        <p className="text-[16px] leading-7 text-[#4d4138]">
+          Λύσε τες πρώτα στο τετράδιο και μετά πάτα «Δείξε τη λύση». Οι αριθμοί είναι οι ίδιοι με του βοηθήματος. Η σελίδα δεν μπορεί
+          να διορθώσει το τετράδιο: σύγκρινε εσύ τίμια! 😉
         </p>
 
-        <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Θεωρία</h3>
-        <Ask n="2.32" q="Να συμπληρώσετε: α) 1 ms = … s, β) 1 min = … s, γ) 1 h = … min = … s, δ) 1 ημέρα = … h, ε) 1 έτος = … ημέρες">
-          <L items={["1 ms = 0,001 s", "1 min = 60 s", "1 h = 60 min = 3600 s", "1 ημέρα = 24 h", "1 έτος = 365 ημέρες"]} />
+        <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Μετατροπές</h3>
+        <Ask n="2.47" q="Σε πόσα δευτερόλεπτα αντιστοιχούν: α) 40 min, β) ¼ h;">
+          <L items={["40 · 60 = 2400 s", "1 h = 3600 s, άρα ¼ h = 3600 : 4 = 900 s"]} />
         </Ask>
-        <Ask n="2.26" q="Πόση είναι η περίοδος: α) της περιστροφής της Γης γύρω από τον άξονά της, β) της περιφοράς της Γης γύρω από τον Ήλιο, γ) του λεπτοδείκτη, δ) του ωροδείκτη;">
-          <L items={["24 h", "365 ημέρες (1 έτος)", "1 h = 60 min", "12 h"]} />
-        </Ask>
-
-        <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Σωστό – Λάθος</h3>
-        <Ask
-          n="2.34"
-          q={
-            <>
-              α) 1 h = 60 min &nbsp; β) 1 h = 36.000 s &nbsp; γ) 1 min = {f(1, 60)} h &nbsp; δ) 1 s = {f(1, 60)} min &nbsp; ε) 10 min =
-              6000 s
-            </>
-          }
-        >
-          <L
-            items={[
-              ok,
-              <>{no}: 1 h = 3600 s (όχι 36.000)</>,
-              ok,
-              ok,
-              <>{no}: 10 min = 10 · 60 = 600 s</>,
-            ]}
-          />
-        </Ask>
-        <Ask
-          n="2.35"
-          q={
-            <>
-              α) 0,5 min = 30 s &nbsp; β) {f(1, 4)} h = 15 min &nbsp; γ) {f(1, 6)} h = 6000 s &nbsp; δ) 600 min = 100 h &nbsp; ε) 300 min =
-              5 h
-            </>
-          }
-        >
-          <L
-            items={[
-              <>{ok}: 0,5 · 60 = 30</>,
-              <>{ok}: 60 : 4 = 15</>,
-              <>{no}: 3600 : 6 = 600 s</>,
-              <>{no}: 600 : 60 = 10 h</>,
-              <>{ok}: 300 : 60 = 5</>,
-            ]}
-          />
-        </Ask>
-        <Ask
-          n="2.36"
-          q={
-            <>
-              α) 1 h = 60 s &nbsp; β) 1 s = {f(1, 86400)} h &nbsp; γ) 1800 s = {f(1, 2)} h &nbsp; δ) 86.400 s = 1 ημέρα &nbsp; ε) 1 ημέρα =
-              1440 min
-            </>
-          }
-        >
-          <L
-            items={[
-              <>{no}: 1 h = 3600 s</>,
-              <>{no}: 1 s = {f(1, 3600)} h (το {f(1, 86400)} είναι της ημέρας)</>,
-              <>{ok}: μισή ώρα = 1800 s</>,
-              <>{ok}: 24 · 3600 = 86.400</>,
-              <>{ok}: 24 · 60 = 1440</>,
-            ]}
-          />
-        </Ask>
-
-        <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Πολλαπλής επιλογής</h3>
-        <Ask
-          n="2.37"
-          q={
-            <>
-              Μεταξύ ώρας και δευτερολέπτου ισχύει: α) 1 h = 60 s &nbsp; β) 1 h = {f(36, 100)} s &nbsp; γ) 1 s = {f(1, 3600)} h &nbsp;
-              δ) 1 h = {f(36, 1000)} s
-            </>
-          }
-        >
-          <p>
-            <b>Σωστό το γ.</b> Αφού 1 h = 3600 s, το 1 s είναι το {f(1, 3600)} της ώρας.
-          </p>
-        </Ask>
-        <Ask n="2.38" q="Το ρολόι που μετράει τον χρόνο με τη μεγαλύτερη ακρίβεια είναι: α) το αναλογικό, β) το ηλιακό, γ) το ψηφιακό, δ) το ωρολογιακό εκκρεμές.">
-          <p>
-            <b>Σωστό το γ, το ψηφιακό.</b> (Από αυτά που δίνει. Το ατομικό, που είναι το ακριβέστερο, δεν είναι στις επιλογές.)
-          </p>
-        </Ask>
-        <Ask n="2.39" q="Σε ρολόι με δείκτες, ο χρόνος ενός πλήρους γύρου: α) του ωροδείκτη (3600 s / 24 h / 43.200 s), β) του λεπτοδείκτη (1000 s / 1 min / 3600 s), γ) του δευτερολεπτοδείκτη (10 s / 1 min / 3600 s);">
-          <L items={["43.200 s, γιατί 12 h = 12 · 3600 = 43.200 s", "3600 s (1 ώρα)", "1 min"]} />
-        </Ask>
-        <Ask n="2.40" q="Σε ένα εικοσιτετράωρο: α) ο ωροδείκτης κάνει (12 / 24 / 2) γύρους, β) ο λεπτοδείκτης (60 / 24 / 1440), γ) ο δευτερολεπτοδείκτης (60 / 3600 / 1440);">
-          <L items={["2 γύρους (ένας γύρος κάθε 12 h)", "24 γύρους (ένας κάθε ώρα)", "1440 γύρους (ένας κάθε λεπτό, και 24 · 60 = 1440)"]} />
-        </Ask>
-        <Ask n="2.42" q="Ένα διαστημόπλοιο κάνει έναν γύρο της Γης σε 1 ώρα, 20 λεπτά και 40 δευτερόλεπτα. Ο χρόνος είναι: α) μικρότερος από 4000 s, β) μεγαλύτερος από 5000 s, γ) μεγαλύτερος από 100 min, δ) μεγαλύτερος από 4500 s;">
-          <p>Τα κάνω όλα δευτερόλεπτα: 3600 + 20 · 60 + 40 = 3600 + 1200 + 40 = 4840 s.</p>
-          <p>
-            <b>Σωστό το δ:</b> 4840 s &gt; 4500 s.
-          </p>
-        </Ask>
-        <Ask n="2.46" q="Έξι μαθητές μετρούν τον χρόνο ενός γύρου ενός αθλητή: 89 s, 90 s, 91 s, 93 s, 95 s και x. Αν η μέση τιμή είναι 92 s, το x είναι: α) 92 s, β) 94 s, γ) 96 s;">
-          <p>Η μέση τιμή είναι 92 s και είναι 6 μετρήσεις, άρα το άθροισμα πρέπει να είναι 6 · 92 = 552.</p>
-          <p>Οι 5 γνωστές κάνουν 89 + 90 + 91 + 93 + 95 = 458. Άρα x = 552 − 458 = 94.</p>
-          <p>
-            <b>Σωστό το β, 94 s.</b>
-          </p>
-        </Ask>
-        <Ask n="2.69" q="Σε ένα αναλογικό ρολόι χάθηκε ο λεπτοδείκτης. Ο ωροδείκτης δείχνει τη 17η υποδιαίρεση (από τις 60). Τι ώρα είναι; α) 3:15, β) 3:20, γ) 3:22, δ) 3:24">
-          <p>Κάθε ώρα πιάνει 5 υποδιαιρέσεις. Η 17η υποδιαίρεση είναι 15 + 2, δηλαδή 3 ώρες και 2 υποδιαιρέσεις παραπάνω.</p>
-          <p>Οι 2 από τις 5 υποδιαιρέσεις είναι τα {f(2, 5)} της ώρας, δηλαδή {f(2, 5)} · 60 = 24 min.</p>
-          <p>
-            <b>Σωστό το δ, 3:24.</b>
-          </p>
-        </Ask>
-
-        <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Ασκήσεις μετατροπών</h3>
-        <Ask n="2.47" q="Σε πόσα δευτερόλεπτα αντιστοιχούν: α) 40 min, β) 3600 ms, γ) ¼ h;">
-          <L items={["40 · 60 = 2400 s", "3600 : 1000 = 3,6 s", "3600 : 4 = 900 s"]} />
-        </Ask>
-        <Ask n="2.48" q="Σε πόσα λεπτά αντιστοιχούν: α) 2,1 h, β) 1800 s, γ) 6 · 10⁴ ms (δηλαδή 60.000 ms);">
-          <L items={["2,1 · 60 = 126 min", "1800 : 60 = 30 min", "60.000 ms = 60 s = 1 min"]} />
+        <Ask n="2.48" q="Σε πόσα λεπτά αντιστοιχούν: α) 2,1 h, β) 1800 s;">
+          <L items={["2,1 · 60 = 126 min", "1800 : 60 = 30 min"]} />
         </Ask>
         <Ask n="2.49" q="Ποιο είναι μεγαλύτερο: α) 5 min ή 320 s; β) 3 h ή 200 min;">
-          <L items={["5 min = 300 s, άρα μεγαλύτερο το 320 s", "3 h = 180 min, άρα μεγαλύτερο το 200 min"]} />
+          <p>Κόλπο: κάνε τα πρώτα ίδια μονάδα!</p>
+          <L items={["5 min = 300 s, άρα μεγαλύτερο είναι το 320 s", "3 h = 180 min, άρα μεγαλύτερο είναι το 200 min"]} />
         </Ask>
         <Ask n="2.50" q="Ένα διάλειμμα κρατάει 10 min. Πόσα s και πόσες h είναι;">
-          <p>10 · 60 = 600 s.</p>
           <p>
-            10 : 60 = {f(10, 60)} = {f(1, 6)} h.
+            10 · 60 = <b>600 s</b>. Σε ώρες: 10 : 60 = {f(10, 60)} = <b>{f(1, 6)} h</b>.
           </p>
         </Ask>
         <Ask n="2.51" q="Να εκφράσετε τις 5 h σε min και σε s.">
-          <p>5 · 60 = 300 min, και 5 · 3600 = 18.000 s.</p>
-        </Ask>
-        <Ask n="2.52" q="Να εκφράσετε τα 720 s σε min, σε h και σε ms.">
-          <L items={["720 : 60 = 12 min", "720 : 3600 = 0,2 h", "720 · 1000 = 720.000 ms"]} />
-        </Ask>
-        <Ask n="2.53" q="Ο «καθαρός» χρόνος ενός αγώνα μπάσκετ είναι 40 min. Να τον εκφράσετε σε h, σε s και σε ms.">
-          <L items={[<>40 : 60 = {f(2, 3)} h</>, "40 · 60 = 2400 s", "2400 · 1000 = 2.400.000 ms"]} />
-        </Ask>
-        <Ask n="2.54" q="Να γράψετε από τον μικρότερο στον μεγαλύτερο: α) 2 h, 110 min, 7000 s β) 1,5 h, 80 min, 5500 s">
-          <p>Τα κάνω όλα δευτερόλεπτα:</p>
-          <L
-            items={[
-              "2 h = 7200 s, 110 min = 6600 s, 7000 s → 110 min < 7000 s < 2 h",
-              "1,5 h = 5400 s, 80 min = 4800 s, 5500 s → 80 min < 1,5 h < 5500 s",
-            ]}
-          />
-        </Ask>
-        <Ask n="2.55" q="Η πρώτη ώρα του σχολείου ξεκινά 08:15 και τελειώνει 08:55. Να βρείτε τη διάρκειά της σε min, σε h και σε s.">
-          <p>Δt = t₂ − t₁ = 08:55 − 08:15 = 40 min.</p>
           <p>
-            Σε ώρες: {f(40, 60)} = {f(2, 3)} h. Σε δευτερόλεπτα: 40 · 60 = 2400 s.
+            5 · 60 = <b>300 min</b>, και 5 · 3600 = <b>18.000 s</b>.
           </p>
         </Ask>
-        <Ask n="2.56" q="Βάλτε >, < ή =: α) 2 h … 120 min, β) 3 min … 180 s, γ) 2 d … 50 h, δ) 3 h … 160 min, ε) 300 s … 6 min, στ) 7200 s … 2 h">
-          <L
-            items={[
-              "= (2 · 60 = 120)",
-              "= (3 · 60 = 180)",
-              "< (2 d = 48 h)",
-              "> (3 h = 180 min)",
-              "< (300 s = 5 min)",
-              "= (2 · 3600 = 7200)",
-            ]}
+        <Ask n="2.53" q="Ο «καθαρός» χρόνος ενός αγώνα μπάσκετ είναι 40 min. Πόσα s είναι;">
+          <p>
+            40 · 60 = <b>2400 s</b>.
+          </p>
+        </Ask>
+        <Ask n="2.54" q="Γράψε από τον μικρότερο στον μεγαλύτερο: 2 h, 110 min, 7000 s">
+          <p>Τα κάνω όλα δευτερόλεπτα: 2 h = 7200 s, 110 min = 6600 s, 7000 s.</p>
+          <p>
+            <b>110 min &lt; 7000 s &lt; 2 h</b>
+          </p>
+        </Ask>
+        <Ask n="2.56" q="Βάλε >, < ή =: α) 2 h … 120 min, β) 3 min … 180 s, γ) 2 d … 50 h, δ) 300 s … 6 min, ε) 7200 s … 2 h">
+          <L items={["= (2 · 60 = 120)", "= (3 · 60 = 180)", "< (2 ημέρες = 48 h)", "< (300 s = 5 min)", "= (2 · 3600 = 7200)"]} />
+        </Ask>
+        <Ask n="2.75" q="Βάλε τη σωστή μονάδα: ποδοσφαιρικός αγώνας 90 …, διδακτική ώρα 45 …, ασανσέρ από 1ο σε 2ο όροφο 15 …, τρένο Λαμία–Θεσσαλονίκη 3 …">
+          <L items={["90 min", "45 min", "15 s", "3 h"]} />
+        </Ask>
+
+        <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Σωστό ή λάθος;</h3>
+        <Ask n="2.34" q={<>α) 1 h = 60 min · β) 1 h = 36.000 s · γ) 1 s = {f(1, 60)} min · δ) 10 min = 6000 s</>}>
+          <L items={[ok, <>{no}: 1 h = 3600 s</>, ok, <>{no}: 10 · 60 = 600 s</>]} />
+        </Ask>
+        <Ask n="2.35" q={<>α) 0,5 min = 30 s · β) {f(1, 4)} h = 15 min · γ) 600 min = 100 h · δ) 300 min = 5 h</>}>
+          <L items={[<>{ok}: 0,5 · 60 = 30</>, <>{ok}: 60 : 4 = 15</>, <>{no}: 600 : 60 = 10 h</>, <>{ok}: 300 : 60 = 5</>]} />
+        </Ask>
+        <Ask n="2.36" q="α) 1 h = 60 s · β) 1800 s = ½ h · γ) 86.400 s = 1 ημέρα · δ) 1 ημέρα = 1440 min">
+          <L items={[<>{no}: 1 h = 3600 s</>, <>{ok}: μισή ώρα = 1800 s</>, <>{ok}: 24 · 3600 = 86.400</>, <>{ok}: 24 · 60 = 1440</>]} />
+        </Ask>
+
+        <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Διάλεξε τη σωστή</h3>
+        <Ask n="2.38" q="Το ρολόι με τη μεγαλύτερη ακρίβεια είναι: α) το αναλογικό, β) το ηλιακό, γ) το ψηφιακό, δ) το ρολόι με εκκρεμές.">
+          <p>
+            <b>γ) το ψηφιακό</b>, από αυτά που δίνει. (Το ατομικό δεν είναι στις επιλογές.)
+          </p>
+        </Ask>
+        <Ask n="2.42" q="Ένα διαστημόπλοιο κάνει τον γύρο της Γης σε 1 ώρα, 20 λεπτά και 40 δευτερόλεπτα. Ο χρόνος είναι: α) μικρότερος από 4000 s, β) μεγαλύτερος από 5000 s, γ) μεγαλύτερος από 4500 s;">
+          <Solve
+            given="1 h 20 min 40 s"
+            find="πόσα s είναι, για να συγκρίνω"
+            rule="1 h = 3600 s, 1 min = 60 s"
+            work={<>3600 + 20 · 60 + 40 = 3600 + 1200 + 40 = 4840 s. <b>Σωστό το γ</b> (4840 &gt; 4500).</>}
           />
         </Ask>
-        <Ask n="2.75" q="Συμπληρώστε τη μονάδα: ποδοσφαιρικός αγώνας 90 …, διδακτική ώρα 45 …, ασανσέρ από 1ο σε 2ο όροφο 15 …, καθαρός χρόνος μπάσκετ 2400 …, τρένο Λαμία–Θεσσαλονίκη 3 …">
-          <L items={["90 min", "45 min", "15 s", "2400 s (= 40 min)", "3 h"]} />
+        <Ask n="2.46" q="Έξι παιδιά μετρούν τον χρόνο ενός γύρου: 89 s, 90 s, 91 s, 93 s, 95 s και x. Η μέση τιμή είναι 92 s. Πόσο είναι το x; α) 92 s, β) 94 s, γ) 96 s">
+          <Solve
+            given="5 μετρήσεις, η 6η άγνωστη, μέση τιμή 92 s"
+            find="το x"
+            rule="άθροισμα = μέση τιμή × πλήθος"
+            work={<>6 · 92 = 552. Οι 5 γνωστές κάνουν 458. x = 552 − 458 = <b>94 s (β)</b>.</>}
+          />
         </Ask>
 
         <h3 className="pt-2 text-lg font-bold text-[#6b3fa0]">Προβλήματα</h3>
-        <Ask n="2.65" q="Το τρένο φεύγει από τη Θεσσαλονίκη στις 09:20:40 και φτάνει στην Αθήνα στις 14:19:35. Πόσο κράτησε το ταξίδι;">
-          <p>Δt = t₂ − t₁ = 14:19:35 − 09:20:40.</p>
-          <p>Τα δευτερόλεπτα 35 − 40 δεν βγαίνουν, οπότε «δανείζομαι» ένα λεπτό: 14:18:95 − 09:20:40.</p>
-          <p>Τα λεπτά 18 − 20 δεν βγαίνουν, οπότε δανείζομαι μία ώρα: 13:78:95 − 09:20:40 = 4 h 58 min 55 s.</p>
+        <Ask n="2.55" q="Η πρώτη ώρα του σχολείου ξεκινά 08:15 και τελειώνει 08:55. Πόσο κρατάει σε min και σε s;">
+          <Solve
+            given="t₁ = 08:15, t₂ = 08:55"
+            find="Δt"
+            rule="Δt = t₂ − t₁"
+            work={<>55 − 15 = <b>40 min</b> = 40 · 60 = <b>2400 s</b>.</>}
+          />
+        </Ask>
+        <Ask n="2.65" q="Το τρένο φεύγει από τη Θεσσαλονίκη 09:20:40 και φτάνει στην Αθήνα 14:19:35. Πόσο κράτησε το ταξίδι;">
+          <Solve
+            given="t₁ = 09:20:40, t₂ = 14:19:35"
+            find="Δt"
+            rule="Δt = t₂ − t₁ (όπως η αφαίρεση με δανεικό)"
+            work={
+              <>
+                Τα δευτερόλεπτα 35 − 40 δεν βγαίνουν, οπότε δανείζομαι 1 λεπτό: 95 − 40 = 55 s. Τα λεπτά τώρα 18 − 20 δεν βγαίνουν,
+                οπότε δανείζομαι 1 ώρα: 78 − 20 = 58 min. Οι ώρες: 13 − 9 = 4 h. <b>Δt = 4 h 58 min 55 s</b>.
+              </>
+            }
+          />
+        </Ask>
+        <Ask n="2.61" q="Οι χρόνοι μιας αθλήτριας στα 200 m: 21,48 · 21,52 · 21,58 · 21,62 · 21,70 s. α) Αναλογικό ή ψηφιακό χρονόμετρο; β) Μέση τιμή;">
+          <p>α) <b>Ψηφιακό</b>, γιατί έχουν εκατοστά του δευτερολέπτου.</p>
           <p>
-            <b>Απάντηση: 4 h 58 min 55 s</b> (σε δευτερόλεπτα: 14.400 + 3480 + 55 = 17.935 s).
+            β) Άθροισμα 107,90 · 107,90 : 5 = <b>21,58 s</b>.
           </p>
         </Ask>
-        <Ask n="2.61" q="Οι χρόνοι μιας αθλήτριας στα 200 m ήταν 21,48 s, 21,52 s, 21,58 s, 21,62 s, 21,70 s. α) Μετρήθηκαν με αναλογικό ή ψηφιακό; β) Μέση τιμή;">
-          <p>α) Με <b>ψηφιακό</b>, γιατί έχουν εκατοστά του δευτερολέπτου.</p>
-          <p>β) Άθροισμα 107,90 s. 107,90 : 5 = <b>21,58 s</b>.</p>
-        </Ask>
-        <Ask n="2.60" q="Πέντε μαθητές μετρούν τον χρόνο των 10 πρώτων ταλαντώσεων: Ανδρέας 39 s, Βασίλης 41 s, Γιάννης 42 s, Δήμητρα 38 s, Ελένη 40 s. α) Γιατί βρήκαν διαφορετικούς χρόνους; β) Μέση τιμή; Ποιος έκανε την καλύτερη μέτρηση;">
+        <Ask n="2.60" q="Πέντε παιδιά μετρούν 10 ταλαντώσεις: Ανδρέας 39 s, Βασίλης 41 s, Γιάννης 42 s, Δήμητρα 38 s, Ελένη 40 s. α) Γιατί βρήκαν διαφορετικά; β) Μέση τιμή; Ποιος μέτρησε καλύτερα;">
+          <p>α) Ο καθένας πατάει το κουμπί λίγο νωρίτερα ή αργότερα (<b>υποκειμενικός παράγοντας</b>).</p>
           <p>
-            α) Λόγω του <b>υποκειμενικού παράγοντα</b>: ο καθένας πατάει το χρονόμετρο λίγο νωρίτερα ή λίγο αργότερα, γιατί έχει
-            διαφορετικά αντανακλαστικά και προσοχή.
-          </p>
-          <p>
-            β) (39 + 41 + 42 + 38 + 40) : 5 = 200 : 5 = <b>40 s</b>. Την καλύτερη μέτρηση την έκανε η <b>Ελένη</b>, γιατί βρήκε ακριβώς
-            τη μέση τιμή.
+            β) 200 : 5 = <b>40 s</b>. Καλύτερα μέτρησε η <b>Ελένη</b>, που βρήκε ακριβώς τη μέση τιμή.
           </p>
         </Ask>
-        <Ask n="2.62" q="Μετρήσαμε 10 φορές τον χρόνο 20 αιωρήσεων: 13,32 · 12,95 · 13,05 · 13,10 · 12,85 · 13,00 · 13,10 · 13,15 · 13,20 · 13,08 (σε s). α) Μέση τιμή με ακρίβεια εκατοστού; β) Με ακρίβεια δευτερολέπτου, σε ms;">
-          <p>α) Άθροισμα = 130,80 s. 130,80 : 10 = <b>13,08 s</b>.</p>
+        <Ask n="2.70" q="Χρονόμετρο Α (ακρίβεια λεπτού), Β (δευτερολέπτου), Γ (εκατοστού του s). Ποιο θέλει: α) ο διαιτητής ποδοσφαίρου, β) ο κριτής στα 200 m, γ) η γραμματεία στο μπάσκετ;">
+          <L items={["Α (λεπτά)", "Γ (εκατοστά)", "Β (δευτερόλεπτα)"]} />
+        </Ask>
+        <Ask n="2.71" q="Ο καθηγητής ρώτησε σε πόσες ημέρες θα είναι τα επόμενα γενέθλια του καθενός. Η Μαρία είπε 1400 ημέρες. Γίνεται;">
           <p>
-            β) Με ακρίβεια δευτερολέπτου: <b>13 s</b> = 13 · 1000 = <b>13.000 ms</b>.
+            <b>Όχι!</b> Γενέθλια έχουμε κάθε χρόνο, άρα το πολύ σε 365 ημέρες (366 σε δίσεκτο). Τα 1400 είναι σχεδόν 4 χρόνια! 😄
           </p>
         </Ask>
-        <Ask n="2.70" q="Χρονόμετρο Α (ακρίβεια λεπτού), Β (ακρίβεια δευτερολέπτου), Γ (ακρίβεια εκατοστού του s). Ποιο θα χρησιμοποιήσει: α) ο διαιτητής ποδοσφαίρου, β) ο κριτής στα 200 m, γ) η γραμματεία στο μπάσκετ, δ) ο διαιτητής στο τένις;">
-          <L items={["Α (λεπτά)", "Γ (εκατοστά του s)", "Β (δευτερόλεπτα)", "Α (στο τένις ο χρόνος δεν μετράει για το αποτέλεσμα)"]} />
-        </Ask>
-        <Ask n="2.71" q="Ο καθηγητής ρώτησε σε πόσες ημέρες θα έχει ο καθένας τα επόμενα γενέθλιά του. Η Μαρία απάντησε 1400 ημέρες. Μπορεί να είναι σωστό;">
-          <p>
-            <b>Όχι.</b> Γενέθλια έχουμε μία φορά τον χρόνο, άρα τα επόμενα είναι το πολύ σε 365 ημέρες (366 σε δίσεκτο έτος). Οι 1400
-            ημέρες είναι σχεδόν 4 χρόνια!
-          </p>
-        </Ask>
-      </Section>
+        <SectionDone id="askiseis" />
+      </PSection>
+
+      {/* ───────────────────────────── ΚΑΡΤΕΣ ───────────────────────────── */}
+      <PSection id="kartes" code="🃏" title="Κάρτες για αποστήθιση" minutes={5}>
+        <p className="text-[16px] leading-7 text-[#4d4138]">
+          Διάβασε την ερώτηση, πες την απάντηση δυνατά και μετά γύρνα την κάρτα. Αν τα πεις όλα σωστά, είσαι έτοιμος!
+        </p>
+        <Flashcards
+          cards={[
+            { front: "Η διεθνής μονάδα χρόνου;", back: <>Το <b>δευτερόλεπτο (s)</b></> },
+            { front: "1 min = ;", back: <b>60 s</b> },
+            { front: "1 h = ;", back: <><b>60 min</b> = <b>3600 s</b></> },
+            { front: "Αναλογικά όργανα;", back: <>Χρησιμοποιούν αναλογίες: <b>ρολόι με δείκτες, ηλιακό ρολόι, κλεψύδρα</b></> },
+            { front: "Ψηφιακά όργανα;", back: <>Έχουν <b>μόνο ψηφία</b></> },
+            { front: "Πότε έχουμε μεγαλύτερη ακρίβεια;", back: <>Με τη <b>μικρότερη μονάδα μέτρησης</b> (χιλιοστά &gt; εκατοστά)</> },
+            { front: "Το ακριβέστερο όργανο;", back: <>Το <b>ατομικό ρολόι</b></> },
+            { front: "Χρονική στιγμή;", back: <>Η ένδειξη του ρολογιού που δείχνει <b>πότε</b> συμβαίνει ένα γεγονός</> },
+            { front: "Χρονική διάρκεια;", back: <>Ο χρόνος <b>ανάμεσα σε δύο γεγονότα</b> (δύο στιγμές): Δt = t₂ − t₁</> },
+            { front: "Μέση τιμή;", back: <>{f("άθροισμα", "πλήθος")} των μετρήσεων</> },
+          ]}
+        />
+        <a
+          href="/sideris/fysiki/kefalaio-2/anakefalaiosi"
+          className="flex min-h-[44px] items-center justify-center gap-2 rounded-2xl border-2 border-[#6b3fa0]/30 bg-white px-4 py-3 font-bold text-[#6b3fa0] shadow-sm"
+        >
+          🖨️ Ανακεφαλαίωση σε μία σελίδα A4 (για εκτύπωση)
+        </a>
+        <SectionDone id="kartes" />
+      </PSection>
 
       {/* ───────────────────────────── ΤΕΣΤ ───────────────────────────── */}
-      <Section id="test" code="🏁" title="Τελικό τεστ (βαθμός στα 20)">
-        <p className="text-[15px] leading-7 text-[#4d4138]">
-          16 ερωτήσεις σαν του διαγωνίσματος. Απάντησε σε όλες και πάτα «Παράδοση». Στους αριθμούς γράψε μόνο τον αριθμό, π.χ. 300 ή
-          8,72.
+      <PSection id="test" code="🏁" title="Τελικό διαγώνισμα (στα 20)" minutes={15}>
+        <p className="text-[16px] leading-7 text-[#4d4138]">
+          16 ερωτήσεις σαν του καθηγητή. Απάντησε σε όλες και πάτα «Παράδοση». Στους αριθμούς γράψε μόνο τον αριθμό, π.χ. 300 ή 8,72.
+          Αν χάσεις κάποιες, πάτα «Ξαναρώτα μόνο όσα έχασα». Καλή επιτυχία, Σιδέρη! 🍀
         </p>
         <FinalTest />
-      </Section>
+        <SectionDone id="test" />
+      </PSection>
     </div>
   );
 }
