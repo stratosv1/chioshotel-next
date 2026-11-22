@@ -61,7 +61,7 @@ Because `npm.cmd run build` runs patch scripts that rewrite source files as a si
 
 ## Student lessons (/mixalis, /sideris, …)
 
-Private, login-protected study areas for individual students (`app/mixalis/(private)/*`, `app/sideris/(private)/*`). **Before building, extending or redesigning any lesson there, read `docs/lesson-build-prompt.md` in full and follow it** (also packaged as the `build-lesson` skill in `.claude/skills/`). It defines the required structure, pedagogy, physics QA scripts, shared "slide" design (`components/mixalis/ormi2/ormi2.css`, `Ormi2Shell`), per-grade adaptation and delivery checklist. The reference implementation is `/mixalis/ormi` + `/mixalis/ormi2`.
+Private, login-protected study areas for individual students (`app/mixalis/(private)/*`, `app/sideris/(private)/*`). **Before building, extending or redesigning any lesson there, read the student's template in full and follow it**: `docs/lesson-build-prompt-sideris.md` for Sideris (Α΄ Γυμνασίου, `/sideris`), `docs/lesson-build-prompt.md` for Mixalis and anyone else (also packaged as the `build-lesson` skill in `.claude/skills/`). It defines the required structure, pedagogy, physics QA scripts, shared "slide" design (`components/mixalis/ormi2/ormi2.css`, `Ormi2Shell`), per-grade adaptation and delivery checklist. The reference implementation is `/mixalis/ormi` + `/mixalis/ormi2`.
 
 ## AI Room Finder / AI Assistant
 
