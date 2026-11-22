@@ -105,6 +105,19 @@ export default function OrmiPage() {
           </div>
         </header>
 
+        <Link
+          href="/mixalis/ormi2"
+          prefetch={false}
+          className="group flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#1f6f5c]/25 bg-[#e6f4ea] px-5 py-5 text-[#174b3a] shadow-sm transition-colors hover:bg-[#d5eee0] sm:px-7"
+        >
+          <span className="max-w-2xl">
+            <span className="block text-xs font-semibold uppercase tracking-[0.17em] text-[#2f8462]">Νέο εργαστήριο · Ορμή 2</span>
+            <span className="mt-1 block text-xl font-semibold sm:text-2xl">Μάθε να λύνεις σύνθετες ασκήσεις μόνος σου</span>
+            <span className="mt-2 block text-sm leading-6 text-[#3f6a59]">36 σενάρια · φάσεις · επιλογή νόμων · σειρά λύσης · σταδιακές υποδείξεις</span>
+          </span>
+          <span className="rounded-full bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white group-hover:bg-[#165442]">Άνοιξε την Ορμή 2 →</span>
+        </Link>
+
         <StudyBar lesson="ormi" />
 
         <OrmiMapEmbed />
