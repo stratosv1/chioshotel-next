@@ -9,7 +9,8 @@ export function rewindToAssistantPrompt(
 
   for (let index = messages.length - 1; index >= 0; index -= 1) {
     const message = messages[index];
-    if (message.role === "assistant" && prompts.has(message.content)) {
+    // A prompt may carry a "Noted: …" lead-in paragraph (withNotedDetails).
+    if (message.role === "assistant" && [...prompts].some(prompt => message.content === prompt || message.content.endsWith(`\n\n${prompt}`))) {
       return messages.slice(0, index + 1);
     }
   }

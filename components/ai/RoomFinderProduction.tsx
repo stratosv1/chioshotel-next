@@ -1154,7 +1154,12 @@ export function RoomFinderProduction({
                     <div className="ml-10 mt-1.5">
                       <button
                         type="button"
-                        onClick={() => finder.goBack()}
+                        onClick={() => {
+                          // The question we go back to was answered before;
+                          // show its calendar / buttons again.
+                          setHiddenQuickReplyPromptId(null);
+                          finder.goBack();
+                        }}
                         aria-label={copy.backLabel}
                         title={copy.backLabel}
                         className="inline-flex min-h-11 items-center gap-1 rounded-full border border-[#ddd3c6] bg-[#fbf8f3] px-3 text-xs font-bold text-[#625b52] shadow-sm transition hover:bg-white active:scale-[.97]"
@@ -1176,6 +1181,7 @@ export function RoomFinderProduction({
                 field={finder.step === "checkout" ? "checkout" : "checkin"}
                 language={language}
                 min={finder.step === "checkout" ? addDaysToIsoDate(finder.checkin, 1) || todayInAthensIso() : todayInAthensIso()}
+                checkin={finder.checkin}
                 onPick={iso => {
                   if (lastAssistantMessageId) setHiddenQuickReplyPromptId(lastAssistantMessageId);
                   void finder.chooseDate(iso);
