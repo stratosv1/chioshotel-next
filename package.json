@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/qa-gsc-index-routing.cjs && node scripts/qa-search-appearance.cjs && node scripts/audit-room-language-parity.cjs && node scripts/qa-seo-intent-architecture.cjs && node scripts/qa-llms-guide.cjs && node scripts/qa-property-knowledge.cjs && node scripts/qa-js-self-profiling.cjs && node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-cta-routing.cjs && node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-beds24-booking-core-flow.cjs && node scripts/qa-mixalis-physics-pipeline.cjs && next build",
+    "build": "node scripts/qa-gsc-index-routing.cjs && node scripts/qa-search-appearance.cjs && node scripts/audit-room-language-parity.cjs && node scripts/qa-seo-intent-architecture.cjs && node scripts/qa-llms-guide.cjs && node scripts/qa-property-knowledge.cjs && node scripts/qa-js-self-profiling.cjs && node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-cta-routing.cjs && node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-beds24-booking-core-flow.cjs && node scripts/qa-mixalis-physics-pipeline.cjs && node scripts/qa-ormi2-challenges.cjs && next build",
     "start": "next start",
     "qa:ai": "node scripts/qa-room-finder-flow.cjs && node scripts/qa-room-finder-mobile-chat.cjs && node scripts/qa-room-finder-back-history.cjs && node scripts/qa-room-finder-cta-routing.cjs && node scripts/qa-room-finder-sales-upgrade.cjs && node scripts/qa-room-finder-interpreter.mjs",
     "qa:room-finder-flow": "node scripts/qa-room-finder-flow.cjs",
@@ -23,6 +23,7 @@
     "qa:rendered-routes": "node scripts/qa-rendered-route-metadata.cjs",
     "maintenance:materialize": "node scripts/prepare-build-clean.cjs",
     "qa:mixalis-physics": "node scripts/qa-mixalis-physics-pipeline.cjs",
+    "qa:ormi2-challenges": "node scripts/qa-ormi2-challenges.cjs",
     "optimize:images": "node scripts/optimize-frog-images.cjs"
   },
   "dependencies": {
