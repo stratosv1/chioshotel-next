@@ -12,6 +12,7 @@ import {
   type ChallengeFamily, type ChallengeVariant, type SolutionStep,
 } from "./challenges-data";
 import { appendSkillEvents, numericSkillEvents } from "./learning-data";
+import { AdvancedMotionScene } from "./AdvancedMotionScenes";
 
 type Attempt = {
   attempts: number;
@@ -30,6 +31,7 @@ const GreekParamLabels: Record<string, string> = {
   d: "Απόσταση πριν την κρούση", u: "Αρχική ταχύτητα", H: "Ύψος τραπεζιού",
   h: "Ύψος", h1: "Ύψος πτώσης", h2: "Ύψος αναπήδησης", x: "Οριζόντια απόσταση",
   g: "Επιτάχυνση βαρύτητας", dt: "Χρόνος επαφής", E: "Ενέργεια ελατηρίου", k: "Σταθερά ελατηρίου",
+  M1: "Πρώτο ξύλο", M2: "Δεύτερος στόχος", L: "Μήκος νήματος", sn: "ημθ", cs: "συνθ",
 };
 function loadHistory(): History {
   try {
@@ -38,8 +40,12 @@ function loadHistory(): History {
   } catch { return {}; }
 }
 
-function MotionDiagram({ family, phase }: { family: ChallengeFamily; phase: number }) {
+function MotionDiagram({ family, phase, variant }: { family: ChallengeFamily; phase: number; variant: ChallengeVariant }) {
   const id = family.id;
+  if (["collision-rough-ramp", "double-collision-spring", "penetration-capture",
+    "collision-pendulum-tension", "wall-rebound-catch"].includes(id)) {
+    return <AdvancedMotionScene family={family} phase={phase} variant={variant} />;
+  }
   const pendulum = id === "ballistic" || id === "pendulum-elastic-spring";
   const bounce = id === "bounce-force";
   const explosion = id === "spring-explosion";
@@ -313,7 +319,7 @@ export function Ormi2ChallengeLab() {
           <div className="min-w-0 space-y-4">
             <section className="rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-7">
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="rounded-full bg-[#eff3ed] px-3 py-1 text-xs font-semibold text-[#316c51]">Πρόκληση {selected + 1}/8 · Δυσκολία {family.difficulty}/5</span>
+                <span className="rounded-full bg-[#eff3ed] px-3 py-1 text-xs font-semibold text-[#316c51]">Πρόκληση {selected + 1}/{CHALLENGES.length} · Δυσκολία {family.difficulty}/5</span>
                 {record?.independent ? <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#24845a]"><CheckCircle2 size={15} /> Έχει λυθεί αυτόνομα</span> : null}
               </div>
               <h2 className="mt-3 text-2xl font-semibold tracking-tight sm:text-3xl">{family.title}</h2>
@@ -334,7 +340,7 @@ export function Ormi2ChallengeLab() {
 
               <div className="mt-5 rounded-2xl border border-[#d8e5db] bg-[#f6faf7] p-3 sm:p-4">
                 <div className="flex items-center gap-2 text-[#2f674f]"><Eye size={18} /><h3 className="text-sm font-semibold">Παρατήρησε την κίνηση</h3></div>
-                <MotionDiagram family={family} phase={phase} />
+                <MotionDiagram family={family} phase={phase} variant={variant} />
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <p className="text-sm font-medium text-[#416c55]">{family.phases[phase]}</p>
                   <div className="flex gap-2">
@@ -410,7 +416,7 @@ export function Ormi2ChallengeLab() {
                 <p className="flex items-center gap-2 text-lg font-semibold text-[#255f43]"><Trophy size={21}/> Η άσκηση ολοκληρώθηκε</p>
                 {wrong === 0 && !Object.values(hints).some((n) => n > 0) ?
                   <p className="mt-2 text-sm leading-7 text-[#3b654e]">Όλα τα ενδιάμεσα αποτελέσματα ήταν σωστά με την πρώτη προσπάθεια, χωρίς βοήθεια. Καταγράφηκε ως αυτόνομη επίλυση.</p> :
-                  <p className="mt-2 text-sm leading-7 text-[#3b654e]">Καταγράφηκε ως καθοδηγούμενη εξάσκηση. Η παραλλαγή Β είναι ιδανική για να διαπιστώσεις αν μπορείς να εφαρμόσεις την ίδια σκέψη αυτόνομα.</p>}
+                  <p className="mt-2 text-sm leading-7 text-[#3b654e]">Καταγράφηκε ως καθοδηγούμενη εξάσκηση. Δοκίμασε την άλλη παραλλαγή για να ελέγξεις αν καταλαβαίνεις τη μέθοδο, χωρίς βοήθεια.</p>}
                 <div className="mt-4 flex flex-wrap gap-2">
                   <button type="button" onClick={() => reset(selected, variantId === "a" ? "b" : "a")} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#255f47] px-4 py-2.5 text-sm font-semibold text-white">Δοκίμασε την άλλη παραλλαγή <ArrowRight size={16}/></button>
                   <button type="button" onClick={() => reset(selected, variantId)} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-[#bad3c4] bg-white px-4 py-2.5 text-sm font-semibold"><RefreshCw size={15}/> Ξανά</button>
@@ -421,7 +427,23 @@ export function Ormi2ChallengeLab() {
 
             <section className="rounded-3xl border border-black/10 bg-white p-5 sm:p-7">
               <div className="flex items-center gap-2"><GitBranch size={19} className="text-[#2b7958]"/><h3 className="text-lg font-semibold">Τι αλλάζει στη δεύτερη παραλλαγή;</h3></div>
-              <p className="mt-2 text-sm leading-7 text-[#6c655c]">Δεν χρειάζεται νέος τύπος επειδή άλλαξαν οι αριθμοί. Εντόπισε ποιο δεδομένο τροποποιείται και πώς επηρεάζει την αλυσίδα των εξισώσεων.</p>
+              <p className="mt-2 text-sm leading-7 text-[#6c655c]">Σύγκρινε τις συνθήκες των δύο εκφωνήσεων. Μερικές αλλαγές επηρεάζουν μόνο τους αριθμούς· άλλες αλλάζουν τον κατάλληλο νόμο ή τη φορά της ταχύτητας.</p>
+
+              {family.id === "collision-rough-ramp" && (
+                <div className="mt-3 rounded-xl border border-[#add4bf] bg-[#eef9f0] p-4 text-sm leading-7 text-[#286049]">
+                  <strong>Αλλάζει ο νόμος:</strong> Α — λεία ράμπα, ισχύει ΑΔΜΕ στην άνοδο. Β — τραχιά ράμπα, εφαρμόζουμε ΘΜΚΕ με έργο τριβής. Η ΑΔΟ της σύντομης κρούσης παραμένει ίδια.
+                </div>
+              )}
+              {family.id === "double-collision-spring" && (
+                <div className="mt-3 rounded-xl border border-[#e7c7a6] bg-[#fff8ed] p-4 text-sm leading-7 text-[#80532a]">
+                  <strong>Αλλάζει το πρόσημο:</strong> στην Α το συσσωμάτωμα ανακρούεται μετά τη δεύτερη κρούση, ενώ στη Β συνεχίζει προς τα δεξιά. Η ελαστική κρούση απαιτεί προσημασμένες ταχύτητες.
+                </div>
+              )}
+              {family.id === "wall-rebound-catch" && (
+                <div className="mt-3 rounded-xl border border-[#add4bf] bg-[#eef9f0] p-4 text-sm leading-7 text-[#286049]">
+                  <strong>Ελέγχω τη συνάντηση:</strong> το πρώτο αμαξίδιο, μετά τον τοίχο, πρέπει να κινείται γρηγορότερα από το δεύτερο. Διαφορετικά δεν θα συνέβαινε η δεύτερη μεταξύ τους κρούση.
+                </div>
+              )}
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {changing.map((key) => <div key={key} className="rounded-xl border border-[#e5e1d8] bg-[#fbfaf6] p-3">
                   <span className="block text-xs text-[#81796e]">{GreekParamLabels[key] ?? key}</span>
