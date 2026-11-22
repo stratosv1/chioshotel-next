@@ -59,6 +59,10 @@ Because `npm.cmd run build` runs patch scripts that rewrite source files as a si
 - `next.config.ts` (~1000 lines) additionally holds a large static `redirects()` array (`legacyRedirects` + more) for permanent 301s, plus security/cache headers and image config. When adding a redirect, check whether it belongs in `proxy.ts`, `next.config.ts`'s redirects, or `lib/url-map.ts` — this codebase has three overlapping redirect mechanisms; match the existing pattern for the type of redirect you're adding rather than introducing a fourth.
 - Do not describe Voulamandis House as a "hotel" in content/metadata except as a careful, non-misleading search term — see `AGENTS.md` for acceptable wording.
 
+## Student lessons (/mixalis, /sideris, …)
+
+Private, login-protected study areas for individual students (`app/mixalis/(private)/*`, `app/sideris/(private)/*`). **Before building, extending or redesigning any lesson there, read `docs/lesson-build-prompt.md` in full and follow it** (also packaged as the `build-lesson` skill in `.claude/skills/`). It defines the required structure, pedagogy, physics QA scripts, shared "slide" design (`components/mixalis/ormi2/ormi2.css`, `Ormi2Shell`), per-grade adaptation and delivery checklist. The reference implementation is `/mixalis/ormi` + `/mixalis/ormi2`.
+
 ## AI Room Finder / AI Assistant
 
 A self-contained conversational room-finder feature, deliberately isolated from the build-patch pipeline (see above):
