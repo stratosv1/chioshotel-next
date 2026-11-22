@@ -131,6 +131,39 @@ function PhysicsScene({ s, frame }: { s: Scenario; frame: number }) {
   );
 }
 
+
+function StageSupport({ kind, level, s, onMore }: {
+  kind: Check; level: number; s: Scenario; onMore: () => void;
+}) {
+  const nextLabel = level === 0 ? "Μικρή υπόδειξη" : level === 1 ? "Δες έναν χάρτη" : "Δείξε την απάντηση";
+  return (
+    <div className="rounded-2xl border border-[#e2d3b7] bg-[#fffbf1] p-4 text-sm">
+      <div className="flex items-center gap-2 font-semibold text-[#815b29]"><Lightbulb size={17} /> Σταδιακή βοήθεια</div>
+      {level >= 1 && <p className="mt-2 leading-6 text-[#625542]">
+        {kind === "cuts" ? "Ψάξε πού αλλάζει το φαινόμενο ή το σύστημα. Δεν είναι κάθε πρόταση υποχρεωτικά νέα φάση."
+          : kind === "laws" ? "Σκέψου ποια ποσότητα ζητείται σε κάθε φάση και αν εξετάζεις ένα σώμα ή ολόκληρο σύστημα."
+          : "Η σειρά των υπολογισμών μπορεί να είναι αντίστροφη από τη χρονική σειρά της κίνησης."}
+      </p>}
+      {level >= 2 && <div className="mt-3 rounded-xl bg-white p-3 text-sm leading-6 text-[#4f5e51]">
+        <strong>Χάρτης σκέψης:</strong>
+        {kind === "cuts" && <p className="mt-1">Το φαινόμενο αποτελείται από {s.phases.length} φάσεις. Δες πότε αλλάζει ο μηχανισμός της κίνησης.</p>}
+        {kind === "laws" && <p className="mt-1">Εξέτασε ξεχωριστά: {s.phases.map((p) => p.label).join(" → ")}.</p>}
+        {kind === "start" && <p className="mt-1">Εντόπισε σε ποια φάση μπορείς να σχηματίσεις εξίσωση με ένα μόνο άγνωστο.</p>}
+      </div>}
+      {level >= 3 && <div className="mt-3 rounded-xl border border-[#d1e4d6] bg-[#eff8f1] p-3 text-sm leading-7 text-[#245844]">
+        <strong>Απάντηση του βήματος:</strong>
+        {kind === "cuts" && <p className="mt-1">{s.phases.map((p, i) => (i + 1) + ". " + p.label).join(" → ")}</p>}
+        {kind === "laws" && s.phases.map((p, i) => <p key={i} className="mt-2"><strong>{i + 1}. {p.label}:</strong> {p.best.map((id) => TOOLS.find((t) => t.id === id)?.label ?? id).join(" + ")}. {p.why}</p>)}
+        {kind === "start" && <p className="mt-1">{s.startWhy}</p>}
+      </div>}
+      {level < 3 && <button type="button" onClick={onMore} className="mt-3 min-h-10 rounded-xl border border-[#cbae82] bg-white px-4 py-2 font-semibold text-[#78552a]">
+        {nextLabel}
+      </button>}
+      {level === 3 && <p className="mt-2 text-xs text-[#876f4b]">Η απάντηση αποκαλύφθηκε. Μπορείς να συνεχίσεις, αλλά η προσπάθεια δεν θα χαρακτηριστεί ανεξάρτητη.</p>}
+    </div>
+  );
+}
+
 export function Ormi2Trainer() {
   const [index, setIndex] = useState(0);
   const [step, setStep] = useState<Step>("observe");
@@ -141,6 +174,7 @@ export function Ormi2Trainer() {
   const [verdicts, setVerdicts] = useState<Verdicts>(blankVerdicts);
   const [first, setFirst] = useState<Verdicts>(blankVerdicts);
   const [help, setHelp] = useState(0);
+  const [support, setSupport] = useState<Record<Check, number>>({ cuts: 0, laws: 0, start: 0 });
   const [plan, setPlan] = useState("");
   const [showSolution, setShowSolution] = useState(false);
   const [viewedSolution, setViewedSolution] = useState(false);
@@ -185,6 +219,7 @@ export function Ormi2Trainer() {
     setVerdicts(blankVerdicts());
     setFirst(blankVerdicts());
     setHelp(0);
+    setSupport({ cuts: 0, laws: 0, start: 0 });
     setPlan("");
     setShowSolution(false);
     setViewedSolution(false);
@@ -221,7 +256,7 @@ export function Ormi2Trainer() {
   function finish() {
     if (savedThisRound) return;
     const points = [first.cuts, first.laws, first.start].filter(Boolean).length;
-    const clean = points === 3 && help === 0 && !viewedSolution && plan.trim().length >= 20;
+    const clean = points === 3 && help === 0 && Object.values(support).every((level) => level === 0) && !viewedSolution && plan.trim().length >= 20;
     setHistory((old) => {
       const current = old[s.id] ?? { attempts: 0, bestDecisions: 0, cleanPlans: 0, needsReview: true, last: 0 };
       return {
@@ -365,9 +400,10 @@ export function Ormi2Trainer() {
                   {verdicts.cuts !== null && <div role="status" className={"rounded-xl p-3 text-sm " + (verdicts.cuts ? "bg-[#e2f3e9] text-[#1c694d]" : "bg-[#fff1e3] text-[#8f521d]")}>
                     {verdicts.cuts ? "Σωστή διάκριση των φάσεων." : "Οι τομές δεν είναι ακόμη σωστές. Δοκίμασε ξανά: πότε αλλάζει το σύστημα ή ο νόμος που χρειάζεται;"}
                   </div>}
+                  <StageSupport kind="cuts" level={support.cuts} s={s} onMore={() => setSupport((old) => ({ ...old, cuts: Math.min(3, old.cuts + 1) }))} />
                   <div className="flex flex-wrap gap-2">
                     <button type="button" onClick={() => checkStage("cuts")} className="min-h-11 rounded-xl bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white">Έλεγχος φάσεων</button>
-                    {verdicts.cuts === true && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Επιλογή νόμων <ArrowRight size={16} /></button>}
+                    {(verdicts.cuts === true || support.cuts === 3) && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Επιλογή νόμων <ArrowRight size={16} /></button>}
                   </div>
                 </div>
               )}
@@ -392,9 +428,10 @@ export function Ormi2Trainer() {
                   {verdicts.laws !== null && <div role="status" className={"rounded-xl p-3 text-sm " + (verdicts.laws ? "bg-[#e2f3e9] text-[#1c694d]" : "bg-[#fff1e3] text-[#8f521d]")}>
                     {verdicts.laws ? "Σωστά εργαλεία για όλες τις φάσεις." : "Κάποια φάση χρειάζεται άλλο ή επιπλέον εργαλείο. Έλεγξε ιδιαίτερα τις περιπτώσεις με δύο ζητούμενα."}
                   </div>}
+                  <StageSupport kind="laws" level={support.laws} s={s} onMore={() => setSupport((old) => ({ ...old, laws: Math.min(3, old.laws + 1) }))} />
                   <div className="flex flex-wrap gap-2">
                     <button type="button" onClick={() => checkStage("laws")} className="min-h-11 rounded-xl bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white">Έλεγχος νόμων</button>
-                    {verdicts.laws === true && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Στρατηγική επίλυσης <ArrowRight size={16} /></button>}
+                    {(verdicts.laws === true || support.laws === 3) && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Στρατηγική επίλυσης <ArrowRight size={16} /></button>}
                   </div>
                 </div>
               )}
@@ -412,9 +449,10 @@ export function Ormi2Trainer() {
                   {verdicts.start !== null && <div role="status" className={"rounded-xl p-4 text-sm leading-6 " + (verdicts.start ? "bg-[#e2f3e9] text-[#1c694d]" : "bg-[#fff1e3] text-[#8f521d]")}>
                     {verdicts.start ? "Σωστή αφετηρία. " + s.startWhy : "Δοκίμασε να εντοπίσεις σε ποια φάση έχεις αρκετά γνωστά μεγέθη για να βρεις ένα άγνωστο."}
                   </div>}
+                  <StageSupport kind="start" level={support.start} s={s} onMore={() => setSupport((old) => ({ ...old, start: Math.min(3, old.start + 1) }))} />
                   <div className="flex flex-wrap gap-2">
                     <button type="button" disabled={startAt === null} onClick={() => checkStage("start")} className="min-h-11 rounded-xl bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40">Έλεγχος στρατηγικής</button>
-                    {verdicts.start === true && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Θα φτιάξω τη λύση <ArrowRight size={16} /></button>}
+                    {(verdicts.start === true || support.start === 3) && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Θα φτιάξω τη λύση <ArrowRight size={16} /></button>}
                   </div>
                 </div>
               )}
