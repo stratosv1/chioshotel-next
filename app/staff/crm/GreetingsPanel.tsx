@@ -15,9 +15,9 @@ const LANGUAGES: { key: EmailLanguage; label: string }[] = [
   { key: "tr", label: "Τουρκικά" },
 ];
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
-const inputClass = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm";
-const secondaryButton = "rounded-full border border-amber-800/30 bg-white px-4 py-2 text-sm font-black text-amber-900 disabled:opacity-50";
-const primaryButton = "rounded-full bg-amber-800 px-4 py-2 text-sm font-black text-white disabled:opacity-50";
+const inputClass = "w-full rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-sm";
+const secondaryButton = "rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a] disabled:opacity-50";
+const primaryButton = "rounded-full bg-[#5443c9] px-4 py-2 text-sm font-black text-white disabled:opacity-50";
 
 async function request(url: string, body?: Record<string, unknown>) {
   const response = await fetch(url, body ? {
@@ -99,7 +99,7 @@ export default function GreetingsPanel() {
 
       <section className={panelClass}>
         <h2 className="text-lg font-black">Ευχές σε πελάτες</h2>
-        <p className="mt-1 text-sm text-stone-600">
+        <p className="mt-1 text-sm text-[#4b5b70]">
           Πηγαίνουν σε όλη τη λίστα του Newsletter (πελάτες του Beds24, εγγραφές από το site και όσα email έχεις προσθέσει), στη γλώσσα του καθενός: ελληνικά για Ελλάδα και Κύπρο, τουρκικά για Τουρκία, αγγλικά για όλους τους άλλους.
           Όσοι έχουν κάνει διαγραφή και οι εξαιρέσεις δεν παίρνουν τίποτα. Κάθε πελάτης παίρνει τις ευχές μία φορά τον χρόνο.
         </p>
@@ -111,7 +111,7 @@ export default function GreetingsPanel() {
               aria-pressed={type === key}
               disabled={sending}
               onClick={() => { setType(key); setNotice(""); }}
-              className={`min-h-11 rounded-full px-4 text-sm font-black disabled:opacity-50 ${type === key ? "bg-stone-900 text-white" : "border border-stone-300 bg-white text-stone-700"}`}
+              className={`min-h-11 rounded-full px-4 text-sm font-black disabled:opacity-50 ${type === key ? "bg-[#5443c9] text-white" : "border border-[#cfd9e4] bg-white text-[#334155]"}`}
             >
               {GREETING_LABELS[key]}
             </button>
@@ -121,13 +121,13 @@ export default function GreetingsPanel() {
 
       <section className={panelClass}>
         <h2 className="mb-3 text-lg font-black">Αποστολή {status ? status.year : ""}</h2>
-        {!status ? <p className="text-sm text-stone-600">Φόρτωση…</p> : (
+        {!status ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : (
           <>
             <ul className="grid gap-1">
               {LANGUAGES.map(({ key, label }) => {
                 const counts = status.byLanguage[key];
                 return (
-                  <li key={key} className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 py-2">
+                  <li key={key} className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e3e9f0] py-2">
                     <label className="flex items-center gap-2 font-black">
                       <input
                         type="checkbox"
@@ -138,14 +138,14 @@ export default function GreetingsPanel() {
                       />
                       {label}
                     </label>
-                    <span className="text-sm text-stone-600">
+                    <span className="text-sm text-[#4b5b70]">
                       {counts.total} πελάτες · {counts.sent} στάλθηκαν · {counts.waiting} περιμένουν{counts.failed ? ` · ${counts.failed} απέτυχαν` : ""}
                     </span>
                   </li>
                 );
               })}
             </ul>
-            <p className="mt-2 text-xs text-stone-500">Σήμερα στάλθηκαν {status.sentToday} από {status.dailyLimit} ευχές (όριο για να μη μπλοκάρει το Gmail).</p>
+            <p className="mt-2 text-xs text-[#5b6b80]">Σήμερα στάλθηκαν {status.sentToday} από {status.dailyLimit} ευχές (όριο για να μη μπλοκάρει το Gmail).</p>
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" className={primaryButton} disabled={sending || busy || !waitingSelected} onClick={() => sendAll(false)}>
                 {sending ? "Αποστολή…" : `Αποστολή σε ${waitingSelected}`}
@@ -159,7 +159,7 @@ export default function GreetingsPanel() {
                 </button>
               ) : null}
             </div>
-            {progress ? <p role="status" className="mt-3 text-sm font-bold text-stone-700">{progress}</p> : null}
+            {progress ? <p role="status" className="mt-3 text-sm font-bold text-[#334155]">{progress}</p> : null}
           </>
         )}
       </section>
@@ -182,9 +182,9 @@ export default function GreetingsPanel() {
         {preview ? (
           <>
             <p className="mb-2 text-sm font-bold">Θέμα: {preview.subject}</p>
-            <iframe title="Προεπισκόπηση ευχών" sandbox="" srcDoc={preview.html} className="h-[620px] w-full rounded-xl border border-stone-200 bg-white" />
+            <iframe title="Προεπισκόπηση ευχών" sandbox="" srcDoc={preview.html} className="h-[620px] w-full rounded-xl border border-[#e3e9f0] bg-white" />
           </>
-        ) : <p className="text-sm text-stone-600">Φόρτωση…</p>}
+        ) : <p className="text-sm text-[#4b5b70]">Φόρτωση…</p>}
       </section>
     </div>
   );

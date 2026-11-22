@@ -106,7 +106,7 @@ function formatDate(iso: string | null) {
 
 function status(offer: Offer) {
   const now = Date.now();
-  if (!offer.active) return { label: "Ανενεργή", className: "bg-stone-200 text-stone-700" };
+  if (!offer.active) return { label: "Ανενεργή", className: "bg-[#e3e9f0] text-[#334155]" };
   if (offer.validUntil && new Date(offer.validUntil).getTime() <= now) return { label: "Έληξε", className: "bg-red-100 text-red-800" };
   if (offer.validFrom && new Date(offer.validFrom).getTime() > now) return { label: "Ξεκινά σύντομα", className: "bg-sky-100 text-sky-800" };
   return { label: "Live στο site", className: "bg-emerald-100 text-emerald-800" };
@@ -133,8 +133,8 @@ function offerToForm(offer: Offer): FormState {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-stone-300 bg-white px-3 py-2.5 text-[15px] text-stone-900 outline-none focus:border-amber-700 focus:ring-2 focus:ring-amber-200";
-const labelClass = "mb-1 block text-xs font-black uppercase tracking-[0.08em] text-stone-600";
+  "w-full rounded-xl border border-[#cfd9e4] bg-white px-3 py-2.5 text-[15px] text-[#1f2a3c] outline-none focus:border-[#5443c9] focus:ring-2 focus:ring-[#e9e4fe]";
+const labelClass = "mb-1 block text-xs font-black uppercase tracking-[0.08em] text-[#4b5b70]";
 
 export default function OffersApp() {
   const [data, setData] = useState<Payload | null>(null);
@@ -245,13 +245,12 @@ export default function OffersApp() {
   const activeSubscribers = subscribers?.filter((s) => !s.unsubscribedAt) ?? [];
 
   return (
-    <main className="min-h-screen bg-[#f6efe5] px-4 py-6 text-stone-900 md:px-8">
-      <div className="mx-auto max-w-[1100px]">
+    <main className="min-h-screen p-4 text-[#1f2a3c] sm:p-6 lg:p-8">
+      <div>
         <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <a href="/staff" className="text-sm font-bold text-amber-800">← Staff</a>
-            <h1 className="mt-1 text-3xl font-black tracking-tight">Προσφορές & Newsletter</h1>
-            <p className="mt-1 text-sm text-stone-600">
+            <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Προσφορές & Newsletter</h1>
+            <p className="mt-1 text-sm text-[#5b6b80]">
               Ό,τι αποθηκεύετε εμφανίζεται αμέσως στη σελίδα προσφορών και στις 7 γλώσσες. Οι ληγμένες προσφορές κρύβονται μόνες τους.
             </p>
           </div>
@@ -260,7 +259,7 @@ export default function OffersApp() {
               href={data.dealsPages.el}
               target="_blank"
               rel="noreferrer"
-              className="rounded-full border border-amber-800/30 bg-white px-4 py-2 text-sm font-black text-amber-900"
+              className="rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a]"
             >
               Άνοιγμα σελίδας ↗
             </a>
@@ -273,7 +272,7 @@ export default function OffersApp() {
               key={key}
               type="button"
               onClick={() => setTab(key)}
-              className={`rounded-full px-5 py-2 text-sm font-black ${tab === key ? "bg-stone-900 text-white" : "bg-white text-stone-700"}`}
+              className={`rounded-full px-5 py-2 text-sm font-black ${tab === key ? "bg-[#5443c9] text-white" : "bg-white text-[#334155]"}`}
             >
               {key === "offers" ? `Προσφορές (${liveCount} live)` : "Newsletter"}
             </button>
@@ -286,7 +285,7 @@ export default function OffersApp() {
         {tab === "offers" ? (
           <>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-white p-4 shadow-sm">
-              <div className="text-sm text-stone-700">
+              <div className="text-sm text-[#334155]">
                 <strong>Last minute:</strong> η ενότητα «Last minute αυτής της εβδομάδας» γεμίζει αυτόματα από τα Live Deals (διαθεσιμότητα των επόμενων 7 ημερών). Δεν χρειάζεται καταχώρηση εδώ.
               </div>
               <button
@@ -295,14 +294,14 @@ export default function OffersApp() {
                   setForm(emptyForm());
                   setLang("el");
                 }}
-                className="rounded-full bg-amber-800 px-5 py-2.5 text-sm font-black text-white shadow"
+                className="rounded-full bg-[#5443c9] px-5 py-2.5 text-sm font-black text-white shadow"
               >
                 + Νέα προσφορά
               </button>
             </div>
 
             {form && data ? (
-              <section className="mb-6 rounded-2xl border border-amber-800/20 bg-white p-5 shadow-md">
+              <section className="mb-6 rounded-2xl border border-[#c7bff7] bg-white p-5 shadow-md">
                 <h2 className="mb-4 text-xl font-black">{form.id ? "Επεξεργασία προσφοράς" : "Νέα προσφορά"}</h2>
                 <div className="grid gap-4 md:grid-cols-3">
                   <div>
@@ -328,7 +327,7 @@ export default function OffersApp() {
                   <div>
                     <label className={labelClass}>Λήγει (προαιρετικό)</label>
                     <input type="datetime-local" className={inputClass} value={form.validUntil} onChange={(e) => setForm({ ...form, validUntil: e.target.value })} />
-                    <p className="mt-1 text-xs text-stone-500">Με λήξη εμφανίζεται αντίστροφη μέτρηση· μετά τη λήξη κρύβεται.</p>
+                    <p className="mt-1 text-xs text-[#5b6b80]">Με λήξη εμφανίζεται αντίστροφη μέτρηση· μετά τη λήξη κρύβεται.</p>
                   </div>
                   <div className="flex items-center gap-3 pt-6">
                     <input id="active" type="checkbox" className="h-5 w-5" checked={form.active} onChange={(e) => setForm({ ...form, active: e.target.checked })} />
@@ -360,13 +359,13 @@ export default function OffersApp() {
                         key={l}
                         type="button"
                         onClick={() => setLang(l)}
-                        className={`rounded-full px-3 py-1.5 text-xs font-black ${lang === l ? "bg-amber-800 text-white" : form.translations[l].title ? "bg-amber-100 text-amber-900" : "bg-stone-100 text-stone-500"}`}
+                        className={`rounded-full px-3 py-1.5 text-xs font-black ${lang === l ? "bg-[#5443c9] text-white" : form.translations[l].title ? "bg-[#e9e4fe] text-[#3b2f8a]" : "bg-[#eef3f7] text-[#5b6b80]"}`}
                       >
                         {LANG_LABELS[l]}{l === "el" || l === "en" ? " *" : ""}
                       </button>
                     ))}
                   </div>
-                  <p className="mb-3 text-xs text-stone-500">
+                  <p className="mb-3 text-xs text-[#5b6b80]">
                     * Ελληνικά και Αγγλικά υποχρεωτικά. Όσες γλώσσες μείνουν κενές δείχνουν το αγγλικό κείμενο.
                   </p>
                   <div className="grid gap-3 md:grid-cols-2">
@@ -394,21 +393,21 @@ export default function OffersApp() {
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-3">
-                  <button type="button" disabled={saving} onClick={save} className="rounded-full bg-stone-900 px-6 py-3 text-sm font-black text-white disabled:opacity-50">
+                  <button type="button" disabled={saving} onClick={save} className="rounded-full bg-[#5443c9] px-6 py-3 text-sm font-black text-white disabled:opacity-50">
                     {saving ? "Αποθήκευση…" : "Αποθήκευση"}
                   </button>
-                  <button type="button" onClick={() => setForm(null)} className="rounded-full bg-stone-100 px-6 py-3 text-sm font-black text-stone-700">
+                  <button type="button" onClick={() => setForm(null)} className="rounded-full bg-[#eef3f7] px-6 py-3 text-sm font-black text-[#334155]">
                     Ακύρωση
                   </button>
                 </div>
               </section>
             ) : null}
 
-            {!data && !error ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+            {!data && !error ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
 
             <div className="mb-3 flex items-center gap-2 text-sm">
-              <span className="font-bold text-stone-700">Links newsletter σε:</span>
-              <select className="rounded-lg border border-stone-300 bg-white px-2 py-1" value={shareLang} onChange={(e) => setShareLang(e.target.value as Lang)}>
+              <span className="font-bold text-[#334155]">Links newsletter σε:</span>
+              <select className="rounded-lg border border-[#cfd9e4] bg-white px-2 py-1" value={shareLang} onChange={(e) => setShareLang(e.target.value as Lang)}>
                 {LANGS.map((l) => (
                   <option key={l} value={l}>{LANG_LABELS[l]}</option>
                 ))}
@@ -425,25 +424,25 @@ export default function OffersApp() {
                       <div>
                         <span className={`inline-flex rounded-full px-3 py-1 text-xs font-black ${st.className}`}>{st.label}</span>
                         <h3 className="mt-2 text-lg font-black">{offer.translations.el?.title ?? offer.slug}</h3>
-                        <p className="text-sm text-stone-600">
+                        <p className="text-sm text-[#4b5b70]">
                           {room} · Κωδικός <strong className="font-mono">{offer.couponCode || "—"}</strong>
                         </p>
-                        <p className="mt-1 text-xs text-stone-500">
+                        <p className="mt-1 text-xs text-[#5b6b80]">
                           Από {formatDate(offer.validFrom)} · Λήξη {formatDate(offer.validUntil)} · Γλώσσες: {LANGS.filter((l) => offer.translations[l]).join(", ")}
                         </p>
                       </div>
                       <div className="flex gap-2">
-                        <button type="button" onClick={() => { setForm(offerToForm(offer)); setLang("el"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-amber-100 px-4 py-2 text-sm font-black text-amber-900">
+                        <button type="button" onClick={() => { setForm(offerToForm(offer)); setLang("el"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-[#e9e4fe] px-4 py-2 text-sm font-black text-[#3b2f8a]">
                           Επεξεργασία
                         </button>
-                        <button type="button" onClick={() => remove(offer)} className="rounded-full bg-stone-100 px-4 py-2 text-sm font-black text-stone-600">
+                        <button type="button" onClick={() => remove(offer)} className="rounded-full bg-[#eef3f7] px-4 py-2 text-sm font-black text-[#4b5b70]">
                           Διαγραφή
                         </button>
                       </div>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-stone-50 p-3">
-                      <code className="min-w-0 flex-1 truncate text-xs text-stone-700">{offer.shareLinks[shareLang]}</code>
-                      <button type="button" onClick={() => copy(offer.shareLinks[shareLang], "Link αντιγράφηκε για newsletter")} className="rounded-full bg-stone-900 px-4 py-2 text-xs font-black text-white">
+                    <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-[#f4f7fa] p-3">
+                      <code className="min-w-0 flex-1 truncate text-xs text-[#334155]">{offer.shareLinks[shareLang]}</code>
+                      <button type="button" onClick={() => copy(offer.shareLinks[shareLang], "Link αντιγράφηκε για newsletter")} className="rounded-full bg-[#5443c9] px-4 py-2 text-xs font-black text-white">
                         Αντιγραφή link
                       </button>
                     </div>
@@ -457,17 +456,17 @@ export default function OffersApp() {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-xl font-black">Εγγραφές στο newsletter</h2>
-                <p className="text-sm text-stone-600">
+                <p className="text-sm text-[#4b5b70]">
                   {subscribers ? `${activeSubscribers.length} ενεργές εγγραφές` : "Φόρτωση…"} · Μόνο όσοι έδωσαν ρητή συγκατάθεση στη σελίδα προσφορών.
                 </p>
               </div>
-              <a href="/api/staff/newsletter/?format=csv" className="rounded-full bg-stone-900 px-5 py-2.5 text-sm font-black text-white">
+              <a href="/api/staff/newsletter/?format=csv" className="rounded-full bg-[#5443c9] px-5 py-2.5 text-sm font-black text-white">
                 Λήψη CSV
               </a>
             </div>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="text-xs uppercase text-stone-500">
+                <thead className="text-xs uppercase text-[#5b6b80]">
                   <tr>
                     <th className="py-2 pr-4">Email</th>
                     <th className="py-2 pr-4">Γλώσσα</th>
@@ -475,7 +474,7 @@ export default function OffersApp() {
                     <th className="py-2">Ημερομηνία</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-100">
+                <tbody className="divide-y divide-[#e3e9f0]">
                   {activeSubscribers.slice(0, 200).map((s) => (
                     <tr key={s.email}>
                       <td className="py-2 pr-4 font-bold">{s.email}</td>

@@ -112,65 +112,63 @@ export default function StatisticsDashboard() {
   ];
 
   return (
-    <main className="min-h-screen bg-[#f6f2e9] text-[#2f3226]">
-      <div className="mx-auto max-w-6xl px-4 pb-12 pt-5 sm:px-6">
-        <header className="border-b border-[#d8d0c1] pb-5">
-          <a href="/staff" className="text-sm font-semibold text-[#66704d]">← Staff Area</a>
-          <p className="mt-5 text-xs font-bold uppercase tracking-[0.24em] text-[#8b806b]">Voulamandis House</p>
-          <div className="mt-2 flex items-end justify-between gap-4">
+    <main className="min-h-screen p-4 text-[#1f2a3c] sm:p-6 lg:p-8">
+      <div className="pb-12">
+        <header className="border-b border-[#e3e9f0] pb-5">
+          <div className="flex items-end justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight">Στατιστικά σεζόν</h1>
-              <p className="mt-2 text-sm text-[#746d60]">1 Απριλίου–31 Οκτωβρίου · 10 δωμάτια · 2026 έναντι 2025</p>
+              <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Στατιστικά σεζόν</h1>
+              <p className="mt-1 text-sm text-[#5b6b80]">1 Απριλίου–31 Οκτωβρίου · 10 δωμάτια · 2026 έναντι 2025</p>
             </div>
-            <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-[#66704d]">Swipe →</span>
+            <span className="shrink-0 text-xs font-semibold uppercase tracking-wider text-[#5443c9] sm:hidden">Swipe →</span>
           </div>
         </header>
 
         {error ? <p className="border-b border-red-200 py-4 text-sm text-red-700">{error}</p> : null}
-        {loading ? <p className="py-10 text-center text-sm text-[#746d60]">Φόρτωση στατιστικών…</p> : (
+        {loading ? <p className="py-10 text-center text-sm text-[#5b6b80]">Φόρτωση στατιστικών…</p> : (
           <>
-            <section className="border-b border-[#d8d0c1] py-5">
+            <section className="border-b border-[#e3e9f0] py-5">
               <div className="mb-4">
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8b806b]">Από {dateLabel(current?.comparisonStartDate)} έως 31 Οκτωβρίου</p>
-                <h2 className="mt-1 text-xl font-semibold">Τι έχω να εισπράξω</h2>
-                <p className="mt-1 text-sm text-[#746d60]">Charges κρατήσεων με check-in από τη σημερινή ημερομηνία και μετά. Η ημερομηνία αλλάζει αυτόματα κάθε μέρα.</p>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#8a97a8]">Από {dateLabel(current?.comparisonStartDate)} έως 31 Οκτωβρίου</p>
+                <h2 className="mt-1 text-lg font-black">Τι έχω να εισπράξω</h2>
+                <p className="mt-1 text-sm text-[#5b6b80]">Charges κρατήσεων με check-in από τη σημερινή ημερομηνία και μετά. Η ημερομηνία αλλάζει αυτόματα κάθε μέρα.</p>
               </div>
               {remainingReady ? (
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <article className="border-l-4 border-[#707a54] bg-[#707a54] px-5 py-5 text-white">
+                  <article className="rounded-2xl border-l-4 border-[#5443c9] bg-[#5443c9] px-5 py-5 text-white">
                     <p className="text-xs font-bold uppercase tracking-[0.15em] text-white/70">Υπόλοιπο 2026</p>
                     <p className="mt-2 text-4xl font-semibold">{euro.format(current?.remainingCharges ?? 0)}</p>
                     <p className="mt-2 text-sm text-white/80">{integer.format(current?.remainingBookings ?? 0)} κρατήσεις</p>
                   </article>
-                  <article className="border-l-4 border-[#b8aa8d] bg-white/55 px-5 py-5">
-                    <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#8b806b]">Αντίστοιχη περίοδος 2025</p>
+                  <article className="rounded-2xl border-l-4 border-[#cfd9e4] bg-white px-5 py-5">
+                    <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#8a97a8]">Αντίστοιχη περίοδος 2025</p>
                     <p className="mt-2 text-4xl font-semibold">{euro.format(previous?.remainingCharges ?? 0)}</p>
-                    <p className="mt-2 text-sm text-[#746d60]">{integer.format(previous?.remainingBookings ?? 0)} κρατήσεις · {remainingDifference >= 0 ? "+" : ""}{euro.format(remainingDifference)} φέτος</p>
+                    <p className="mt-2 text-sm text-[#5b6b80]">{integer.format(previous?.remainingBookings ?? 0)} κρατήσεις · {remainingDifference >= 0 ? "+" : ""}{euro.format(remainingDifference)} φέτος</p>
                   </article>
                 </div>
               ) : (
-                <div className="border border-[#d8c9a7] bg-[#fff8e7] px-4 py-4 text-sm leading-6 text-[#6f624b]">
+                <div className="rounded-2xl border border-[#d8c9a7] bg-[#fff8e7] px-4 py-4 text-sm leading-6 text-[#6f624b]">
                   Για να εμφανιστεί ακριβής δυναμική σύγκριση, ανέβασε ξανά ένα Beds24 payments report για το 2026 και ένα για το 2025. Τα παλαιότερα αποθηκευμένα reports δεν περιέχουν τις ημερομηνίες ανά κράτηση.
                 </div>
               )}
             </section>
 
-            <section className="border-b border-[#d8d0c1] py-5">
+            <section className="border-b border-[#e3e9f0] py-5">
               <Carousel label="Βασικά στατιστικά">
                 {kpis.map(([label, value, note]) => (
-                  <article key={label} className="min-w-[72%] snap-start border-l-4 border-[#7b855d] bg-white/55 px-4 py-4 sm:min-w-[260px]">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8b806b]">{label}</p>
+                  <article key={label} className="rounded-2xl min-w-[72%] snap-start border-l-4 border-[#5443c9] bg-white px-4 py-4 sm:min-w-[260px]">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#8a97a8]">{label}</p>
                     <p className="mt-2 text-3xl font-semibold">{value}</p>
-                    <p className="mt-1 text-xs text-[#746d60]">{note}</p>
+                    <p className="mt-1 text-xs text-[#5b6b80]">{note}</p>
                   </article>
                 ))}
               </Carousel>
             </section>
 
-            <section className="border-b border-[#d8d0c1] py-5">
+            <section className="border-b border-[#e3e9f0] py-5">
               <div className="mb-4 flex items-end justify-between gap-4">
-                <div><h2 className="text-xl font-semibold">Πληρότητα ανά μήνα</h2><p className="mt-1 text-sm text-[#746d60]">Μία κάρτα ανά μήνα</p></div>
-                <span className="text-xs text-[#8b806b]">2026 / 2025</span>
+                <div><h2 className="text-lg font-black">Πληρότητα ανά μήνα</h2><p className="mt-1 text-sm text-[#5b6b80]">Μία κάρτα ανά μήνα</p></div>
+                <span className="text-xs text-[#8a97a8]">2026 / 2025</span>
               </div>
               <Carousel label="Πληρότητα ανά μήνα">
                 {(current?.monthly ?? []).map((item) => {
@@ -178,28 +176,28 @@ export default function StatisticsDashboard() {
                   const nowPct = item.capacityNights ? item.occupiedNights / item.capacityNights : 0;
                   const oldPct = old?.capacityNights ? old.occupiedNights / old.capacityNights : 0;
                   return (
-                    <article key={item.month} className="min-w-[78%] snap-start bg-white/50 px-4 py-4 sm:min-w-[280px]">
+                    <article key={item.month} className="rounded-2xl min-w-[78%] snap-start bg-white px-4 py-4 sm:min-w-[280px]">
                       <div className="flex items-baseline justify-between"><h3 className="font-semibold">{MONTH_LABELS[item.month]}</h3><span className="text-2xl font-semibold">{pct(nowPct)}</span></div>
-                      <p className="mt-1 text-xs text-[#746d60]">2025: {pct(oldPct)} · {item.occupiedNights} νύχτες</p>
-                      <div className="mt-4 h-2 bg-[#e5dece]"><div className="h-2 bg-[#748057]" style={{ width: `${Math.min(100, nowPct * 100)}%` }} /></div>
+                      <p className="mt-1 text-xs text-[#5b6b80]">2025: {pct(oldPct)} · {item.occupiedNights} νύχτες</p>
+                      <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#e9e4fe]"><div className="h-2 rounded-full bg-[#5443c9]" style={{ width: `${Math.min(100, nowPct * 100)}%` }} /></div>
                     </article>
                   );
                 })}
               </Carousel>
             </section>
 
-            <section className="border-b border-[#d8d0c1] py-5">
-              <div className="mb-4"><h2 className="text-xl font-semibold">Πληρότητα ανά δωμάτιο</h2><p className="mt-1 text-sm text-[#746d60]">Swipe στα δωμάτια 1–10</p></div>
+            <section className="border-b border-[#e3e9f0] py-5">
+              <div className="mb-4"><h2 className="text-lg font-black">Πληρότητα ανά δωμάτιο</h2><p className="mt-1 text-sm text-[#5b6b80]">Swipe στα δωμάτια 1–10</p></div>
               <Carousel label="Πληρότητα ανά δωμάτιο">
                 {(current?.rooms ?? []).map((room) => {
                   const old = previous?.rooms?.find((item) => item.room === room.room);
                   const occupancy = room.capacityNights ? room.occupiedNights / room.capacityNights : 0;
                   const oldOccupancy = old?.capacityNights ? old.occupiedNights / old.capacityNights : 0;
                   return (
-                    <article key={room.room} className="min-w-[62%] snap-start border-t-2 border-[#7b855d] bg-white/45 px-4 py-4 sm:min-w-[220px]">
-                      <p className="text-xs uppercase tracking-wider text-[#8b806b]">Δωμάτιο {room.room}</p>
+                    <article key={room.room} className="rounded-2xl min-w-[62%] snap-start border-t-2 border-[#5443c9] bg-white px-4 py-4 sm:min-w-[220px]">
+                      <p className="text-xs uppercase tracking-wider text-[#8a97a8]">Δωμάτιο {room.room}</p>
                       <p className="mt-2 text-3xl font-semibold">{pct(occupancy)}</p>
-                      <p className="mt-1 text-xs text-[#746d60]">2025: {pct(oldOccupancy)}</p>
+                      <p className="mt-1 text-xs text-[#5b6b80]">2025: {pct(oldOccupancy)}</p>
                       <p className="mt-3 text-sm">{room.occupiedNights} / {room.capacityNights} νύχτες</p>
                     </article>
                   );
@@ -207,14 +205,14 @@ export default function StatisticsDashboard() {
               </Carousel>
             </section>
 
-            <section className="border-b border-[#d8d0c1] py-5">
-              <div className="mb-4"><h2 className="text-xl font-semibold">Έσοδα ανά δωμάτιο</h2><p className="mt-1 text-sm text-[#746d60]">Σύνολο charges του report</p></div>
+            <section className="border-b border-[#e3e9f0] py-5">
+              <div className="mb-4"><h2 className="text-lg font-black">Έσοδα ανά δωμάτιο</h2><p className="mt-1 text-sm text-[#5b6b80]">Σύνολο charges του report</p></div>
               <Carousel label="Έσοδα ανά δωμάτιο">
                 {[...(current?.rooms ?? [])].sort((a, b) => b.charges - a.charges).map((room) => {
                   const old = previous?.rooms?.find((item) => item.room === room.room);
                   const difference = room.charges - (old?.charges ?? 0);
                   return (
-                    <article key={room.room} className="min-w-[68%] snap-start bg-[#707a54] px-4 py-4 text-white sm:min-w-[240px]">
+                    <article key={room.room} className="rounded-2xl min-w-[68%] snap-start bg-[#5443c9] px-4 py-4 text-white sm:min-w-[240px]">
                       <p className="text-xs uppercase tracking-wider text-white/70">Δωμάτιο {room.room}</p>
                       <p className="mt-2 text-3xl font-semibold">{euro.format(room.charges)}</p>
                       <p className="mt-1 text-xs text-white/75">{difference >= 0 ? "+" : ""}{euro.format(difference)} από 2025</p>
@@ -225,17 +223,17 @@ export default function StatisticsDashboard() {
               </Carousel>
             </section>
 
-            <section className="border-b border-[#d8d0c1] py-5">
-              <div className="mb-4"><h2 className="text-xl font-semibold">Booking channels</h2><p className="mt-1 text-sm text-[#746d60]">Κρατήσεις, νύχτες και charges ανά κανάλι</p></div>
+            <section className="border-b border-[#e3e9f0] py-5">
+              <div className="mb-4"><h2 className="text-lg font-black">Booking channels</h2><p className="mt-1 text-sm text-[#5b6b80]">Κρατήσεις, νύχτες και charges ανά κανάλι</p></div>
               <Carousel label="Booking channels">
                 {(current?.channels ?? []).map((channel) => {
                   const totalCharges = currentTotals.charges || 1;
                   return (
-                    <article key={channel.channel} className="min-w-[76%] snap-start border-l border-[#b9b09f] px-4 py-3 sm:min-w-[270px]">
+                    <article key={channel.channel} className="rounded-2xl min-w-[76%] snap-start border border-[#e3e9f0] bg-white px-4 py-4 sm:min-w-[270px]">
                       <p className="font-semibold">{channel.channel}</p>
                       <p className="mt-2 text-2xl font-semibold">{euro.format(channel.charges)}</p>
-                      <p className="mt-1 text-xs text-[#746d60]">{channel.bookings} κρατήσεις · {channel.occupiedNights} νύχτες</p>
-                      <p className="mt-3 text-sm font-semibold text-[#66704d]">{pct(channel.charges / totalCharges)} των charges</p>
+                      <p className="mt-1 text-xs text-[#5b6b80]">{channel.bookings} κρατήσεις · {channel.occupiedNights} νύχτες</p>
+                      <p className="mt-3 text-sm font-semibold text-[#5443c9]">{pct(channel.charges / totalCharges)} των charges</p>
                     </article>
                   );
                 })}
@@ -245,21 +243,21 @@ export default function StatisticsDashboard() {
             <section className="py-5">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <h2 className="text-xl font-semibold">Νέο report</h2>
-                  <p className="mt-1 text-sm text-[#746d60]">Αποθηκεύεται στη Neon και το προηγούμενο μένει στο ιστορικό.</p>
-                  <p className="mt-2 text-xs text-[#8b806b]">Τελευταίο: {current?.sourceFilename || "—"} · {current ? new Date(current.importedAt).toLocaleString("el-GR") : ""}</p>
+                  <h2 className="text-lg font-black">Νέο report</h2>
+                  <p className="mt-1 text-sm text-[#5b6b80]">Αποθηκεύεται στη Neon και το προηγούμενο μένει στο ιστορικό.</p>
+                  <p className="mt-2 text-xs text-[#8a97a8]">Τελευταίο: {current?.sourceFilename || "—"} · {current ? new Date(current.importedAt).toLocaleString("el-GR") : ""}</p>
                 </div>
                 <form onSubmit={uploadReport} className="grid gap-2 sm:grid-cols-[90px_1fr_auto]">
-                  <select value={year} onChange={(e) => setYear(Number(e.target.value))} className="border border-[#cfc5b4] bg-transparent px-3 py-2 text-sm">
+                  <select value={year} onChange={(e) => setYear(Number(e.target.value))} className="min-h-11 rounded-xl border border-[#cfd9e4] bg-white px-3 text-sm">
                     <option value={2026}>2026</option><option value={2025}>2025</option>
                   </select>
-                  <input name="report" type="file" accept=".xls,.xlsx" required className="min-w-0 border border-[#cfc5b4] bg-transparent px-3 py-2 text-xs" />
-                  <button disabled={uploading} className="bg-[#707a54] px-5 py-2 text-sm font-semibold text-white disabled:opacity-60">{uploading ? "Αποθήκευση…" : "Αποθήκευση"}</button>
+                  <input name="report" type="file" accept=".xls,.xlsx" required className="min-w-0 rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-xs" />
+                  <button disabled={uploading} className="min-h-11 rounded-full bg-[#5443c9] px-5 text-sm font-bold text-white disabled:opacity-60">{uploading ? "Αποθήκευση…" : "Αποθήκευση"}</button>
                 </form>
               </div>
             </section>
 
-            <p className="border-t border-[#d8d0c1] pt-4 text-xs leading-5 text-[#746d60]">Τα charges περιλαμβάνουν διαμονή, φόρους, extras και εκπτώσεις. Δεν εμφανίζονται ως καθαρός τζίρος. Το 2026 είναι τρέχον snapshot και όχι ολοκληρωμένη σεζόν.</p>
+            <p className="border-t border-[#e3e9f0] pt-4 text-xs leading-5 text-[#5b6b80]">Τα charges περιλαμβάνουν διαμονή, φόρους, extras και εκπτώσεις. Δεν εμφανίζονται ως καθαρός τζίρος. Το 2026 είναι τρέχον snapshot και όχι ολοκληρωμένη σεζόν.</p>
           </>
         )}
       </div>

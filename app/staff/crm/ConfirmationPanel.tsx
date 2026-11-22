@@ -12,10 +12,10 @@ type RecentBooking = { bookingId: string; name: string; email: string | null; ro
 
 const API = "/api/staff/crm/confirmation/";
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
-const inputClass = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm";
+const inputClass = "w-full rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-sm";
 const labelClass = "mb-1 block text-sm font-bold";
-const secondaryButton = "rounded-full border border-amber-800/30 bg-white px-4 py-2 text-sm font-black text-amber-900 disabled:opacity-50";
-const primaryButton = "rounded-full bg-amber-800 px-4 py-2 text-sm font-black text-white disabled:opacity-50";
+const secondaryButton = "rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a] disabled:opacity-50";
+const primaryButton = "rounded-full bg-[#5443c9] px-4 py-2 text-sm font-black text-white disabled:opacity-50";
 
 function Field({ id, label, value, onChange, type = "text" }: { id: string; label: string; value: string | number; onChange: (value: string) => void; type?: string }) {
   return (
@@ -105,7 +105,7 @@ export default function ConfirmationPanel() {
       {!data ? (
         <section className={panelClass}>
           <h2 className="mb-1 text-lg font-black">Επιβεβαίωση κράτησης</h2>
-          <p className="mb-3 text-sm text-stone-600">Διάλεξε κράτηση, έλεγξε ή διόρθωσε τα στοιχεία και δες το email πριν το στείλεις.</p>
+          <p className="mb-3 text-sm text-[#4b5b70]">Διάλεξε κράτηση, έλεγξε ή διόρθωσε τα στοιχεία και δες το email πριν το στείλεις.</p>
           <form
             className="mb-4 flex flex-wrap items-end gap-2"
             onSubmit={(event) => { event.preventDefault(); if (manualId.trim()) void open(manualId.trim()); }}
@@ -116,13 +116,13 @@ export default function ConfirmationPanel() {
             </div>
             <button type="submit" disabled={busy} className={primaryButton}>Άνοιγμα</button>
           </form>
-          {!bookings ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+          {!bookings ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
           <ul className="grid gap-1">
             {(bookings ?? []).map((booking) => (
-              <li key={booking.bookingId} className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 py-2">
+              <li key={booking.bookingId} className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e3e9f0] py-2">
                 <div className="min-w-0 text-sm">
-                  <p className="font-black">{booking.name || "Χωρίς όνομα"} <span className="font-normal text-stone-500">#{booking.bookingId}</span></p>
-                  <p className="text-stone-600">{booking.checkin} → {booking.checkout}{booking.room ? ` · ${booking.room}` : ""} · {booking.status}</p>
+                  <p className="font-black">{booking.name || "Χωρίς όνομα"} <span className="font-normal text-[#5b6b80]">#{booking.bookingId}</span></p>
+                  <p className="text-[#4b5b70]">{booking.checkin} → {booking.checkout}{booking.room ? ` · ${booking.room}` : ""} · {booking.status}</p>
                   {booking.sentAt ? <p className="font-bold text-emerald-800">Στάλθηκε {booking.sentAt}</p> : null}
                 </div>
                 <button type="button" disabled={busy} className={secondaryButton} onClick={() => open(booking.bookingId)}>Άνοιγμα</button>
@@ -222,8 +222,8 @@ export default function ConfirmationPanel() {
           <section className={`${panelClass} grid content-start gap-3 lg:sticky lg:top-4 lg:self-start`}>
             <h2 className="text-lg font-black">Προεπισκόπηση</h2>
             <p className="break-all text-sm font-bold">Θέμα: {email?.subject}</p>
-            <p className="break-all text-sm text-stone-600">Προς: {data.email || "-"}</p>
-            <iframe title="Προεπισκόπηση επιβεβαίωσης" sandbox="" srcDoc={email?.html} className="h-[70vh] w-full rounded-xl border border-stone-200 bg-white" />
+            <p className="break-all text-sm text-[#4b5b70]">Προς: {data.email || "-"}</p>
+            <iframe title="Προεπισκόπηση επιβεβαίωσης" sandbox="" srcDoc={email?.html} className="h-[70vh] w-full rounded-xl border border-[#e3e9f0] bg-white" />
             <div className="flex flex-wrap gap-2">
               <button type="button" disabled={busy} className={secondaryButton} onClick={() => send("test")}>Στείλε μου δοκιμή</button>
               <button type="button" disabled={busy || !data.email} className={primaryButton} onClick={() => send("send")}>Αποστολή στον πελάτη</button>

@@ -8,7 +8,7 @@ const shiftDay = (day: string, delta: number) => new Date(Date.parse(day) + delt
 const dayLabel = (day: string) => new Intl.DateTimeFormat("el-GR", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${day}T00:00:00Z`));
 const shortDate = (day: string) => new Intl.DateTimeFormat("el-GR", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${day}T00:00:00Z`));
 const roomKind = (room: number) => (room >= 8 ? "Διαμέρισμα" : "Δωμάτιο");
-const navButton = "min-h-11 rounded-full border border-amber-800/30 bg-white px-4 text-sm font-black text-amber-900";
+const navButton = "min-h-11 rounded-full border border-[#cfd9e4] bg-white px-4 text-sm font-black text-[#3b2f8a]";
 
 function people(stay: RoomStay) {
   if (stay.adults === null) return null;
@@ -26,15 +26,15 @@ function RoomRow({ stay, arriving }: { stay: RoomStay; arriving?: boolean }) {
   const count = people(stay);
   return (
     <li className="grid grid-cols-[3.25rem_minmax(0,1fr)_auto] items-center gap-3 rounded-2xl bg-white p-3 shadow-sm">
-      <span className="grid justify-items-center rounded-xl bg-[#f6efe5] py-2">
+      <span className="grid justify-items-center rounded-xl bg-[#eef3f7] py-2">
         <span className="text-xl font-black leading-none">{stay.room}</span>
       </span>
       <span className="grid min-w-0 gap-0.5">
-        <span className="text-xs font-bold text-stone-500">{roomKind(stay.room)}</span>
+        <span className="text-xs font-bold text-[#5b6b80]">{roomKind(stay.room)}</span>
         <span className="break-words text-sm font-black">{stay.name || "Χωρίς όνομα"}</span>
-        <span className="text-xs text-stone-600">{count === null ? "Δες τα άτομα στο Beds24" : peopleDetail(stay)}</span>
+        <span className="text-xs text-[#4b5b70]">{count === null ? "Δες τα άτομα στο Beds24" : peopleDetail(stay)}</span>
         {stay.sameDayChange ? <span className="text-xs font-black text-red-800">Φεύγει και έρχεται την ίδια μέρα</span> : null}
-        {arriving && stay.arrivalDetails ? <span className="text-xs text-stone-600">{stay.arrivalDetails}</span> : null}
+        {arriving && stay.arrivalDetails ? <span className="text-xs text-[#4b5b70]">{stay.arrivalDetails}</span> : null}
       </span>
       <span className="grid justify-items-end gap-0.5 text-right">
         <span className="text-lg font-black leading-none">{count ?? "?"} <span className="text-xs font-bold">{count === 1 ? "άτομο" : "άτομα"}</span></span>
@@ -74,31 +74,31 @@ export default function RoomDayPanel() {
         <button type="button" aria-label="Προηγούμενη μέρα" className={navButton} onClick={() => setDay(shiftDay(day, -1))}>←</button>
         <div className="min-w-0 text-center">
           <h2 className="text-lg font-black leading-tight">{label || "Δωμάτια"}</h2>
-          <p className="text-sm font-bold text-stone-600">{dayLabel(day)}</p>
+          <p className="text-sm font-bold text-[#4b5b70]">{dayLabel(day)}</p>
         </div>
         <button type="button" aria-label="Επόμενη μέρα" className={navButton} onClick={() => setDay(shiftDay(day, 1))}>→</button>
       </div>
       {day !== today ? <button type="button" className={`${navButton} justify-self-center`} onClick={() => setDay(today)}>Πίσω στο σήμερα</button> : null}
 
       {error ? <p role="alert" className="rounded-xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{error}</p> : null}
-      {!data && !error ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+      {!data && !error ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
 
       {data ? (
         <>
           <section className="grid gap-2">
             <h3 className="font-black">Φεύγουν · {data.leaving.length}</h3>
-            {data.leaving.length ? <ul className="grid gap-2">{data.leaving.map((stay) => <RoomRow key={`${stay.room}-${stay.bookingId}`} stay={stay} />)}</ul> : <p className="text-sm text-stone-600">Δεν φεύγει κανείς.</p>}
+            {data.leaving.length ? <ul className="grid gap-2">{data.leaving.map((stay) => <RoomRow key={`${stay.room}-${stay.bookingId}`} stay={stay} />)}</ul> : <p className="text-sm text-[#4b5b70]">Δεν φεύγει κανείς.</p>}
           </section>
 
           <section className="grid gap-2">
             <h3 className="font-black">Έρχονται · {data.arriving.length}{incoming ? ` δωμάτια, ${incoming} άτομα` : ""}</h3>
-            {data.arriving.length ? <ul className="grid gap-2">{data.arriving.map((stay) => <RoomRow key={`${stay.room}-${stay.bookingId}`} stay={stay} arriving />)}</ul> : <p className="text-sm text-stone-600">Δεν έρχεται κανείς.</p>}
+            {data.arriving.length ? <ul className="grid gap-2">{data.arriving.map((stay) => <RoomRow key={`${stay.room}-${stay.bookingId}`} stay={stay} arriving />)}</ul> : <p className="text-sm text-[#4b5b70]">Δεν έρχεται κανείς.</p>}
           </section>
 
           {data.staying.length ? (
             <section className="grid gap-1">
               <h3 className="font-black">Μένουν · {data.staying.length}</h3>
-              <ul className="grid gap-1 text-sm text-stone-700">
+              <ul className="grid gap-1 text-sm text-[#334155]">
                 {data.staying.map((stay) => (
                   <li key={`${stay.room}-${stay.bookingId}`}>
                     {roomKind(stay.room)} {stay.room} · {people(stay) ?? "?"} {people(stay) === 1 ? "άτομο" : "άτομα"}{stay.checkout ? ` · έως ${shortDate(stay.checkout)}` : ""}
@@ -108,7 +108,7 @@ export default function RoomDayPanel() {
             </section>
           ) : null}
 
-          <p className="text-sm text-stone-600"><span className="font-black">Ελεύθερα:</span> {data.free.length ? data.free.join(", ") : "κανένα"}</p>
+          <p className="text-sm text-[#4b5b70]"><span className="font-black">Ελεύθερα:</span> {data.free.length ? data.free.join(", ") : "κανένα"}</p>
         </>
       ) : null}
     </section>

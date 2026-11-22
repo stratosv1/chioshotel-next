@@ -27,10 +27,10 @@ const LANGUAGES: { key: EmailLanguage; label: string }[] = [
 ];
 const SOURCE_LABELS: Record<Source, string> = { guest: "Πελάτης", website: "Από το site", staff: "Πρόσθεσες εσύ" };
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
-const inputClass = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm";
-const secondaryButton = "rounded-full border border-amber-800/30 bg-white px-4 py-2 text-sm font-black text-amber-900 disabled:opacity-50";
-const primaryButton = "rounded-full bg-amber-800 px-4 py-2 text-sm font-black text-white disabled:opacity-50";
-const chipClass = (active: boolean) => `min-h-10 rounded-full px-4 text-sm font-black disabled:opacity-50 ${active ? "bg-stone-900 text-white" : "border border-stone-300 bg-white text-stone-700"}`;
+const inputClass = "w-full rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-sm";
+const secondaryButton = "rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a] disabled:opacity-50";
+const primaryButton = "rounded-full bg-[#5443c9] px-4 py-2 text-sm font-black text-white disabled:opacity-50";
+const chipClass = (active: boolean) => `min-h-10 rounded-full px-4 text-sm font-black disabled:opacity-50 ${active ? "bg-[#5443c9] text-white" : "border border-[#cfd9e4] bg-white text-[#334155]"}`;
 
 async function request(url: string, body?: Record<string, unknown>) {
   const response = await fetch(url, body ? {
@@ -120,19 +120,19 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
     URL.revokeObjectURL(link.href);
   };
 
-  if (!contacts) return <p className="text-sm text-stone-600">Φόρτωση…</p>;
+  if (!contacts) return <p className="text-sm text-[#4b5b70]">Φόρτωση…</p>;
 
   return (
     <div className="grid gap-4">
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {LANGUAGES.map(({ key, label }) => (
           <div key={key} className={panelClass}>
-            <p className="text-sm font-bold text-stone-500">{label}</p>
+            <p className="text-sm font-bold text-[#5b6b80]">{label}</p>
             <p className="mt-1 text-3xl font-black">{active.filter((contact) => contact.language === key).length}</p>
           </div>
         ))}
         <div className={panelClass}>
-          <p className="text-sm font-bold text-stone-500">Έχουν κάνει διαγραφή</p>
+          <p className="text-sm font-bold text-[#5b6b80]">Έχουν κάνει διαγραφή</p>
           <p className="mt-1 text-3xl font-black">{contacts.length - active.length}</p>
         </div>
       </div>
@@ -149,7 +149,7 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
 
       <section className={panelClass}>
         <h2 className="text-lg font-black">Προσθήκη email</h2>
-        <p className="mt-1 text-sm text-stone-600">Ένα email ανά γραμμή. Αν θες και όνομα: <code>email, όνομα</code>. Μπορείς να επικολλήσεις μια ολόκληρη παλιά λίστα.</p>
+        <p className="mt-1 text-sm text-[#4b5b70]">Ένα email ανά γραμμή. Αν θες και όνομα: <code>email, όνομα</code>. Μπορείς να επικολλήσεις μια ολόκληρη παλιά λίστα.</p>
         <form
           className="mt-3 grid gap-3"
           onSubmit={(event) => { event.preventDefault(); void add(); }}
@@ -186,13 +186,13 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
           </label>
           <button type="button" className={secondaryButton} disabled={!visible.length} onClick={download}>Λήψη CSV</button>
         </div>
-        <p className="mb-2 text-sm font-bold text-stone-600">{visible.length} email</p>
+        <p className="mb-2 text-sm font-bold text-[#4b5b70]">{visible.length} email</p>
         <ul className="grid gap-1">
           {visible.slice(0, 200).map((contact) => (
-            <li key={contact.email} className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 py-2">
+            <li key={contact.email} className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e3e9f0] py-2">
               <div className="min-w-0">
                 <p className="break-all font-black">{contact.email}</p>
-                <p className="text-sm text-stone-600">
+                <p className="text-sm text-[#4b5b70]">
                   {contact.name || "Χωρίς όνομα"} · {contact.sources.map((source) => SOURCE_LABELS[source]).join(", ")}
                   {contact.stays ? ` · ${contact.stays} ${contact.stays === 1 ? "διαμονή" : "διαμονές"}` : ""}
                 </p>
@@ -201,7 +201,7 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
                 <label htmlFor={`nl-lang-${contact.email}`} className="sr-only">Γλώσσα για {contact.email}</label>
                 <select
                   id={`nl-lang-${contact.email}`}
-                  className="rounded-xl border border-stone-300 bg-white px-2 py-1.5 text-sm"
+                  className="rounded-xl border border-[#cfd9e4] bg-white px-2 py-1.5 text-sm"
                   value={contact.language}
                   disabled={busy}
                   onChange={(event) => act({ action: "set_language", email: contact.email, language: event.target.value }, "Η γλώσσα άλλαξε.")}
@@ -223,7 +223,7 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
             </li>
           ))}
         </ul>
-        {visible.length > 200 ? <p className="mt-3 text-sm text-stone-600">Εμφανίζονται τα πρώτα 200. Χρησιμοποίησε αναζήτηση ή γλώσσα.</p> : null}
+        {visible.length > 200 ? <p className="mt-3 text-sm text-[#4b5b70]">Εμφανίζονται τα πρώτα 200. Χρησιμοποίησε αναζήτηση ή γλώσσα.</p> : null}
       </section>
     </div>
   );
@@ -328,7 +328,7 @@ function CampaignEditor({ initial, onClose, onNotice, onError }: { initial: Draf
 
   return (
     <div className="grid gap-4">
-      <button type="button" className="justify-self-start text-sm font-bold text-amber-800" onClick={() => {
+      <button type="button" className="justify-self-start text-sm font-bold text-[#5443c9]" onClick={() => {
         if (dirty && !window.confirm("Έχεις αλλαγές που δεν αποθηκεύτηκαν. Να φύγω;")) return;
         onClose();
       }}>← Όλες οι καμπάνιες</button>
@@ -352,7 +352,7 @@ function CampaignEditor({ initial, onClose, onNotice, onError }: { initial: Draf
             </button>
           ))}
         </div>
-        <p className="text-sm text-stone-600">Γράψε το μήνυμα σε κάθε γλώσσα που θες να στείλεις. Όποια γλώσσα μείνει κενή δεν στέλνεται. Το «Αγαπητέ/ή Όνομα» μπαίνει μόνο του.</p>
+        <p className="text-sm text-[#4b5b70]">Γράψε το μήνυμα σε κάθε γλώσσα που θες να στείλεις. Όποια γλώσσα μείνει κενή δεν στέλνεται. Το «Αγαπητέ/ή Όνομα» μπαίνει μόνο του.</p>
         <div>
           <label htmlFor="cmp-subject" className="mb-1 block text-sm font-bold">Θέμα email</label>
           <input id="cmp-subject" className={inputClass} value={text.subject} onChange={(event) => setText({ subject: event.target.value })} />
@@ -381,21 +381,21 @@ function CampaignEditor({ initial, onClose, onNotice, onError }: { initial: Draf
             Στείλε μου δοκιμή ({editLanguage.toUpperCase()})
           </button>
         </div>
-        {dirty ? <p className="text-xs text-stone-500">Αποθήκευσε για να στείλεις δοκιμή ή την καμπάνια.</p> : null}
+        {dirty ? <p className="text-xs text-[#5b6b80]">Αποθήκευσε για να στείλεις δοκιμή ή την καμπάνια.</p> : null}
       </section>
 
       {draft.id && !dirty ? (
         <section className={panelClass}>
           <h2 className="mb-3 text-lg font-black">Αποστολή</h2>
-          {!status ? <p className="text-sm text-stone-600">Φόρτωση…</p> : (
+          {!status ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : (
             <>
               <ul className="grid gap-1">
                 {LANGUAGES.map(({ key, label }) => {
                   const counts = status.byLanguage[key];
                   const canSend = ready.includes(key);
                   return (
-                    <li key={key} className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 py-2">
-                      <label className={`flex items-center gap-2 font-black ${canSend ? "" : "text-stone-400"}`}>
+                    <li key={key} className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e3e9f0] py-2">
+                      <label className={`flex items-center gap-2 font-black ${canSend ? "" : "text-[#8a97a8]"}`}>
                         <input
                           type="checkbox"
                           className="h-5 w-5"
@@ -405,14 +405,14 @@ function CampaignEditor({ initial, onClose, onNotice, onError }: { initial: Draf
                         />
                         {label}{canSend ? "" : " (χωρίς κείμενο)"}
                       </label>
-                      <span className="text-sm text-stone-600">
+                      <span className="text-sm text-[#4b5b70]">
                         {counts.total} στη λίστα · {counts.sent} στάλθηκαν · {counts.waiting} περιμένουν{counts.failed ? ` · ${counts.failed} απέτυχαν` : ""}
                       </span>
                     </li>
                   );
                 })}
               </ul>
-              <p className="mt-2 text-xs text-stone-500">Σήμερα στάλθηκαν {status.sentToday} από {status.dailyLimit} μαζικά email (όριο για να μη μπλοκάρει το Gmail). Κάθε email παίρνει την καμπάνια μία φορά.</p>
+              <p className="mt-2 text-xs text-[#5b6b80]">Σήμερα στάλθηκαν {status.sentToday} από {status.dailyLimit} μαζικά email (όριο για να μη μπλοκάρει το Gmail). Κάθε email παίρνει την καμπάνια μία φορά.</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <button type="button" className={primaryButton} disabled={sending || busy || !waiting} onClick={() => sendAll(false)}>
                   {sending ? "Αποστολή…" : `Αποστολή σε ${waiting}`}
@@ -420,7 +420,7 @@ function CampaignEditor({ initial, onClose, onNotice, onError }: { initial: Draf
                 {sending ? <button type="button" className={secondaryButton} onClick={stop}>Διακοπή</button> : null}
                 {!sending && failed ? <button type="button" className={secondaryButton} disabled={busy} onClick={() => sendAll(true)}>Ξαναδοκίμασε {failed} αποτυχημένα</button> : null}
               </div>
-              {progress ? <p role="status" className="mt-3 text-sm font-bold text-stone-700">{progress}</p> : null}
+              {progress ? <p role="status" className="mt-3 text-sm font-bold text-[#334155]">{progress}</p> : null}
             </>
           )}
         </section>
@@ -431,9 +431,9 @@ function CampaignEditor({ initial, onClose, onNotice, onError }: { initial: Draf
         {preview ? (
           <>
             <p className="mb-2 text-sm font-bold">Θέμα: {preview.subject}</p>
-            <iframe title="Προεπισκόπηση καμπάνιας" sandbox="" srcDoc={preview.html} className="h-[620px] w-full rounded-xl border border-stone-200 bg-white" />
+            <iframe title="Προεπισκόπηση καμπάνιας" sandbox="" srcDoc={preview.html} className="h-[620px] w-full rounded-xl border border-[#e3e9f0] bg-white" />
           </>
-        ) : <p className="text-sm text-stone-600">Γράψε θέμα και κείμενο για να δεις την προεπισκόπηση.</p>}
+        ) : <p className="text-sm text-[#4b5b70]">Γράψε θέμα και κείμενο για να δεις την προεπισκόπηση.</p>}
       </section>
     </div>
   );
@@ -458,14 +458,14 @@ function CampaignsView({ onNotice, onError }: { onNotice: (text: string) => void
       <div>
         <button type="button" className={primaryButton} onClick={() => setEditing(emptyDraft())}>Νέα καμπάνια</button>
       </div>
-      {!campaigns ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+      {!campaigns ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
       {campaigns && !campaigns.length ? <p className={panelClass}>Δεν υπάρχει καμπάνια ακόμα.</p> : null}
       <ul className="grid gap-2">
         {(campaigns ?? []).map((campaign) => (
           <li key={campaign.id} className={`${panelClass} flex flex-wrap items-center justify-between gap-3`}>
             <div>
               <p className="font-black">{campaign.title}</p>
-              <p className="text-sm text-stone-600">
+              <p className="text-sm text-[#4b5b70]">
                 {LANGUAGES.filter(({ key }) => isCampaignReady(campaign.content[key])).map(({ key }) => key.toUpperCase()).join(" · ") || "Χωρίς κείμενο"}
                 {" · "}{campaign.sent ? `στάλθηκε σε ${campaign.sent}` : "δεν έχει σταλεί"} · {campaign.updatedAt}
               </p>

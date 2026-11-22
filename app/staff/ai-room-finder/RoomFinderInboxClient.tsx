@@ -8,7 +8,7 @@ import type {
 } from "@/lib/ai-assistant/conversation-store";
 import { decodeRoomFinderOfferSnapshot } from "@/lib/ai-assistant/room-finder-offer-tracking";
 
-const ACCENT = "#c9822f";
+const ACCENT = "#5443c9";
 
 function dateTime(value: string | null | undefined) {
   if (!value) return "—";
@@ -82,7 +82,7 @@ const toneClass: Record<Status["tone"], string> = {
   lead: "bg-amber-50 text-amber-800 ring-amber-200",
   done: "bg-sky-50 text-sky-700 ring-sky-200",
   none: "bg-rose-50 text-rose-700 ring-rose-200",
-  idle: "bg-stone-50 text-stone-500 ring-stone-200",
+  idle: "bg-[#f4f7fa] text-[#5b6b80] ring-[#e3e9f0]",
 };
 
 function fullName(conversation: RoomFinderInboxConversation) {
@@ -213,8 +213,8 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
   );
 
   const listPane = (
-    <section className={`${mobileDetail ? "hidden lg:flex" : "flex"} min-h-0 flex-col bg-white lg:rounded-2xl lg:border lg:border-stone-200`}>
-      <div className="flex items-center justify-between px-4 pb-2 pt-1 text-xs text-stone-500 lg:border-b lg:border-stone-100 lg:py-3">
+    <section className={`${mobileDetail ? "hidden lg:flex" : "flex"} min-h-0 flex-col bg-white lg:rounded-2xl lg:border lg:border-[#e3e9f0]`}>
+      <div className="flex items-center justify-between px-4 pb-2 pt-1 text-xs text-[#5b6b80] lg:border-b lg:border-[#e3e9f0] lg:py-3">
         <span>Σήμερα {data.stats.today} · 7 ημέρες {data.stats.last7Days}</span>
         {data.stats.active > 0 && (
           <span className="inline-flex items-center gap-1.5 font-medium text-emerald-700">
@@ -223,7 +223,7 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
           </span>
         )}
       </div>
-      <ul className="min-h-0 flex-1 divide-y divide-stone-100 lg:overflow-y-auto">
+      <ul className="min-h-0 flex-1 divide-y divide-[#e3e9f0] lg:overflow-y-auto">
         {data.conversations.map((conversation) => {
           const status = statusOf(conversation);
           const name = fullName(conversation);
@@ -234,31 +234,31 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
               <button
                 type="button"
                 onClick={() => void openConversation(conversation.sessionId)}
-                className={`flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors ${isSelected ? "lg:bg-stone-100" : "hover:bg-stone-50 active:bg-stone-100"}`}
+                className={`flex w-full items-start gap-3 px-4 py-3.5 text-left transition-colors ${isSelected ? "lg:bg-[#eef3f7]" : "hover:bg-[#f4f7fa] active:bg-[#eef3f7]"}`}
               >
                 <span
                   className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-semibold text-white"
-                  style={{ backgroundColor: conversation.unread ? ACCENT : "#a8a29e" }}
+                  style={{ backgroundColor: conversation.unread ? ACCENT : "#8a97a8" }}
                 >
                   {conversation.language.toUpperCase()}
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-baseline justify-between gap-2">
-                    <span className={`truncate text-[15px] ${conversation.unread ? "font-semibold text-stone-900" : "font-medium text-stone-700"}`}>
+                    <span className={`truncate text-[15px] ${conversation.unread ? "font-semibold text-[#1f2a3c]" : "font-medium text-[#334155]"}`}>
                       {name || "Επισκέπτης"}
                     </span>
-                    <span className={`shrink-0 text-xs ${conversation.unread ? "font-semibold" : "text-stone-400"}`} style={conversation.unread ? { color: ACCENT } : undefined}>
+                    <span className={`shrink-0 text-xs ${conversation.unread ? "font-semibold" : "text-[#8a97a8]"}`} style={conversation.unread ? { color: ACCENT } : undefined}>
                       {shortTime(conversation.lastActivityAt)}
                     </span>
                   </span>
-                  <span className="mt-0.5 block truncate text-sm text-stone-500">
+                  <span className="mt-0.5 block truncate text-sm text-[#5b6b80]">
                     {line || conversation.lastUserMessage || "Άνοιξε τον Room Finder"}
                   </span>
                   <span className="mt-1.5 flex items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ring-1 ring-inset ${toneClass[status.tone]}`}>
                       {status.label}
                     </span>
-                    {conversation.phone && <Phone className="h-3.5 w-3.5 text-stone-400" aria-label="Άφησε τηλέφωνο" />}
+                    {conversation.phone && <Phone className="h-3.5 w-3.5 text-[#8a97a8]" aria-label="Άφησε τηλέφωνο" />}
                     {conversation.unread && <span className="ml-auto h-2 w-2 rounded-full" style={{ backgroundColor: ACCENT }} aria-label="Μη αναγνωσμένη" />}
                   </span>
                 </span>
@@ -267,32 +267,32 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
           );
         })}
         {!data.conversations.length && (
-          <li className="p-10 text-center text-sm text-stone-500">Δεν υπάρχουν ακόμη συνομιλίες.</li>
+          <li className="p-10 text-center text-sm text-[#5b6b80]">Δεν υπάρχουν ακόμη συνομιλίες.</li>
         )}
       </ul>
     </section>
   );
 
   const detailPane = (
-    <section className={`${mobileDetail ? "flex" : "hidden lg:flex"} min-h-0 flex-col bg-[#f7f5f1] lg:rounded-2xl lg:border lg:border-stone-200`}>
+    <section className={`${mobileDetail ? "flex" : "hidden lg:flex"} min-h-0 flex-col bg-[#f4f7fa] lg:rounded-2xl lg:border lg:border-[#e3e9f0]`}>
       {selected ? (
         <>
-          <div className="sticky top-0 z-10 border-b border-stone-200 bg-white/95 px-3 py-2.5 backdrop-blur lg:static lg:rounded-t-2xl lg:px-5 lg:py-4">
+          <div className="sticky top-0 z-10 border-b border-[#e3e9f0] bg-white/95 px-3 py-2.5 backdrop-blur lg:static lg:rounded-t-2xl lg:px-5 lg:py-4">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={backToList}
-                className="-ml-1 flex h-10 w-10 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100 lg:hidden"
+                className="-ml-1 flex h-10 w-10 items-center justify-center rounded-full text-[#334155] hover:bg-[#eef3f7] lg:hidden"
                 aria-label="Πίσω στη λίστα"
               >
                 <ArrowLeft className="h-5 w-5" />
               </button>
               <div className="min-w-0 flex-1">
-                <h2 className="truncate text-base font-semibold text-stone-900">
+                <h2 className="truncate text-base font-semibold text-[#1f2a3c]">
                   {fullName(selected) || "Επισκέπτης"}
-                  <span className="ml-2 text-xs font-normal text-stone-400">{selected.language.toUpperCase()}</span>
+                  <span className="ml-2 text-xs font-normal text-[#8a97a8]">{selected.language.toUpperCase()}</span>
                 </h2>
-                <p className="truncate text-xs text-stone-500">
+                <p className="truncate text-xs text-[#5b6b80]">
                   {stayLine(selected) || "Χωρίς ημερομηνίες"} · {dateTime(selected.createdAt)}
                 </p>
               </div>
@@ -304,7 +304,7 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
             {(selected.phone || selected.email) && (
               <div className="mt-2.5 flex gap-2">
                 {selected.phone && (
-                  <a href={`tel:${selected.phone}`} className="flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-stone-900 px-3 text-sm font-medium text-white">
+                  <a href={`tel:${selected.phone}`} className="flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl bg-[#5443c9] px-3 text-sm font-medium text-white">
                     <Phone className="h-4 w-4" /> Κλήση
                   </a>
                 )}
@@ -314,14 +314,14 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
                   </a>
                 )}
                 {selected.email && (
-                  <a href={`mailto:${selected.email}`} className="flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl border border-stone-300 bg-white px-3 text-sm font-medium text-stone-800">
+                  <a href={`mailto:${selected.email}`} className="flex min-h-10 flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#cfd9e4] bg-white px-3 text-sm font-medium text-[#1f2a3c]">
                     <Mail className="h-4 w-4" /> Email
                   </a>
                 )}
               </div>
             )}
             {(selected.phone || selected.email || selectedRooms.length > 0 || selected.breakfast) && (
-              <p className="mt-2 text-xs leading-5 text-stone-500">
+              <p className="mt-2 text-xs leading-5 text-[#5b6b80]">
                 {[selected.phone, selected.email, selectedRooms.length ? `Δωμάτια: ${selectedRooms.join(", ")}` : "", selected.breakfast ? "Με πρωινό" : ""]
                   .filter(Boolean)
                   .join(" · ")}
@@ -337,28 +337,28 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
               return (
                 <div key={message.id} className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
                   <div
-                    className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-[15px] leading-6 ${isUser ? "rounded-br-sm text-white" : "rounded-bl-sm bg-white text-stone-800 shadow-[0_1px_1px_rgba(0,0,0,0.04)]"}`}
+                    className={`max-w-[85%] rounded-2xl px-3.5 py-2 text-[15px] leading-6 ${isUser ? "rounded-br-sm text-white" : "rounded-bl-sm bg-white text-[#1f2a3c] shadow-[0_1px_1px_rgba(0,0,0,0.04)]"}`}
                     style={isUser ? { backgroundColor: ACCENT } : undefined}
                   >
                     <div className="whitespace-pre-wrap">{tracked.content}</div>
                     {snapshot && (
-                      <div className="mt-2 space-y-1.5 border-t border-stone-100 pt-2">
+                      <div className="mt-2 space-y-1.5 border-t border-[#e3e9f0] pt-2">
                         {snapshot.groups.map((group) => (
                           <div key={`${message.id}-${group.groupNumber}`} className="space-y-1.5">
                             {snapshot.groups.length > 1 && (
-                              <p className="text-xs text-stone-500">Δωμάτιο {group.groupNumber} · {group.guests} άτομα</p>
+                              <p className="text-xs text-[#5b6b80]">Δωμάτιο {group.groupNumber} · {group.guests} άτομα</p>
                             )}
                             {group.offers.map((offer, offerIndex) => (
-                              <div key={`${offer.roomNumber}-${offer.checkin}-${offerIndex}`} className="flex items-center justify-between gap-3 rounded-xl bg-stone-50 px-3 py-2 text-sm">
+                              <div key={`${offer.roomNumber}-${offer.checkin}-${offerIndex}`} className="flex items-center justify-between gap-3 rounded-xl bg-[#f4f7fa] px-3 py-2 text-sm">
                                 <span className="min-w-0">
                                   <span className="block truncate font-medium">{offer.name}</span>
-                                  <span className="block text-xs text-stone-500">
+                                  <span className="block text-xs text-[#5b6b80]">
                                     Δωμ. {offer.roomNumber} · {shortStayDate(offer.checkin)}–{shortStayDate(offer.checkout)}
                                   </span>
                                 </span>
                                 <span className="shrink-0 text-right">
                                   {offer.originalTotal > offer.directTotal && (
-                                    <span className="block text-[11px] text-stone-400 line-through">{money(offer.originalTotal)}</span>
+                                    <span className="block text-[11px] text-[#8a97a8] line-through">{money(offer.originalTotal)}</span>
                                   )}
                                   <span className="block font-semibold text-emerald-700">{money(offer.directTotal)}</span>
                                 </span>
@@ -368,31 +368,28 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
                         ))}
                       </div>
                     )}
-                    <div className={`mt-0.5 text-right text-[10px] ${isUser ? "text-white/75" : "text-stone-400"}`}>
+                    <div className={`mt-0.5 text-right text-[10px] ${isUser ? "text-white/75" : "text-[#8a97a8]"}`}>
                       {shortTime(message.createdAt)}{message.reaction ? ` · ${message.reaction}` : ""}
                     </div>
                   </div>
                 </div>
               );
             })}
-            {!messages.length && <p className="py-10 text-center text-sm text-stone-500">Δεν υπάρχουν μηνύματα.</p>}
+            {!messages.length && <p className="py-10 text-center text-sm text-[#5b6b80]">Δεν υπάρχουν μηνύματα.</p>}
           </div>
         </>
       ) : (
-        <div className="m-auto p-12 text-center text-sm text-stone-500">Επίλεξε μια συνομιλία.</div>
+        <div className="m-auto p-12 text-center text-sm text-[#5b6b80]">Επίλεξε μια συνομιλία.</div>
       )}
     </section>
   );
 
   return (
-    <main className="min-h-[100dvh] bg-white font-sans text-stone-900 lg:bg-[#f7f5f1] lg:px-6 lg:py-6">
-      <div className="mx-auto flex max-w-6xl flex-col lg:h-[calc(100dvh-3rem)]">
+    <main className="min-h-[100dvh] bg-white font-sans text-[#1f2a3c] lg:bg-transparent lg:p-8">
+      <div className="flex flex-col lg:h-[calc(100dvh-4rem)]">
         <header className={`${mobileDetail ? "hidden lg:flex" : "flex"} items-center gap-2 px-3 py-2.5 lg:px-0 lg:pb-4 lg:pt-0`}>
-          <a href="/staff" className="flex h-10 w-10 items-center justify-center rounded-full text-stone-700 hover:bg-stone-100" aria-label="Staff Area">
-            <ArrowLeft className="h-5 w-5" />
-          </a>
-          <h1 className="flex-1 text-lg font-semibold">
-            Room Finder
+          <h1 className="flex-1 text-lg font-black tracking-tight lg:text-3xl">
+            AI συνομιλίες
             {data.stats.unread > 0 && (
               <span className="ml-2 rounded-full px-2 py-0.5 align-middle text-xs font-medium text-white" style={{ backgroundColor: ACCENT }}>
                 {data.stats.unread}
@@ -403,7 +400,7 @@ export default function RoomFinderInboxClient({ initialData }: { initialData: Ro
             type="button"
             onClick={() => void load()}
             disabled={refreshing}
-            className="flex h-10 w-10 items-center justify-center rounded-full text-stone-600 hover:bg-stone-100 disabled:opacity-50"
+            className="flex h-10 w-10 items-center justify-center rounded-full text-[#4b5b70] hover:bg-[#eef3f7] disabled:opacity-50"
             aria-label="Ανανέωση"
           >
             <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />

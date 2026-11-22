@@ -17,9 +17,9 @@ type Outreach = { enabled: boolean; samples: Record<EmailLanguage, string>; log:
 
 const API = "/api/staff/crm/emails/";
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
-const inputClass = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm";
-const secondaryButton = "rounded-full border border-amber-800/30 bg-white px-4 py-2 text-sm font-black text-amber-900 disabled:opacity-50";
-const primaryButton = "rounded-full bg-amber-800 px-4 py-2 text-sm font-black text-white disabled:opacity-50";
+const inputClass = "w-full rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-sm";
+const secondaryButton = "rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a] disabled:opacity-50";
+const primaryButton = "rounded-full bg-[#5443c9] px-4 py-2 text-sm font-black text-white disabled:opacity-50";
 
 async function request(url: string, body?: Record<string, unknown>) {
   const response = await fetch(url, body ? {
@@ -82,7 +82,7 @@ export default function EmailsPanel() {
     }
   };
 
-  if (!settings) return <div>{error ? <p role="alert" className="text-sm font-bold text-red-900">{error}</p> : <p className="text-sm text-stone-600">Φόρτωση…</p>}</div>;
+  if (!settings) return <div>{error ? <p role="alert" className="text-sm font-bold text-red-900">{error}</p> : <p className="text-sm text-[#4b5b70]">Φόρτωση…</p>}</div>;
 
   return (
     <div className="grid gap-4">
@@ -121,15 +121,15 @@ export default function EmailsPanel() {
 
       <section className={panelClass}>
         <h2 className="mb-1 text-lg font-black">Αυτόματα email</h2>
-        <p className="mb-3 text-sm text-stone-600">Άνοιξε ή κλείσε κάθε email ξεχωριστά. Ο έλεγχος τρέχει κάθε πρωί γύρω στις 9, και κάθε βράδυ γύρω στις 9 για το πρωινό.</p>
+        <p className="mb-3 text-sm text-[#4b5b70]">Άνοιξε ή κλείσε κάθε email ξεχωριστά. Ο έλεγχος τρέχει κάθε πρωί γύρω στις 9, και κάθε βράδυ γύρω στις 9 για το πρωινό.</p>
         <ul className="grid gap-1">
           {EMAIL_TYPES.map((type) => {
             const enabled = settings.enabledTypes.includes(type);
             return (
-              <li key={type} className="flex flex-wrap items-center justify-between gap-3 border-b border-stone-100 py-2">
+              <li key={type} className="flex flex-wrap items-center justify-between gap-3 border-b border-[#e3e9f0] py-2">
                 <div>
                   <p className="font-black">{EMAIL_TYPE_LABELS[type].label}</p>
-                  <p className="text-sm text-stone-600">{EMAIL_TYPE_LABELS[type].when}</p>
+                  <p className="text-sm text-[#4b5b70]">{EMAIL_TYPE_LABELS[type].when}</p>
                 </div>
                 <button
                   type="button"
@@ -138,7 +138,7 @@ export default function EmailsPanel() {
                   aria-label={EMAIL_TYPE_LABELS[type].label}
                   disabled={busy}
                   onClick={() => act({ action: "toggle_type", type, enabled: !enabled }, enabled ? "Έκλεισε." : "Άνοιξε.")}
-                  className={`min-w-[76px] rounded-full px-4 py-2 text-sm font-black disabled:opacity-50 ${enabled ? "bg-emerald-700 text-white" : "bg-stone-200 text-stone-700"}`}
+                  className={`min-w-[76px] rounded-full px-4 py-2 text-sm font-black disabled:opacity-50 ${enabled ? "bg-emerald-700 text-white" : "bg-[#e3e9f0] text-[#334155]"}`}
                 >
                   {enabled ? "ON" : "OFF"}
                 </button>
@@ -162,13 +162,13 @@ export default function EmailsPanel() {
                 if (!outreach.enabled && !window.confirm("Κάθε νέα κράτηση Booking/Expedia θα παίρνει αυτόματα το μήνυμα. Να ανοίξει;")) return;
                 void act({ action: "set_outreach", enabled: !outreach.enabled }, outreach.enabled ? "Έκλεισε." : "Άνοιξε για νέες κρατήσεις.");
               }}
-              className={`min-w-[76px] rounded-full px-4 py-2 text-sm font-black disabled:opacity-50 ${outreach.enabled ? "bg-emerald-700 text-white" : "bg-stone-200 text-stone-700"}`}
+              className={`min-w-[76px] rounded-full px-4 py-2 text-sm font-black disabled:opacity-50 ${outreach.enabled ? "bg-emerald-700 text-white" : "bg-[#e3e9f0] text-[#334155]"}`}
             >
               {outreach.enabled ? "ON" : "OFF"}
             </button>
           </div>
-          <p className="mb-3 text-sm text-stone-600">Φεύγει σε νέες κρατήσεις, με υπενθύμιση 7 και 3 μέρες πριν και ένα SMS στο τέλος, μέχρι να μας δώσει email. Η δοκιμαστική λειτουργία δεν ισχύει εδώ: τα μηνύματα πάνε στον πελάτη.</p>
-          <pre className="mb-3 whitespace-pre-wrap rounded-xl bg-stone-100 p-3 font-sans text-sm">{outreach.samples[previewLanguage]}</pre>
+          <p className="mb-3 text-sm text-[#4b5b70]">Φεύγει σε νέες κρατήσεις, με υπενθύμιση 7 και 3 μέρες πριν και ένα SMS στο τέλος, μέχρι να μας δώσει email. Η δοκιμαστική λειτουργία δεν ισχύει εδώ: τα μηνύματα πάνε στον πελάτη.</p>
+          <pre className="mb-3 whitespace-pre-wrap rounded-xl bg-[#eef3f7] p-3 font-sans text-sm">{outreach.samples[previewLanguage]}</pre>
           <form
             className="flex flex-wrap items-end gap-2"
             onSubmit={(event) => {
@@ -186,7 +186,7 @@ export default function EmailsPanel() {
           {outreach.log.length ? (
             <ul className="mt-3 grid gap-1 text-sm">
               {outreach.log.map((row) => (
-                <li key={row.bookingId} className="break-all border-b border-stone-100 py-1.5">
+                <li key={row.bookingId} className="break-all border-b border-[#e3e9f0] py-1.5">
                   {row.sentAt} · #{row.bookingId} · {row.language.toUpperCase()} · {row.status === "sent" ? "στάλθηκε" : row.status === "failed" ? `απέτυχε: ${row.error ?? ""}` : row.status}
                 </li>
               ))}
@@ -205,12 +205,12 @@ export default function EmailsPanel() {
         {due.length ? (
           <ul className="grid gap-1 text-sm">
             {due.map((item) => (
-              <li key={`${item.type}-${item.guestEmail}`} className="break-all border-b border-stone-100 py-1.5">
+              <li key={`${item.type}-${item.guestEmail}`} className="break-all border-b border-[#e3e9f0] py-1.5">
                 <strong>{EMAIL_TYPE_LABELS[item.type].label}</strong> · {item.name || "Πελάτης"} · {item.guestEmail} · {item.language.toUpperCase()} · άφιξη {item.checkin}
               </li>
             ))}
           </ul>
-        ) : <p className="text-sm text-stone-600">Σήμερα δεν είναι προγραμματισμένο κανένα email.</p>}
+        ) : <p className="text-sm text-[#4b5b70]">Σήμερα δεν είναι προγραμματισμένο κανένα email.</p>}
       </section>
 
       <section className={panelClass}>
@@ -235,9 +235,9 @@ export default function EmailsPanel() {
         {preview ? (
           <>
             <p className="mb-2 text-sm font-bold">Θέμα: {preview.subject}</p>
-            <iframe title="Προεπισκόπηση email" sandbox="" srcDoc={preview.html} className="h-[560px] w-full rounded-xl border border-stone-200 bg-white" />
+            <iframe title="Προεπισκόπηση email" sandbox="" srcDoc={preview.html} className="h-[560px] w-full rounded-xl border border-[#e3e9f0] bg-white" />
           </>
-        ) : <p className="text-sm text-stone-600">Φόρτωση…</p>}
+        ) : <p className="text-sm text-[#4b5b70]">Φόρτωση…</p>}
       </section>
 
       <section className={panelClass}>
@@ -245,12 +245,12 @@ export default function EmailsPanel() {
         {log.length ? (
           <ul className="grid gap-1 text-sm">
             {log.map((row, index) => (
-              <li key={`${row.sentAt}-${index}`} className="break-all border-b border-stone-100 py-1.5">
+              <li key={`${row.sentAt}-${index}`} className="break-all border-b border-[#e3e9f0] py-1.5">
                 {row.sentAt} · <strong>{EMAIL_TYPE_LABELS[row.type]?.label ?? (row.type === "confirmation" ? "Επιβεβαίωση κράτησης" : row.type)}</strong> · {row.recipient} · {row.mode === "test" ? "δοκιμή" : "ζωντανά"} · {row.status === "sent" ? "στάλθηκε" : row.status === "failed" ? `απέτυχε: ${row.error ?? ""}` : row.status}
               </li>
             ))}
           </ul>
-        ) : <p className="text-sm text-stone-600">Δεν έχει σταλεί τίποτα ακόμα.</p>}
+        ) : <p className="text-sm text-[#4b5b70]">Δεν έχει σταλεί τίποτα ακόμα.</p>}
       </section>
     </div>
   );

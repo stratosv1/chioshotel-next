@@ -10,9 +10,9 @@ export const metadata: Metadata = {
 export default function StaffRoomsPage() {
   return (
     <PyrgosShell>
-    <main className="min-h-screen bg-[#f6efe5] px-4 py-6 text-stone-900">
-      <div className="mx-auto max-w-xl">
-                <h1 className="mb-4 mt-1 text-2xl font-black tracking-tight">Δωμάτια ημέρας</h1>
+    <main className="min-h-screen p-4 text-[#1f2a3c] sm:p-6 lg:p-8">
+      <div className="max-w-3xl">
+        <h1 className="mb-4 text-2xl font-black tracking-tight sm:text-3xl">Αφίξεις & δωμάτια</h1>
         <RoomDayPanel />
       </div>
     </main>

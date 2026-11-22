@@ -1,9 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ArrowLeft,
   BarChart3,
   ChevronLeft,
   ChevronRight,
@@ -214,7 +212,7 @@ function Segmented<T extends string>({
     <div
       role="group"
       aria-label={label}
-      className="flex min-w-0 gap-1 rounded-2xl bg-[#ebe3d9] p-1"
+      className="flex min-w-0 gap-1 rounded-2xl bg-[#e3e9f0] p-1"
     >
       {options.map((option) => {
         const active = option.value === value;
@@ -226,8 +224,8 @@ function Segmented<T extends string>({
             onClick={() => onChange(option.value)}
             className={`flex min-h-11 min-w-0 flex-1 items-center justify-center gap-1 rounded-xl px-1.5 text-sm font-extrabold whitespace-nowrap transition ${
               active
-                ? `border bg-white shadow-sm ${option.activeClass ?? "border-[#c9a77f] text-[#5b3f29]"}`
-                : "border border-transparent text-stone-600"
+                ? `border bg-white shadow-sm ${option.activeClass ?? "border-[#5443c9] text-[#1f2a3c]"}`
+                : "border border-transparent text-[#4b5b70]"
             }`}
           >
             {option.icon ? <span aria-hidden="true">{option.icon}</span> : null}
@@ -250,11 +248,11 @@ function MonthNav({
 }) {
   const atMax = month >= maxMonth;
   return (
-    <div className="flex items-center justify-between gap-2 rounded-2xl bg-white p-1 ring-1 ring-stone-200">
+    <div className="flex items-center justify-between gap-2 rounded-2xl bg-white p-1 ring-1 ring-[#e3e9f0]">
       <button
         type="button"
         onClick={() => onChange(shiftMonth(month, -1))}
-        className="grid size-11 place-items-center rounded-xl text-stone-600 active:bg-stone-100"
+        className="grid size-11 place-items-center rounded-xl text-[#4b5b70] active:bg-[#eef3f7]"
         aria-label="Προηγούμενος μήνας"
       >
         <ChevronLeft className="size-5" />
@@ -264,7 +262,7 @@ function MonthNav({
         type="button"
         onClick={() => onChange(shiftMonth(month, 1))}
         disabled={atMax}
-        className="grid size-11 place-items-center rounded-xl text-stone-600 active:bg-stone-100 disabled:opacity-30"
+        className="grid size-11 place-items-center rounded-xl text-[#4b5b70] active:bg-[#eef3f7] disabled:opacity-30"
         aria-label="Επόμενος μήνας"
       >
         <ChevronRight className="size-5" />
@@ -286,13 +284,13 @@ function Sheet({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end bg-stone-950/40 md:items-center md:justify-center md:p-6"
+      className="fixed inset-0 z-50 flex items-end bg-[#1f2a3c]/40 md:items-center md:justify-center md:p-6"
       onClick={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
     >
       <div
-        className="max-h-[92dvh] w-full overflow-auto overscroll-contain rounded-t-[2rem] bg-[#fbfaf7] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl md:max-w-lg md:rounded-[2rem] md:p-6"
+        className="max-h-[92dvh] w-full overflow-auto overscroll-contain rounded-t-[2rem] bg-[#f4f7fa] p-4 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl md:max-w-lg md:rounded-[2rem] md:p-6"
         role="dialog"
         aria-modal="true"
         aria-label={title}
@@ -300,14 +298,14 @@ function Sheet({
         <div className="mb-4 flex items-center justify-between gap-3">
           <div className="min-w-0">
             {eyebrow ? (
-              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#a86f35]">{eyebrow}</p>
+              <p className="text-xs font-extrabold uppercase tracking-[0.16em] text-[#5443c9]">{eyebrow}</p>
             ) : null}
-            <h2 className="mt-0.5 truncate text-2xl font-black text-[#49392f]">{title}</h2>
+            <h2 className="mt-0.5 truncate text-2xl font-black text-[#1f2a3c]">{title}</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="grid size-11 shrink-0 place-items-center rounded-full border border-stone-200 bg-white text-stone-600"
+            className="grid size-11 shrink-0 place-items-center rounded-full border border-[#e3e9f0] bg-white text-[#4b5b70]"
             aria-label="Κλείσιμο"
           >
             <X className="size-5" />
@@ -334,7 +332,7 @@ function Chip({
       onClick={onClick}
       aria-pressed={active}
       className={`min-h-11 rounded-full border px-3.5 text-sm font-extrabold transition ${
-        active ? "border-[#8c633b] bg-[#f4eadc] text-[#674722]" : "border-stone-200 bg-white text-stone-600"
+        active ? "border-[#5443c9] bg-[#e9e4fe] text-[#3b2f8a]" : "border-[#e3e9f0] bg-white text-[#4b5b70]"
       }`}
     >
       {children}
@@ -416,8 +414,8 @@ function ExpenseForm({
 
   return (
     <form onSubmit={submit} className="space-y-4">
-      <div className="flex items-center rounded-3xl border-2 border-[#d9c9b9] bg-white px-4 py-2 focus-within:border-[#a86f35]">
-        <span className="mr-2 text-3xl font-black text-[#9a7655]">€</span>
+      <div className="flex items-center rounded-3xl border-2 border-[#cfd9e4] bg-white px-4 py-2 focus-within:border-[#5443c9]">
+        <span className="mr-2 text-3xl font-black text-[#8a97a8]">€</span>
         <input
           ref={amountRef}
           value={amount}
@@ -427,13 +425,13 @@ function ExpenseForm({
           placeholder="0,00"
           autoComplete="off"
           aria-label="Ποσό"
-          className="min-w-0 flex-1 bg-transparent py-1 text-5xl font-black tracking-tight text-[#49392f] tabular-nums outline-none placeholder:text-stone-300"
+          className="min-w-0 flex-1 bg-transparent py-1 text-5xl font-black tracking-tight text-[#1f2a3c] tabular-nums outline-none placeholder:text-[#cfd9e4]"
         />
       </div>
 
       {showPeople ? (
         <div>
-          <p className="mb-2 text-sm font-extrabold text-stone-600">
+          <p className="mb-2 text-sm font-extrabold text-[#4b5b70]">
             Για ποιον{needsPerson ? "" : " · προαιρετικό"}
           </p>
           <div className="flex flex-wrap gap-2">
@@ -453,7 +451,7 @@ function ExpenseForm({
 
       {showSubject ? (
         <div>
-          <p className="mb-2 text-sm font-extrabold text-stone-600">Μάθημα</p>
+          <p className="mb-2 text-sm font-extrabold text-[#4b5b70]">Μάθημα</p>
           <div className="flex flex-wrap gap-2">
             {staffTuitionSubjects.map((item) => (
               <Chip key={item} active={subject === item} onClick={() => setSubject(subject === item ? "" : item)}>
@@ -465,13 +463,13 @@ function ExpenseForm({
       ) : null}
 
       <div>
-        <p className="mb-2 text-sm font-extrabold text-stone-600">Πότε</p>
+        <p className="mb-2 text-sm font-extrabold text-[#4b5b70]">Πότε</p>
         <div className="flex flex-wrap items-center gap-2">
           <Chip active={expenseDate === today} onClick={() => setExpenseDate(today)}>Σήμερα</Chip>
           <Chip active={expenseDate === yesterday} onClick={() => setExpenseDate(yesterday)}>Χθες</Chip>
           <label
             className={`relative inline-flex min-h-11 items-center rounded-full border px-3.5 text-sm font-extrabold ${
-              customDate ? "border-[#8c633b] bg-[#f4eadc] text-[#674722]" : "border-stone-200 bg-white text-stone-600"
+              customDate ? "border-[#5443c9] bg-[#e9e4fe] text-[#3b2f8a]" : "border-[#e3e9f0] bg-white text-[#4b5b70]"
             }`}
           >
             {customDate ? formatDay(expenseDate) : "Άλλη μέρα"}
@@ -491,7 +489,7 @@ function ExpenseForm({
         value={note}
         onChange={(event) => setNote(event.target.value)}
         placeholder={category === "service" ? "Σημείωση (υποχρεωτική) π.χ. τεχνικός" : "Σημείωση (προαιρετικά)"}
-        className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 text-base font-semibold outline-none focus:border-[#b17a43]"
+        className="min-h-12 w-full rounded-2xl border border-[#e3e9f0] bg-white px-4 text-base font-semibold outline-none focus:border-[#5443c9]"
       />
 
       {error ? <p className="text-sm font-extrabold text-red-700" role="alert">{error}</p> : null}
@@ -499,7 +497,7 @@ function ExpenseForm({
       <button
         type="submit"
         disabled={saving}
-        className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#805536] px-4 text-lg font-black text-white shadow-lg shadow-stone-400/30 active:scale-[0.99] disabled:opacity-60"
+        className="flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl bg-[#5443c9] px-4 text-lg font-black text-white shadow-lg shadow-stone-400/30 active:scale-[0.99] disabled:opacity-60"
       >
         {saving ? "Αποθήκευση..." : parsed > 0 ? `${submitLabel} ${formatMoney(parsed)}` : submitLabel}
       </button>
@@ -556,11 +554,11 @@ function EditSheet({
         />
       </div>
       <label className="mb-4 block">
-        <span className="mb-1.5 block text-sm font-extrabold text-stone-600">Κατηγορία</span>
+        <span className="mb-1.5 block text-sm font-extrabold text-[#4b5b70]">Κατηγορία</span>
         <select
           value={category}
           onChange={(event) => setCategory(event.target.value)}
-          className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white px-3 font-bold outline-none focus:border-[#b17a43]"
+          className="min-h-12 w-full rounded-2xl border border-[#e3e9f0] bg-white px-3 font-bold outline-none focus:border-[#5443c9]"
         >
           {allowed.map((item) => (
             <option key={item.slug} value={item.slug}>
@@ -594,16 +592,16 @@ function ExpenseRow({ expense, onClick, showAccount }: { expense: StaffExpense; 
     <button
       type="button"
       onClick={onClick}
-      className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-stone-50"
+      className="flex w-full items-center gap-3 px-4 py-3 text-left active:bg-[#f4f7fa]"
     >
-      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#f2e7da] text-lg" aria-hidden="true">
+      <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#e9e4fe] text-lg" aria-hidden="true">
         {category?.icon ?? "🧾"}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-[15px] font-black text-[#49392f]">{category?.label ?? expense.category}</span>
-        {sub ? <span className="block truncate text-xs font-bold text-stone-500">{sub}</span> : null}
+        <span className="block truncate text-[15px] font-black text-[#1f2a3c]">{category?.label ?? expense.category}</span>
+        {sub ? <span className="block truncate text-xs font-bold text-[#5b6b80]">{sub}</span> : null}
       </span>
-      <span className="shrink-0 text-base font-black tabular-nums text-[#49392f]">{formatMoney(expense.amount)}</span>
+      <span className="shrink-0 text-base font-black tabular-nums text-[#1f2a3c]">{formatMoney(expense.amount)}</span>
     </button>
   );
 }
@@ -966,7 +964,7 @@ export default function ExpensesApp() {
           value={filterCategory}
           onChange={(event) => { setFilterCategory(event.target.value); setOpenCategory(null); }}
           aria-label="Κατηγορία"
-          className="min-h-12 min-w-0 rounded-2xl border border-stone-200 bg-white px-3 font-bold outline-none focus:border-[#b17a43]"
+          className="min-h-12 min-w-0 rounded-2xl border border-[#e3e9f0] bg-white px-3 font-bold outline-none focus:border-[#5443c9]"
         >
           <option value="">Όλες οι κατηγορίες</option>
           {filterCategories.map((item) => (
@@ -978,7 +976,7 @@ export default function ExpensesApp() {
           aria-pressed={allMonths}
           onClick={() => { setAllMonths(!allMonths); setOpenCategory(null); }}
           className={`min-h-12 rounded-2xl border px-3 text-sm font-extrabold ${
-            allMonths ? "border-[#8c633b] bg-[#f4eadc] text-[#674722]" : "border-stone-200 bg-white text-stone-600"
+            allMonths ? "border-[#5443c9] bg-[#e9e4fe] text-[#3b2f8a]" : "border-[#e3e9f0] bg-white text-[#4b5b70]"
           }`}
         >
           Όλοι οι μήνες
@@ -986,19 +984,19 @@ export default function ExpensesApp() {
       </div>
 
       <label className="relative block">
-        <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
+        <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#8a97a8]" />
         <input
           value={search}
           onChange={(event) => { setSearch(event.target.value); setOpenCategory(null); }}
           placeholder="Αναζήτηση π.χ. μιχ φροντιστήριο"
           aria-label="Αναζήτηση εξόδων"
-          className="min-h-12 w-full rounded-2xl border border-stone-200 bg-white pl-10 pr-10 font-bold outline-none focus:border-[#b17a43]"
+          className="min-h-12 w-full rounded-2xl border border-[#e3e9f0] bg-white pl-10 pr-10 font-bold outline-none focus:border-[#5443c9]"
         />
         {search ? (
           <button
             type="button"
             onClick={() => setSearch("")}
-            className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-stone-500"
+            className="absolute right-2 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-full text-[#5b6b80]"
             aria-label="Καθαρισμός αναζήτησης"
           >
             <X className="size-4" />
@@ -1007,7 +1005,7 @@ export default function ExpensesApp() {
       </label>
 
       {hasFilters ? (
-        <button type="button" onClick={clearFilters} className="min-h-9 px-1 text-sm font-extrabold text-[#8a5f37] underline">
+        <button type="button" onClick={clearFilters} className="min-h-9 px-1 text-sm font-extrabold text-[#5443c9] underline">
           Καθαρισμός φίλτρων
         </button>
       ) : null}
@@ -1017,10 +1015,10 @@ export default function ExpensesApp() {
   /* -------------------------------------------------------- render */
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f4efe8] pb-[calc(6.5rem+env(safe-area-inset-bottom))] text-[#49392f]">
+    <main className="min-h-screen overflow-x-hidden pb-[calc(6.5rem+env(safe-area-inset-bottom))] text-[#1f2a3c]">
       {toast ? (
         <div
-          className="fixed inset-x-3 top-[calc(.75rem+env(safe-area-inset-top))] z-[70] mx-auto flex max-w-md items-center justify-between gap-3 rounded-2xl border border-[#dfd1c2] bg-white px-4 py-3 text-base font-extrabold shadow-xl"
+          className="fixed inset-x-3 top-[calc(.75rem+env(safe-area-inset-top))] z-[70] mx-auto flex max-w-md items-center justify-between gap-3 rounded-2xl border border-[#cfd9e4] bg-white px-4 py-3 text-base font-extrabold shadow-xl"
           role="status"
           aria-live="polite"
         >
@@ -1029,7 +1027,7 @@ export default function ExpensesApp() {
             <button
               type="button"
               onClick={() => void undoDelete()}
-              className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#f2e7da] px-3 text-[#795333]"
+              className="inline-flex min-h-10 items-center gap-1 rounded-xl bg-[#e9e4fe] px-3 text-[#3b2f8a]"
             >
               <Undo2 className="size-4" /> Αναίρεση
             </button>
@@ -1037,16 +1035,11 @@ export default function ExpensesApp() {
         </div>
       ) : null}
 
-      <div className="mx-auto min-w-0 max-w-2xl px-4 pt-[calc(.75rem+env(safe-area-inset-top))]">
+      <div className="min-w-0 max-w-3xl p-4 pt-[calc(1rem+env(safe-area-inset-top))] sm:p-6 lg:p-8">
         <header className="mb-4 flex items-center justify-between gap-3">
-          <Link
-            href="/staff"
-            className="inline-flex min-h-11 items-center gap-2 rounded-2xl border border-stone-200 bg-white px-3 text-sm font-extrabold text-[#6a4a35]"
-          >
-            <ArrowLeft className="size-4" /> Staff
-          </Link>
+          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Έξοδα</h1>
           <div className="text-right">
-            <p className="text-xs font-extrabold text-stone-500">Αυτόν τον μήνα</p>
+            <p className="text-xs font-extrabold text-[#5b6b80]">Αυτόν τον μήνα</p>
             <p className="text-2xl font-black tabular-nums tracking-tight">{formatMoney(globalSummary.currentMonthTotal)}</p>
           </div>
         </header>
@@ -1069,8 +1062,8 @@ export default function ExpensesApp() {
             />
 
             <div className="flex items-baseline justify-between px-1">
-              <h1 className="text-lg font-black">Τι πλήρωσες;</h1>
-              <p className="text-sm font-bold text-stone-500">
+              <h2 className="text-lg font-black">Τι πλήρωσες;</h2>
+              <p className="text-sm font-bold text-[#5b6b80]">
                 {formatMonthShort(thisMonth)}: <span className="tabular-nums">{formatMoney(accountMonthTotal)}</span>
               </p>
             </div>
@@ -1083,11 +1076,11 @@ export default function ExpensesApp() {
                     key={item.slug}
                     type="button"
                     onClick={() => setEntryCategory(item.slug)}
-                    className="flex min-h-[6.25rem] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl border border-stone-200 bg-white px-1.5 py-2 text-center shadow-sm transition active:scale-[0.97] active:bg-[#f6eadc]"
+                    className="flex min-h-[6.25rem] min-w-0 flex-col items-center justify-center gap-1 rounded-2xl border border-[#e3e9f0] bg-white px-1.5 py-2 text-center shadow-sm transition active:scale-[0.97] active:bg-[#e9e4fe]"
                   >
                     <span className="text-3xl leading-none" aria-hidden="true">{item.icon}</span>
-                    <span className="line-clamp-2 text-[13px] leading-tight font-extrabold text-[#4f3d31]">{item.label}</span>
-                    <span className={`text-[11px] font-bold tabular-nums ${spent > 0 ? "text-[#8a5f37]" : "text-transparent"}`}>
+                    <span className="line-clamp-2 text-[13px] leading-tight font-extrabold text-[#1f2a3c]">{item.label}</span>
+                    <span className={`text-[11px] font-bold tabular-nums ${spent > 0 ? "text-[#5443c9]" : "text-transparent"}`}>
                       {spent > 0 ? formatMoneyShort(spent) : "–"}
                     </span>
                   </button>
@@ -1097,8 +1090,8 @@ export default function ExpensesApp() {
 
             {recent.length > 0 ? (
               <section>
-                <h2 className="mb-2 px-1 text-sm font-black text-stone-600">Τελευταίες καταχωρήσεις</h2>
-                <div className="divide-y divide-stone-100 overflow-hidden rounded-2xl bg-white ring-1 ring-stone-200">
+                <h2 className="mb-2 px-1 text-sm font-black text-[#4b5b70]">Τελευταίες καταχωρήσεις</h2>
+                <div className="divide-y divide-[#e3e9f0] overflow-hidden rounded-2xl bg-white ring-1 ring-[#e3e9f0]">
                   {recent.slice(0, 5).map((expense) => (
                     <div key={expense.id} className="flex items-center">
                       <div className="min-w-0 flex-1">
@@ -1117,10 +1110,10 @@ export default function ExpensesApp() {
           <div className="space-y-4">
             {periodControls}
 
-            <section className="rounded-3xl bg-white p-4 ring-1 ring-stone-200">
-              <p className="text-sm font-extrabold text-stone-500">Σύνολο {allMonths ? "όλων των μηνών" : formatMonthLong(month)}</p>
+            <section className="rounded-3xl bg-white p-4 ring-1 ring-[#e3e9f0]">
+              <p className="text-sm font-extrabold text-[#5b6b80]">Σύνολο {allMonths ? "όλων των μηνών" : formatMonthLong(month)}</p>
               <p className="mt-0.5 text-4xl font-black tabular-nums tracking-tight">{formatMoney(periodSummary.filteredTotal)}</p>
-              <p className="mt-1 text-sm font-bold text-stone-500">
+              <p className="mt-1 text-sm font-bold text-[#5b6b80]">
                 {periodSummary.filteredCount} {periodSummary.filteredCount === 1 ? "κίνηση" : "κινήσεις"}
                 {hasPreviousData && month >= shiftMonth(thisMonth, -11) ? (
                   <>
@@ -1149,13 +1142,13 @@ export default function ExpensesApp() {
                         className="group relative flex h-full min-w-0 flex-1 items-end justify-center"
                       >
                         {selected && point.total > 0 ? (
-                          <span className="absolute -top-0.5 z-10 whitespace-nowrap text-[10px] font-black tabular-nums text-[#49392f]">
+                          <span className="absolute -top-0.5 z-10 whitespace-nowrap text-[10px] font-black tabular-nums text-[#1f2a3c]">
                             {formatMoneyShort(point.total)}
                           </span>
                         ) : null}
                         <span
                           className={`w-full max-w-7 rounded-t-[4px] transition ${
-                            selected ? "bg-[#805536]" : "bg-[#d9c3aa] group-hover:bg-[#c4a27d]"
+                            selected ? "bg-[#5443c9]" : "bg-[#c7bff7] group-hover:bg-[#a99cf0]"
                           }`}
                           style={{ height: `${height}%` }}
                         />
@@ -1163,12 +1156,12 @@ export default function ExpensesApp() {
                     );
                   })}
                 </div>
-                <div className="mt-1 flex gap-[2px] border-t border-stone-200 pt-1">
+                <div className="mt-1 flex gap-[2px] border-t border-[#e3e9f0] pt-1">
                   {trend.map((point) => (
                     <span
                       key={point.month}
                       className={`min-w-0 flex-1 truncate text-center text-[10px] font-bold ${
-                        !allMonths && point.month === month ? "text-[#49392f]" : "text-stone-400"
+                        !allMonths && point.month === month ? "text-[#1f2a3c]" : "text-[#8a97a8]"
                       }`}
                     >
                       {formatMonthShort(point.month)}
@@ -1178,14 +1171,14 @@ export default function ExpensesApp() {
               </div>
             </section>
 
-            <section className="rounded-3xl bg-white ring-1 ring-stone-200">
+            <section className="rounded-3xl bg-white ring-1 ring-[#e3e9f0]">
               <div className="flex items-center justify-between px-4 pt-4 pb-2">
                 <h2 className="text-base font-black">Ανά κατηγορία</h2>
                 {periodExpenses.length > 0 ? (
                   <button
                     type="button"
                     onClick={exportCsv}
-                    className="inline-flex min-h-9 items-center gap-1.5 rounded-xl border border-stone-200 px-3 text-xs font-extrabold text-stone-600"
+                    className="inline-flex min-h-9 items-center gap-1.5 rounded-xl border border-[#e3e9f0] px-3 text-xs font-extrabold text-[#4b5b70]"
                   >
                     <Download className="size-3.5" /> CSV
                   </button>
@@ -1193,11 +1186,11 @@ export default function ExpensesApp() {
               </div>
 
               {periodLoading && categoryRows.length === 0 ? (
-                <p className="p-8 text-center text-sm font-extrabold text-stone-500">Φόρτωση...</p>
+                <p className="p-8 text-center text-sm font-extrabold text-[#5b6b80]">Φόρτωση...</p>
               ) : categoryRows.length === 0 ? (
-                <p className="p-8 text-center text-sm font-extrabold text-stone-500">Δεν βρέθηκαν έξοδα.</p>
+                <p className="p-8 text-center text-sm font-extrabold text-[#5b6b80]">Δεν βρέθηκαν έξοδα.</p>
               ) : (
-                <ul className="divide-y divide-stone-100">
+                <ul className="divide-y divide-[#e3e9f0]">
                   {categoryRows.map((row) => {
                     const share = periodSummary.filteredTotal > 0 ? (row.total / periodSummary.filteredTotal) * 100 : 0;
                     const open = openCategory === row.category;
@@ -1208,28 +1201,28 @@ export default function ExpensesApp() {
                           type="button"
                           onClick={() => setOpenCategory(open ? null : row.category)}
                           aria-expanded={open}
-                          className="w-full px-4 py-3 text-left active:bg-stone-50"
+                          className="w-full px-4 py-3 text-left active:bg-[#f4f7fa]"
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-xl" aria-hidden="true">{row.meta?.icon ?? "🧾"}</span>
                             <span className="min-w-0 flex-1">
                               <span className="block truncate text-[15px] font-black">{row.meta?.label ?? row.category}</span>
-                              <span className="block text-xs font-bold text-stone-500">
+                              <span className="block text-xs font-bold text-[#5b6b80]">
                                 {row.count} {row.count === 1 ? "κίνηση" : "κινήσεις"} · {Math.round(share)}%
                               </span>
                             </span>
                             <span className="shrink-0 text-base font-black tabular-nums">{formatMoney(row.total)}</span>
-                            <ChevronRight className={`size-4 shrink-0 text-stone-400 transition ${open ? "rotate-90" : ""}`} />
+                            <ChevronRight className={`size-4 shrink-0 text-[#8a97a8] transition ${open ? "rotate-90" : ""}`} />
                           </div>
-                          <div className="mt-2 ml-8 h-2 rounded-full bg-[#f1ebe4]">
+                          <div className="mt-2 ml-8 h-2 rounded-full bg-[#eef3f7]">
                             <div
-                              className="h-2 rounded-full bg-[#a5764b]"
+                              className="h-2 rounded-full bg-[#5443c9]"
                               style={{ width: `${Math.max(2, (row.total / categoryMax) * 100)}%` }}
                             />
                           </div>
                         </button>
                         {open ? (
-                          <div className="mx-3 mb-3 divide-y divide-stone-100 overflow-hidden rounded-2xl bg-[#faf7f3] ring-1 ring-stone-100">
+                          <div className="mx-3 mb-3 divide-y divide-[#e3e9f0] overflow-hidden rounded-2xl bg-[#f4f7fa] ring-1 ring-[#e3e9f0]">
                             {items.map((expense) => (
                               <button
                                 key={expense.id}
@@ -1237,8 +1230,8 @@ export default function ExpensesApp() {
                                 onClick={() => setEditing(expense)}
                                 className="flex w-full items-center gap-3 px-3 py-2.5 text-left active:bg-white"
                               >
-                                <span className="w-14 shrink-0 text-xs font-extrabold text-stone-500">{formatDayShort(expense.expenseDate)}</span>
-                                <span className="min-w-0 flex-1 truncate text-sm font-bold text-stone-600">
+                                <span className="w-14 shrink-0 text-xs font-extrabold text-[#5b6b80]">{formatDayShort(expense.expenseDate)}</span>
+                                <span className="min-w-0 flex-1 truncate text-sm font-bold text-[#4b5b70]">
                                   {[
                                     filterAccount === "all" ? accountLabel(expense.primaryAccount) : null,
                                     expense.primaryAccount === "family" && expense.entity !== "home" ? personName(expense.entity) : null,
@@ -1264,9 +1257,9 @@ export default function ExpensesApp() {
                     key={item.slug}
                     type="button"
                     onClick={() => changeFilterAccount(item.slug)}
-                    className="min-w-0 rounded-2xl bg-white px-2 py-3 text-center ring-1 ring-stone-200"
+                    className="min-w-0 rounded-2xl bg-white px-2 py-3 text-center ring-1 ring-[#e3e9f0]"
                   >
-                    <p className="truncate text-xs font-extrabold text-stone-500">{item.icon} {item.shortLabel}</p>
+                    <p className="truncate text-xs font-extrabold text-[#5b6b80]">{item.icon} {item.shortLabel}</p>
                     <p className="mt-0.5 text-sm font-black tabular-nums">{formatMoney(periodSummary.accountTotals[item.slug])}</p>
                   </button>
                 ))}
@@ -1279,24 +1272,24 @@ export default function ExpensesApp() {
         {tab === "list" ? (
           <div className="space-y-3">
             {periodControls}
-            <p className="px-1 text-sm font-bold text-stone-500">
-              {periodSummary.filteredCount} κινήσεις · <span className="font-black text-[#49392f] tabular-nums">{formatMoney(periodSummary.filteredTotal)}</span>
+            <p className="px-1 text-sm font-bold text-[#5b6b80]">
+              {periodSummary.filteredCount} κινήσεις · <span className="font-black text-[#1f2a3c] tabular-nums">{formatMoney(periodSummary.filteredTotal)}</span>
             </p>
 
             {periodLoading && periodExpenses.length === 0 ? (
-              <p className="p-8 text-center text-sm font-extrabold text-stone-500">Φόρτωση...</p>
+              <p className="p-8 text-center text-sm font-extrabold text-[#5b6b80]">Φόρτωση...</p>
             ) : groupedByDay.length === 0 ? (
-              <p className="rounded-2xl bg-white p-8 text-center text-sm font-extrabold text-stone-500 ring-1 ring-stone-200">
+              <p className="rounded-2xl bg-white p-8 text-center text-sm font-extrabold text-[#5b6b80] ring-1 ring-[#e3e9f0]">
                 Δεν βρέθηκαν κινήσεις.
               </p>
             ) : (
               groupedByDay.map((group) => (
                 <section key={group.date}>
-                  <div className="mb-1 flex items-center justify-between px-1 text-xs font-extrabold text-stone-500">
+                  <div className="mb-1 flex items-center justify-between px-1 text-xs font-extrabold text-[#5b6b80]">
                     <span>{group.date === today ? "Σήμερα" : group.date === shiftDate(today, -1) ? "Χθες" : formatDay(group.date)}</span>
                     <span className="tabular-nums">{formatMoney(group.total)}</span>
                   </div>
-                  <div className="divide-y divide-stone-100 overflow-hidden rounded-2xl bg-white ring-1 ring-stone-200">
+                  <div className="divide-y divide-[#e3e9f0] overflow-hidden rounded-2xl bg-white ring-1 ring-[#e3e9f0]">
                     {group.items.map((expense) => (
                       <ExpenseRow key={expense.id} expense={expense} showAccount={filterAccount === "all"} onClick={() => setEditing(expense)} />
                     ))}
@@ -1310,10 +1303,10 @@ export default function ExpensesApp() {
 
       {/* ------------------------------------------------ bottom nav */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-[#fbfaf7]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-[#e3e9f0] bg-white/95 lg:left-56 pb-[env(safe-area-inset-bottom)] backdrop-blur"
         aria-label="Ενότητες"
       >
-        <div className="mx-auto grid max-w-2xl grid-cols-3">
+        <div className="grid max-w-3xl grid-cols-3 lg:px-8">
           {([
             { value: "add", label: "Καταχώρηση", Icon: Plus },
             { value: "analysis", label: "Ανάλυση", Icon: BarChart3 },
@@ -1327,10 +1320,10 @@ export default function ExpensesApp() {
                 onClick={() => { setTab(value); window.scrollTo({ top: 0 }); }}
                 aria-current={active ? "page" : undefined}
                 className={`flex min-h-16 flex-col items-center justify-center gap-0.5 text-xs font-extrabold ${
-                  active ? "text-[#805536]" : "text-stone-500"
+                  active ? "text-[#5443c9]" : "text-[#5b6b80]"
                 }`}
               >
-                <span className={`grid h-8 w-14 place-items-center rounded-full ${active ? "bg-[#f2e3d1]" : ""}`}>
+                <span className={`grid h-8 w-14 place-items-center rounded-full ${active ? "bg-[#e9e4fe]" : ""}`}>
                   <Icon className="size-5" />
                 </span>
                 {label}
@@ -1368,7 +1361,7 @@ export default function ExpensesApp() {
       ) : null}
 
       {pendingDelete ? (
-        <div className="fixed inset-0 z-[60] flex items-end bg-stone-950/40 md:items-center md:justify-center md:p-6">
+        <div className="fixed inset-0 z-[60] flex items-end bg-[#1f2a3c]/40 md:items-center md:justify-center md:p-6">
           <div
             className="w-full rounded-t-[2rem] bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl md:max-w-sm md:rounded-[2rem] md:pb-5"
             role="alertdialog"
@@ -1376,11 +1369,11 @@ export default function ExpensesApp() {
             aria-labelledby="delete-expense-title"
           >
             <h2 id="delete-expense-title" className="text-xl font-black">Διαγραφή εξόδου;</h2>
-            <p className="mt-1 text-sm font-medium text-stone-500">
+            <p className="mt-1 text-sm font-medium text-[#5b6b80]">
               {categoryBySlug(pendingDelete.category)?.label} · {formatMoney(pendingDelete.amount)} · {formatDay(pendingDelete.expenseDate)}
             </p>
             <div className="mt-5 grid grid-cols-2 gap-2">
-              <button type="button" onClick={() => setPendingDelete(null)} className="min-h-12 rounded-2xl border border-stone-200 bg-white font-extrabold">
+              <button type="button" onClick={() => setPendingDelete(null)} className="min-h-12 rounded-2xl border border-[#e3e9f0] bg-white font-extrabold">
                 Ακύρωση
               </button>
               <button type="button" onClick={() => void confirmDelete()} className="min-h-12 rounded-2xl bg-red-600 font-extrabold text-white">

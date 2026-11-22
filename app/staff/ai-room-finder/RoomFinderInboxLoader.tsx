@@ -44,8 +44,8 @@ export default function RoomFinderInboxLoader() {
 
   if (error) {
     return (
-      <main className="min-h-screen bg-[#f7f3eb] px-4 py-8 text-stone-900">
-        <div className="mx-auto max-w-xl rounded-2xl border border-red-200 bg-white p-5">
+      <main className="min-h-screen p-4 text-[#1f2a3c] sm:p-6 lg:p-8">
+        <div className="max-w-xl rounded-2xl border border-red-200 bg-white p-5">
           <h1 className="text-lg font-black">AI Room Finder Inbox</h1>
           <p className="mt-2 text-sm text-red-700">{error}</p>
         </div>
@@ -55,8 +55,8 @@ export default function RoomFinderInboxLoader() {
 
   if (!data) {
     return (
-      <main className="min-h-screen bg-[#f7f3eb] px-4 py-8 text-stone-900">
-        <div className="mx-auto max-w-xl rounded-2xl border border-stone-200 bg-white p-5 text-sm font-semibold text-stone-600">
+      <main className="min-h-screen p-4 text-[#1f2a3c] sm:p-6 lg:p-8">
+        <div className="max-w-xl rounded-2xl border border-[#e3e9f0] bg-white p-5 text-sm font-semibold text-[#4b5b70]">
           Φόρτωση AI Room Finder Inbox…
         </div>
       </main>

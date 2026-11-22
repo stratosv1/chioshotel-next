@@ -30,10 +30,10 @@ const TIERS: { key: Tier; title: string; hint: string }[] = [
   { key: "action", title: "Θέλουν ενέργεια", hint: "Προβλήματα αποστολής και ό,τι λείπει για αφίξεις μέσα σε 14 μέρες." },
   { key: "later", title: "Αργότερα", hint: "Δεν βιάζει. Ή περιμένουμε απάντηση ή είναι ακόμα μακριά." },
 ];
-const TIER_BAR: Record<Tier, string> = { arriving: "border-amber-600", action: "border-red-600", later: "border-stone-200" };
-const inputClass = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm";
-const secondaryButton = "rounded-full border border-amber-800/30 bg-white px-4 py-2 text-sm font-black text-amber-900 disabled:opacity-50";
-const primaryButton = "rounded-full bg-amber-800 px-4 py-2 text-sm font-black text-white disabled:opacity-50";
+const TIER_BAR: Record<Tier, string> = { arriving: "border-amber-600", action: "border-red-600", later: "border-[#e3e9f0]" };
+const inputClass = "w-full rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-sm";
+const secondaryButton = "rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a] disabled:opacity-50";
+const primaryButton = "rounded-full bg-[#5443c9] px-4 py-2 text-sm font-black text-white disabled:opacity-50";
 const FILTERS: { key: Filter; label: string }[] = [
   { key: "all", label: "Όλες" },
   { key: "no_email", label: "Χωρίς email" },
@@ -51,11 +51,11 @@ const SMS_STATUS: Record<string, { label: string; tone: string }> = {
   REJECTED: { label: "✕ Απορρίφθηκε", tone: "text-red-800" },
 };
 const CHANNEL_DOT: Record<BoardEvent["channel"], string> = {
-  guest: "bg-stone-100", staff: "bg-emerald-50", email: "bg-sky-50", sms: "bg-violet-50", whatsapp: "bg-emerald-50", ota: "bg-amber-50",
+  guest: "bg-[#eef3f7]", staff: "bg-emerald-50", email: "bg-sky-50", sms: "bg-violet-50", whatsapp: "bg-emerald-50", ota: "bg-amber-50",
 };
 
 const CHANNEL_MARK: Record<BoardEvent["channel"], string> = {
-  guest: "bg-stone-500", staff: "bg-emerald-600", email: "bg-sky-600", sms: "bg-violet-600", whatsapp: "bg-emerald-600", ota: "bg-amber-600",
+  guest: "bg-[#8a97a8]", staff: "bg-emerald-600", email: "bg-sky-600", sms: "bg-violet-600", whatsapp: "bg-emerald-600", ota: "bg-amber-600",
 };
 const GSM_TEXT = /^[@£$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !"#¤%&'()*+,\-./0-9:;<=>?¡A-ZÄÖÑÜ§¿a-zäöñüà^{}\\[~\]|€]*$/;
 
@@ -68,7 +68,7 @@ const monthLabel = (month: string) => new Intl.DateTimeFormat("el-GR", { month: 
 const shortDate = (iso: string) => new Intl.DateTimeFormat("el-GR", { day: "numeric", month: "short", timeZone: "UTC" }).format(new Date(`${iso}T00:00:00Z`));
 
 function Chip({ tone, children }: { tone: "ok" | "bad" | "quiet"; children: React.ReactNode }) {
-  const color = tone === "ok" ? "bg-emerald-100 text-emerald-900" : tone === "bad" ? "bg-red-100 text-red-900" : "bg-stone-100 text-stone-700";
+  const color = tone === "ok" ? "bg-emerald-100 text-emerald-900" : tone === "bad" ? "bg-red-100 text-red-900" : "bg-[#eef3f7] text-[#334155]";
   return <span className={`rounded-full px-2.5 py-0.5 text-xs font-black ${color}`}>{children}</span>;
 }
 
@@ -109,7 +109,7 @@ function eventWhen(time: string, today: string) {
 }
 
 function eventStatus(status: string) {
-  return SMS_STATUS[status] ?? { label: status, tone: status.startsWith("Απέτυχε") ? "text-red-800" : "text-stone-600" };
+  return SMS_STATUS[status] ?? { label: status, tone: status.startsWith("Απέτυχε") ? "text-red-800" : "text-[#4b5b70]" };
 }
 
 /** Rooms booked together show once with a count, in place of a repeated list. */
@@ -338,17 +338,17 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
     return (
       <li key={booking.bookingIds[0]} className={`overflow-hidden rounded-2xl border-l-4 bg-white shadow-sm ${attention ? TIER_BAR[tier] : "border-transparent"}`}>
         <button type="button" aria-expanded={open} onClick={() => toggle(booking)} className="grid w-full grid-cols-[3.25rem_minmax(0,1fr)] gap-3 p-4 text-left">
-          <span className="grid justify-items-center self-start rounded-xl bg-[#f6efe5] py-2 text-stone-800">
+          <span className="grid justify-items-center self-start rounded-xl bg-[#eef3f7] py-2 text-[#1f2a3c]">
             <span className="text-xl font-black leading-none">{Number(booking.checkin.slice(8))}</span>
             <span className="mt-1 text-xs font-bold">{monthShort(booking.checkin)}</span>
           </span>
           <span className="grid min-w-0 gap-1.5">
             <span className="flex flex-wrap items-baseline justify-between gap-x-3">
               <span className="min-w-0 break-words text-base font-black">{booking.name || "Χωρίς όνομα"}</span>
-              {when ? <span className={`text-sm font-bold ${days >= 0 && days <= 1 ? "text-amber-800" : "text-stone-500"}`}>{when}</span> : null}
+              {when ? <span className={`text-sm font-bold ${days >= 0 && days <= 1 ? "text-amber-800" : "text-[#5b6b80]"}`}>{when}</span> : null}
             </span>
-            <span className="text-sm text-stone-600">{roomSummary(booking.rooms)} · {nights} {nights === 1 ? "νύχτα" : "νύχτες"} · {booking.channel}</span>
-            {step ? <span className={`text-sm font-bold ${tier === "later" ? "text-stone-600" : tier === "arriving" && !booking.deliveryProblem && booking.emailState === "real" && !missingArrival ? "text-emerald-800" : "text-red-900"}`}>{step}</span> : null}
+            <span className="text-sm text-[#4b5b70]">{roomSummary(booking.rooms)} · {nights} {nights === 1 ? "νύχτα" : "νύχτες"} · {booking.channel}</span>
+            {step ? <span className={`text-sm font-bold ${tier === "later" ? "text-[#4b5b70]" : tier === "arriving" && !booking.deliveryProblem && booking.emailState === "real" && !missingArrival ? "text-emerald-800" : "text-red-900"}`}>{step}</span> : null}
             <span className="flex flex-wrap gap-1.5">
               {booking.emailState === "real" ? (attention ? null : <Chip tone="ok">✓ Email</Chip>) : days >= 0 ? <Chip tone={soon ? "bad" : "quiet"}>Χωρίς email</Chip> : null}
               {booking.arrivalTime ? <Chip tone="ok">{booking.arrivalDetails ? arrivalLabel(booking.arrivalTime, shortInfo(booking.arrivalDetails)) : `Άφιξη ${booking.arrivalTime}`}</Chip> : booking.arrivalClosed ? <Chip tone="ok">{booking.arrivalDetails ? `✓ ${arrivalLabel(null, shortInfo(booking.arrivalDetails))}` : "✓ Άφιξη"}</Chip> : booking.arrivalDetails ? <Chip tone="quiet">{arrivalLabel(null, shortInfo(booking.arrivalDetails))}</Chip> : null}
@@ -362,14 +362,14 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
         </button>
 
         {open ? (
-          <div className="grid gap-5 border-t border-stone-100 p-4 lg:grid-cols-2">
+          <div className="grid gap-5 border-t border-[#e3e9f0] p-4 lg:grid-cols-2">
             <section className="grid content-start gap-3">
               {notice ? <p role="status" className="rounded-xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-900">{notice}</p> : null}
               <h3 className="font-black">Στοιχεία</h3>
               <div className="grid gap-1 text-sm">
-                <p className="break-all">{booking.email ? (booking.emailState === "real" ? <a className="font-bold text-amber-900 underline" href={`mailto:${booking.email}`}>{booking.email}</a> : `${booking.email} (εικονικό)`) : "Χωρίς email"}</p>
-                <p>{booking.phone ? <a className="font-bold text-amber-900 underline" href={`tel:${booking.phone}`}>{booking.phone}</a> : "Χωρίς κινητό"}</p>
-                <p className="text-stone-600">#{booking.bookingIds.join(", ")} · {booking.rooms.join(", ")}</p>
+                <p className="break-all">{booking.email ? (booking.emailState === "real" ? <a className="font-bold text-[#3b2f8a] underline" href={`mailto:${booking.email}`}>{booking.email}</a> : `${booking.email} (εικονικό)`) : "Χωρίς email"}</p>
+                <p>{booking.phone ? <a className="font-bold text-[#3b2f8a] underline" href={`tel:${booking.phone}`}>{booking.phone}</a> : "Χωρίς κινητό"}</p>
+                <p className="text-[#4b5b70]">#{booking.bookingIds.join(", ")} · {booking.rooms.join(", ")}</p>
               </div>
               {booking.emailSyncError ? (
                 <div className="grid gap-2 rounded-xl bg-red-50 p-3 text-sm font-bold text-red-900">
@@ -393,7 +393,7 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                 </button>
               ) : null}
 
-              <form className="grid gap-2 rounded-xl bg-stone-50 p-3" onSubmit={(event) => { event.preventDefault(); void saveArrival(booking, arrivalForm.time, arrivalForm.details); }}>
+              <form className="grid gap-2 rounded-xl bg-[#f4f7fa] p-3" onSubmit={(event) => { event.preventDefault(); void saveArrival(booking, arrivalForm.time, arrivalForm.details); }}>
                 <h3 className="font-black">Άφιξη</h3>
                 <div className="flex flex-wrap items-end gap-2">
                   <div>
@@ -411,9 +411,9 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                 </div>
               </form>
 
-              <details className="group rounded-xl bg-stone-50 p-3">
+              <details className="group rounded-xl bg-[#f4f7fa] p-3">
                 <summary className="flex min-h-8 cursor-pointer list-none items-center gap-2 [&::-webkit-details-marker]:hidden">
-                  <span aria-hidden="true" className="text-xs text-stone-500 transition-transform group-open:rotate-90">▶</span>
+                  <span aria-hidden="true" className="text-xs text-[#5b6b80] transition-transform group-open:rotate-90">▶</span>
                   <span className="font-black">Αποστολή SMS</span>
                   {lastSms ? <span className={`ml-auto text-right text-xs font-bold ${eventStatus(lastSms.status ?? "").tone}`}>{eventStatus(lastSms.status ?? "").label}</span> : null}
                 </summary>
@@ -421,15 +421,15 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                   <div>
                     <label htmlFor={`crm-sms-phone-${booking.bookingIds[0]}`} className="mb-1 block text-sm font-bold">Κινητό</label>
                     <input id={`crm-sms-phone-${booking.bookingIds[0]}`} type="tel" inputMode="tel" autoComplete="off" required placeholder="+39 338 000 0000" aria-describedby={`crm-sms-phone-hint-${booking.bookingIds[0]}`} className={inputClass} value={sms.phone} onChange={(event) => setSms({ ...sms, phone: event.target.value })} />
-                    {!booking.phone ? <p id={`crm-sms-phone-hint-${booking.bookingIds[0]}`} className="mt-1 text-xs text-stone-600">{sms.phone && sms.phone === lastSmsPhone(booking) ? "Από το προηγούμενο SMS. Η κράτηση δεν έχει δικό της κινητό." : "Η κράτηση δεν έχει κινητό. Γράψ' το με τον κωδικό χώρας."}</p> : null}
+                    {!booking.phone ? <p id={`crm-sms-phone-hint-${booking.bookingIds[0]}`} className="mt-1 text-xs text-[#4b5b70]">{sms.phone && sms.phone === lastSmsPhone(booking) ? "Από το προηγούμενο SMS. Η κράτηση δεν έχει δικό της κινητό." : "Η κράτηση δεν έχει κινητό. Γράψ' το με τον κωδικό χώρας."}</p> : null}
                   </div>
                   <div>
                     <div className="mb-1 flex items-center justify-between gap-2">
                       <label htmlFor={`crm-sms-text-${booking.bookingIds[0]}`} className="text-sm font-bold">Μήνυμα</label>
-                      <button type="button" className="min-h-8 rounded-full px-2 text-sm font-black text-amber-900 underline underline-offset-2" onClick={() => setSms({ ...sms, message: booking.smsTemplate })}>Έτοιμο κείμενο</button>
+                      <button type="button" className="min-h-8 rounded-full px-2 text-sm font-black text-[#3b2f8a] underline underline-offset-2" onClick={() => setSms({ ...sms, message: booking.smsTemplate })}>Έτοιμο κείμενο</button>
                     </div>
                     <textarea id={`crm-sms-text-${booking.bookingIds[0]}`} required rows={5} maxLength={918} placeholder="Γράψε το μήνυμα ή πάτα «Έτοιμο κείμενο»" className={inputClass} value={sms.message} onChange={(event) => setSms({ ...sms, message: event.target.value })} />
-                    <p className={`mt-1 text-xs ${parts.parts > 1 ? "font-bold text-amber-900" : "text-stone-600"}`}>{sms.message.length} / {parts.single} χαρακτήρες · {parts.parts} SMS{parts.gsm ? "" : " (ελληνικά: 70 ανά SMS)"}</p>
+                    <p className={`mt-1 text-xs ${parts.parts > 1 ? "font-bold text-amber-900" : "text-[#4b5b70]"}`}>{sms.message.length} / {parts.single} χαρακτήρες · {parts.parts} SMS{parts.gsm ? "" : " (ελληνικά: 70 ανά SMS)"}</p>
                   </div>
                   <button type="submit" disabled={busy || !sms.phone.trim() || !sms.message.trim()} className={`${primaryButton} min-h-11 w-full sm:w-auto sm:justify-self-start`}>{running === "sms" ? "Αποστολή…" : "Αποστολή SMS"}</button>
                   {smsFeedback ? <p role={smsFeedback.ok ? "status" : "alert"} className={`rounded-xl px-3 py-2 text-sm font-bold ${smsFeedback.ok ? "bg-emerald-100 text-emerald-900" : "bg-red-100 text-red-900"}`}>{smsFeedback.text}</p> : null}
@@ -445,21 +445,21 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                 </button>
               </div>
               {checkFeedback ? <p role={checkFeedback.ok ? "status" : "alert"} className={`rounded-xl px-3 py-2 text-sm font-bold ${checkFeedback.ok ? "bg-emerald-100 text-emerald-900" : "bg-red-100 text-red-900"}`}>{checkFeedback.text}</p> : null}
-              {!booking.events.length ? <p className="text-sm text-stone-600">Δεν υπάρχει επικοινωνία ακόμα.</p> : null}
+              {!booking.events.length ? <p className="text-sm text-[#4b5b70]">Δεν υπάρχει επικοινωνία ακόμα.</p> : null}
               {booking.events.length ? (
                 <ol>
                   {[...booking.events].reverse().map((event, index) => {
                     const status = event.status ? eventStatus(event.status) : null;
                     return (
-                      <li key={`${event.time}-${index}`} className="relative border-l-2 border-stone-200 pb-3 pl-4 last:border-transparent last:pb-0">
+                      <li key={`${event.time}-${index}`} className="relative border-l-2 border-[#e3e9f0] pb-3 pl-4 last:border-transparent last:pb-0">
                         <span aria-hidden="true" className={`absolute -left-[7px] top-3.5 size-3 rounded-full ring-2 ring-white ${CHANNEL_MARK[event.channel]}`} />
                         <article className={`rounded-xl p-3 text-sm ${CHANNEL_DOT[event.channel]}`}>
                           <div className="flex flex-wrap items-baseline justify-between gap-x-3">
                             <p className="min-w-0 break-words font-bold">{event.title.replace(/^SMS προς (\d)/, "SMS προς +$1")}</p>
-                            <time dateTime={event.time.replace(" ", "T")} className="text-xs text-stone-600">{eventWhen(event.time, today)}</time>
+                            <time dateTime={event.time.replace(" ", "T")} className="text-xs text-[#4b5b70]">{eventWhen(event.time, today)}</time>
                           </div>
-                          {event.summary ? <p className="mt-1 font-bold text-amber-900">{event.summary}</p> : null}
-                          {event.body ? <p className="mt-1 whitespace-pre-wrap break-words text-stone-800">{event.body}</p> : null}
+                          {event.summary ? <p className="mt-1 font-bold text-[#3b2f8a]">{event.summary}</p> : null}
+                          {event.body ? <p className="mt-1 whitespace-pre-wrap break-words text-[#1f2a3c]">{event.body}</p> : null}
                           {status ? <p className={`mt-1 text-xs font-black ${status.tone}`}>{status.label}</p> : null}
                         </article>
                       </li>
@@ -467,11 +467,11 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
                   })}
                 </ol>
               ) : null}
-              <h3 className="border-t border-stone-100 pt-3 font-black">Notes Beds24</h3>
-              {notes === undefined ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
-              {notes === null ? <p className="text-sm text-stone-600">Δεν φορτώθηκαν.</p> : null}
-              {notes ? <p className="whitespace-pre-wrap break-words rounded-xl bg-stone-100 p-3 text-sm">{notes}</p> : null}
-              {notes === "" ? <p className="text-sm text-stone-600">Χωρίς σημειώσεις.</p> : null}
+              <h3 className="border-t border-[#e3e9f0] pt-3 font-black">Notes Beds24</h3>
+              {notes === undefined ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
+              {notes === null ? <p className="text-sm text-[#4b5b70]">Δεν φορτώθηκαν.</p> : null}
+              {notes ? <p className="whitespace-pre-wrap break-words rounded-xl bg-[#eef3f7] p-3 text-sm">{notes}</p> : null}
+              {notes === "" ? <p className="text-sm text-[#4b5b70]">Χωρίς σημειώσεις.</p> : null}
             </section>
           </div>
         ) : null}
@@ -493,14 +493,14 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
           <h2 className="min-w-[180px] text-center text-xl font-black capitalize">{monthLabel(month)}</h2>
           <button type="button" aria-label="Επόμενος μήνας" className={secondaryButton} onClick={() => setMonth(shiftMonth(month, 1))}>→</button>
         </div>
-        <p className="text-sm font-bold text-stone-600">{total} κρατήσεις · {withEmail} με email · {withArrival} με ώρα άφιξης</p>
+        <p className="text-sm font-bold text-[#4b5b70]">{total} κρατήσεις · {withEmail} με email · {withArrival} με ώρα άφιξης</p>
       </div>
       )}
 
       {!attention || total > 5 ? (
         <div className="flex flex-wrap gap-2">
           {FILTERS.map((item) => (
-            <button key={item.key} type="button" aria-pressed={filter === item.key} onClick={() => setFilter(item.key)} className={`rounded-full px-4 py-1.5 text-sm font-black ${filter === item.key ? "bg-stone-900 text-white" : "bg-white text-stone-700"}`}>
+            <button key={item.key} type="button" aria-pressed={filter === item.key} onClick={() => setFilter(item.key)} className={`rounded-full px-4 py-1.5 text-sm font-black ${filter === item.key ? "bg-[#5443c9] text-white" : "bg-white text-[#334155]"}`}>
               {item.label}
             </button>
           ))}
@@ -508,15 +508,15 @@ export default function BookingsPanel({ attention = false }: { attention?: boole
       ) : null}
 
       {error ? <div role="alert" className="rounded-xl bg-red-100 px-4 py-3 text-sm font-bold text-red-900">{error}</div> : null}
-      {!bookings ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+      {!bookings ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
       {notice && !openId ? <p role="status" className="rounded-xl bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-900">{notice}</p> : null}
-      {bookings && !visible.length ? <p className="rounded-2xl bg-white p-4 text-sm text-stone-600 shadow-sm">{attention ? "Όλες οι κρατήσεις έχουν email και ώρα άφιξης." : "Δεν υπάρχουν κρατήσεις."}</p> : null}
+      {bookings && !visible.length ? <p className="rounded-2xl bg-white p-4 text-sm text-[#4b5b70] shadow-sm">{attention ? "Όλες οι κρατήσεις έχουν email και ώρα άφιξης." : "Δεν υπάρχουν κρατήσεις."}</p> : null}
 
       {attention ? groups.map((group) => (
         <section key={group.key} className="grid gap-2" aria-label={group.title}>
           <div>
-            <h2 className="text-sm font-black text-stone-700">{group.title} · {group.bookings.length}</h2>
-            <p className="text-xs text-stone-500">{group.hint}</p>
+            <h2 className="text-sm font-black text-[#334155]">{group.title} · {group.bookings.length}</h2>
+            <p className="text-xs text-[#5b6b80]">{group.hint}</p>
           </div>
           <ul className="grid gap-2">{group.bookings.map(renderCard)}</ul>
         </section>

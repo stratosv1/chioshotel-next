@@ -66,10 +66,10 @@ const BACKFILL_FIRST_MONTH = "2022-01";
 const BACKFILL_LAST_MONTH = "2027-12";
 const BACKFILL_MONTH_KEY = "vh-crm-backfill-month";
 
-const inputClass = "w-full rounded-xl border border-stone-300 bg-white px-3 py-2 text-sm";
+const inputClass = "w-full rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-sm";
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
-const secondaryButton = "rounded-full border border-amber-800/30 bg-white px-4 py-2 text-sm font-black text-amber-900 disabled:opacity-50";
-const primaryButton = "rounded-full bg-amber-800 px-4 py-2 text-sm font-black text-white disabled:opacity-50";
+const secondaryButton = "rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a] disabled:opacity-50";
+const primaryButton = "rounded-full bg-[#5443c9] px-4 py-2 text-sm font-black text-white disabled:opacity-50";
 
 function countryName(code: string | null) {
   if (!code || code === "?") return "Άγνωστη";
@@ -125,9 +125,9 @@ async function postAction(body: Record<string, unknown>) {
 function Stat({ label, value, hint }: { label: string; value: string | number; hint?: string }) {
   return (
     <div className={panelClass}>
-      <p className="text-sm font-bold text-stone-500">{label}</p>
+      <p className="text-sm font-bold text-[#5b6b80]">{label}</p>
       <p className="mt-1 text-3xl font-black">{value}</p>
-      {hint ? <p className="mt-1 text-xs text-stone-500">{hint}</p> : null}
+      {hint ? <p className="mt-1 text-xs text-[#5b6b80]">{hint}</p> : null}
     </div>
   );
 }
@@ -139,14 +139,14 @@ function BucketList({ title, buckets, format }: { title: string; buckets: Bucket
       {buckets.length ? (
         <ul className="grid gap-1 text-sm">
           {buckets.map((bucket) => (
-            <li key={bucket.key} className="flex justify-between gap-4 border-b border-stone-100 py-1.5">
+            <li key={bucket.key} className="flex justify-between gap-4 border-b border-[#e3e9f0] py-1.5">
               <span>{format(bucket.key)}</span>
               <span className="font-black">{bucket.count}</span>
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-stone-500">Δεν υπάρχουν δεδομένα.</p>
+        <p className="text-sm text-[#5b6b80]">Δεν υπάρχουν δεδομένα.</p>
       )}
     </section>
   );
@@ -288,11 +288,10 @@ export default function CrmApp() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f6efe5] px-4 py-6 text-stone-900 md:px-8">
-      <div className="mx-auto max-w-[1280px]">
+    <main className="min-h-screen p-4 text-[#1f2a3c] sm:p-6 lg:p-8">
+      <div>
         <header className="mb-4">
-          <a href="/staff" className="text-sm font-bold text-amber-800">← Staff</a>
-          <h1 className="mt-1 text-2xl font-black tracking-tight">Πελάτες & CRM</h1>
+          <h1 className="text-2xl font-black tracking-tight sm:text-3xl">Πελάτες & CRM</h1>
         </header>
 
         <nav className="mb-2 grid grid-cols-3 gap-1 rounded-2xl bg-white p-1 shadow-sm md:max-w-md" aria-label="Κύριες ενότητες CRM">
@@ -302,7 +301,7 @@ export default function CrmApp() {
               type="button"
               aria-pressed={tab === key}
               onClick={() => { setTab(key); setNotice(""); }}
-              className={`min-h-11 rounded-xl px-2 text-sm font-black ${tab === key ? "bg-stone-900 text-white" : "text-stone-700"}`}
+              className={`min-h-11 rounded-xl px-2 text-sm font-black ${tab === key ? "bg-[#5443c9] text-white" : "text-[#334155]"}`}
             >
               {label}
             </button>
@@ -315,7 +314,7 @@ export default function CrmApp() {
               type="button"
               aria-pressed={tab === key}
               onClick={() => { setTab(key); setNotice(""); }}
-              className={`min-h-8 text-xs font-bold ${tab === key ? "text-stone-900 underline underline-offset-4" : "text-stone-500"}`}
+              className={`min-h-8 text-xs font-bold ${tab === key ? "text-[#1f2a3c] underline underline-offset-4" : "text-[#5b6b80]"}`}
             >
               {label}
             </button>
@@ -341,7 +340,7 @@ export default function CrmApp() {
 
               <section className={panelClass}>
                 <h2 className="text-lg font-black">Χώρα, γλώσσα και κινητό από το Beds24</h2>
-                <p className="mt-1 text-sm text-stone-600">
+                <p className="mt-1 text-sm text-[#4b5b70]">
                   {summary.bookingsWithCountry} από {summary.bookings} κρατήσεις έχουν χώρα
                   {" · "}{summary.guestsWithCountry} από {summary.guests} πελάτες.
                   Η άντληση συμπληρώνει μόνο κενά πεδία και μπορεί να ξανατρέξει.
@@ -356,17 +355,17 @@ export default function CrmApp() {
                     </button>
                   ) : null}
                 </div>
-                {backfill.text ? <p role="status" className="mt-3 text-sm font-bold text-stone-700">{backfill.text}</p> : null}
-                {backfill.fields.length ? <p className="mt-1 text-xs text-stone-500">Πεδία που βρέθηκαν: {backfill.fields.join(", ")}</p> : null}
+                {backfill.text ? <p role="status" className="mt-3 text-sm font-bold text-[#334155]">{backfill.text}</p> : null}
+                {backfill.fields.length ? <p className="mt-1 text-xs text-[#5b6b80]">Πεδία που βρέθηκαν: {backfill.fields.join(", ")}</p> : null}
               </section>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <BucketList title="Πελάτες ανά χώρα" buckets={summary.countries} format={countryName} />
                 <BucketList title="Πελάτες ανά γλώσσα" buckets={summary.languages} format={(key) => (key === "?" ? "Άγνωστη" : key.toUpperCase())} />
               </div>
-              <p className="text-xs text-stone-500">Τελευταία κράτηση από το Beds24: {summary.lastBookingAt ?? "-"}</p>
+              <p className="text-xs text-[#5b6b80]">Τελευταία κράτηση από το Beds24: {summary.lastBookingAt ?? "-"}</p>
             </div>
-          ) : <p className="text-sm text-stone-600">Φόρτωση…</p>
+          ) : <p className="text-sm text-[#4b5b70]">Φόρτωση…</p>
         ) : null}
 
         {tab === "guests" ? (
@@ -386,14 +385,14 @@ export default function CrmApp() {
                 </select>
               </div>
             </div>
-            <p className="mb-3 text-sm font-bold text-stone-600">{guests ? `${visibleGuests.length} πελάτες` : "Φόρτωση…"}</p>
+            <p className="mb-3 text-sm font-bold text-[#4b5b70]">{guests ? `${visibleGuests.length} πελάτες` : "Φόρτωση…"}</p>
             <ul className="grid gap-2">
               {visibleGuests.slice(0, 200).map((guest) => (
                 <li key={guest.email} className={panelClass}>
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-black">{guest.name || "Χωρίς όνομα"}</p>
-                      <p className="break-all text-sm text-stone-600">{guest.email}{guest.phone ? ` · ${guest.phone}` : ""}</p>
+                      <p className="break-all text-sm text-[#4b5b70]">{guest.email}{guest.phone ? ` · ${guest.phone}` : ""}</p>
                       <p className="mt-1 text-sm">
                         {countryName(guest.country)} · {guest.language?.toUpperCase() || "Χωρίς γλώσσα"} · {guest.stays} {guest.stays === 1 ? "διαμονή" : "διαμονές"}
                         {guest.lastCheckin ? ` · τελευταία ${guest.lastCheckin}` : ""}
@@ -415,13 +414,13 @@ export default function CrmApp() {
                     </div>
                   </div>
                   {conversation?.email === guest.email ? (
-                    <div className="mt-3 grid gap-2 border-t border-stone-100 pt-3">
-                      {!conversation.messages ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
-                      {conversation.messages && !conversation.messages.length ? <p className="text-sm text-stone-600">Δεν υπάρχουν μηνύματα.</p> : null}
+                    <div className="mt-3 grid gap-2 border-t border-[#e3e9f0] pt-3">
+                      {!conversation.messages ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
+                      {conversation.messages && !conversation.messages.length ? <p className="text-sm text-[#4b5b70]">Δεν υπάρχουν μηνύματα.</p> : null}
                       {(conversation.messages ?? []).map((message, index) => (
-                        <article key={`${message.sentAt}-${index}`} className={`rounded-xl p-3 text-sm ${message.direction === "guest" ? "bg-stone-100" : "bg-emerald-50"}`}>
+                        <article key={`${message.sentAt}-${index}`} className={`rounded-xl p-3 text-sm ${message.direction === "guest" ? "bg-[#eef3f7]" : "bg-emerald-50"}`}>
                           <p className="font-bold">{message.direction === "guest" ? "Πελάτης" : "Εμείς"} · {message.sentAt} · #{message.bookingIds.join(", ")}</p>
-                          {message.summary ? <p className="mt-1 font-bold text-amber-900">{message.summary}</p> : null}
+                          {message.summary ? <p className="mt-1 font-bold text-[#3b2f8a]">{message.summary}</p> : null}
                           <p className="mt-1 whitespace-pre-wrap break-words">{message.body}</p>
                         </article>
                       ))}
@@ -429,7 +428,7 @@ export default function CrmApp() {
                   ) : null}
                   {editing?.email === guest.email ? (
                     <form
-                      className="mt-3 grid gap-3 border-t border-stone-100 pt-3 md:grid-cols-[1fr_1fr_auto]"
+                      className="mt-3 grid gap-3 border-t border-[#e3e9f0] pt-3 md:grid-cols-[1fr_1fr_auto]"
                       onSubmit={(event) => {
                         event.preventDefault();
                         void run(async () => {
@@ -470,14 +469,14 @@ export default function CrmApp() {
                 </li>
               ))}
             </ul>
-            {visibleGuests.length > 200 ? <p className="mt-3 text-sm text-stone-600">Εμφανίζονται οι 200 πιο πρόσφατοι. Χρησιμοποίησε αναζήτηση ή χώρα.</p> : null}
+            {visibleGuests.length > 200 ? <p className="mt-3 text-sm text-[#4b5b70]">Εμφανίζονται οι 200 πιο πρόσφατοι. Χρησιμοποίησε αναζήτηση ή χώρα.</p> : null}
           </section>
         ) : null}
 
         {tab === "pending" ? (
           <section>
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <p className="text-sm text-stone-600">Κρατήσεις Booking/Expedia χωρίς πραγματικό email. Δεν μπαίνουν στους πελάτες μέχρι να το συμπληρώσεις.</p>
+              <p className="text-sm text-[#4b5b70]">Κρατήσεις Booking/Expedia χωρίς πραγματικό email. Δεν μπαίνουν στους πελάτες μέχρι να το συμπληρώσεις.</p>
               <button
                 type="button"
                 className={secondaryButton}
@@ -486,13 +485,13 @@ export default function CrmApp() {
                 {pendingScope === "upcoming" ? "Δείξε και τις παλιές" : "Μόνο τρέχουσες και επόμενες"}
               </button>
             </div>
-            {!pending ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+            {!pending ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
             {pending && !pending.length ? <p className={panelClass}>Δεν υπάρχουν εκκρεμότητες.</p> : null}
             <ul className="grid gap-2">
               {(pending ?? []).map((booking) => (
                 <li key={booking.bookingId} className={panelClass}>
                   <p className="font-black">{booking.name || "Χωρίς όνομα"}</p>
-                  <p className="text-sm text-stone-600">
+                  <p className="text-sm text-[#4b5b70]">
                     {booking.checkin} → {booking.checkout}{booking.room ? ` · ${booking.room}` : ""} · #{booking.bookingId}
                     {booking.country ? ` · ${countryName(booking.country)}` : ""}{booking.phone ? ` · ${booking.phone}` : ""}
                   </p>
@@ -562,11 +561,11 @@ export default function CrmApp() {
               </div>
               <button type="submit" className={primaryButton}>Προσθήκη</button>
             </form>
-            {!exclusions ? <p className="text-sm text-stone-600">Φόρτωση…</p> : null}
+            {!exclusions ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
             <ul className="grid gap-2">
               {(exclusions ?? []).map((item) => (
                 <li key={item.email} className={`${panelClass} flex flex-wrap items-center justify-between gap-3`}>
-                  <span className="break-all font-bold">{item.email}{item.note ? <span className="font-normal text-stone-500"> · {item.note}</span> : null}</span>
+                  <span className="break-all font-bold">{item.email}{item.note ? <span className="font-normal text-[#5b6b80]"> · {item.note}</span> : null}</span>
                   <button
                     type="button"
                     className={secondaryButton}
