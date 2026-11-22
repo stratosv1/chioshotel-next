@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   ArrowLeft, ArrowRight, BookOpen, BrainCircuit, CheckCircle2, ChevronRight,
   CircleHelp, ClipboardCheck, Eye, GitBranch, Lightbulb, RotateCcw,
@@ -9,6 +10,11 @@ import {
 } from "lucide-react";
 import { SCENARIOS, type Scenario, type Tool } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
 import { appendSkillEvents, phaseSkillEvents } from "@/components/mixalis/ormi2/learning-data";
+
+const Ormi2MotionScene = dynamic(() => import("./Ormi2MotionScene").then((m) => m.Ormi2MotionScene), {
+  ssr: false,
+  loading: () => <div className="mt-5 min-h-[220px] animate-pulse rounded-2xl border border-[#cbded2] bg-[#f3f8f6] p-6 text-sm text-[#49715c]">Φόρτωση κινούμενου φυσικού σχήματος…</div>,
+});
 
 type Step = "observe" | "cuts" | "laws" | "start" | "solve";
 type Check = "cuts" | "laws" | "start";
@@ -69,70 +75,6 @@ function readHistory(): History {
   }
 }
 
-/** The three introductory scenes have dedicated motion drawings; others use a truthful event storyboard. */
-function PhysicsScene({ s, frame }: { s: Scenario; frame: number }) {
-  const stageText = ["Αρχική κατάσταση", "Η αλλαγή / κρούση", "Κίνηση μετά το γεγονός"];
-  if (s.id === "bullet-floor") {
-    return (
-      <svg viewBox="0 0 500 190" role="img" aria-label="Βλήμα, πλαστική κρούση σε ξύλο και ολίσθηση με τριβή" className="w-full">
-        <rect x="12" y="9" width="476" height="172" rx="16" fill="#f4f8f7" />
-        <path d="M28 143H470" stroke="#a4b6b0" strokeWidth="4" strokeLinecap="round" />
-        {Array.from({ length: 13 }, (_, i) => <path key={i} d={"M" + (32 + i * 34) + " 145l-9 10"} stroke="#c5d1cc" strokeWidth="2" />)}
-        <rect x={218 + (frame === 2 ? 105 : 0)} y="93" width="59" height="49" rx="5" fill="#b77a49" style={{ transition: "x 700ms ease" }} />
-        <rect x={frame === 0 ? 75 : frame === 1 ? 208 : 313} y="111" width="21" height="13" rx="5" fill="#276f9a" style={{ transition: "x 700ms ease" }} />
-        <path d={frame === 0 ? "M110 118h65m-9-7 9 7-9 7" : frame === 1 ? "M283 117h45m-8-7 8 7-8 7" : "M383 117h37m-8-7 8 7-8 7"} stroke="#276f9a" strokeWidth="3" fill="none" strokeLinecap="round" />
-        {frame === 2 && <path d="M325 169h-51m8-7-8 7 8 7" stroke="#bb5c43" strokeWidth="3" fill="none" />}
-        <text x="250" y="37" textAnchor="middle" fontSize="17" fill="#304239" fontWeight="700">{stageText[frame]}</text>
-        <text x="250" y="65" textAnchor="middle" fontSize="13" fill="#62756e">{frame === 2 ? "Τριβή αντίθετη στην κίνηση" : "Οριζόντια κίνηση"}</text>
-      </svg>
-    );
-  }
-  if (s.id === "ballistic") {
-    return (
-      <svg viewBox="0 0 500 190" role="img" aria-label="Βλήμα που σφηνώνεται σε εκκρεμές και στη συνέχεια ανεβαίνει" className="w-full">
-        <rect x="12" y="9" width="476" height="172" rx="16" fill="#f4f8f7" />
-        <circle cx="303" cy="27" r="6" fill="#59685e" />
-        <path d={frame === 2 ? "M303 27L364 106" : "M303 27L303 137"} stroke="#636c67" strokeWidth="3" />
-        <rect x={frame === 2 ? 348 : 286} y={frame === 2 ? 100 : 131} width="35" height="33" rx="6" fill="#b77a49" />
-        <circle cx={frame === 0 ? 102 : frame === 1 ? 284 : 348} cy={frame === 2 ? 116 : 148} r="7" fill="#276f9a" />
-        {frame === 0 && <path d="M124 148h82m-9-8 9 8-9 8" stroke="#276f9a" strokeWidth="3" fill="none" />}
-        {frame === 2 && <path d="M394 118q17-37-2-66" fill="none" stroke="#348a61" strokeWidth="3" strokeDasharray="5 5" />}
-        <text x="245" y="51" textAnchor="middle" fontSize="16" fill="#304239" fontWeight="700">{stageText[frame]}</text>
-        <text x="245" y="71" textAnchor="middle" fontSize="12" fill="#62756e">{frame === 2 ? "Άνοδος του συσσωματώματος" : "Σύντομη πλαστική κρούση"}</text>
-      </svg>
-    );
-  }
-  if (s.id === "table-edge") {
-    return (
-      <svg viewBox="0 0 500 190" role="img" aria-label="Πλαστελίνη συγκρούεται με κύβο στην άκρη τραπεζιού και ακολουθεί οριζόντια βολή" className="w-full">
-        <rect x="12" y="9" width="476" height="172" rx="16" fill="#f4f8f7" />
-        <path d="M30 124H322V170" stroke="#a5b3ae" strokeWidth="8" fill="none" strokeLinejoin="round" />
-        <rect x={frame === 2 ? 352 : 280} y={frame === 2 ? 148 : 95} width="32" height="28" rx="5" fill="#b77a49" />
-        <circle cx={frame === 0 ? 100 : frame === 1 ? 276 : 352} cy={frame === 2 ? 162 : 109} r="7" fill="#276f9a" />
-        {frame === 0 && <path d="M119 109h95m-9-8 9 8-9 8" stroke="#276f9a" strokeWidth="3" fill="none" />}
-        {frame === 2 && <path d="M322 111Q355 118 370 163" fill="none" stroke="#348a61" strokeWidth="3" strokeDasharray="5 5" />}
-        <text x="231" y="43" textAnchor="middle" fontSize="16" fill="#304239" fontWeight="700">{stageText[frame]}</text>
-        <text x="231" y="64" textAnchor="middle" fontSize="12" fill="#62756e">{frame === 2 ? "Οριζόντια βολή" : "Πλαστελίνη και κύβος"}</text>
-      </svg>
-    );
-  }
-  return (
-    <div className="rounded-2xl bg-[#f4f8f7] p-4 sm:p-6" aria-label="Αφήγηση διαδοχικών γεγονότων">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-[#56766a]">Αφήγηση γεγονότων · βήμα {frame + 1}/3</p>
-      <div className="flex items-center gap-2" aria-hidden="true">
-        {[0, 1, 2].map((i) => (
-          <div key={i} className={"h-2 flex-1 rounded-full transition-colors " + (i <= frame ? "bg-[#237b65]" : "bg-[#d7e4dd]")} />
-        ))}
-      </div>
-      <div className="mt-4 flex min-h-28 items-center justify-center rounded-xl border border-[#d6e4dc] bg-white px-5 py-6 text-center text-base leading-7 text-[#2e453b]">
-        {s.segs[Math.min(s.segs.length - 1, Math.floor(frame * s.segs.length / 3))]}
-      </div>
-      <p className="mt-3 text-center text-xs text-[#66776e]">Αφήγηση εκφώνησης, όχι αριθμητική προσομοίωση.</p>
-    </div>
-  );
-}
-
-
 function StageSupport({ kind, level, s, onMore }: {
   kind: Check; level: number; s: Scenario; onMore: () => void;
 }) {
@@ -168,7 +110,6 @@ function StageSupport({ kind, level, s, onMore }: {
 export function Ormi2Trainer() {
   const [index, setIndex] = useState(0);
   const [step, setStep] = useState<Step>("observe");
-  const [frame, setFrame] = useState(0);
   const [cuts, setCuts] = useState<number[]>([]);
   const [selectedLaws, setSelectedLaws] = useState<Record<number, Tool[]>>({});
   const [startAt, setStartAt] = useState<number | null>(null);
@@ -216,7 +157,6 @@ export function Ormi2Trainer() {
   function openScenario(nextIndex: number) {
     setIndex(nextIndex);
     setStep("observe");
-    setFrame(0);
     setCuts([]);
     setSelectedLaws({});
     setStartAt(null);
@@ -387,16 +327,11 @@ export function Ormi2Trainer() {
                 })}
               </div>
 
+              <Ormi2MotionScene key={s.id} scenario={s} />
+
               {step === "observe" && (
                 <div className="mt-6 space-y-4">
                   <div className="flex items-center gap-2 text-[#226451]"><Eye size={19} /><h3 className="text-lg font-semibold">Πρώτα παρατήρησε τι συμβαίνει</h3></div>
-                  <PhysicsScene s={s} frame={frame} />
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => setFrame((old) => (old + 1) % 3)} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white">
-                      Επόμενη στιγμή <ArrowRight size={17} />
-                    </button>
-                    <button type="button" onClick={() => setFrame(0)} className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-black/15 px-4 py-2 text-sm font-semibold"><RotateCcw size={16} /> Από την αρχή</button>
-                  </div>
                   <div className="space-y-2 rounded-2xl border border-black/10 bg-[#fbfaf7] p-4">
                     <p className="text-sm font-semibold">Η εκφώνηση, χωρίς έτοιμη ανάλυση</p>
                     {s.segs.map((part, i) => <p key={i} className="text-sm leading-7 text-[#4f4a43]"><span className="mr-2 font-semibold text-[#237860]">{i + 1}.</span>{part}</p>)}
