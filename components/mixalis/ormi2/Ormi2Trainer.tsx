@@ -8,6 +8,7 @@ import {
   Sparkles, Target, Trophy,
 } from "lucide-react";
 import { SCENARIOS, type Scenario, type Tool } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
+import { appendSkillEvents, phaseSkillEvents } from "@/components/mixalis/ormi2/learning-data";
 
 type Step = "observe" | "cuts" | "laws" | "start" | "solve";
 type Check = "cuts" | "laws" | "start";
@@ -190,6 +191,9 @@ export function Ormi2Trainer() {
 
   useEffect(() => {
     setHistory(readHistory());
+    const requested = new URLSearchParams(window.location.search).get("scenario");
+    const chosenIndex = SCENARIOS.findIndex((scenario) => scenario.id === requested);
+    if (chosenIndex >= 0) setIndex(chosenIndex);
     setReady(true);
   }, []);
 
@@ -270,6 +274,7 @@ export function Ormi2Trainer() {
         },
       };
     });
+    appendSkillEvents(phaseSkillEvents(s.id, verdicts, first, support, Date.now()));
     setSavedThisRound(true);
   }
 
@@ -309,6 +314,16 @@ export function Ormi2Trainer() {
           </div>
           <p className="mt-4 text-[11px] text-[#b6d5c4]">*Καταγράφεται η ανεξάρτητη μεθοδολογική προσπάθεια, όχι αυτόματη βαθμολόγηση των αριθμητικών πράξεων.</p>
         </header>
+
+        <Link href="/mixalis/ormi2/proodos"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#abcbb8] bg-white px-5 py-4 text-[#255c47] hover:bg-[#e9f4ed]">
+          <span>
+            <span className="block text-xs font-bold uppercase tracking-wider text-[#3b8061]">Νέο · Ο προσωπικός μου προπονητής</span>
+            <span className="mt-1 block text-lg font-semibold">Δες τις αδυναμίες σου και την επόμενη άσκηση</span>
+            <span className="mt-1 block text-sm text-[#678070]">12 δεξιότητες · στόχευση λαθών · προσωπική σειρά εξάσκησης</span>
+          </span>
+          <span className="rounded-xl bg-[#245c46] px-4 py-2.5 text-sm font-semibold text-white">Χάρτης προόδου →</span>
+        </Link>
 
         <Link href="/mixalis/ormi2/prokliseis"
           className="group flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#a5c7af] bg-[#e3f2e8] p-5 text-[#1b4e39] shadow-sm transition-colors hover:bg-[#d5ecdc] sm:p-7">
