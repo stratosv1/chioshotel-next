@@ -27,7 +27,7 @@ function byId(steps) {
 }
 
 const fixtures = {
-  "stick-friction": [{ V: 4, u: 400, Q: 1584 }, { V: 5, u: 500, Q: 2480 }],
+  "stick-friction": [{ V: 4, u: 400, Q: 1584 }, { V: 5, u: 500, Q: 2475 }],
   ballistic: [{ V: 3, u: 120, loss: 97.5 }, { V: 4, u: 80, loss: 95 }],
   "pass-edge": [{ t: 0.5, V: 4, uout: 100, Q: 792 }, { t: 0.4, V: 3, uout: 150, Q: 670.5 }],
   "elastic-ramp": [{ v1: -6, v2: 4, h: 0.8 }, { v1: -2, v2: 8, h: 3.2 }],
