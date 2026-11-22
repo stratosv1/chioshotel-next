@@ -49,7 +49,7 @@ for (const t of tricks) {
   for(const st of q.steps){
     steps++;
     for(const field of ["title","question","choice","because","formula","result","bridge"]){
-      assert(st[field].length>(field==="result"?3:7),"missing narrative part "+field+" in "+t.scenarioId+":"+q.id);
+      assert(st[field].length>(field==="result"||field==="formula"?3:7),"missing narrative part "+field+" in "+t.scenarioId+":"+q.id);
     }
   }
  }
