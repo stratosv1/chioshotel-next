@@ -310,6 +310,16 @@ export function Ormi2Trainer() {
           <p className="mt-4 text-[11px] text-[#b6d5c4]">*Καταγράφεται η ανεξάρτητη μεθοδολογική προσπάθεια, όχι αυτόματη βαθμολόγηση των αριθμητικών πράξεων.</p>
         </header>
 
+        <Link href="/mixalis/ormi2/prokliseis"
+          className="group flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#a5c7af] bg-[#e3f2e8] p-5 text-[#1b4e39] shadow-sm transition-colors hover:bg-[#d5ecdc] sm:p-7">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-[#307b55]"><Trophy size={16}/> Νέο · Επίπεδο 2 · Αριθμητική επίλυση</span>
+            <h2 className="mt-2 text-xl font-bold sm:text-2xl">Εργαστήριο δύσκολων προκλήσεων</h2>
+            <p className="mt-2 text-sm leading-7">8 οικογένειες, 16 παραλλαγές: βρες τις ενδιάμεσες ταχύτητες, σύνδεσε τους νόμους, έλεγξε κάθε αποτέλεσμα και δοκίμασε τη διαφορετική συνθήκη χωρίς βοήθεια.</p>
+          </div>
+          <span className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-[#245d45] px-5 py-3 text-sm font-semibold text-white group-hover:bg-[#194631]">Ξεκίνα τις προκλήσεις <ArrowRight size={17}/></span>
+        </Link>
+
         <div className="grid items-start gap-5 lg:grid-cols-[290px_minmax(0,1fr)]">
           <aside className="rounded-3xl border border-black/10 bg-white p-4 lg:sticky lg:top-4">
             <div className="flex items-center justify-between gap-2"><h2 className="font-semibold">Βιβλιοθήκη σεναρίων</h2><BookOpen size={18} className="text-[#668072]" /></div>
