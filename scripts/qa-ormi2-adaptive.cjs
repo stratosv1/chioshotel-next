@@ -96,4 +96,4 @@ assert.equal(due.skill, "momentum", "return mastered skill for review after 3 da
 const truncated = data.normalizeSkillEvents(Array.from({length:650},(_,i)=>independent("i"+i,now+i)));
 assert.equal(truncated.length, data.MAX_EVENTS);
 assert.equal(truncated[0].item, "i50");
-console.log("Ormi2 adaptive QA passed: 12 skill categories, 8 mapped families, first-try grading, hints, local storage, recency, and mastery transfer.");
+console.log("Ormi2 adaptive QA passed: 12 skill categories, 13 mapped families, first-try grading, hints, local storage, recency, and mastery transfer.");
