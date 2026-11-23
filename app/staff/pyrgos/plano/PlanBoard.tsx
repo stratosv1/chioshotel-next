@@ -752,6 +752,8 @@ function BookingPanel({
   const [data, setData] = useState<{ booking: PlanBooking; history: any[]; group: { id: string; room: number }[]; initial: any } | null>(null);
   const [error, setError] = useState("");
   const [form, setForm] = useState<any>(null);
+  // Must stay above the early return below — hooks after it crash the panel (React #310).
+  const [sendingConfirmation, setSendingConfirmation] = useState(false);
 
   const reload = useCallback(async () => {
     const json = await api(`/api/staff/pyrgos/plan/?id=${encodeURIComponent(id)}`);
@@ -826,7 +828,6 @@ function BookingPanel({
 
   // Manual send of the booking confirmation from the panel (owner, 2026-11-23).
   // Same path as the CRM "Αποστολή στον πελάτη": loads the email data, warns, asks, then sends.
-  const [sendingConfirmation, setSendingConfirmation] = useState(false);
   async function openSendConfirmation() {
     if (dirty) return setError("Αποθήκευσε πρώτα τις αλλαγές — η επιβεβαίωση παίρνει τα αποθηκευμένα στοιχεία.");
     setSendingConfirmation(true);
