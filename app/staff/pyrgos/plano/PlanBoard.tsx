@@ -5,6 +5,7 @@ import type { PlanBooking, PlanCell } from "@/lib/pyrgos/plan";
 import { useBeds24Sync } from "../useBeds24Sync";
 import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
 import PyrgosNav from "../PyrgosNav";
+import { foreignTextInEmail, type ConfirmationData } from "@/lib/crm/booking-confirmation-email";
 
 // ---------- helpers ----------
 
@@ -823,6 +824,56 @@ function BookingPanel({
     await reload();
   }
 
+  // Manual send of the booking confirmation from the panel (owner, 2026-11-23).
+  // Same path as the CRM "Αποστολή στον πελάτη": loads the email data, warns, asks, then sends.
+  const [sendingConfirmation, setSendingConfirmation] = useState(false);
+  async function openSendConfirmation() {
+    if (dirty) return setError("Αποθήκευσε πρώτα τις αλλαγές — η επιβεβαίωση παίρνει τα αποθηκευμένα στοιχεία.");
+    setSendingConfirmation(true);
+    setError("");
+    try {
+      const res = await fetch(`/api/staff/crm/confirmation/?bookingId=${encodeURIComponent(b.id)}`, { cache: "no-store" });
+      const json = await res.json();
+      if (!json.ok) return setError(json.error || "Δεν φορτώθηκε η επιβεβαίωση.");
+      const conf = json.data as ConfirmationData;
+      const to = String(conf.email || "").trim();
+      if (!to || /@([a-z0-9-]+\.)*(booking\.com|expedia\.com|expediapartnercentral\.com)$/i.test(to)) {
+        return setError("Η κράτηση δεν έχει πραγματικό email πελάτη — συμπλήρωσέ το στο «Πελάτης» και αποθήκευσε.");
+      }
+      const leftovers = foreignTextInEmail(conf);
+      const warnings: string[] = Array.isArray(json.warnings) ? json.warnings : [];
+      setConfirm({
+        title: "Αποστολή επιβεβαίωσης",
+        lines: [
+          `Προς: ${to}`,
+          `Γλώσσα: ${String(conf.language || "").toUpperCase()}`,
+          ...warnings.map((w) => `⚠ ${w}`),
+          ...(leftovers.length ? ["⚠ Δεν είναι όλο στη γλώσσα του πελάτη:", ...leftovers] : []),
+          "Δες πρώτα το «Preview επιβεβαίωσης» αν δεν το έχεις δει.",
+        ],
+        confirmLabel: "Αποστολή",
+        onConfirm: async () => {
+          const r = await fetch("/api/staff/crm/confirmation/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ action: "send", data: conf }),
+          });
+          const out = await r.json();
+          if (!out.ok) {
+            setError(out.error || "Η αποστολή απέτυχε.");
+            return;
+          }
+          onChanged(`Στάλθηκε η επιβεβαίωση στο ${out.sentTo}`);
+          await reload();
+        },
+      });
+    } catch {
+      setError("Δεν φορτώθηκε η επιβεβαίωση.");
+    } finally {
+      setSendingConfirmation(false);
+    }
+  }
+
   // ---- one form, one save (owner, 2026-11-20): every change is collected and saved together ----
   const initial = data.initial;
   const changed = (keys: string[]) => keys.some((k) => String(form[k] ?? "") !== String(initial[k] ?? ""));
@@ -1047,6 +1098,15 @@ function BookingPanel({
             >
               Preview επιβεβαίωσης ↗
             </a>
+            <button
+              type="button"
+              disabled={sendingConfirmation}
+              title={dirty ? "Αποθήκευσε πρώτα τις αλλαγές" : ""}
+              onClick={() => void openSendConfirmation()}
+              className={actionBtn}
+            >
+              {sendingConfirmation ? "Φόρτωση…" : "Αποστολή επιβεβαίωσης"}
+            </button>
             {!b.masterId && (
               <button
                 type="button"
