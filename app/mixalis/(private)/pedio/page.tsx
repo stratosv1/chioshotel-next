@@ -6,11 +6,12 @@ import { Note } from "@/components/mixalis/omali/shared";
 import { PedioAnimationsClient } from "@/components/mixalis/pedio/PedioAnimationsClient";
 import { PedioGraphs } from "@/components/mixalis/pedio/PedioGraphs";
 import { PedioIntroEmbed } from "@/components/mixalis/pedio/PedioIntroEmbed";
+import { PedioKaratzikos } from "@/components/mixalis/pedio/PedioKaratzikos";
 
 export const metadata: Metadata = {
   title: { absolute: "Ηλεκτρικό πεδίο · Τυπολόγιο · Physics Workspace" },
   description:
-    "34 περιπτώσεις ηλεκτρικού πεδίου (ένταση, ομογενές πεδίο, δυναμική ενέργεια, δυναμικό, πυκνωτής) από το σχολικό βιβλίο και τον Σαββάλα, με κινούμενο σχέδιο για κάθε περίπτωση.",
+    "34 περιπτώσεις ηλεκτρικού πεδίου (ένταση, ομογενές πεδίο, δυναμική ενέργεια, δυναμικό, πυκνωτής) από το σχολικό βιβλίο και τον Σαββάλα, με κινούμενο σχέδιο για κάθε περίπτωση, και οι μεθοδολογίες του βοηθήματος του Καρατζίκου.",
   robots: { index: false, follow: false },
 };
 
@@ -81,7 +82,7 @@ export default function PedioPage() {
             δυναμική ενέργεια, δυναμικό, τάση και πυκνωτής. Οι αριθμοί των κινούμενων σχεδίων είναι από τις λυμένες ασκήσεις του Σαββάλα.{" "}
             <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.{" "}
             Τα κουτάκια 31–34 είναι οι επιπλέον ασκήσεις (σχήματα με φορτία, κίνηση σε πεδίο Coulomb, αντίστροφα προβλήματα). Θα βρεις ακόμα έναν γρήγορο έλεγχο με ερωτήσεις σαν το
-            Θέμα Α και τα διαγράμματα του κεφαλαίου.
+            Θέμα Α, τα διαγράμματα του κεφαλαίου και τις μεθοδολογίες του βοηθήματος του Καρατζίκου.
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
             <a href="/mixalis/pedio-typologio.svg" target="_blank" rel="noopener" className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
@@ -143,6 +144,9 @@ export default function PedioPage() {
             ))}
             <a href="#diagrammata" className="shrink-0 rounded-full px-3 py-1.5 text-[#4d4138] hover:bg-[#f3efe8]">
               Διαγράμματα
+            </a>
+            <a href="#karatzikos" className="shrink-0 rounded-full px-3 py-1.5 text-[#4d4138] hover:bg-[#f3efe8]">
+              Μεθοδολογίες
             </a>
           </div>
         </nav>
@@ -215,6 +219,8 @@ export default function PedioPage() {
 
         <PedioGraphs />
 
+        <PedioKaratzikos />
+
         <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Οδηγός</p>
           <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Τι προσέχεις σε κάθε ενότητα</h2>
@@ -237,7 +243,8 @@ export default function PedioPage() {
             </Note>
             <Note tone="ok" title="Από πού είναι">
               Θεωρία: σχολικό βιβλίο Φυσικής Γενικής Παιδείας (ενότητες 1.2–1.5) και Σαββάλας (κεφάλαια 3–8). Οι αριθμοί των παραδειγμάτων είναι κυρίως
-              από τις βασικές λυμένες ασκήσεις του Σαββάλα. Στο σχολικό βιβλίο η απόσταση των οπλισμών λέγεται ℓ, στον Σαββάλα d.
+              από τις βασικές λυμένες ασκήσεις του Σαββάλα. Στο σχολικό βιβλίο η απόσταση των οπλισμών λέγεται ℓ, στον Σαββάλα και στον Καρατζίκο d. Η ενότητα «Θεωρία και μεθοδολογίες» είναι από
+              το βοήθημα του Καρατζίκου (Ενότητα 7, σελ. 425–432 και Ενότητα 8, σελ. 467–480).
             </Note>
           </div>
         </section>
