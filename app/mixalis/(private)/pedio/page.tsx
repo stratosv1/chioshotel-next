@@ -6,7 +6,7 @@ import { Note } from "@/components/mixalis/omali/shared";
 import { PedioAnimationsClient } from "@/components/mixalis/pedio/PedioAnimationsClient";
 import { PedioGraphs } from "@/components/mixalis/pedio/PedioGraphs";
 import { PedioIntroEmbed } from "@/components/mixalis/pedio/PedioIntroEmbed";
-import { PedioKaratzikos } from "@/components/mixalis/pedio/PedioKaratzikos";
+import { PedioKaratzikosClient } from "@/components/mixalis/pedio/PedioKaratzikosClient";
 
 export const metadata: Metadata = {
   title: { absolute: "Ηλεκτρικό πεδίο · Τυπολόγιο · Physics Workspace" },
@@ -219,7 +219,7 @@ export default function PedioPage() {
 
         <PedioGraphs />
 
-        <PedioKaratzikos />
+        <PedioKaratzikosClient />
 
         <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8">
           <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Οδηγός</p>
@@ -243,7 +243,7 @@ export default function PedioPage() {
             </Note>
             <Note tone="ok" title="Από πού είναι">
               Θεωρία: σχολικό βιβλίο Φυσικής Γενικής Παιδείας (ενότητες 1.2–1.5) και Σαββάλας (κεφάλαια 3–8). Οι αριθμοί των παραδειγμάτων είναι κυρίως
-              από τις βασικές λυμένες ασκήσεις του Σαββάλα. Στο σχολικό βιβλίο η απόσταση των οπλισμών λέγεται ℓ, στον Σαββάλα και στον Καρατζίκο d. Η ενότητα «Θεωρία και μεθοδολογίες» είναι από
+              από τις βασικές λυμένες ασκήσεις του Σαββάλα. Στο σχολικό βιβλίο η απόσταση των οπλισμών λέγεται ℓ, στον Σαββάλα και στον Καρατζίκο d. Η ενότητα «Μεθοδολογίες με κίνηση» (Κ1–Κ10) είναι από
               το βοήθημα του Καρατζίκου (Ενότητα 7, σελ. 425–432 και Ενότητα 8, σελ. 467–480).
             </Note>
           </div>

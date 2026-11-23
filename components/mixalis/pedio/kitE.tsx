@@ -29,6 +29,10 @@ export type ECase = {
   solve: ReactNode;
   trap?: ReactNode;
   legend?: ELegend[];
+  /** Text in the round badge instead of the number (e.g. "Κ3"). */
+  badge?: string;
+  /** Exercise type shown above the title, e.g. "Coulomb + κινητική ενέργεια". */
+  kind?: string;
   /** Extra follow-up questions under the solution, each with its own hidden answer. */
   more?: { q: string; a: ReactNode }[];
 };
