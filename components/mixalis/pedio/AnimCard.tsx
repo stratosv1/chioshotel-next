@@ -165,9 +165,16 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
           className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-sm font-bold text-white"
           style={{ backgroundColor: accent }}
         >
-          {data.n}
+          {data.badge ?? data.n}
         </span>
-        <h3 className="text-lg font-semibold tracking-tight text-[#1c2433]">{data.title}</h3>
+        <div className="min-w-0">
+          {data.kind ? (
+            <p className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: accent }}>
+              {data.kind}
+            </p>
+          ) : null}
+          <h3 className="text-lg font-semibold tracking-tight text-[#1c2433]">{data.title}</h3>
+        </div>
       </header>
 
       <p className="mt-2 px-4 text-[15px] leading-6 text-[#3d4452] sm:px-5">
@@ -303,7 +310,7 @@ export function AnimCard({ data, accent, study }: { data: ECase; accent: string;
       </div>
       {data.more?.map((m, i) => <MoreQuestion key={i} q={m.q} a={m.a} accent={accent} />)}
       {study ? (
-        <StudyMark lesson={study.lesson} id={`k${data.n}`} title={`${data.n}. ${data.title}`} path={study.path} className="border-t border-black/5 px-4 py-3 sm:px-5" />
+        <StudyMark lesson={study.lesson} id={`k${data.n}`} title={`${data.badge ?? data.n}. ${data.title}`} path={study.path} className="border-t border-black/5 px-4 py-3 sm:px-5" />
       ) : null}
     </article>
   );
