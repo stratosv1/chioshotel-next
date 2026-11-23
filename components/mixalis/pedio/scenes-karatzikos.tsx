@@ -29,6 +29,20 @@ export const KINDS = {
   boltAngle: "«Βολή» · γωνία από κινητικές ενέργειες",
   mixed: "Ομογενές + Coulomb στην ίδια άσκηση",
   collision: "Ομογενές + κρούση + οριζόντια βολή",
+  cDist: "Coulomb · αλλαγή απόστασης (E = ΔU)",
+  cInverse: "Coulomb · αντίστροφο: άγνωστο φορτίο",
+  cShape: "Coulomb · φορτία σε σχήμα (Πυθαγόρειο, συντεταγμένες)",
+  cWork: "Coulomb · έργο εξωτερικής δύναμης (W = ΔU + ΔK)",
+  cOrbit: "Coulomb · κυκλική τροχιά (F = κεντρομόλος)",
+  cRails: "Coulomb · κυκλικές ράγες και απελευθέρωση",
+  cEscape: "Coulomb · διαφυγή ή στάση (πρόσημο της E)",
+  cTogether: "Και τα δύο ελεύθερα · κοινή ταχύτητα",
+  cGmax: "Coulomb + βάρος · υ_max εκεί όπου F = B",
+  cIncline: "Coulomb + βάρος σε κεκλιμένο",
+  cSymmetry: "Coulomb · συμμετρία με δύο ακλόνητα",
+  cThree: "Τρία φορτία · κάποια ελεύθερα",
+  cShare: "Δύο ελεύθερα από ηρεμία · μοιρασιά της K",
+  cCollision: "Coulomb + κρούση + τριβή",
 } as const;
 
 const K_NUM = 9e9;
