@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { AnimCard, rich } from "./AnimCard";
 import { KINDS, karatzikos7, karatzikos8 } from "./scenes-karatzikos";
 import { karatzikosEx } from "./scenes-karatzikos-2";
+import { karatzikos7Ex } from "./scenes-karatzikos-3";
 
 /**
  * Karatzikos study guide (owner, 2026-11-23): Unit 7 pp. 425–432 and Unit 8 pp. 467–480.
@@ -14,6 +15,7 @@ import { karatzikosEx } from "./scenes-karatzikos-2";
 const COLOR_7 = "#6b3fa0";
 const COLOR_8 = "#b8322b";
 const COLOR_EX = "#0f7d8c";
+const COLOR_7EX = "#a0457a";
 
 type Kind = { label: string; color: string; when: ReactNode; tool: ReactNode; cards: string[]; exercises: string };
 
@@ -166,9 +168,121 @@ const MAP: Kind[] = [
     cards: ["Κ21"],
     exercises: "8.86",
   },
+  {
+    label: KINDS.cDist,
+    color: COLOR_7EX,
+    when: "Ακλόνητα φορτία αλλάζουν απόσταση· ζητούν ενέργεια ή νέα απόσταση.",
+    tool: "E_δαπ = U_τελ − U_αρχ. Προσοχή στις μονάδες: nC, μC, mC.",
+    cards: ["Κ22"],
+    exercises: "7.38, 7.39, 7.40",
+  },
+  {
+    label: KINDS.cInverse,
+    color: COLOR_7EX,
+    when: "Δίνεται η U ή η ενέργεια διάλυσης· ζητούν ένα φορτίο.",
+    tool: "E_διάλ = −U. Γράφεις όλους τους όρους, ο άγνωστος βγαίνει κοινός παράγοντας.",
+    cards: ["Κ23"],
+    exercises: "7.39, 7.43, 7.58",
+  },
+  {
+    label: KINDS.cShape,
+    color: COLOR_7EX,
+    when: "Φορτία σε τρίγωνο ή σε σημεία αξόνων.",
+    tool: "Βρίσκεις όλες τις αποστάσεις (Πυθαγόρειο), έναν όρο για κάθε ζευγάρι.",
+    cards: ["Κ24"],
+    exercises: "7.44, 7.45, 7.56",
+  },
+  {
+    label: KINDS.cWork,
+    color: COLOR_7EX,
+    when: "Μετακινούμε φορτίο και στο τέλος έχει ταχύτητα, ή το παίρνουμε στο άπειρο.",
+    tool: "W_εξ = ΔU + ΔK. Έργο του πεδίου: W_F = U_αρχ − U_τελ.",
+    cards: ["Κ25"],
+    exercises: "7.56",
+  },
+  {
+    label: KINDS.cOrbit,
+    color: COLOR_7EX,
+    when: "Φορτίο κάνει κυκλική κίνηση γύρω από άλλο (ή δύο γύρω από το μέσο τους).",
+    tool: "F_Coulomb = mυ²/r. E = K + U = U/2 < 0.",
+    cards: ["Κ26"],
+    exercises: "7.41, 7.57",
+  },
+  {
+    label: KINDS.cRails,
+    color: COLOR_7EX,
+    when: "Σώματα σε κυκλική ράγα· ζητούν δύναμη ράγας ή ταχύτητα αν αφεθούν.",
+    tool: "N = mυ²/r + F_C (η άπωση σπρώχνει έξω). Στο άπειρο η U μοιράζεται.",
+    cards: ["Κ27"],
+    exercises: "7.62",
+  },
+  {
+    label: KINDS.cEscape,
+    color: COLOR_7EX,
+    when: "Ρωτούν αν φτάνει στο άπειρο, πού σταματά ή ποια ταχύτητα χρειάζεται.",
+    tool: "E = K + U: E < 0 σταματά, E = 0 οριακά, E > 0 φεύγει.",
+    cards: ["Κ28"],
+    exercises: "7.48, 7.60",
+  },
+  {
+    label: KINDS.cTogether,
+    color: COLOR_7EX,
+    when: "Και τα δύο σωματίδια ελεύθερα· ζητούν ελάχιστη ή μέγιστη απόσταση.",
+    tool: "Τη στιγμή εκείνη κοινή ταχύτητα: ΑΔΟ για την υ, ΑΔΜΕ για την απόσταση.",
+    cards: ["Κ29"],
+    exercises: "7.50, 7.59, 7.60",
+  },
+  {
+    label: KINDS.cGmax,
+    color: COLOR_7EX,
+    when: "Κατακόρυφα πάνω από φορτίο με βάρος· ζητούν μέγιστη ταχύτητα ή πού σταματά.",
+    tool: "υ_max εκεί όπου F = B. ΑΔΜΕ με mgh και kQq/r· η μία ρίζα είναι η αρχή.",
+    cards: ["Κ30"],
+    exercises: "7.51, 7.52, 7.53, 7.63",
+  },
+  {
+    label: KINDS.cIncline,
+    color: COLOR_7EX,
+    when: "Φορτίο στη βάση κεκλιμένου επιπέδου.",
+    tool: "Σύγκριση F με mg·ημφ. Ύψος = s·ημφ στην ΑΔΜΕ.",
+    cards: ["Κ31"],
+    exercises: "7.54",
+  },
+  {
+    label: KINDS.cSymmetry,
+    color: COLOR_7EX,
+    when: "Δύο ίσα ακλόνητα φορτία και ένα που κινείται ανάμεσα.",
+    tool: "Οι κάθετες συνιστώσες αναιρούνται ⇒ κίνηση στη μεσοκάθετο. Ενέργεια με δύο όρους.",
+    cards: ["Κ32"],
+    exercises: "7.55",
+  },
+  {
+    label: KINDS.cThree,
+    color: COLOR_7EX,
+    when: "Τρία φορτία, κάποια κρατιούνται και κάποια αφήνονται.",
+    tool: "Ο ελεύθερος παίρνει μόνο τους όρους που τον αφορούν. Συμμετρία ⇒ ίσες ταχύτητες.",
+    cards: ["Κ33"],
+    exercises: "7.58, 7.61",
+  },
+  {
+    label: KINDS.cShare,
+    color: COLOR_7EX,
+    when: "Δύο σωματίδια αφήνονται μαζί από ηρεμία.",
+    tool: "Ίσες ορμές: υ₂/υ₁ = m₁/m₂, K₂/K₁ = m₁/m₂. dp/dt = F.",
+    cards: ["Κ34"],
+    exercises: "7.47, 7.49, 7.64",
+  },
+  {
+    label: KINDS.cCollision,
+    color: COLOR_7EX,
+    when: "Μετά την απώθηση ακολουθεί κρούση ή τριβή.",
+    tool: "Κάθε κομμάτι με το εργαλείο του: ΑΔΜΕ, ΑΔΟ, ΘΜΚΕ.",
+    cards: ["Κ35"],
+    exercises: "7.65",
+  },
 ];
 
-const ANCHOR: Record<string, string> = Object.fromEntries([...karatzikos7, ...karatzikos8, ...karatzikosEx].map((c) => [c.badge ?? String(c.n), `#k${c.n}`]));
+const ANCHOR: Record<string, string> = Object.fromEntries([...karatzikos7, ...karatzikos8, ...karatzikosEx, ...karatzikos7Ex].map((c) => [c.badge ?? String(c.n), `#k${c.n}`]));
 
 function KindMap() {
   return (
@@ -232,8 +346,8 @@ export function PedioKaratzikos() {
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Βοήθημα Καρατζίκου</p>
       <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Μεθοδολογίες με κίνηση</h2>
       <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
-        Κάθε λυμένη εφαρμογή και κάθε νέα περίπτωση των λυμένων ασκήσεων του βοηθήματος ως κινούμενο σχέδιο (Κ1–Κ21). Πάνω από τον τίτλο κάθε κάρτας γράφει τι τύπος άσκησης είναι. Όλες οι πράξεις
-        ελέγχθηκαν ξανά. Όπου το βιβλίο έχει λάθος ή ασάφεια (Κ9, 8.71 στην Κ13, Κ21) υπάρχει σημείωση.
+        Κάθε λυμένη εφαρμογή και κάθε νέα περίπτωση των λυμένων ασκήσεων του βοηθήματος ως κινούμενο σχέδιο (Κ1–Κ35). Πάνω από τον τίτλο κάθε κάρτας γράφει τι τύπος άσκησης είναι. Όλες οι πράξεις
+        ελέγχθηκαν ξανά. Όπου το βιβλίο έχει λάθος ή ασάφεια (Κ9, 8.71 στην Κ13, Κ21, Κ25) υπάρχει σημείωση.
       </p>
 
       <KindMap />
@@ -277,6 +391,20 @@ export function PedioKaratzikos() {
           </>
         }
         cards={karatzikosEx}
+      />
+
+      <Unit
+        unit={7}
+        pages="452–460"
+        title="Λυμένες ασκήσεις (7.38–7.65): δυναμική ενέργεια, οι υπόλοιπες περιπτώσεις"
+        color={COLOR_7EX}
+        intro={
+          <>
+            Από τις ασκήσεις της Ενότητας 7, μία κάρτα για κάθε περίπτωση που δεν καλύπτουν τα Κ1–Κ5: αλλαγή απόστασης, άγνωστο φορτίο, σχήματα, κυκλική
+            τροχιά, διαφυγή, δύο ελεύθερα σωματίδια, βάρος, κεκλιμένο, συμμετρία, τρία φορτία και κρούση. Κάτω από κάθε λύση υπάρχουν και συγγενικές ασκήσεις.
+          </>
+        }
+        cards={karatzikos7Ex}
       />
     </section>
   );
