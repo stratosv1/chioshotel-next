@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { AnimCard, rich } from "./AnimCard";
 import { KINDS, karatzikos7, karatzikos8 } from "./scenes-karatzikos";
+import { karatzikosEx } from "./scenes-karatzikos-2";
 
 /**
  * Karatzikos study guide (owner, 2026-11-23): Unit 7 pp. 425–432 and Unit 8 pp. 467–480.
@@ -12,6 +13,7 @@ import { KINDS, karatzikos7, karatzikos8 } from "./scenes-karatzikos";
 
 const COLOR_7 = "#6b3fa0";
 const COLOR_8 = "#b8322b";
+const COLOR_EX = "#0f7d8c";
 
 type Kind = { label: string; color: string; when: ReactNode; tool: ReactNode; cards: string[]; exercises: string };
 
@@ -74,11 +76,99 @@ const MAP: Kind[] = [
     when: "Μπαίνει ανάμεσα στις πλάκες παράλληλα σε αυτές (κάθετα στις γραμμές).",
     tool: "x: ευθύγραμμη ομαλή, y: ομαλά επιταχυνόμενη. t₁ = L/υ₀, y₁ = ½αt₁², εφφ = υ₁y/υ₀. Έλεγχος y₁ ≤ d!",
     cards: ["Κ9", "Κ10"],
-    exercises: "8.6, 8.7, 8.76–8.84",
+    exercises: "8.6, 8.7, 8.76, 8.79, 8.82",
+  },
+  {
+    label: KINDS.eqG,
+    color: COLOR_EX,
+    when: "Σωματίδιο ισορροπεί ανάμεσα σε οριζόντιες πλάκες· μετά αλλάζει η τάση.",
+    tool: "|q|E = mg. Νέα τάση ⇒ νέα F ⇒ ΣF = F′ − mg ⇒ α σταθερή.",
+    cards: ["Κ11"],
+    exercises: "8.64, 8.74",
+  },
+  {
+    label: KINDS.vertG,
+    color: COLOR_EX,
+    when: "Κατακόρυφη κίνηση ανάμεσα σε οριζόντιες πλάκες και η άσκηση δίνει g.",
+    tool: "ΣF από F και B με τις φορές τους ⇒ α σταθερή ⇒ κινηματική. Ή ΘΜΚΕ: ΔK = W_F + W_B.",
+    cards: ["Κ12"],
+    exercises: "8.65, 8.67, 8.73",
+  },
+  {
+    label: KINDS.backForth,
+    color: COLOR_EX,
+    when: "Το σωματίδιο φρενάρει, σταματά στιγμιαία και γυρίζει πίσω.",
+    tool: "Στάση: υ = 0, t = υ₀/α. Επιστρέφει με το ίδιο μέτρο ταχύτητας (W κλειστής διαδρομής = 0). V από ΘΜΚΕ.",
+    cards: ["Κ13"],
+    exercises: "8.63, 8.69, 8.71, 8.72, 8.75",
+  },
+  {
+    label: KINDS.hole,
+    color: COLOR_EX,
+    when: "Πλάκα με οπή: ζητούν ταχύτητα εξόδου ή ελάχιστη ταχύτητα για να φτάσει ως εκεί.",
+    tool: "ΘΜΚΕ: ½mυ² = |q|·V. «Οριακά» σημαίνει φτάνει με υ = 0.",
+    cards: ["Κ14"],
+    exercises: "8.61, 8.66",
+  },
+  {
+    label: KINDS.twoFields,
+    color: COLOR_EX,
+    when: "Βγαίνει από ένα πεδίο και μπαίνει αμέσως σε δεύτερο.",
+    tool: "Η ταχύτητα εξόδου του πρώτου είναι η αρχική του δεύτερου. Μέση ταχύτητα υ/2 για τους χρόνους. W₁ + W₂ = ΔK.",
+    cards: ["Κ15"],
+    exercises: "8.68, 8.70",
+  },
+  {
+    label: KINDS.boltOffset,
+    color: COLOR_EX,
+    when: "Μπαίνει κάθετα αλλά σε απόσταση d₁ από την πλάκα προς την οποία στρίβει, ή ζητούν όριο τάσης για να βγει.",
+    tool: "Βγαίνει αν y₁ ≤ d₁. Οριακά y₁ = d₁ ⇒ V_max (ή υ_min).",
+    cards: ["Κ16"],
+    exercises: "8.77, 8.84",
+  },
+  {
+    label: KINDS.boltScreen,
+    color: COLOR_EX,
+    when: "Πρώτα επιτάχυνση με τάση, μετά πλάκες, μετά οθόνη.",
+    tool: "½mυ₀² = qV. Μετά «βολή». Έξω από τις πλάκες ευθεία: OK = y₁ + D·εφφ.",
+    cards: ["Κ17"],
+    exercises: "8.80",
+  },
+  {
+    label: KINDS.boltG,
+    color: COLOR_EX,
+    when: "Κάθετη είσοδος σε οριζόντιες πλάκες και η άσκηση δίνει g.",
+    tool: "α = ΣF/m από F και B. «Ξυστά»: απόκλιση = απόσταση από την πλάκα. qE = mg ⇒ ευθεία.",
+    cards: ["Κ18"],
+    exercises: "8.81",
+  },
+  {
+    label: KINDS.boltAngle,
+    color: COLOR_EX,
+    when: "Ζητούν γωνία ή τάση από κινητικές ενέργειες, ή απάντηση μόνο με γράμματα.",
+    tool: "ΔK = |q|·V εισόδου–εξόδου. συνφ = υ₀/υ₁ = √(K₁/K₂).",
+    cards: ["Κ19"],
+    exercises: "8.78, 8.83",
+  },
+  {
+    label: KINDS.mixed,
+    color: COLOR_EX,
+    when: "Μετά τις πλάκες συναντά σημειακό φορτίο.",
+    tool: "Πλάκες: κινηματική ή ΘΜΚΕ. Κοντά στο Q: μόνο ΑΔΜΕ με U = kqQ/r.",
+    cards: ["Κ20"],
+    exercises: "8.85",
+  },
+  {
+    label: KINDS.collision,
+    color: COLOR_EX,
+    when: "Η άσκηση συνεχίζει με κρούση ή βολή και τα δεδομένα είναι στο τέλος.",
+    tool: "Λύνεις ανάποδα: βολή ⇒ υ_κ, ΑΔΟ ⇒ υ, ανάλυση ⇒ υ₀, t = L/υ₀.",
+    cards: ["Κ21"],
+    exercises: "8.86",
   },
 ];
 
-const ANCHOR: Record<string, string> = Object.fromEntries([...karatzikos7, ...karatzikos8].map((c) => [c.badge ?? String(c.n), `#k${c.n}`]));
+const ANCHOR: Record<string, string> = Object.fromEntries([...karatzikos7, ...karatzikos8, ...karatzikosEx].map((c) => [c.badge ?? String(c.n), `#k${c.n}`]));
 
 function KindMap() {
   return (
@@ -142,8 +232,8 @@ export function PedioKaratzikos() {
       <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Βοήθημα Καρατζίκου</p>
       <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">Μεθοδολογίες με κίνηση</h2>
       <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#5c534c]">
-        Κάθε λυμένη εφαρμογή του βοηθήματος ως κινούμενο σχέδιο (Κ1–Κ10). Πάνω από τον τίτλο κάθε κάρτας γράφει τι τύπος άσκησης είναι. Όλες οι πράξεις
-        ελέγχθηκαν ξανά. Στην Κ9 τα δεδομένα του βιβλίου δεν στέκουν και εξηγείται γιατί.
+        Κάθε λυμένη εφαρμογή και κάθε νέα περίπτωση των λυμένων ασκήσεων του βοηθήματος ως κινούμενο σχέδιο (Κ1–Κ21). Πάνω από τον τίτλο κάθε κάρτας γράφει τι τύπος άσκησης είναι. Όλες οι πράξεις
+        ελέγχθηκαν ξανά. Όπου το βιβλίο έχει λάθος ή ασάφεια (Κ9, 8.71 στην Κ13, Κ21) υπάρχει σημείωση.
       </p>
 
       <KindMap />
@@ -173,6 +263,20 @@ export function PedioKaratzikos() {
           </>
         }
         cards={karatzikos8}
+      />
+
+      <Unit
+        unit={8}
+        pages="506–518"
+        title="Λυμένες ασκήσεις (8.60–8.86): οι υπόλοιπες περιπτώσεις"
+        color={COLOR_EX}
+        intro={
+          <>
+            Από τις ασκήσεις Τράπεζας Θεμάτων του βοηθήματος, μία κάρτα για κάθε περίπτωση που δεν καλύπτουν τα Κ1–Κ10: βάρος μέσα στις πλάκες, πήγαινε–έλα,
+            οπή, δύο πεδία, όριο τάσης, οθόνη, γωνία από ενέργειες, Coulomb μετά τις πλάκες και κρούση. Κάτω από κάθε λύση υπάρχουν και συγγενικές ασκήσεις.
+          </>
+        }
+        cards={karatzikosEx}
       />
     </section>
   );
