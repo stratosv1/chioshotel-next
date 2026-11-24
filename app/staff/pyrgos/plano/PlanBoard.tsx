@@ -42,6 +42,17 @@ const RANGES = [
   { days: 14, label: "2 εβδ.", width: 72 },
   { days: 28, label: "4 εβδ.", width: 44 },
 ];
+// Month view (owner, 2026-11-24): pick a month with one click and still see a few days
+// before and after it, so stays that cross the month edge are not cut off.
+const MONTH_PAD = 3;
+const MONTH_W = 40;
+const MONTHS = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιουν", "Ιουλ", "Αύγ", "Σεπ", "Οκτ", "Νοέ", "Δεκ"];
+const monthFirst = (ym: string) => `${ym}-01`;
+const monthDays = (ym: string) => new Date(Date.UTC(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)), 0)).getUTCDate();
+const shiftMonth = (ym: string, n: number) => {
+  const d = new Date(Date.UTC(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)) - 1 + n, 1));
+  return d.toISOString().slice(0, 7);
+};
 const ROOM_COL = 150;
 const ROW_H = 66;
 
@@ -133,10 +144,25 @@ function categoryWarning(booking: Pick<PlanBooking, "channel" | "room">, to: num
 export default function PlanBoard() {
   const [start, setStart] = useState(() => addDays(athensToday(), -1));
   const [rangeIndex, setRangeIndex] = useState(1);
-  const range = RANGES[rangeIndex];
+  // Selected month ("YYYY-MM") or null for the 1/2/4-week views.
+  const [month, setMonth] = useState<string | null>(null);
+  const [pickYear, setPickYear] = useState(() => Number(athensToday().slice(0, 4)));
+  const range = month
+    ? { days: monthDays(month) + MONTH_PAD * 2, label: "Μήνας", width: MONTH_W }
+    : RANGES[rangeIndex];
   const end = addDays(start, range.days);
   const days = useMemo(() => Array.from({ length: range.days }, (_, i) => addDays(start, i)), [start, range.days]);
   const W = range.width;
+  const goMonth = (ym: string) => {
+    setMonth(ym);
+    setPickYear(Number(ym.slice(0, 4)));
+    setStart(addDays(monthFirst(ym), -MONTH_PAD));
+  };
+  // Any other way of moving (Σήμερα, date box, search, deep link) leaves the month view.
+  const goDay = (day: string) => {
+    setMonth(null);
+    setStart(day);
+  };
 
   const [bookings, setBookings] = useState<PlanBooking[]>([]);
   const [cells, setCells] = useState<PlanCell[]>([]);
@@ -149,7 +175,7 @@ export default function PlanBoard() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search);
     const from = q.get("from");
-    if (from && /^\d{4}-\d{2}-\d{2}$/.test(from)) setStart(addDays(from, -1));
+    if (from && /^\d{4}-\d{2}-\d{2}$/.test(from)) goDay(addDays(from, -1));
     if (q.get("open")) setOpenId(q.get("open"));
   }, []);
   const [newBooking, setNewBooking] = useState<{ room: number; checkin: string } | null>(null);
@@ -365,22 +391,25 @@ export default function PlanBoard() {
           <header className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="mr-2 text-2xl font-black tracking-tight">Πλάνο κρατήσεων</h1>
-              <button type="button" aria-label="Πίσω" onClick={() => setStart(addDays(start, -range.days))} className="h-10 w-10 rounded-full border border-[#dbe3ec] bg-white">‹</button>
-              <button type="button" onClick={() => setStart(addDays(today, -1))} className="h-10 rounded-full border border-[#dbe3ec] bg-white px-4 text-sm font-bold">Σήμερα</button>
-              <button type="button" aria-label="Μπροστά" onClick={() => setStart(addDays(start, range.days))} className="h-10 w-10 rounded-full border border-[#dbe3ec] bg-white">›</button>
-              <input type="date" aria-label="Από ημερομηνία" value={start} onChange={(e) => e.target.value && setStart(e.target.value)} className="h-10 rounded-full border border-[#dbe3ec] bg-white px-3 text-sm" />
+              <button type="button" aria-label={month ? "Προηγούμενος μήνας" : "Πίσω"} onClick={() => (month ? goMonth(shiftMonth(month, -1)) : setStart(addDays(start, -range.days)))} className="h-10 w-10 rounded-full border border-[#dbe3ec] bg-white">‹</button>
+              <button type="button" onClick={() => goDay(addDays(today, -1))} className="h-10 rounded-full border border-[#dbe3ec] bg-white px-4 text-sm font-bold">Σήμερα</button>
+              <button type="button" aria-label={month ? "Επόμενος μήνας" : "Μπροστά"} onClick={() => (month ? goMonth(shiftMonth(month, 1)) : setStart(addDays(start, range.days)))} className="h-10 w-10 rounded-full border border-[#dbe3ec] bg-white">›</button>
+              <input type="date" aria-label="Από ημερομηνία" value={start} onChange={(e) => e.target.value && goDay(e.target.value)} className="h-10 w-[42px] rounded-full border border-[#dbe3ec] bg-white px-2 text-sm text-transparent [&::-webkit-calendar-picker-indicator]:m-0 [&::-webkit-calendar-picker-indicator]:cursor-pointer" title="Συγκεκριμένη μέρα" />
               <span className="inline-flex overflow-hidden rounded-full border border-[#dbe3ec] bg-white" role="group" aria-label="Εύρος">
                 {RANGES.map((r, i) => (
-                  <button key={r.days} type="button" aria-pressed={i === rangeIndex} onClick={() => setRangeIndex(i)} className={`h-10 px-3 text-sm font-bold ${i === rangeIndex ? "bg-[#e9e4fe] text-[#3b2f8a]" : ""}`}>
+                  <button key={r.days} type="button" aria-pressed={!month && i === rangeIndex} onClick={() => { setMonth(null); setRangeIndex(i); }} className={`h-10 px-3 text-sm font-bold ${!month && i === rangeIndex ? "bg-[#e9e4fe] text-[#3b2f8a]" : ""}`}>
                     {r.label}
                   </button>
                 ))}
+                <button type="button" aria-pressed={Boolean(month)} onClick={() => goMonth(month ?? addDays(start, MONTH_PAD).slice(0, 7))} className={`h-10 px-3 text-sm font-bold ${month ? "bg-[#e9e4fe] text-[#3b2f8a]" : ""}`}>
+                  Μήνας
+                </button>
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <SearchBox
                 onPick={(b) => {
-                  setStart(addDays(b.checkin, -1));
+                  goDay(addDays(b.checkin, -1));
                   setOpenId(b.id);
                 }}
               />
@@ -397,6 +426,28 @@ export default function PlanBoard() {
             </div>
           </header>
 
+          <nav aria-label="Επιλογή μήνα" className="-mt-1 flex items-center gap-1 overflow-x-auto pb-1">
+            <button type="button" aria-label="Προηγούμενο έτος" onClick={() => setPickYear((y) => y - 1)} className="h-8 w-8 shrink-0 rounded-full text-[#5b6b80] hover:bg-white">‹</button>
+            <span className="shrink-0 px-1 text-sm font-black">{pickYear}</span>
+            <button type="button" aria-label="Επόμενο έτος" onClick={() => setPickYear((y) => y + 1)} className="mr-1 h-8 w-8 shrink-0 rounded-full text-[#5b6b80] hover:bg-white">›</button>
+            {MONTHS.map((label, i) => {
+              const ym = `${pickYear}-${String(i + 1).padStart(2, "0")}`;
+              const active = month === ym;
+              const current = today.slice(0, 7) === ym;
+              return (
+                <button
+                  key={ym}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => goMonth(ym)}
+                  className={`h-8 shrink-0 rounded-full px-3 text-sm font-bold ${active ? "bg-[#5443c9] text-white" : current ? "border border-[#c9c0fb] bg-white text-[#3b2f8a]" : "text-[#3d4b5e] hover:bg-white"}`}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </nav>
+
           <div className="flex flex-wrap gap-3 text-xs font-semibold text-[#3d4b5e]">
             {Object.values(CHANNEL).map((c) => (
               <span key={c.label} className="flex items-center gap-1.5"><span className={`h-3 w-3 rounded ${c.chip}`} />{c.label}</span>
@@ -412,12 +463,16 @@ export default function PlanBoard() {
             <div style={{ width: gridWidth }} className={loading ? "opacity-60" : ""}>
               <div className="sticky top-0 z-20 flex border-b border-[#e3e9f0] bg-white">
                 <div style={{ width: ROOM_COL }} className="sticky left-0 z-30 flex items-end bg-white px-3 pb-2 text-xs font-bold text-[#5b6b80]">Δωμάτιο</div>
-                {days.map((d) => (
-                  <div key={d} style={{ width: W }} className={`border-l border-[#eef2f6] py-1.5 text-center ${d === today ? "bg-[#ece9fd]" : ""} ${["Σάβ", "Κυρ"].includes(wd(d)) ? "text-[#5443c9]" : ""}`}>
-                    <div className="text-[10px] font-bold uppercase text-[#5b6b80]">{wd(d)}</div>
-                    <div className="text-sm font-black">{range.days === 28 ? Number(d.slice(8, 10)) : dm(d)}</div>
-                  </div>
-                ))}
+                {days.map((d) => {
+                  const outside = month !== null && d.slice(0, 7) !== month;
+                  const firstOfMonth = d.endsWith("-01");
+                  return (
+                    <div key={d} style={{ width: W }} className={`border-l py-1.5 text-center ${firstOfMonth ? "border-[#8b7cf0]" : "border-[#eef2f6]"} ${d === today ? "bg-[#ece9fd]" : outside ? "bg-[#f4f6f9] opacity-60" : ""} ${["Σάβ", "Κυρ"].includes(wd(d)) ? "text-[#5443c9]" : ""}`}>
+                      <div className="text-[10px] font-bold uppercase text-[#5b6b80]">{firstOfMonth && W < 72 ? MONTHS[Number(d.slice(5, 7)) - 1] : wd(d)}</div>
+                      <div className="text-sm font-black">{W < 72 ? Number(d.slice(8, 10)) : dm(d)}</div>
+                    </div>
+                  );
+                })}
               </div>
 
               {PYRGOS_ROOMS.map((room) => {
@@ -473,7 +528,7 @@ export default function PlanBoard() {
                             cell?.closed ? "bg-[repeating-linear-gradient(45deg,#eceef1,#eceef1_4px,#f6f7f9_4px,#f6f7f9_8px)]" : gap ? "bg-[#fffbeb] outline outline-2 -outline-offset-4 outline-dashed outline-[#f59e0b]" : d === today ? "bg-[#f6f4fe]" : ""
                           } ${!busy && !cell?.closed ? "hover:bg-[#ece9fd]" : ""}`}
                         >
-                          {!busy && !cell?.closed && cell?.price && range.days <= 14 ? `€${Math.round(cell.price)}` : ""}
+                          {!busy && cell?.price ? <span className={W < 72 ? "text-[9px] tracking-tight" : ""}>{W < 72 ? Math.round(cell.price) : `€${Math.round(cell.price)}`}</span> : ""}
                         </button>
                       );
                     })}

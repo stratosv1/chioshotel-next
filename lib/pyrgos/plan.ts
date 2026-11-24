@@ -113,7 +113,8 @@ export async function getPlan(from: string, to: string) {
     .map((cell) => ({
       room: Number(cell.room_number),
       day: cell.day,
-      price: cell.reason === "CLOSED" ? null : num(cell.base_price),
+      // Closed nights keep their Beds24 rate too: the owner closes rooms to enter bookings himself.
+      price: num(cell.base_price),
       closed: cell.reason === "CLOSED",
     }));
   return { bookings: await enrich(rows), cells: plan };
