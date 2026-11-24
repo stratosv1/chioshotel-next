@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 1976" width="1212" height="1976" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
-<rect width="1212" height="1976" fill="#fbfaf7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 2512" width="1212" height="2512" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
+<rect width="1212" height="2512" fill="#fbfaf7"/>
 <text x="606.0" y="52.0" font-size="40" fill="#14306b" text-anchor="middle" font-weight="900">ΗΛΕΚΤΡΙΚΟ ΠΕΔΙΟ – ΤΥΠΟΛΟΓΙΟ</text>
-<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">34 περιπτώσεις • σχολικό βιβλίο και Σαββάλας • Φυσική Γενικής Παιδείας Β΄ Λυκείου</text>
+<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">44 περιπτώσεις • σχολικό βιβλίο, Σαββάλας και Καρατζίκος • Φυσική Γενικής Παιδείας Β΄ Λυκείου</text>
 <text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Βήματα: υπόθεμα +q για τις φορές → ένταση = διάνυσμα, δυναμικό = αριθμός με πρόσημο → W = q·(V<tspan baseline-shift="sub" font-size="70%">αρχ</tspan> − V<tspan baseline-shift="sub" font-size="70%">τελ</tspan>) → ενέργεια</text>
 <rect x="14" y="112" width="1184" height="250" rx="10" fill="#eaf2fd" stroke="#1e5fb4" stroke-width="1.5"/>
 <rect x="14" y="112" width="1184" height="30" rx="10" fill="#1e5fb4"/>
@@ -681,7 +681,136 @@
 <text x="981" y="1830" font-size="11.5" fill="#1f9d55" text-anchor="start" font-weight="bold">4. Ίδια ευθεία ⇒ πρόσθεση/αφαίρεση</text>
 <text x="981" y="1850" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">5. Δυναμικό: απλό άθροισμα</text>
 <text x="981" y="1870" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="normal">   με πρόσημα, χωρίς βελάκια</text>
-<text x="606.0" y="1922.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: k = 9·10<tspan baseline-shift="super" font-size="70%">9</tspan> N·m<tspan baseline-shift="super" font-size="70%">2</tspan>/C<tspan baseline-shift="super" font-size="70%">2</tspan> • ε<tspan baseline-shift="sub" font-size="70%">0</tspan> = 8,85·10<tspan baseline-shift="super" font-size="70%">−12</tspan> C<tspan baseline-shift="super" font-size="70%">2</tspan>/(N·m<tspan baseline-shift="super" font-size="70%">2</tspan>) • e = 1,6·10<tspan baseline-shift="super" font-size="70%">−19</tspan> C • ℓ απόσταση πλακών (στον Σαββάλα: d) • S εμβαδόν οπλισμού • g = 10 m/s<tspan baseline-shift="super" font-size="70%">2</tspan></text>
-<text x="606.0" y="1944.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">Ένταση E: διάνυσμα (N/C = V/m). Δυναμικό V και ενέργεια U: μονόμετρα με πρόσημο. Στο V = kQ/r και U = kQq/r τα φορτία μπαίνουν με το πρόσημό τους.</text>
-<text x="606.0" y="1972.0" font-size="11" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
+<rect x="14" y="1904" width="1184" height="250" rx="10" fill="#e6f4f5" stroke="#0f7d8c" stroke-width="1.5"/>
+<rect x="14" y="1904" width="1184" height="30" rx="10" fill="#0f7d8c"/>
+<rect x="14" y="1924" width="1184" height="10" fill="#0f7d8c"/>
+<text x="30" y="1925" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">8. ΚΙΝΗΣΗ ΣΤΟ ΟΜΟΓΕΝΕΣ ΠΕΔΙΟ — ΑΠΟ ΤΟΝ ΚΑΡΑΤΖΙΚΟ</text>
+<rect x="17" y="1938" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="32" cy="1953" r="10" fill="#0f7d8c"/>
+<text x="32" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">35</text>
+<text x="47" y="1958" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ως την απέναντι πλάκα</text>
+<text x="29" y="1986.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Από ηρεμία, α = |q|·E/m:</text>
+<text x="29" y="2006.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">x = ½·α·t²,   υ = α·t</text>
+<text x="29" y="2027.0" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">t₁ = √(2d/α)</text>
+<text x="29" y="2047.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">υ₁ = √(2·α·d)</text>
+<text x="29" y="2068.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">ή με ενέργεια:</text>
+<text x="29" y="2088.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">½·m·υ₁² = |q|·V</text>
+<text x="29" y="2109.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">q &lt; 0: η F αντίθετη της E</text>
+<text x="29" y="2129.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ7, Κ8</text>
+<rect x="255" y="1938" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="270" cy="1953" r="10" fill="#0f7d8c"/>
+<text x="270" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">36</text>
+<text x="285" y="1958" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πάνω–κάτω με βάρος</text>
+<text x="267" y="1986.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πρώτα ΣF από F και B:</text>
+<text x="267" y="2006.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">ίδια φορά: α = g + |q|E/m</text>
+<text x="267" y="2027.0" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">αντίθετες: α = |q|E/m − g</text>
+<text x="267" y="2047.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">ισορροπία: |q|·E = m·g</text>
+<text x="267" y="2068.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">με ενέργεια:</text>
+<text x="267" y="2088.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">ΔK = W<tspan baseline-shift="sub" font-size="70%">F</tspan> + W<tspan baseline-shift="sub" font-size="70%">B</tspan></text>
+<text x="267" y="2109.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">W<tspan baseline-shift="sub" font-size="70%">B</tspan> = ±m·g·h</text>
+<text x="267" y="2129.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ11, Κ12</text>
+<rect x="493" y="1938" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="508" cy="1953" r="10" fill="#0f7d8c"/>
+<text x="508" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">37</text>
+<text x="523" y="1958" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Στρίβει στις πλάκες</text>
+<text x="505" y="1986.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">x: ομαλή · y: από ηρεμία</text>
+<text x="505" y="2006.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">α = |q|·V/(m·d)</text>
+<text x="505" y="2027.0" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">t₁ = L/υ₀</text>
+<text x="505" y="2047.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">y₁ = ½·α·t₁²</text>
+<text x="505" y="2068.0" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">εφφ = α·t₁/υ₀</text>
+<text x="505" y="2088.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">y = α·x²/(2υ₀²)  (παραβολή)</text>
+<text x="505" y="2109.0" font-size="11.5" fill="#c0392b" text-anchor="start" font-weight="bold">Βγαίνει μόνο αν y₁ ≤ d!</text>
+<text x="505" y="2129.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ9, Κ10, Κ16</text>
+<rect x="731" y="1938" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="746" cy="1953" r="10" fill="#0f7d8c"/>
+<text x="746" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">38</text>
+<text x="761" y="1958" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Επιτάχυνση, πλάκες, οθόνη</text>
+<text x="743" y="1986.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Τάση επιτάχυνσης V₀:</text>
+<text x="743" y="2006.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">½·m·υ₀² = |q|·V₀</text>
+<text x="743" y="2027.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">Έξω από τις πλάκες: ευθεία</text>
+<text x="743" y="2047.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">OK = y₁ + D·εφφ</text>
+<text x="743" y="2068.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Γωνία από ενέργειες:</text>
+<text x="743" y="2088.5" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">συνφ = υ₀/υ₁ = √(K₁/K₂)</text>
+<text x="743" y="2109.0" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">K₂ = K₁ + |q|·V<tspan baseline-shift="sub" font-size="70%">εισ→εξ</tspan></text>
+<text x="743" y="2129.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ17, Κ19</text>
+<rect x="969" y="1938" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="984" cy="1953" r="10" fill="#0f7d8c"/>
+<text x="984" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">39</text>
+<text x="999" y="1958" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Τρύπα, «ξυστά», δύο πεδία</text>
+<text x="981" y="1986.0" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">Τρύπα: ½·m·υ² = |q|·V</text>
+<text x="981" y="2006.5" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">Οριακά φτάνει: υ = 0 εκεί</text>
+<text x="981" y="2027.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ξυστά: y₁ = απόσταση από</text>
+<text x="981" y="2047.5" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">  την πλάκα (d ή d/2)</text>
+<text x="981" y="2068.0" font-size="11.5" fill="#0f7d8c" text-anchor="start" font-weight="bold">qE = mg ⇒ ευθεία, υ σταθ.</text>
+<text x="981" y="2088.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">2 πεδία: υ<tspan baseline-shift="sub" font-size="70%">εξ 1</tspan> = υ<tspan baseline-shift="sub" font-size="70%">αρχ 2</tspan></text>
+<text x="981" y="2109.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">μέση υ = υ/2 ⇒ t = 2x/υ</text>
+<text x="981" y="2129.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ13, Κ14, Κ15, Κ18</text>
+<rect x="14" y="2160" width="1184" height="250" rx="10" fill="#f7ecf2" stroke="#a0457a" stroke-width="1.5"/>
+<rect x="14" y="2160" width="1184" height="30" rx="10" fill="#a0457a"/>
+<rect x="14" y="2180" width="1184" height="10" fill="#a0457a"/>
+<text x="30" y="2181" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">9. ΕΝΕΡΓΕΙΑ ΚΑΙ ΚΙΝΗΣΗ ΜΕ ΦΟΡΤΙΑ COULOMB — ΑΠΟ ΤΟΝ ΚΑΡΑΤΖΙΚΟ</text>
+<rect x="17" y="2194" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="32" cy="2209" r="10" fill="#a0457a"/>
+<text x="32" y="2213.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">40</text>
+<text x="47" y="2214" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ενέργεια ακίνητων φορτίων</text>
+<text x="29" y="2242.0" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">U = Σ k·qᵢ·qⱼ/rᵢⱼ</text>
+<text x="29" y="2262.5" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">3 φορτία ⇒ 3 όροι (ζευγάρια)</text>
+<text x="29" y="2283.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Σχηματισμός: E = U</text>
+<text x="29" y="2303.5" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Διάλυση: E = −U</text>
+<text x="29" y="2324.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">Αλλάζω απόσταση:</text>
+<text x="29" y="2344.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">E = U<tspan baseline-shift="sub" font-size="70%">τελ</tspan> − U<tspan baseline-shift="sub" font-size="70%">αρχ</tspan></text>
+<text x="29" y="2365.0" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">Με ταχύτητα: W = ΔU + ΔK</text>
+<text x="29" y="2385.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ1, Κ2, Κ22–Κ25</text>
+<rect x="255" y="2194" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="270" cy="2209" r="10" fill="#a0457a"/>
+<text x="270" y="2213.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">41</text>
+<text x="285" y="2214" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Φεύγει ή σταματά;</text>
+<text x="267" y="2242.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κοίτα E = K + U στην αρχή:</text>
+<text x="267" y="2262.5" font-size="11.5" fill="#c0392b" text-anchor="start" font-weight="bold">E &lt; 0: σταματά και γυρίζει</text>
+<text x="267" y="2283.0" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">E = 0: φτάνει οριακά στο ∞</text>
+<text x="267" y="2303.5" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">E &gt; 0: φεύγει με ταχύτητα</text>
+<text x="267" y="2324.0" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">Στάση: K = 0 ⇒ U = E</text>
+<text x="267" y="2344.5" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">Ακίνητο Q: στη d<tspan baseline-shift="sub" font-size="70%">min</tspan> υ = 0</text>
+<text x="267" y="2365.0" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">Διαφυγή: ½·m·υ² = −U</text>
+<text x="267" y="2385.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ3, Κ28</text>
+<rect x="493" y="2194" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="508" cy="2209" r="10" fill="#a0457a"/>
+<text x="508" y="2213.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">42</text>
+<text x="523" y="2214" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κινούνται και τα δύο</text>
+<text x="505" y="2242.0" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">ΑΔΟ: m₁·υ₁ = m₂·υ₂</text>
+<text x="505" y="2262.5" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">+ ΑΔΜΕ (στο ∞ U = 0)</text>
+<text x="505" y="2283.0" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">K₂/K₁ = m₁/m₂</text>
+<text x="505" y="2303.5" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ελάχιστη ή μέγιστη απόσταση:</text>
+<text x="505" y="2324.0" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">κοινή υ (σαν πλαστική κρούση)</text>
+<text x="505" y="2344.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">ΑΔΟ ⇒ υ, ΑΔΜΕ ⇒ r</text>
+<text x="505" y="2365.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">Ρυθμός ορμής: dp/dt = F</text>
+<text x="505" y="2385.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ4, Κ29, Κ34</text>
+<rect x="731" y="2194" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="746" cy="2209" r="10" fill="#a0457a"/>
+<text x="746" y="2213.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">43</text>
+<text x="761" y="2214" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Coulomb + βάρος</text>
+<text x="743" y="2242.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Σύγκρινε F και B = m·g</text>
+<text x="743" y="2262.5" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">ΑΔΜΕ με δύο U:</text>
+<text x="743" y="2283.0" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">mg·h + kQq/r = σταθ.</text>
+<text x="743" y="2303.5" font-size="11.5" fill="#c0392b" text-anchor="start" font-weight="bold">Δύο ρίζες: η μία = αρχή</text>
+<text x="743" y="2324.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">υ<tspan baseline-shift="sub" font-size="70%">max</tspan> εκεί όπου F = B:</text>
+<text x="743" y="2344.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">k·Qq/r² = m·g</text>
+<text x="743" y="2365.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">Κεκλιμένο: mg·ημφ, h = s·ημφ</text>
+<text x="743" y="2385.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ5, Κ30, Κ31</text>
+<rect x="969" y="2194" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="984" cy="2209" r="10" fill="#a0457a"/>
+<text x="984" y="2213.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">44</text>
+<text x="999" y="2214" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κύκλος, ράγα, συμμετρία</text>
+<text x="981" y="2242.0" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">Κύκλος: kQ|q|/r² = mυ²/r</text>
+<text x="981" y="2262.5" font-size="11.5" fill="#e08a1e" text-anchor="start" font-weight="bold">K = −U/2,   E = U/2 &lt; 0</text>
+<text x="981" y="2283.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ράγα και άπωση:</text>
+<text x="981" y="2303.5" font-size="11.5" fill="#a0457a" text-anchor="start" font-weight="bold">N = mυ²/r + F<tspan baseline-shift="sub" font-size="70%">C</tspan></text>
+<text x="981" y="2324.0" font-size="11.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ένα ελεύθερο ανάμεσα σε πολλά:</text>
+<text x="981" y="2344.5" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">παίρνει μόνο τους όρους της U</text>
+<text x="981" y="2365.0" font-size="11.5" fill="#5b6577" text-anchor="start" font-weight="normal">  που το περιέχουν</text>
+<text x="981" y="2385.5" font-size="10.5" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">→ Κ26, Κ27, Κ32, Κ33</text>
+<text x="606.0" y="2434.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: k = 9·10<tspan baseline-shift="super" font-size="70%">9</tspan> N·m<tspan baseline-shift="super" font-size="70%">2</tspan>/C<tspan baseline-shift="super" font-size="70%">2</tspan> • ε<tspan baseline-shift="sub" font-size="70%">0</tspan> = 8,85·10<tspan baseline-shift="super" font-size="70%">−12</tspan> C<tspan baseline-shift="super" font-size="70%">2</tspan>/(N·m<tspan baseline-shift="super" font-size="70%">2</tspan>) • e = 1,6·10<tspan baseline-shift="super" font-size="70%">−19</tspan> C • ℓ απόσταση πλακών (στον Σαββάλα: d) • S εμβαδόν οπλισμού • g = 10 m/s<tspan baseline-shift="super" font-size="70%">2</tspan></text>
+<text x="606.0" y="2456.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">Ένταση E: διάνυσμα (N/C = V/m). Δυναμικό V και ενέργεια U: μονόμετρα με πρόσημο. Στο V = kQ/r και U = kQq/r τα φορτία μπαίνουν με το πρόσημό τους.</text>
+<text x="606.0" y="2478.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="normal">Μονάδες: nC = 10<tspan baseline-shift="super" font-size="70%">−9</tspan> C • μC = 10<tspan baseline-shift="super" font-size="70%">−6</tspan> C • mC = 10<tspan baseline-shift="super" font-size="70%">−3</tspan> C. Συνδυασμένες ασκήσεις (Κ20, Κ21, Κ35): κάθε κομμάτι με το εργαλείο του — Coulomb ⇒ ΑΔΜΕ, κρούση ⇒ ΑΔΟ, τριβή ⇒ ΘΜΚΕ.</text>
+<text x="606.0" y="2504.0" font-size="11" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
 </svg>

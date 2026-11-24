@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 const POSTER_W = 1212;
-const POSTER_H = 1976;
+const POSTER_H = 2512;
 
 const sectionNames = ["Ένταση", "Ομογενές πεδίο", "Δυναμική ενέργεια", "Δυναμικό", "Τάση & ένταση", "Πυκνωτής"];
 
@@ -54,10 +54,13 @@ const groups: { range: string; title: string; text: string }[] = [
 ];
 
 /** Clickable areas over the poster cells (same grid as the poster SVG). */
-const cells = Array.from({ length: 34 }, (_, i) => {
+// Boxes 35–44 (Karatzikos) jump to the matching animated card (Κ7, Κ12, Κ9, Κ17, Κ14, Κ22, Κ28, Κ29, Κ30, Κ26).
+const KARATZIKOS_BOX: Record<number, number> = { 35: 47, 36: 52, 37: 49, 38: 57, 39: 54, 40: 62, 41: 68, 42: 69, 43: 70, 44: 66 };
+
+const cells = Array.from({ length: 44 }, (_, i) => {
   const section = Math.floor(i / 5);
   const col = i % 5;
-  return { n: i + 1, x: 17 + 238 * col, y: 146 + 256 * section, w: 226, h: 212 };
+  return { n: i + 1, href: `#k${KARATZIKOS_BOX[i + 1] ?? i + 1}`, x: 17 + 238 * col, y: 146 + 256 * section, w: 226, h: 212 };
 });
 
 const pct = (v: number, total: number) => `${((v / total) * 100).toFixed(3)}%`;
@@ -117,7 +120,7 @@ export default function PedioPage() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/mixalis/pedio-typologio.svg"
-              alt="Τυπολόγιο ηλεκτρικού πεδίου: 30 περιπτώσεις με σχήματα και τύπους"
+              alt="Τυπολόγιο ηλεκτρικού πεδίου: 44 περιπτώσεις με σχήματα και τύπους"
               width={POSTER_W}
               height={POSTER_H}
               decoding="async"
@@ -126,7 +129,7 @@ export default function PedioPage() {
             {cells.map((c) => (
               <a
                 key={c.n}
-                href={`#k${c.n}`}
+                href={c.href}
                 aria-label={`Κινούμενο σχέδιο για το κουτάκι ${c.n}`}
                 className="absolute rounded-lg outline-none ring-[#c9822f] transition hover:bg-[#c9822f]/10 hover:ring-2 focus-visible:ring-2"
                 style={{ left: pct(c.x, POSTER_W), top: pct(c.y, POSTER_H), width: pct(c.w, POSTER_W), height: pct(c.h, POSTER_H) }}
