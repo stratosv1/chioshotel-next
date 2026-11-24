@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 2488" width="1212" height="2488" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
-<rect width="1212" height="2488" fill="#fbfaf7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 3000" width="1212" height="3000" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
+<rect width="1212" height="3000" fill="#fbfaf7"/>
 <text x="606.0" y="52.0" font-size="40" fill="#14306b" text-anchor="middle" font-weight="900">ΟΡΜΗ ΚΑΙ ΚΡΟΥΣΕΙΣ – ΤΥΠΟΛΟΓΙΟ</text>
-<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">43 περιπτώσεις • Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας • Φυσική Προσανατολισμού Β΄ Λυκείου</text>
+<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">53 περιπτώσεις • Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας, συνθετικές • Φυσική Προσανατολισμού Β΄ Λυκείου</text>
 <text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Πρώτα: σύστημα + χρονικό διάστημα + εξωτερική ώθηση → ΑΔΟ αν η εξωτερική ώθηση ≈ 0, αλλιώς Δp = εξωτερική ώθηση → ενέργεια αν χρειάζεται</text>
 <rect x="14" y="112" width="1184" height="250" rx="10" fill="#eaf2fd" stroke="#1e5fb4" stroke-width="1.5"/>
 <rect x="14" y="112" width="1184" height="30" rx="10" fill="#1e5fb4"/>
@@ -186,7 +186,7 @@
 <rect x="17" y="402" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="32" cy="417" r="10" fill="#0f7d8c"/>
 <text x="32.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">6</text>
-<text x="47.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">2ος νόμος με ορμή</text>
+<text x="47.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">ΣF = ρυθμός αλλαγής p</text>
 <line x1="34.0" y1="516.0" x2="226.0" y2="516.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <line x1="40.0" y1="516.0" x2="34.0" y2="522.0" stroke="#b9bec7" stroke-width="1" stroke-linecap="round"/>
 <line x1="50.0" y1="516.0" x2="44.0" y2="522.0" stroke="#b9bec7" stroke-width="1" stroke-linecap="round"/>
@@ -284,7 +284,7 @@
 <rect x="969" y="402" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="417" r="10" fill="#0f7d8c"/>
 <text x="984.0" y="421.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">10</text>
-<text x="999.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ελεύθερη πτώση</text>
+<text x="999.0" y="422.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Η ορμή αλλάζει στην πτώση</text>
 <line x1="986.0" y1="528.0" x2="1178.0" y2="528.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <circle cx="1082.0" cy="456.0" r="9" fill="#f4a261" stroke="#7a4b22" stroke-width="1.3"/>
 <line x1="1082.0" y1="468.0" x2="1082.0" y2="505.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
@@ -303,7 +303,7 @@
 <rect x="17" y="658" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="32" cy="673" r="10" fill="#6b3fa0"/>
 <text x="32.0" y="677.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">11</text>
-<text x="47.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Εσωτερικές δυνάμεις</text>
+<text x="47.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ίσες και αντίθετες Δp</text>
 <line x1="34.0" y1="772.0" x2="226.0" y2="772.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <line x1="40.0" y1="772.0" x2="34.0" y2="778.0" stroke="#b9bec7" stroke-width="1" stroke-linecap="round"/>
 <line x1="50.0" y1="772.0" x2="44.0" y2="778.0" stroke="#b9bec7" stroke-width="1" stroke-linecap="round"/>
@@ -340,7 +340,7 @@
 <rect x="255" y="658" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="270" cy="673" r="10" fill="#6b3fa0"/>
 <text x="270.0" y="677.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">12</text>
-<text x="285.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Αρχή διατήρησης ορμής</text>
+<text x="285.0" y="678.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πότε η ορμή μένει ίδια</text>
 <rect x="280" y="698" width="176" height="80" rx="12" fill="none" stroke="#5b6577" stroke-dasharray="5 4"/>
 <text x="368.0" y="714.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="normal">μονωμένο σύστημα</text>
 <rect x="302.0" y="734.0" width="34.0" height="28.0" rx="3" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2"/>
@@ -420,7 +420,7 @@
 <rect x="17" y="914" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="32" cy="929" r="10" fill="#c46a12"/>
 <text x="32.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">16</text>
-<text x="47.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ίδια φορά κίνησης</text>
+<text x="47.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κολλάνε (ίδια φορά)</text>
 <line x1="34.0" y1="992.0" x2="226.0" y2="992.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <rect x="50.0" y="968.0" width="30.0" height="24.0" rx="3" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2"/>
 <text x="65.0" y="984.3" font-size="12" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">1</tspan></text>
@@ -445,7 +445,7 @@
 <rect x="255" y="914" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="270" cy="929" r="10" fill="#c46a12"/>
 <text x="270.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">17</text>
-<text x="285.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Αντίθετη φορά κίνησης</text>
+<text x="285.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κολλάνε (αντίθετη φορά)</text>
 <line x1="272.0" y1="992.0" x2="464.0" y2="992.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <rect x="288.0" y="968.0" width="30.0" height="24.0" rx="3" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2"/>
 <text x="303.0" y="984.3" font-size="12" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">1</tspan></text>
@@ -494,7 +494,7 @@
 <rect x="731" y="914" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="746" cy="929" r="10" fill="#c46a12"/>
 <text x="746.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">19</text>
-<text x="761.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Απώλεια ενέργειας</text>
+<text x="761.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πόση ενέργεια χάνεται</text>
 <line x1="758.0" y1="1036.0" x2="930.0" y2="1036.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <rect x="784.0" y="960.0" width="40.0" height="76.0" rx="2" fill="#7fb3e6" stroke="#2f6aa3" stroke-width="1.2"/>
 <rect x="864.0" y="994.0" width="40.0" height="42.0" rx="2" fill="#7fb3e6" stroke="#2f6aa3" stroke-width="1.2"/>
@@ -508,7 +508,7 @@
 <rect x="969" y="914" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="929" r="10" fill="#c46a12"/>
 <text x="984.0" y="933.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">20</text>
-<text x="999.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κάθετες διευθύνσεις</text>
+<text x="999.0" y="934.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κρούση σε σταυροδρόμι</text>
 <line x1="996.0" y1="1006.0" x2="1063.0" y2="1006.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/>
 <polygon points="1072.0,1006.0 1063.0,1010.5 1063.0,1001.5" fill="#1f6fd1"/>
 <text x="1018.0" y="998.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">1</tspan>υ<tspan baseline-shift="sub" font-size="70%">1</tspan></text>
@@ -629,7 +629,7 @@
 <rect x="969" y="1170" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="1185" r="10" fill="#b8322b"/>
 <text x="984.0" y="1189.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">25</text>
-<text x="999.0" y="1190.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Τάση νήματος μετά</text>
+<text x="999.0" y="1190.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Νήμα: τάση μετά την κρούση</text>
 <line x1="1036.0" y1="1200.0" x2="1136.0" y2="1200.0" stroke="#8a8f99" stroke-width="3" stroke-linecap="round"/>
 <line x1="1086.0" y1="1200.0" x2="1086.0" y2="1254.0" stroke="#1c2433" stroke-width="1.6" stroke-linecap="round"/>
 <text x="1094.0" y="1244.0" font-size="13" fill="#5b6577" text-anchor="start" font-weight="normal" font-style="italic">ℓ</text>
@@ -652,7 +652,7 @@
 <rect x="17" y="1426" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="32" cy="1441" r="10" fill="#2e7d32"/>
 <text x="32.0" y="1445.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">26</text>
-<text x="47.0" y="1446.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Έκρηξη ακίνητου</text>
+<text x="47.0" y="1446.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ακίνητο σώμα σπάει στα δύο</text>
 <line x1="34.0" y1="1544.0" x2="226.0" y2="1544.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <polygon points="130,1468 138,1482 154,1478 144,1492 156,1504 138,1500 130,1514 122,1500 104,1504 116,1492 106,1478 122,1482" fill="#ffd166" stroke="#e67e22" stroke-width="1.5"/>
 <rect x="70.0" y="1520.0" width="26.0" height="24.0" rx="3" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2"/>
@@ -671,7 +671,7 @@
 <rect x="255" y="1426" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="270" cy="1441" r="10" fill="#2e7d32"/>
 <text x="270.0" y="1445.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">27</text>
-<text x="285.0" y="1446.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Έκρηξη κινούμενου</text>
+<text x="285.0" y="1446.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κινούμενο σπάει στα δύο</text>
 <line x1="272.0" y1="1504.0" x2="464.0" y2="1504.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
 <rect x="312.0" y="1478.0" width="40.0" height="26.0" rx="3" fill="#9fd8b0" stroke="#4a5568" stroke-width="1.2"/>
 <text x="332.0" y="1495.3" font-size="12" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">M</text>
@@ -793,7 +793,7 @@
 <rect x="17" y="1682" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="32" cy="1697" r="10" fill="#3949ab"/>
 <text x="32.0" y="1701.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">31</text>
-<text x="47.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ανελαστική κρούση</text>
+<text x="47.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Δεν κολλάνε, χάνεται K</text>
 <g transform="translate(17,1682)"><text x="15.0" y="36.0" font-size="10" fill="#5b6577" text-anchor="start" font-weight="normal">πριν</text><text x="15.0" y="84.0" font-size="10" fill="#5b6577" text-anchor="start" font-weight="normal">μετά</text><line x1="17" y1="68" x2="209" y2="68" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/><rect x="40.0" y="46.0" width="30.0" height="22.0" rx="3" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2"/><text x="55.0" y="61.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">1</tspan></text><line x1="73.0" y1="57.0" x2="99.0" y2="57.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="108.0,57.0 99.0,61.5 99.0,52.5" fill="#1f6fd1"/><text x="92.0" y="50.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">1</tspan></text><rect x="140.0" y="44.0" width="36.0" height="24.0" rx="3" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2"/><text x="158.0" y="60.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">2</tspan></text><line x1="17" y1="116" x2="209" y2="116" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/><rect x="60.0" y="94.0" width="30.0" height="22.0" rx="3" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2"/><text x="75.0" y="109.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">1</tspan></text><line x1="93.0" y1="105.0" x2="101.0" y2="105.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="110.0,105.0 101.0,109.5 101.0,100.5" fill="#1f6fd1"/><text x="102.0" y="98.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ′<tspan baseline-shift="sub" font-size="70%">1</tspan></text><rect x="150.0" y="92.0" width="36.0" height="24.0" rx="3" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2"/><text x="168.0" y="108.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">2</tspan></text><line x1="189.0" y1="104.0" x2="203.0" y2="104.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="212.0,104.0 203.0,108.5 203.0,99.5" fill="#1f6fd1"/><text x="202.0" y="97.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ′<tspan baseline-shift="sub" font-size="70%">2</tspan></text></g>
 <text x="130.0" y="1836.0" font-size="13" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">1</tspan>υ<tspan baseline-shift="sub" font-size="70%">1</tspan> = m<tspan baseline-shift="sub" font-size="70%">1</tspan>υ′<tspan baseline-shift="sub" font-size="70%">1</tspan> + m<tspan baseline-shift="sub" font-size="70%">2</tspan>υ′<tspan baseline-shift="sub" font-size="70%">2</tspan></text>
 <text x="130.0" y="1855.0" font-size="12.5" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Q = K<tspan baseline-shift="sub" font-size="70%">πριν</tspan> − K<tspan baseline-shift="sub" font-size="70%">μετά</tspan> &gt; 0</text>
@@ -809,7 +809,7 @@
 <rect x="493" y="1682" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="508" cy="1697" r="10" fill="#3949ab"/>
 <text x="508.0" y="1701.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">33</text>
-<text x="523.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Δύναμη από το έδαφος</text>
+<text x="523.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πόσο σπρώχνει το έδαφος</text>
 <g transform="translate(493,1682)"><line x1="17" y1="112" x2="209" y2="112" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/><circle cx="90" cy="103" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/><line x1="90.0" y1="96.0" x2="90.0" y2="43.0" stroke="#d9342b" stroke-width="3.2" stroke-linecap="round"/><polygon points="90.0,34.0 94.5,43.0 85.5,43.0" fill="#d9342b"/><text x="102.0" y="46.0" font-size="13" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">N</text><line x1="90.0" y1="104.0" x2="90.0" y2="127.0" stroke="#d9342b" stroke-width="2.5" stroke-linecap="round"/><polygon points="90.0,136.0 85.5,127.0 94.5,127.0" fill="#d9342b"/><text x="106.0" y="130.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text><line x1="150.0" y1="40.0" x2="150.0" y2="75.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="150.0,84.0 145.5,75.0 154.5,75.0" fill="#1f6fd1"/><text x="162.0" y="64.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">1</tspan></text><line x1="178.0" y1="88.0" x2="178.0" y2="63.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="178.0,54.0 182.5,63.0 173.5,63.0" fill="#1f6fd1"/><text x="192.0" y="74.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">2</tspan></text></g>
 <text x="606.0" y="1836.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">N − mg = Δp / Δt</text>
 <text x="606.0" y="1855.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Δp = m(υ<tspan baseline-shift="sub" font-size="70%">1</tspan> + υ<tspan baseline-shift="sub" font-size="70%">2</tspan>)</text>
@@ -817,7 +817,7 @@
 <rect x="731" y="1682" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="746" cy="1697" r="10" fill="#3949ab"/>
 <text x="746.0" y="1701.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">34</text>
-<text x="761.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Βλήμα μέσα στο ξύλο</text>
+<text x="761.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πόσο μπαίνει η σφαίρα</text>
 <g transform="translate(731,1682)"><line x1="17" y1="112" x2="209" y2="112" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/><rect x="80.0" y="62.0" width="70.0" height="50.0" rx="3" fill="#c8a27a" stroke="#4a5568" stroke-width="1.2"/><text x="115.0" y="91.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">M</text><line x1="44" y1="76" x2="118" y2="76" stroke="#8a8f99" stroke-width="1" stroke-dasharray="3 3"/><circle cx="118" cy="76" r="4" fill="#333" stroke="#4a5568" stroke-width="1.2"/><line x1="28.0" y1="76.0" x2="51.0" y2="76.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="60.0,76.0 51.0,80.5 51.0,71.5" fill="#1f6fd1"/><text x="40.0" y="69.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text><text x="26.0" y="92.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text><line x1="80" y1="52" x2="118" y2="52" stroke="#1f9d55" stroke-width="1.5"/><line x1="80" y1="48" x2="80" y2="56" stroke="#1f9d55" stroke-width="1.5"/><line x1="118" y1="48" x2="118" y2="56" stroke="#1f9d55" stroke-width="1.5"/><text x="99.0" y="46.0" font-size="12" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">d</text><line x1="152.0" y1="72.0" x2="181.0" y2="72.0" stroke="#d9342b" stroke-width="2.2" stroke-linecap="round"/><polygon points="190.0,72.0 181.0,76.5 181.0,67.5" fill="#d9342b"/><text x="172.0" y="66.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">F</text><line x1="114.0" y1="68.0" x2="103.0" y2="68.0" stroke="#d9342b" stroke-width="2.2" stroke-linecap="round"/><polygon points="94.0,68.0 103.0,63.5 103.0,72.5" fill="#d9342b"/></g>
 <text x="844.0" y="1836.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Q = F·d</text>
 <text x="844.0" y="1855.0" font-size="12.5" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">F·d = K<tspan baseline-shift="sub" font-size="70%">πριν</tspan> − K<tspan baseline-shift="sub" font-size="70%">μετά</tspan></text>
@@ -825,7 +825,7 @@
 <rect x="969" y="1682" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="1697" r="10" fill="#3949ab"/>
 <text x="984.0" y="1701.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">35</text>
-<text x="999.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μαλακή «προσγείωση»</text>
+<text x="999.0" y="1702.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Γιατί λυγίζουμε τα γόνατα</text>
 <g transform="translate(969,1682)"><line x1="26.0" y1="118.0" x2="199.0" y2="118.0" stroke="#8a8f99" stroke-width="1.5" stroke-linecap="round"/><polygon points="206.0,118.0 199.0,121.5 199.0,114.5" fill="#8a8f99"/><line x1="26.0" y1="118.0" x2="26.0" y2="37.0" stroke="#8a8f99" stroke-width="1.5" stroke-linecap="round"/><polygon points="26.0,30.0 29.5,37.0 22.5,37.0" fill="#8a8f99"/><text x="206.0" y="132.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">t</text><text x="18.0" y="36.0" font-size="11" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">F</text><path d="M 32 118 Q 46 -32 60 118 Z" fill="#d9342b" fill-opacity="0.25" stroke="#d9342b" stroke-width="2"/><path d="M 86 118 Q 141 62 196 118 Z" fill="#1f9d55" fill-opacity="0.25" stroke="#1f9d55" stroke-width="2"/><text x="78.0" y="44.0" font-size="10" fill="#d9342b" text-anchor="start" font-weight="bold">σκληρό</text><text x="141.0" y="76.0" font-size="10" fill="#1f9d55" text-anchor="middle" font-weight="bold">μαλακό</text></g>
 <text x="1082.0" y="1836.0" font-size="13" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">ίδια Δp ⇒ F<tspan baseline-shift="sub" font-size="70%">μ</tspan> = Δp / Δt</text>
 <text x="1082.0" y="1855.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">μεγάλο Δt ⇒ μικρή F</text>
@@ -837,7 +837,7 @@
 <rect x="17" y="1938" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="32" cy="1953" r="10" fill="#8e3b6a"/>
 <text x="32.0" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">36</text>
-<text x="47.0" y="1958.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ελατήριο ανάμεσα</text>
+<text x="47.0" y="1958.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ελατήριο τα διώχνει</text>
 <g transform="translate(17,1938)"><line x1="17" y1="112" x2="209" y2="112" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/><rect x="30.0" y="84.0" width="34.0" height="28.0" rx="3" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2"/><text x="47.0" y="102.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">1</tspan></text><rect x="150.0" y="80.0" width="44.0" height="32.0" rx="3" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2"/><text x="172.0" y="100.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan baseline-shift="sub" font-size="70%">2</tspan></text><path d="M 64 98 L 68 92 L 76 104 L 84 92 L 92 104 L 100 92 L 108 104 L 116 92 L 124 104 L 132 92 L 140 104 L 150 98" fill="none" stroke="#5b6577" stroke-width="1.6"/><path d="M 47 84 Q 107 58 172 80" fill="none" stroke="#1c2433" stroke-width="1" stroke-dasharray="3 3"/><text x="107.0" y="62.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">νήμα</text><line x1="28.0" y1="72.0" x2="17.0" y2="72.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="8.0,72.0 17.0,67.5 17.0,76.5" fill="#1f6fd1"/><text x="20.0" y="64.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">1</tspan></text><line x1="196.0" y1="68.0" x2="207.0" y2="68.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="216.0,68.0 207.0,72.5 207.0,63.5" fill="#1f6fd1"/><text x="206.0" y="60.0" font-size="11" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">2</tspan></text></g>
 <text x="130.0" y="2092.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">0 = m<tspan baseline-shift="sub" font-size="70%">1</tspan>υ<tspan baseline-shift="sub" font-size="70%">1</tspan> − m<tspan baseline-shift="sub" font-size="70%">2</tspan>υ<tspan baseline-shift="sub" font-size="70%">2</tspan></text>
 <text x="130.0" y="2111.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">U<tspan baseline-shift="sub" font-size="70%">ελ</tspan> = K<tspan baseline-shift="sub" font-size="70%">1</tspan> + K<tspan baseline-shift="sub" font-size="70%">2</tspan></text>
@@ -869,7 +869,7 @@
 <rect x="969" y="1938" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
 <circle cx="984" cy="1953" r="10" fill="#8e3b6a"/>
 <text x="984.0" y="1957.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">40</text>
-<text x="999.0" y="1958.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Κατακόρυφη βολή</text>
+<text x="999.0" y="1958.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ορμή σε κατακόρυφη βολή</text>
 <g transform="translate(969,1938)"><line x1="17" y1="126" x2="209" y2="126" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/><line x1="80" y1="40" x2="80" y2="120" stroke="#5b6577" stroke-width="1" stroke-dasharray="3 3"/><circle cx="80" cy="40" r="8" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/><text x="96.0" y="36.0" font-size="10" fill="#1c2433" text-anchor="start" font-weight="bold">υ = 0, p = 0</text><line x1="80.0" y1="49.0" x2="80.0" y2="65.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/><polygon points="80.0,74.0 75.5,65.0 84.5,65.0" fill="#d9342b"/><text x="94.0" y="70.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold" font-style="italic">mg</text><line x1="56.0" y1="118.0" x2="56.0" y2="91.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="56.0,82.0 60.5,91.0 51.5,91.0" fill="#1f6fd1"/><text x="44.0" y="100.0" font-size="12" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">0</tspan></text><line x1="104.0" y1="84.0" x2="104.0" y2="109.0" stroke="#1f6fd1" stroke-width="2.5" stroke-linecap="round"/><polygon points="104.0,118.0 99.5,109.0 108.5,109.0" fill="#1f6fd1"/><text x="118.0" y="106.0" font-size="12" fill="#1f6fd1" text-anchor="start" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">0</tspan></text><text x="170.0" y="66.0" font-size="10" fill="#5b6577" text-anchor="middle" font-weight="normal">πάνω: +</text></g>
 <text x="1082.0" y="2092.0" font-size="14" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Δp = −2mυ<tspan baseline-shift="sub" font-size="70%">0</tspan> (ως την επιστροφή)</text>
 <text x="1082.0" y="2111.0" font-size="12.5" fill="#1f9d55" text-anchor="middle" font-weight="bold" font-style="italic">Δp/Δt = −mg (και στο ύψιστο)</text>
@@ -910,7 +910,115 @@
 <text x="747" y="2334" font-size="13" fill="#1c2433" text-anchor="start" font-weight="normal">31–32 · Ανελαστική και ελαστική ίσων μαζών</text>
 <text x="747" y="2360" font-size="13" fill="#1c2433" text-anchor="start" font-weight="normal">20 · Κάθετες διευθύνσεις: ΑΔΟ ανά άξονα</text>
 <text x="747" y="2390" font-size="12" fill="#1f9d55" text-anchor="start" font-weight="bold" font-style="italic">Ελαστική; Έλεγξε K πριν/μετά. ΑΔΟ όταν η εξωτερική ώθηση είναι αμελητέα.</text>
-<text x="606.0" y="2434.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q απώλεια κινητικής ενέργειας • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
-<text x="606.0" y="2456.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = εξωτερική ώθηση. Στην ελαστική κρούση διατηρείται και η K.</text>
-<text x="606.0" y="2484.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
+<rect x="14" y="2416" width="1184" height="250" rx="10" fill="#fbefe6" stroke="#8e4a1c" stroke-width="1.5"/>
+<rect x="14" y="2416" width="1184" height="30" rx="10" fill="#8e4a1c"/>
+<rect x="14" y="2436" width="1184" height="10" fill="#8e4a1c"/>
+<text x="30.0" y="2437.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">10. ΚΡΟΥΣΗ ΚΑΙ ΜΕΤΑ: ΚΥΚΛΟΣ, ΡΑΜΠΑ, ΕΛΑΤΗΡΙΟ, ΣΑΝΙΔΑ, ΕΚΚΡΕΜΕΣ</text>
+<rect x="17" y="2450" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="32" cy="2465" r="10" fill="#8e4a1c"/>
+<text x="32.0" y="2469.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">44</text>
+<text x="47.0" y="2470.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μετά την κρούση: κύκλος</text>
+<g><line x1="33.0" y1="2556.0" x2="225.0" y2="2556.0" stroke="#7a8597" stroke-width="2"/><circle cx="161" cy="2520" r="32" fill="none" stroke="#5b6577" stroke-width="1.2" stroke-dasharray="3 3"/><circle cx="59.0" cy="2548.0" r="3" fill="#6b7a8f" stroke="#2b3545" stroke-width="1"/><line x1="67.0" y1="2548.0" x2="82.0" y2="2548.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="89.0,2548.0 82.0,2551.6 82.0,2544.4" fill="#1f6fd1"/><text x="78.0" y="2543.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text><rect x="152.0" y="2539.0" width="18" height="17" rx="2" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><text x="161.0" y="2551.5" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">M</text><circle cx="161.0" cy="2488.0" r="5" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><line x1="169.0" y1="2488.0" x2="180.0" y2="2488.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="187.0,2488.0 180.0,2491.6 180.0,2484.4" fill="#1f6fd1"/><text x="178.0" y="2483.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ<tspan baseline-shift="sub" font-size="70%">κ</tspan></text><line x1="161.0" y1="2495.0" x2="161.0" y2="2504.0" stroke="#9a5a0c" stroke-width="2.2" stroke-linecap="round"/><polygon points="161.0,2511.0 157.4,2504.0 164.6,2504.0" fill="#9a5a0c"/><text x="175.0" y="2507.0" font-size="10" fill="#9a5a0c" text-anchor="middle" font-weight="bold" font-style="italic">mg</text></g>
+<text x="29.0" y="2584.0" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">ΑΔΟ: m·υ = (m + M)·V</text>
+<text x="29.0" y="2599.5" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">ΑΔΜΕ: V² = υ<tspan baseline-shift="sub" font-size="70%">κ</tspan>² + 4g·R</text>
+<text x="29.0" y="2615.0" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Νήμα, οριακά: υ<tspan baseline-shift="sub" font-size="70%">κ</tspan>² = g·R</text>
+<text x="29.0" y="2630.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Ράβδος, οριακά: υ<tspan baseline-shift="sub" font-size="70%">κ</tspan> = 0</text>
+<text x="231.0" y="2656.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετικές 9, 14, 27</text>
+<rect x="255" y="2450" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="270" cy="2465" r="10" fill="#8e4a1c"/>
+<text x="270.0" y="2469.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">45</text>
+<text x="285.0" y="2470.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μετά την κρούση ανεβαίνει</text>
+<g><polygon points="377,2556 463,2556 463,2500" fill="#e8e3da" stroke="#7a8597"/><line x1="271.0" y1="2556.0" x2="377.0" y2="2556.0" stroke="#7a8597" stroke-width="2"/><circle cx="291.0" cy="2548.0" r="3" fill="#6b7a8f" stroke="#2b3545" stroke-width="1"/><line x1="299.0" y1="2548.0" x2="310.0" y2="2548.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="317.0,2548.0 310.0,2551.6 310.0,2544.4" fill="#1f6fd1"/><text x="308.0" y="2543.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text><rect x="327.0" y="2539.0" width="18" height="17" rx="2" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><text x="336.0" y="2551.5" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">M</text><polyline points="347.0,2548.0 377.0,2548.0 437.0,2510.0" fill="none" stroke="#e08a1e" stroke-width="1.4" stroke-dasharray="3 3"/><rect x="431.0" y="2500.0" width="14" height="12" rx="2" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><line x1="467.0" y1="2506.0" x2="467.0" y2="2556.0" stroke="#5b6577" stroke-width="0.8"/><text x="459.0" y="2536.0" font-size="10" fill="#5b6577" text-anchor="end" font-weight="bold" font-style="italic">h</text></g>
+<text x="267.0" y="2584.0" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">Πρώτα ΑΔΟ ⇒ V</text>
+<text x="267.0" y="2599.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Λεία ράμπα: h = V²/(2g)</text>
+<text x="267.0" y="2615.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Με τριβή: ΘΜΚΕ ως τη στάση</text>
+<text x="267.0" y="2630.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">½·M·V² = M·g·h + μ·N·s</text>
+<text x="469.0" y="2656.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετικές 10, 21</text>
+<rect x="493" y="2450" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="508" cy="2465" r="10" fill="#8e4a1c"/>
+<text x="508.0" y="2469.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">46</text>
+<text x="523.0" y="2470.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Συμπίεση του ελατηρίου</text>
+<g><line x1="509.0" y1="2550.0" x2="701.0" y2="2550.0" stroke="#7a8597" stroke-width="2"/><rect x="535.0" y="2524.0" width="28" height="26" rx="2" fill="#3d7fd6" stroke="#2b3545" stroke-width="1"/><text x="549.0" y="2541.0" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">m₁</text><polyline points="615.0,2537.0 617.0,2543.0 621.0,2531.0 625.0,2543.0 629.0,2531.0 633.0,2543.0 637.0,2531.0 641.0,2543.0 643.0,2537.0" fill="none" stroke="#5b6577" stroke-width="1.4"/><rect x="643.0" y="2524.0" width="34" height="26" rx="2" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><text x="660.0" y="2541.0" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">m₂</text><line x1="545.0" y1="2510.0" x2="564.0" y2="2510.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="571.0,2510.0 564.0,2513.6 564.0,2506.4" fill="#1f6fd1"/><text x="558.0" y="2505.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">V</text><line x1="653.0" y1="2510.0" x2="672.0" y2="2510.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="679.0,2510.0 672.0,2513.6 672.0,2506.4" fill="#1f6fd1"/><text x="666.0" y="2505.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">V</text></g>
+<text x="505.0" y="2584.0" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Μέγιστη συμπίεση: κοινή V</text>
+<text x="505.0" y="2599.5" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">ΑΔΟ: m₁·υ₁ = (m₁ + m₂)·V</text>
+<text x="505.0" y="2615.0" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">½m₁υ₁² = ½(m₁+m₂)V² + ½kx²</text>
+<text x="505.0" y="2630.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Μετά ξανανοίγει: ελαστική</text>
+<text x="707.0" y="2656.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετικές 11</text>
+<rect x="731" y="2450" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="746" cy="2465" r="10" fill="#8e4a1c"/>
+<text x="746.0" y="2469.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">47</text>
+<text x="761.0" y="2470.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Γλιστρά πάνω σε σανίδα</text>
+<g><line x1="747.0" y1="2556.0" x2="939.0" y2="2556.0" stroke="#7a8597" stroke-width="2"/><rect x="763.0" y="2536.0" width="170" height="12" rx="2" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><rect x="777.0" y="2520.0" width="22" height="16" rx="2" fill="#3d7fd6" stroke="#2b3545" stroke-width="1"/><text x="788.0" y="2532.0" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">m</text><line x1="803.0" y1="2510.0" x2="826.0" y2="2510.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="833.0,2510.0 826.0,2513.6 826.0,2506.4" fill="#1f6fd1"/><text x="818.0" y="2505.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ₀</text><line x1="783.0" y1="2514.0" x2="776.0" y2="2514.0" stroke="#d9342b" stroke-width="2.2" stroke-linecap="round"/><polygon points="769.0,2514.0 776.0,2510.4 776.0,2517.6" fill="#d9342b"/><text x="776.0" y="2509.0" font-size="10" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">T</text><line x1="863.0" y1="2542.0" x2="874.0" y2="2542.0" stroke="#d9342b" stroke-width="2.2" stroke-linecap="round"/><polygon points="881.0,2542.0 874.0,2545.6 874.0,2538.4" fill="#d9342b"/><text x="872.0" y="2537.0" font-size="10" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">T</text></g>
+<text x="743.0" y="2584.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Τριβή ως κοινή ταχύτητα V</text>
+<text x="743.0" y="2599.5" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">ΑΔΟ: m·υ₀ = (m + M)·V</text>
+<text x="743.0" y="2615.0" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Θερμότητα: μ·m·g·s<tspan baseline-shift="sub" font-size="70%">σχ</tspan> = ΔK</text>
+<text x="743.0" y="2630.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">s<tspan baseline-shift="sub" font-size="70%">σχ</tspan>: πόσο γλίστρησε πάνω της</text>
+<text x="945.0" y="2656.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετική 23</text>
+<rect x="969" y="2450" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="984" cy="2465" r="10" fill="#8e4a1c"/>
+<text x="984.0" y="2469.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">48</text>
+<text x="999.0" y="2470.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Εκκρεμές χτυπά σφαίρα</text>
+<g><line x1="1011.0" y1="2484.0" x2="1091.0" y2="2484.0" stroke="#7a8597" stroke-width="2"/><line x1="1051.0" y1="2484.0" x2="1051.0" y2="2546.0" stroke="#5b6577" stroke-width="0.8" stroke-dasharray="2 3"/><line x1="1051.0" y1="2484.0" x2="1013.0" y2="2526.0" stroke="#5b6577" stroke-width="1.2"/><circle cx="1013.0" cy="2526.0" r="7" fill="#6b7a8f" stroke="#2b3545" stroke-width="1"/><path d="M1013,2526 A62,62 0 0,0 1051,2546" fill="none" stroke="#e08a1e" stroke-width="1.3" stroke-dasharray="3 3"/><circle cx="1051.0" cy="2546.0" r="7" fill="#6b7a8f" stroke="#2b3545" stroke-width="1"/><circle cx="1067.0" cy="2546.0" r="6" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><line x1="1075.0" y1="2546.0" x2="1094.0" y2="2546.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="1101.0,2546.0 1094.0,2549.6 1094.0,2542.4" fill="#1f6fd1"/><text x="1088.0" y="2541.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">V</text><line x1="1131.0" y1="2526.0" x2="1131.0" y2="2546.0" stroke="#5b6577" stroke-width="0.8"/><text x="1137.0" y="2540.0" font-size="10" fill="#5b6577" text-anchor="start" font-weight="bold" font-style="italic">h</text><line x1="1021.0" y1="2526.0" x2="1133.0" y2="2526.0" stroke="#5b6577" stroke-width="0.6" stroke-dasharray="2 3"/></g>
+<text x="981.0" y="2584.0" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">h = ℓ·(1 − συνφ)</text>
+<text x="981.0" y="2599.5" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">Πριν: υ = √(2·g·h)</text>
+<text x="981.0" y="2615.0" font-size="11" fill="#8e4a1c" text-anchor="start" font-weight="bold">Κρούση: ΑΔΟ (+ K ίδια αν ελαστική)</text>
+<text x="981.0" y="2630.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Μετά: h′ = V²/(2g)</text>
+<text x="1183.0" y="2656.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετική 3</text>
+<rect x="14" y="2672" width="1184" height="250" rx="10" fill="#ebedf8" stroke="#3949ab" stroke-width="1.5"/>
+<rect x="14" y="2672" width="1184" height="30" rx="10" fill="#3949ab"/>
+<rect x="14" y="2692" width="1184" height="10" fill="#3949ab"/>
+<text x="30.0" y="2693.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">11. ΔΙΑΓΡΑΜΜΑΤΑ, ΠΟΛΛΕΣ ΚΡΟΥΣΕΙΣ, ΠΟΣΟΣΤΑ ΚΑΙ ΦΟΡΤΙΑ</text>
+<rect x="17" y="2706" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="32" cy="2721" r="10" fill="#3949ab"/>
+<text x="32.0" y="2725.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">49</text>
+<text x="47.0" y="2726.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ταχύτητες από x–t</text>
+<g><line x1="59.0" y1="2812.0" x2="225.0" y2="2812.0" stroke="#1c2433" stroke-width="1"/><line x1="59.0" y1="2812.0" x2="59.0" y2="2740.0" stroke="#1c2433" stroke-width="1"/><text x="221.0" y="2824.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">t</text><text x="51.0" y="2746.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">x</text><line x1="59.0" y1="2806.0" x2="139.0" y2="2776.0" stroke="#1f6fd1" stroke-width="1.8"/><line x1="59.0" y1="2744.0" x2="139.0" y2="2776.0" stroke="#d9342b" stroke-width="1.8"/><line x1="139.0" y1="2776.0" x2="219.0" y2="2766.0" stroke="#6b3fa0" stroke-width="2"/><line x1="139.0" y1="2776.0" x2="139.0" y2="2812.0" stroke="#5b6577" stroke-width="0.7" stroke-dasharray="2 3"/><text x="139.0" y="2824.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">κρούση</text></g>
+<text x="29.0" y="2840.0" font-size="11" fill="#3949ab" text-anchor="start" font-weight="bold">Κλίση της x–t = ταχύτητα</text>
+<text x="29.0" y="2855.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">υ = Δx/Δt</text>
+<text x="29.0" y="2871.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Μετά την κρούση: νέες κλίσεις</text>
+<text x="29.0" y="2886.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Μία κοινή γραμμή ⇒ κόλλησαν</text>
+<text x="231.0" y="2912.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετική 28</text>
+<rect x="255" y="2706" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="270" cy="2721" r="10" fill="#3949ab"/>
+<text x="270.0" y="2725.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">50</text>
+<text x="285.0" y="2726.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Τρία σώματα, δύο κρούσεις</text>
+<g><line x1="271.0" y1="2806.0" x2="463.0" y2="2806.0" stroke="#7a8597" stroke-width="2"/><rect x="287.0" y="2786.0" width="22" height="20" rx="2" fill="#3d7fd6" stroke="#2b3545" stroke-width="1"/><text x="298.0" y="2800.0" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">1</text><line x1="313.0" y1="2796.0" x2="324.0" y2="2796.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="331.0,2796.0 324.0,2799.6 324.0,2792.4" fill="#1f6fd1"/><rect x="357.0" y="2786.0" width="24" height="20" rx="2" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><text x="369.0" y="2800.0" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">2</text><rect x="423.0" y="2786.0" width="26" height="20" rx="2" fill="#8a8f99" stroke="#2b3545" stroke-width="1"/><text x="436.0" y="2800.0" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">3</text><text x="344.0" y="2778.0" font-size="9" fill="#e08a1e" text-anchor="middle" font-weight="bold">1η κρούση</text><text x="403.0" y="2778.0" font-size="9" fill="#e08a1e" text-anchor="middle" font-weight="bold">2η κρούση</text></g>
+<text x="267.0" y="2840.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Μία κρούση τη φορά</text>
+<text x="267.0" y="2855.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">υ μετά την 1η = υ πριν τη 2η</text>
+<text x="267.0" y="2871.0" font-size="11" fill="#3949ab" text-anchor="start" font-weight="bold">ΑΔΟ σε κάθε κρούση χωριστά</text>
+<text x="267.0" y="2886.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Κολλάνε όλα: μία ΑΔΟ αρχή–τέλος</text>
+<text x="469.0" y="2912.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετικές 22, 29</text>
+<rect x="493" y="2706" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="508" cy="2721" r="10" fill="#3949ab"/>
+<text x="508.0" y="2725.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">51</text>
+<text x="523.0" y="2726.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πολλές σφαίρες στο ξύλο</text>
+<g><line x1="509.0" y1="2812.0" x2="701.0" y2="2812.0" stroke="#7a8597" stroke-width="2"/><rect x="645.0" y="2780.0" width="36" height="32" rx="2" fill="#c9a46a" stroke="#2b3545" stroke-width="1"/><text x="663.0" y="2800.0" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="bold">M</text><circle cx="535.0" cy="2788.0" r="3" fill="#6b7a8f" stroke="#2b3545" stroke-width="1"/><line x1="541.0" y1="2788.0" x2="556.0" y2="2788.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="563.0,2788.0 556.0,2791.6 556.0,2784.4" fill="#1f6fd1"/><circle cx="553.0" cy="2796.0" r="3" fill="#6b7a8f" stroke="#2b3545" stroke-width="1"/><line x1="559.0" y1="2796.0" x2="574.0" y2="2796.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="581.0,2796.0 574.0,2799.6 574.0,2792.4" fill="#1f6fd1"/><circle cx="571.0" cy="2804.0" r="3" fill="#6b7a8f" stroke="#2b3545" stroke-width="1"/><line x1="577.0" y1="2804.0" x2="592.0" y2="2804.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="599.0,2804.0 592.0,2807.6 592.0,2800.4" fill="#1f6fd1"/><text x="565.0" y="2772.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="normal">N σφαίρες</text></g>
+<text x="505.0" y="2840.0" font-size="11" fill="#3949ab" text-anchor="start" font-weight="bold">Όλες μαζί: N·m·υ = (M + N·m)·V</text>
+<text x="505.0" y="2855.5" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Μία μία: ΑΔΟ κάθε φορά</text>
+<text x="505.0" y="2871.0" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Συνεχής ροή:</text>
+<text x="505.0" y="2886.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">F = (N/Δt)·m·υ</text>
+<text x="707.0" y="2912.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ συνθετική 30</text>
+<rect x="731" y="2706" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="746" cy="2721" r="10" fill="#3949ab"/>
+<text x="746.0" y="2725.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">52</text>
+<text x="761.0" y="2726.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Δίνεται το % της ενέργειας</text>
+<g><text x="787.0" y="2765.0" font-size="10" fill="#e08a1e" text-anchor="end" font-weight="bold">K πριν</text><rect x="793" y="2756" width="130" height="12" fill="#eef0f3"/><rect x="793" y="2756" width="130" height="12" fill="#e08a1e"/><text x="787.0" y="2795.0" font-size="10" fill="#c46a12" text-anchor="end" font-weight="bold">K μετά</text><rect x="793" y="2786" width="130" height="12" fill="#eef0f3"/><rect x="793" y="2786" width="52" height="12" fill="#c46a12"/><text x="893.0" y="2822.0" font-size="9.5" fill="#c0392b" text-anchor="middle" font-weight="bold">χάνεται 60%</text></g>
+<text x="743.0" y="2840.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Πλαστική, ακίνητος στόχος:</text>
+<text x="743.0" y="2855.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">K<tspan baseline-shift="sub" font-size="70%">μετά</tspan>/K<tspan baseline-shift="sub" font-size="70%">πριν</tspan> = m/(m + M)</text>
+<text x="743.0" y="2871.0" font-size="11" fill="#3949ab" text-anchor="start" font-weight="bold">Χάνεται: M/(m + M)</text>
+<text x="743.0" y="2886.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Δίνεται το % ⇒ λόγος μαζών</text>
+<text x="945.0" y="2912.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ 20 περιπτώσεις, Γ2</text>
+<rect x="969" y="2706" width="226" height="212" rx="7" fill="#ffffff" stroke="#d6dae1"/>
+<circle cx="984" cy="2721" r="10" fill="#3949ab"/>
+<text x="984.0" y="2725.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">53</text>
+<text x="999.0" y="2726.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Φορτία: ορμή και ενέργεια</text>
+<g><line x1="991.0" y1="2776.0" x2="1177.0" y2="2776.0" stroke="#5b6577" stroke-width="0.8" stroke-dasharray="3 3"/><circle cx="1061.0" cy="2776.0" r="9" fill="#e8574c" stroke="#2b3545" stroke-width="1"/><text x="1061.0" y="2780.9" font-size="11.700000000000001" fill="#fff" text-anchor="middle" font-weight="bold">+</text><text x="1061.0" y="2762.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">q₁</text><circle cx="1105.0" cy="2776.0" r="7" fill="#e8574c" stroke="#2b3545" stroke-width="1"/><text x="1105.0" y="2779.8" font-size="9.1" fill="#fff" text-anchor="middle" font-weight="bold">+</text><text x="1105.0" y="2764.0" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">q₂</text><line x1="1049.0" y1="2796.0" x2="1034.0" y2="2796.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="1027.0,2796.0 1034.0,2792.4 1034.0,2799.6" fill="#1f6fd1"/><text x="1038.0" y="2808.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ₁</text><line x1="1113.0" y1="2796.0" x2="1136.0" y2="2796.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/><polygon points="1143.0,2796.0 1136.0,2799.6 1136.0,2792.4" fill="#1f6fd1"/><text x="1128.0" y="2808.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ₂</text><text x="1082.0" y="2824.0" font-size="9.5" fill="#e08a1e" text-anchor="middle" font-weight="bold">ΑΔΟ + ΑΔΜΕ</text></g>
+<text x="981.0" y="2840.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Κινούνται και τα δύο:</text>
+<text x="981.0" y="2855.5" font-size="11" fill="#3949ab" text-anchor="start" font-weight="bold">ΑΔΟ: m₁·υ₁ = m₂·υ₂</text>
+<text x="981.0" y="2871.0" font-size="11" fill="#3949ab" text-anchor="start" font-weight="bold">ΑΔΜΕ: U<tspan baseline-shift="sub" font-size="70%">αρχ</tspan> = K₁ + K₂ + U<tspan baseline-shift="sub" font-size="70%">τελ</tspan></text>
+<text x="981.0" y="2886.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Ελάχιστη απόσταση: κοινή υ</text>
+<text x="1183.0" y="2912.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ Πεδίο Κ4, Κ29</text>
+<text x="606.0" y="2946.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q απώλεια κινητικής ενέργειας • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
+<text x="606.0" y="2968.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = εξωτερική ώθηση. Στην ελαστική κρούση διατηρείται και η K.</text>
+<text x="606.0" y="2996.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
 </svg>

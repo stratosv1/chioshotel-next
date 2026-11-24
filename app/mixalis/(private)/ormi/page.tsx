@@ -16,11 +16,11 @@ import { SinthetaPresentationsClient } from "@/components/mixalis/ormi/sintheta/
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
   description:
-    "Διαδραστικό μάθημα του κεφαλαίου 2 (ορμή) με κίνηση και λυμένες όλες τις ασκήσεις του βιβλίου, 43 περιπτώσεις ορμής και κρούσεων σε ένα poster, και όλα τα Θέματα 2 της Τράπεζας λυμένα.",
+    "Διαδραστικό μάθημα του κεφαλαίου 2 (ορμή) με κίνηση και λυμένες όλες τις ασκήσεις του βιβλίου, 53 περιπτώσεις ορμής και κρούσεων σε ένα poster, και όλα τα Θέματα 2 της Τράπεζας λυμένα.",
 };
 
 const POSTER_W = 1212;
-const POSTER_H = 2488;
+const POSTER_H = 3000;
 
 const sectionNames = [
   "Ορμή",
@@ -44,13 +44,31 @@ const groups: { range: string; title: string; text: string }[] = [
   { range: "31–35", title: "Κρούσεις χωρίς συσσωμάτωση", text: "Δύο ταχύτητες μετά: θέλεις τη μία δοσμένη. Δύναμη εδάφους: N = Δp/Δt + mg. Βλήμα μέσα σε ξύλο: Q = F·d." },
   { range: "36–40", title: "Ωθήσεις, ροές, κατακόρυφη βολή", text: "Ελατήριο και πύραυλος είναι «εκρήξεις». Σανίδα: το κέντρο μάζας μένει ακίνητο. Βροχή: F = (N/Δt)·m·υ." },
   { range: "41–43", title: "Ειδικές περιπτώσεις", text: "Ελαστική: έλεγχος με K πριν = K μετά, το ελαφρύ γυρίζει πίσω. Τρία κομμάτια: τα βέλη ορμής κλείνουν τρίγωνο. Κινούμενο όχημα: p πριν ≠ 0." },
+  { range: "44–48", title: "Κρούση και μετά", text: "Πρώτα ΑΔΟ για την κρούση. Μετά: κύκλος (κεντρομόλος στην κορυφή), ράμπα (ΑΔΜΕ ή ΘΜΚΕ), ελατήριο ή σανίδα (κοινή ταχύτητα στο τέλος), εκκρεμές (υ = √(2gh))." },
+  { range: "49–53", title: "Διαγράμματα, πολλές κρούσεις, ποσοστά", text: "Στο x–t η κλίση είναι η ταχύτητα. Πολλές κρούσεις: μία τη φορά. Ποσοστό ενέργειας ⇒ λόγος μαζών. Φορτισμένα σωματίδια: ΑΔΟ μαζί με ΑΔΜΕ." },
 ];
 
 /** Clickable areas over the poster cells (SVG coordinates of the poster). */
-const cells = Array.from({ length: 43 }, (_, i) => {
-  const section = Math.floor(i / 5);
-  const col = i % 5;
-  return { n: i + 1, x: 17 + 238 * col, y: 146 + 256 * section, w: 226, h: 212 };
+// Boxes 44–53 open the matching worked example (combined stories #s…, the 20-case page, or the field page).
+const EXTRA_BOX: Record<number, string> = {
+  44: "#s9",
+  45: "#s21",
+  46: "#s11",
+  47: "#s23",
+  48: "#s3",
+  49: "#s28",
+  50: "#s22",
+  51: "#s30",
+  52: "/mixalis/ormi/periptoseis#pc2",
+  53: "/mixalis/pedio#k69",
+};
+
+const cells = Array.from({ length: 53 }, (_, i) => {
+  // Section 9 has boxes 41–43 and a related-boxes panel, so boxes 44+ start a new row of five.
+  const k = i < 43 ? i : i + 2;
+  const section = Math.floor(k / 5);
+  const col = k % 5;
+  return { n: i + 1, href: EXTRA_BOX[i + 1], x: 17 + 238 * col, y: 146 + 256 * section, w: 226, h: 212 };
 });
 
 
@@ -65,7 +83,7 @@ export default function OrmiPage() {
           <p className="mt-5 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Φυσική Προσανατολισμού Β΄ Λυκείου</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Ορμή και κρούσεις: τυπολόγιο</h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-[#5c534c] sm:text-base">
-            43 περιπτώσεις σε ένα σχέδιο: όλες της Τράπεζας Θεμάτων, μαζί με όσες προσθέτουν το σχολικό βιβλίο και οι λυμένες του Σαββάλα. Σε κάθε
+            53 περιπτώσεις σε ένα σχέδιο: όλες της Τράπεζας Θεμάτων, μαζί με όσες προσθέτουν το σχολικό βιβλίο, οι λυμένες του Σαββάλα και οι συνθετικές ασκήσεις. Σε κάθε
             κουτάκι βλέπεις ταχύτητες (μπλε), δυνάμεις (κόκκινο) και αποτελέσματα (πράσινο). <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο
             σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα.
           </p>
@@ -160,12 +178,12 @@ export default function OrmiPage() {
               ))}
             </div>
           </div>
-          <div className="overflow-x-auto rounded-2xl border border-black/10 bg-[#fbfaf7]" aria-label="Τυπολόγιο 43 περιπτώσεων, κυλήστε οριζόντια στο κινητό">
+          <div className="overflow-x-auto rounded-2xl border border-black/10 bg-[#fbfaf7]" aria-label="Τυπολόγιο 53 περιπτώσεων, κυλήστε οριζόντια στο κινητό">
             <div className="relative min-w-[850px] sm:min-w-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/mixalis/ormi-typologio.svg"
-              alt="Τυπολόγιο ορμής και κρούσεων: 43 περιπτώσεις με σχήματα και εξισώσεις"
+              alt="Τυπολόγιο ορμής και κρούσεων: 53 περιπτώσεις με σχήματα και εξισώσεις"
               width={POSTER_W}
               height={POSTER_H}
               decoding="async"

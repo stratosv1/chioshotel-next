@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { onStudyChange, readStudy } from "@/components/mixalis/study/store";
 
-type Cell = { n: number; x: number; y: number; w: number; h: number };
+type Cell = { n: number; href?: string; x: number; y: number; w: number; h: number };
 
 const pct = (v: number, total: number) => `${((v / total) * 100).toFixed(3)}%`;
 
@@ -35,7 +35,7 @@ export function PosterCells({ cells, posterW, posterH, lesson }: { cells: Cell[]
         return (
           <a
             key={c.n}
-            href={`#k${c.n}`}
+            href={c.href ?? `#k${c.n}`}
             aria-label={`Κινούμενο σχέδιο για το κουτάκι ${c.n}${marked ? " (για επανάληψη)" : ""}`}
             className={`absolute rounded-lg outline-none ring-[#c9822f] transition hover:bg-[#c9822f]/10 hover:ring-2 focus-visible:ring-2 ${
               marked ? "bg-[#c9822f]/10 ring-[3px] ring-[#c9822f]" : ""
