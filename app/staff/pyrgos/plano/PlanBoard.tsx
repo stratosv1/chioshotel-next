@@ -5,6 +5,7 @@ import type { PlanBooking, PlanCell } from "@/lib/pyrgos/plan";
 import { useBeds24Sync } from "../useBeds24Sync";
 import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChange, roomByNumber } from "@/lib/pyrgos/rooms";
 import PyrgosNav from "../PyrgosNav";
+import { holidaysOn, type HolidayCountry } from "@/lib/pyrgos/holidays";
 import { foreignTextInEmail, type ConfirmationData } from "@/lib/crm/booking-confirmation-email";
 
 // ---------- helpers ----------
@@ -53,6 +54,27 @@ const shiftMonth = (ym: string, n: number) => {
   const d = new Date(Date.UTC(Number(ym.slice(0, 4)), Number(ym.slice(5, 7)) - 1 + n, 1));
   return d.toISOString().slice(0, 7);
 };
+// Small SVG flags: Windows does not draw flag emoji.
+function Flag({ country }: { country: HolidayCountry }) {
+  if (country === "GR")
+    return (
+      <svg viewBox="0 0 27 18" width="15" height="10" aria-hidden="true" className="shrink-0 rounded-[2px] ring-1 ring-black/10">
+        <rect width="27" height="18" fill="#0d5eaf" />
+        {[2, 6, 10, 14].map((y) => <rect key={y} y={y} width="27" height="2" fill="#fff" />)}
+        <rect width="10" height="10" fill="#0d5eaf" />
+        <rect x="4" width="2" height="10" fill="#fff" />
+        <rect y="4" width="10" height="2" fill="#fff" />
+      </svg>
+    );
+  return (
+    <svg viewBox="0 0 30 20" width="15" height="10" aria-hidden="true" className="shrink-0 rounded-[2px] ring-1 ring-black/10">
+      <rect width="30" height="20" fill="#e30a17" />
+      <circle cx="11" cy="10" r="5" fill="#fff" />
+      <circle cx="12.3" cy="10" r="4" fill="#e30a17" />
+      <polygon points="16.00,10.00 17.75,9.38 17.80,7.53 18.92,9.00 20.70,8.47 19.65,10.00 20.70,11.53 18.92,11.00 17.80,12.47 17.75,10.62" fill="#fff" />
+    </svg>
+  );
+}
 const ROOM_COL = 150;
 const ROW_H = 66;
 
@@ -466,10 +488,19 @@ export default function PlanBoard() {
                 {days.map((d) => {
                   const outside = month !== null && d.slice(0, 7) !== month;
                   const firstOfMonth = d.endsWith("-01");
+                  const hol = holidaysOn(d);
+                  const countries = [...new Set(hol.map((h) => h.country))];
+                  const holTitle = hol.map((h) => `${h.country === "GR" ? "Ελλάδα" : "Τουρκία"}: ${h.name}${h.note ? ` (${h.note})` : ""}`).join("\n");
                   return (
-                    <div key={d} style={{ width: W }} className={`border-l py-1.5 text-center ${firstOfMonth ? "border-[#8b7cf0]" : "border-[#eef2f6]"} ${d === today ? "bg-[#ece9fd]" : outside ? "bg-[#f4f6f9] opacity-60" : ""} ${["Σάβ", "Κυρ"].includes(wd(d)) ? "text-[#5443c9]" : ""}`}>
+                    <div key={d} style={{ width: W }} title={holTitle || undefined} className={`border-l py-1.5 text-center ${firstOfMonth ? "border-[#8b7cf0]" : "border-[#eef2f6]"} ${d === today ? "bg-[#ece9fd]" : outside ? "bg-[#f4f6f9] opacity-60" : ""} ${["Σάβ", "Κυρ"].includes(wd(d)) ? "text-[#5443c9]" : ""} ${hol.length ? "cursor-help" : ""}`}>
                       <div className="text-[10px] font-bold uppercase text-[#5b6b80]">{firstOfMonth && W < 72 ? MONTHS[Number(d.slice(5, 7)) - 1] : wd(d)}</div>
                       <div className="text-sm font-black">{W < 72 ? Number(d.slice(8, 10)) : dm(d)}</div>
+                      <div className="flex h-[12px] items-center justify-center gap-0.5" aria-label={holTitle || undefined}>
+                        {countries.map((c) => <Flag key={c} country={c} />)}
+                      </div>
+                      {W >= 120 && hol.length > 0 && (
+                        <div className="truncate px-1 text-[9px] font-semibold leading-tight text-[#5b6b80]">{hol[0].name}</div>
+                      )}
                     </div>
                   );
                 })}
