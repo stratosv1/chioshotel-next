@@ -1,20 +1,18 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import {
-  ArrowLeft, ArrowRight, BookOpen, BrainCircuit, CheckCircle2, ChevronRight,
-  CircleHelp, ClipboardCheck, Eye, GitBranch, Lightbulb, RotateCcw,
-  Sparkles, Target, Trophy,
-} from "lucide-react";
+import { CheckCircle2, ChevronDown, RotateCcw } from "lucide-react";
 import { SCENARIOS, type Scenario, type Tool } from "@/components/mixalis/ormi/OrmiPhaseQuiz";
 import { appendSkillEvents, phaseSkillEvents } from "@/components/mixalis/ormi2/learning-data";
 import { getThinkingTrick } from "@/components/mixalis/ormi2/thinking-tricks-data";
+import { StudyMark } from "@/components/mixalis/study/StudyMark";
+import { Ormi2Navbar, Ormi2Secs, Ormi2Shell } from "./Ormi2Shell";
 
 const Ormi2MotionScene = dynamic(() => import("./Ormi2MotionScene").then((m) => m.Ormi2MotionScene), {
   ssr: false,
-  loading: () => <div className="mt-5 min-h-[220px] animate-pulse rounded-2xl border border-[#cbded2] bg-[#f3f8f6] p-6 text-sm text-[#49715c]">Φόρτωση κινούμενου φυσικού σχήματος…</div>,
+  loading: () => <div className="o2-bench o2-readout">Φόρτωση κινούμενου φυσικού σχήματος…</div>,
 });
 
 type Step = "observe" | "cuts" | "laws" | "start" | "solve";
@@ -25,11 +23,11 @@ type History = Record<string, HistoryEntry>;
 
 const STORAGE_KEY = "mixalis-ormi2-lab-v1";
 const STEPS: { id: Step; name: string; short: string }[] = [
-  { id: "observe", name: "Παρατήρηση", short: "Βλέπω" },
-  { id: "cuts", name: "Φάσεις", short: "Χωρίζω" },
-  { id: "laws", name: "Νόμοι", short: "Επιλέγω" },
-  { id: "start", name: "Στρατηγική", short: "Συνδέω" },
-  { id: "solve", name: "Επίλυση", short: "Λύνω" },
+  { id: "observe", name: "Παρατήρηση", short: "1 · Βλέπω" },
+  { id: "cuts", name: "Φάσεις", short: "2 · Χωρίζω" },
+  { id: "laws", name: "Νόμοι", short: "3 · Επιλέγω" },
+  { id: "start", name: "Στρατηγική", short: "4 · Συνδέω" },
+  { id: "solve", name: "Επίλυση", short: "5 · Λύνω" },
 ];
 
 const TOOLS: { id: Tool; label: string; description: string }[] = [
@@ -43,6 +41,7 @@ const TOOLS: { id: Tool; label: string; description: string }[] = [
   { id: "kentro", label: "Κεντρομόλος", description: "Στιγμιαία ακτινική συνισταμένη" },
   { id: "rate", label: "Ρυθμοί", description: "dp/dt και dK/dt" },
 ];
+const toolLabel = (id: Tool) => TOOLS.find((t) => t.id === id)?.label ?? id;
 
 const blankVerdicts = (): Verdicts => ({ cuts: null, laws: null, start: null });
 const sameNumbers = (a: number[], b: number[]) =>
@@ -81,29 +80,29 @@ function StageSupport({ kind, level, s, onMore }: {
 }) {
   const nextLabel = level === 0 ? "Μικρή υπόδειξη" : level === 1 ? "Δες έναν χάρτη" : "Δείξε την απάντηση";
   return (
-    <div className="rounded-2xl border border-[#e2d3b7] bg-[#fffbf1] p-4 text-sm">
-      <div className="flex items-center gap-2 font-semibold text-[#815b29]"><Lightbulb size={17} /> Σταδιακή βοήθεια</div>
-      {level >= 1 && <p className="mt-2 leading-6 text-[#625542]">
+    <div className="o2-card key">
+      <p className="o2-card-title">Σταδιακή βοήθεια</p>
+      {level === 0 && <p className="o2-small o2-muted">Δοκίμασε πρώτα μόνος σου. Αν κολλήσεις, η βοήθεια ανοίγει ένα βήμα τη φορά.</p>}
+      {level >= 1 && <p className="o2-small">
         {kind === "cuts" ? "Ψάξε πού αλλάζει το φαινόμενο ή το σύστημα. Δεν είναι κάθε πρόταση υποχρεωτικά νέα φάση."
           : kind === "laws" ? "Σκέψου ποια ποσότητα ζητείται σε κάθε φάση και αν εξετάζεις ένα σώμα ή ολόκληρο σύστημα."
           : "Η σειρά των υπολογισμών μπορεί να είναι αντίστροφη από τη χρονική σειρά της κίνησης."}
       </p>}
-      {level >= 2 && <div className="mt-3 rounded-xl bg-white p-3 text-sm leading-6 text-[#4f5e51]">
-        <strong>Χάρτης σκέψης:</strong>
-        {kind === "cuts" && <p className="mt-1">Το φαινόμενο αποτελείται από {s.phases.length} φάσεις. Δες πότε αλλάζει ο μηχανισμός της κίνησης.</p>}
-        {kind === "laws" && <p className="mt-1">Εξέτασε ξεχωριστά: {s.phases.map((p) => p.label).join(" → ")}.</p>}
-        {kind === "start" && <p className="mt-1">Εντόπισε σε ποια φάση μπορείς να σχηματίσεις εξίσωση με ένα μόνο άγνωστο.</p>}
+      {level >= 2 && <p className="o2-small">
+        <b>Χάρτης σκέψης: </b>
+        {kind === "cuts" && <>Το φαινόμενο αποτελείται από {s.phases.length} φάσεις. Δες πότε αλλάζει ο μηχανισμός της κίνησης.</>}
+        {kind === "laws" && <>Εξέτασε ξεχωριστά: {s.phases.map((p) => p.label).join(" → ")}.</>}
+        {kind === "start" && <>Εντόπισε σε ποια φάση μπορείς να σχηματίσεις εξίσωση με ένα μόνο άγνωστο.</>}
+      </p>}
+      {level >= 3 && <div className="o2-fb ok o2-pop">
+        <b>Απάντηση του βήματος: </b>
+        {kind === "cuts" && <>{s.phases.map((p, i) => (i + 1) + ". " + p.label).join(" → ")}</>}
+        {kind === "laws" && s.phases.map((p, i) => <p key={i} className="mt-1"><b>{i + 1}. {p.label}:</b> {p.best.map(toolLabel).join(" + ")}. {p.why}</p>)}
+        {kind === "start" && <>{s.startWhy}</>}
       </div>}
-      {level >= 3 && <div className="mt-3 rounded-xl border border-[#d1e4d6] bg-[#eff8f1] p-3 text-sm leading-7 text-[#245844]">
-        <strong>Απάντηση του βήματος:</strong>
-        {kind === "cuts" && <p className="mt-1">{s.phases.map((p, i) => (i + 1) + ". " + p.label).join(" → ")}</p>}
-        {kind === "laws" && s.phases.map((p, i) => <p key={i} className="mt-2"><strong>{i + 1}. {p.label}:</strong> {p.best.map((id) => TOOLS.find((t) => t.id === id)?.label ?? id).join(" + ")}. {p.why}</p>)}
-        {kind === "start" && <p className="mt-1">{s.startWhy}</p>}
-      </div>}
-      {level < 3 && <button type="button" onClick={onMore} className="mt-3 min-h-10 rounded-xl border border-[#cbae82] bg-white px-4 py-2 font-semibold text-[#78552a]">
-        {nextLabel}
-      </button>}
-      {level === 3 && <p className="mt-2 text-xs text-[#876f4b]">Η απάντηση αποκαλύφθηκε. Μπορείς να συνεχίσεις, αλλά η προσπάθεια δεν θα χαρακτηριστεί ανεξάρτητη.</p>}
+      {level < 3
+        ? <div><button type="button" onClick={onMore} className="o2-btn">{nextLabel}</button></div>
+        : <p className="o2-small o2-muted">Η απάντηση αποκαλύφθηκε. Μπορείς να συνεχίσεις, αλλά η προσπάθεια δεν θα χαρακτηριστεί ανεξάρτητη.</p>}
     </div>
   );
 }
@@ -126,11 +125,13 @@ export function Ormi2Trainer() {
   const [filter, setFilter] = useState<"all" | "basic" | "advanced" | "review">("all");
   const [search, setSearch] = useState("");
   const [savedThisRound, setSavedThisRound] = useState(false);
+  const [libraryOpen, setLibraryOpen] = useState(false);
 
   const s = SCENARIOS[index];
   const featuredTrick = getThinkingTrick(s.id);
   const grouped = useMemo(() => groupsFor(s), [s]);
   const total = SCENARIOS.length;
+  const stepPos = STEPS.findIndex((item) => item.id === step);
 
   useEffect(() => {
     setHistory(readHistory());
@@ -156,7 +157,7 @@ export function Ormi2Trainer() {
     return true;
   });
 
-  function openScenario(nextIndex: number) {
+  const openScenario = useCallback((nextIndex: number) => {
     setIndex(nextIndex);
     setStep("observe");
     setCuts([]);
@@ -170,7 +171,14 @@ export function Ormi2Trainer() {
     setShowSolution(false);
     setViewedSolution(false);
     setSavedThisRound(false);
-  }
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("scenario", SCENARIOS[nextIndex].id);
+      window.history.replaceState(null, "", url);
+    } catch { /* address bar update is optional */ }
+  }, []);
+  const prevScenario = useCallback(() => openScenario((index - 1 + total) % total), [index, total, openScenario]);
+  const nextScenario = useCallback(() => openScenario((index + 1) % total), [index, total, openScenario]);
 
   function checkStage(which: Check) {
     let correct = false;
@@ -195,8 +203,7 @@ export function Ormi2Trainer() {
   }
 
   function nextStage() {
-    const place = STEPS.findIndex((item) => item.id === step);
-    if (place >= 0 && place < STEPS.length - 1) setStep(STEPS[place + 1].id);
+    if (stepPos >= 0 && stepPos < STEPS.length - 1) setStep(STEPS[stepPos + 1].id);
   }
 
   function finish() {
@@ -229,275 +236,243 @@ export function Ormi2Trainer() {
     })).filter((entry) => entry.i !== index).sort((a, b) => b.similarity - a.similarity).slice(0, 3);
   }, [index, s]);
 
+  // Υποδείξεις επίλυσης φτιαγμένες από τα δεδομένα του ΣΥΓΚΕΚΡΙΜΕΝΟΥ σεναρίου.
+  const firstPhase = s.start[0] ?? 0;
+  const solveOrder = [firstPhase, ...s.phases.map((_, i) => i).filter((i) => i !== firstPhase)];
+
   if (!s) return null;
+  const record = history[s.id];
 
   return (
-    <main className="min-h-screen bg-[#f3efe8] px-3 py-5 text-[#2c2825] sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-7xl space-y-5">
-        <header className="overflow-hidden rounded-3xl bg-[#183d35] px-5 py-7 text-white sm:px-9 sm:py-9">
-          <Link href="/mixalis/ormi" className="inline-flex items-center gap-2 text-sm text-[#cce6d6] hover:text-white">
-            <ArrowLeft size={16} /> Πίσω στο τυπολόγιο και τη θεωρία
-          </Link>
-          <div className="mt-6 flex flex-wrap items-start justify-between gap-5">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#a7d4bd]">Physics Workspace · Μιχάλης</p>
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Ορμή 2</h1>
-              <p className="mt-2 text-lg font-medium text-[#d6ecde]">Εργαστήριο συνδυαστικών ασκήσεων</p>
-              <p className="mt-3 max-w-xl text-sm leading-7 text-[#d2e4d9]">
-                Βλέπω το φαινόμενο. Χωρίζω σε φάσεις. Επιλέγω νόμους. Συνδέω τα άγνωστα.
-                Στο τέλος δοκιμάζω να λύσω χωρίς βοήθεια.
-              </p>
-            </div>
-            <div className="grid w-full grid-cols-3 gap-2 sm:w-auto sm:min-w-[310px]">
-              <div className="rounded-2xl border border-white/15 bg-white/10 p-3 text-center"><p className="text-2xl font-bold">{total}</p><p className="text-[11px] text-[#d2e4d9]">Σενάρια</p></div>
-              <div className="rounded-2xl border border-white/15 bg-white/10 p-3 text-center"><p className="text-2xl font-bold">{progress}</p><p className="text-[11px] text-[#d2e4d9]">Δοκιμασμένα</p></div>
-              <div className="rounded-2xl border border-white/15 bg-white/10 p-3 text-center"><p className="text-2xl font-bold">{independent}</p><p className="text-[11px] text-[#d2e4d9]">Χωρίς βοήθεια*</p></div>
-            </div>
-          </div>
-          <p className="mt-4 text-[11px] text-[#b6d5c4]">*Καταγράφεται η ανεξάρτητη μεθοδολογική προσπάθεια, όχι αυτόματη βαθμολόγηση των αριθμητικών πράξεων.</p>
-        </header>
+    <Ormi2Shell page="phases" subtitle="Εργαστήριο φάσεων"
+      counter={<>Σενάριο {index + 1}/{total} · {progress} δοκιμασμένα · {independent} αυτόνομα*</>}>
+      <Ormi2Secs label="Στάδια επίλυσης" items={STEPS.map((item, pos) => ({
+        key: item.id,
+        label: item.short,
+        fill: pos < stepPos ? 1 : pos === stepPos ? (item.id === "observe" || item.id === "solve" ? (savedThisRound ? 1 : 0.4) : verdicts[item.id as Check] ? 1 : 0.4) : 0,
+        current: pos === stepPos,
+        onClick: pos < stepPos ? () => setStep(item.id) : undefined,
+      }))} />
 
-        <Link href="/mixalis/ormi2/kolpa" className="group flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#b8cda8] bg-[#fff8e8] px-5 py-5 text-[#5c4b2d] shadow-sm transition-colors hover:bg-[#f8efd8] sm:px-7">
-          <span className="max-w-2xl">
-            <span className="block text-xs font-bold uppercase tracking-[0.17em] text-[#9b7038]">Νέο · 5 δυνατά κόλπα Φυσικής</span>
-            <span className="mt-1 block text-xl font-bold sm:text-2xl">Μάθε τη διαδρομή της σκέψης, όχι έτοιμους τύπους</span>
-            <span className="mt-2 block text-sm leading-6 text-[#79694e]">5 δύσκολες ασκήσεις · ανάλυση δυνάμεων · 20 εναλλακτικά ζητούμενα με αναλυτικές λύσεις</span>
-          </span>
-          <span className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#806335] px-5 py-2.5 text-sm font-semibold text-white">Μάθε τα 5 κόλπα <ArrowRight size={16}/></span>
-        </Link>
-
-        <Link href="/mixalis/ormi2/proodos"
-          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#abcbb8] bg-white px-5 py-4 text-[#255c47] hover:bg-[#e9f4ed]">
-          <span>
-            <span className="block text-xs font-bold uppercase tracking-wider text-[#3b8061]">Νέο · Ο προσωπικός μου προπονητής</span>
-            <span className="mt-1 block text-lg font-semibold">Δες τις αδυναμίες σου και την επόμενη άσκηση</span>
-            <span className="mt-1 block text-sm text-[#678070]">12 δεξιότητες · στόχευση λαθών · προσωπική σειρά εξάσκησης</span>
-          </span>
-          <span className="rounded-xl bg-[#245c46] px-4 py-2.5 text-sm font-semibold text-white">Χάρτης προόδου →</span>
-        </Link>
-
-        <Link href="/mixalis/ormi2/prokliseis"
-          className="group flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[#a5c7af] bg-[#e3f2e8] p-5 text-[#1b4e39] shadow-sm transition-colors hover:bg-[#d5ecdc] sm:p-7">
-          <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-[#307b55]"><Trophy size={16}/> Νέο · Επίπεδο 2 · Αριθμητική επίλυση</span>
-            <h2 className="mt-2 text-xl font-bold sm:text-2xl">Εργαστήριο δύσκολων προκλήσεων</h2>
-            <p className="mt-2 text-sm leading-7">13 οικογένειες, 26 παραλλαγές: βρες τις ενδιάμεσες ταχύτητες, σύνδεσε τους νόμους, έλεγξε κάθε αποτέλεσμα και δοκίμασε τη διαφορετική συνθήκη χωρίς βοήθεια.</p>
-          </div>
-          <span className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-xl bg-[#245d45] px-5 py-3 text-sm font-semibold text-white group-hover:bg-[#194631]">Ξεκίνα τις προκλήσεις <ArrowRight size={17}/></span>
-        </Link>
-
-        <div className="grid items-start gap-5 lg:grid-cols-[290px_minmax(0,1fr)]">
-          <aside className="rounded-3xl border border-black/10 bg-white p-4 lg:sticky lg:top-4">
-            <div className="flex items-center justify-between gap-2"><h2 className="font-semibold">Βιβλιοθήκη σεναρίων</h2><BookOpen size={18} className="text-[#668072]" /></div>
-            <label htmlFor="ormi2-search" className="mt-4 block text-xs font-semibold text-[#655c52]">Αναζήτηση</label>
-            <input id="ormi2-search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="π.χ. εκκρεμές, βλήμα" className="mt-1 w-full rounded-xl border border-black/15 bg-[#faf8f4] px-3 py-2.5 text-sm outline-offset-2 focus:border-[#35745d]" />
-            <div className="mt-3 grid grid-cols-2 gap-1.5" aria-label="Φίλτρο δυσκολίας">
-              {([
-                ["all", "Όλες"], ["basic", "2 φάσεις"], ["advanced", "3+ φάσεις"], ["review", "Για επανάληψη"],
-              ] as const).map(([id, text]) => (
-                <button type="button" key={id} onClick={() => setFilter(id)} aria-pressed={filter === id}
-                  className={"min-h-10 rounded-xl px-2 py-2 text-xs font-semibold " + (filter === id ? "bg-[#1f6f5c] text-white" : "border border-black/10 bg-[#faf8f4] text-[#5d594f]")}>
-                  {text}
-                </button>
-              ))}
-            </div>
-            <div className="mt-3 max-h-[330px] space-y-1 overflow-y-auto pr-1 lg:max-h-[560px]" aria-label="Επιλογή σεναρίου">
-              {filtered.length === 0 && <p className="py-5 text-sm text-[#786f65]">Δεν βρέθηκαν ασκήσεις για αυτό το φίλτρο.</p>}
-              {filtered.map(({ item, i }) => (
-                <button type="button" key={item.id} onClick={() => openScenario(i)}
-                  aria-current={index === i ? "true" : undefined}
-                  className={"flex w-full items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-sm transition-colors " + (index === i ? "border-[#1f6f5c] bg-[#e6f4ed] text-[#1c5645]" : "border-transparent hover:bg-[#f6f4ef]")}>
-                  <span className="w-6 shrink-0 text-xs tabular-nums text-[#857d71]">{i + 1}.</span>
-                  <span className="flex-1 leading-5">{item.title}</span>
-                  {history[item.id]?.cleanPlans ? <CheckCircle2 className="shrink-0 text-[#25835a]" size={16} /> : history[item.id]?.attempts ? <RotateCcw className="shrink-0 text-[#b17b35]" size={15} /> : null}
-                </button>
-              ))}
-            </div>
-            <button type="button" onClick={() => openScenario((index + 1) % total)} className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl bg-[#f1ece5] px-3 py-3 text-sm font-semibold hover:bg-[#e8e0d5]">
-              Άλλο σενάριο <ArrowRight size={16} />
-            </button>
-          </aside>
-
-          <div className="min-w-0 space-y-4">
-            <section className="rounded-3xl border border-black/10 bg-white p-4 shadow-sm sm:p-7">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-[#277860]">Σενάριο {index + 1} από {total}</p>
-                <span className="rounded-full bg-[#f0ede7] px-3 py-1 text-xs font-semibold text-[#6b6053]">{s.phases.length} φάσεις</span>
-              </div>
-              <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">{s.title}</h2>
-              <div className="mt-4 rounded-2xl border border-[#bdd8c3] bg-[#edf7ee] p-4 sm:p-5">
-                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.13em] text-[#286c4c]">
-                  <Target size={18} /> Η αποστολή μας — Τι ψάχνουμε;
-                </div>
-                <p className="mt-2 text-lg font-semibold leading-8 text-[#244735]">{s.ask}</p>
-                <p className="mt-2 text-xs leading-6 text-[#617968]">Θυμήσου αυτό το ζητούμενο ενώ παρακολουθείς το φαινόμενο. Μην ψάχνεις ακόμη τον νόμο — πρώτα κατάλαβε τι θέλεις να βρεις.</p>
-              </div>
-              <div className="mt-5 grid grid-cols-5 gap-1.5" aria-label="Στάδια επίλυσης">
-                {STEPS.map((item, pos) => {
-                  const active = item.id === step;
-                  const passed = STEPS.findIndex((a) => a.id === step) > pos;
-                  return <button type="button" key={item.id} onClick={() => { if (passed) setStep(item.id); }} disabled={!passed && !active}
-                    aria-current={active ? "step" : undefined}
-                    className={"rounded-xl px-1 py-3 text-center text-[11px] font-semibold sm:text-sm " + (active ? "bg-[#1f6f5c] text-white" : passed ? "bg-[#def1e7] text-[#255f4b]" : "bg-[#f2f0eb] text-[#9a9085]")}>
-                    <span className="block text-base sm:text-lg">{pos + 1}</span>{item.short}
-                  </button>;
-                })}
-              </div>
-
-              <Ormi2MotionScene key={s.id} scenario={s} />
-
-              {step === "observe" && (
-                <div className="mt-6 space-y-4">
-                  <div className="flex items-center gap-2 text-[#226451]"><Eye size={19} /><h3 className="text-lg font-semibold">Πρώτα παρατήρησε τι συμβαίνει</h3></div>
-                  <div className="space-y-2 rounded-2xl border border-black/10 bg-[#fbfaf7] p-4">
-                    <p className="text-sm font-semibold">Η εκφώνηση, χωρίς έτοιμη ανάλυση</p>
-                    {s.segs.map((part, i) => <p key={i} className="text-sm leading-7 text-[#4f4a43]"><span className="mr-2 font-semibold text-[#237860]">{i + 1}.</span>{part}</p>)}
-                  </div>
-                  <button type="button" onClick={nextStage} className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#242c2a] px-6 py-3 font-semibold text-white">Θα τη χωρίσω σε φάσεις <ArrowRight size={17} /></button>
-                </div>
-              )}
-
-              {step === "cuts" && (
-                <div className="mt-6 space-y-4">
-                  <div className="flex items-center gap-2 text-[#226451]"><GitBranch size={20} /><h3 className="text-lg font-semibold">Πού αλλάζει το φυσικό φαινόμενο;</h3></div>
-                  <p className="text-sm leading-6 text-[#655e55]">Πάτησε σε κάθε θέση όπου τελειώνει μία φάση και αρχίζει άλλη. Μπορείς να επιλέξεις περισσότερες από μία τομές ή καμία.</p>
-                  <div className="space-y-1">
-                    {s.segs.map((part, i) => (
-                      <div key={i}>
-                        <div className="rounded-xl bg-[#f7f6f1] p-4 text-sm leading-7">{part}</div>
-                        {i < s.segs.length - 1 && (
-                          <button type="button" onClick={() => switchCut(i)} aria-pressed={cuts.includes(i)}
-                            className={"my-1 flex min-h-10 w-full items-center justify-center rounded-xl border border-dashed text-sm font-semibold " + (cuts.includes(i) ? "border-[#1f6f5c] bg-[#e2f3e9] text-[#1f6f5c]" : "border-[#cfccc4] text-[#887d6f] hover:bg-[#f4f0e9]")}>
-                            {cuts.includes(i) ? "✓ Τομή φάσης εδώ" : "+ Χώρισμα φάσης εδώ;"}
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  {verdicts.cuts !== null && <div role="status" className={"rounded-xl p-3 text-sm " + (verdicts.cuts ? "bg-[#e2f3e9] text-[#1c694d]" : "bg-[#fff1e3] text-[#8f521d]")}>
-                    {verdicts.cuts ? "Σωστή διάκριση των φάσεων." : "Οι τομές δεν είναι ακόμη σωστές. Δοκίμασε ξανά: πότε αλλάζει το σύστημα ή ο νόμος που χρειάζεται;"}
-                  </div>}
-                  <StageSupport kind="cuts" level={support.cuts} s={s} onMore={() => setSupport((old) => ({ ...old, cuts: Math.min(3, old.cuts + 1) }))} />
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => checkStage("cuts")} className="min-h-11 rounded-xl bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white">Έλεγχος φάσεων</button>
-                    {(verdicts.cuts === true || support.cuts === 3) && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Επιλογή νόμων <ArrowRight size={16} /></button>}
-                  </div>
-                </div>
-              )}
-
-              {step === "laws" && (
-                <div className="mt-6 space-y-4">
-                  <div className="flex items-center gap-2 text-[#226451]"><BrainCircuit size={20} /><h3 className="text-lg font-semibold">Ποιοι νόμοι χρειάζονται;</h3></div>
-                  <p className="text-sm leading-6 text-[#655e55]">Για κάθε φάση επίλεξε όλους τους νόμους που χρειάζονται. Μερικές φάσεις απαιτούν συνδυασμό δύο νόμων.</p>
-                  {grouped.map((parts, i) => (
-                    <div key={i} className="rounded-2xl border border-black/10 p-4">
-                      <p className="text-sm font-semibold text-[#237860]">Φάση {i + 1}: {s.phases[i]?.label}</p>
-                      <p className="mt-2 text-sm leading-6 text-[#6a6259]">{parts.join(" ")}</p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {TOOLS.map((tool) => {
-                          const active = (selectedLaws[i] ?? []).includes(tool.id);
-                          return <button type="button" key={tool.id} onClick={() => switchLaw(i, tool.id)} aria-pressed={active} title={tool.description}
-                            className={"min-h-10 rounded-full border px-3 py-2 text-xs font-semibold " + (active ? "border-[#1f6f5c] bg-[#1f6f5c] text-white" : "border-black/15 bg-white text-[#514c45] hover:bg-[#edf4ee]")}>{tool.label}</button>;
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                  {verdicts.laws !== null && <div role="status" className={"rounded-xl p-3 text-sm " + (verdicts.laws ? "bg-[#e2f3e9] text-[#1c694d]" : "bg-[#fff1e3] text-[#8f521d]")}>
-                    {verdicts.laws ? "Σωστά εργαλεία για όλες τις φάσεις." : "Κάποια φάση χρειάζεται άλλο ή επιπλέον εργαλείο. Έλεγξε ιδιαίτερα τις περιπτώσεις με δύο ζητούμενα."}
-                  </div>}
-                  <StageSupport kind="laws" level={support.laws} s={s} onMore={() => setSupport((old) => ({ ...old, laws: Math.min(3, old.laws + 1) }))} />
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" onClick={() => checkStage("laws")} className="min-h-11 rounded-xl bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white">Έλεγχος νόμων</button>
-                    {(verdicts.laws === true || support.laws === 3) && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Στρατηγική επίλυσης <ArrowRight size={16} /></button>}
-                  </div>
-                </div>
-              )}
-
-              {step === "start" && (
-                <div className="mt-6 space-y-4">
-                  <div className="flex items-center gap-2 text-[#226451]"><Target size={20} /><h3 className="text-lg font-semibold">Από ποια φάση ξεκινά η λύση;</h3></div>
-                  <p className="text-sm leading-7 text-[#655e55]">Τα φυσικά γεγονότα έχουν χρονική σειρά. Όμως οι υπολογισμοί μπορεί να πρέπει να ξεκινήσουν από το τέλος. Δες τα δεδομένα και τα ζητούμενα.</p>
-                  <div className="grid gap-2 sm:grid-cols-2">
-                    {s.phases.map((phase, i) => <button type="button" key={i} onClick={() => { setStartAt(i); setVerdicts((old) => ({ ...old, start: null })); }}
-                      aria-pressed={startAt === i} className={"rounded-xl border px-4 py-4 text-left text-sm font-semibold " + (startAt === i ? "border-[#1f6f5c] bg-[#e2f3e9] text-[#1c694d]" : "border-black/15 bg-[#faf9f6]")}>
-                      <span className="mb-1 block text-xs font-normal text-[#85786c]">Φάση {i + 1}</span>{phase.label}
-                    </button>)}
-                  </div>
-                  {verdicts.start !== null && <div role="status" className={"rounded-xl p-4 text-sm leading-6 " + (verdicts.start ? "bg-[#e2f3e9] text-[#1c694d]" : "bg-[#fff1e3] text-[#8f521d]")}>
-                    {verdicts.start ? "Σωστή αφετηρία. " + s.startWhy : "Δοκίμασε να εντοπίσεις σε ποια φάση έχεις αρκετά γνωστά μεγέθη για να βρεις ένα άγνωστο."}
-                  </div>}
-                  <StageSupport kind="start" level={support.start} s={s} onMore={() => setSupport((old) => ({ ...old, start: Math.min(3, old.start + 1) }))} />
-                  <div className="flex flex-wrap gap-2">
-                    <button type="button" disabled={startAt === null} onClick={() => checkStage("start")} className="min-h-11 rounded-xl bg-[#1f6f5c] px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40">Έλεγχος στρατηγικής</button>
-                    {(verdicts.start === true || support.start === 3) && <button type="button" onClick={nextStage} className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#242c2a] px-5 py-2.5 text-sm font-semibold text-white">Θα φτιάξω τη λύση <ArrowRight size={16} /></button>}
-                  </div>
-                </div>
-              )}
-
-              {step === "solve" && (
-                <div className="mt-6 space-y-5">
-                  <div className="flex items-center gap-2 text-[#226451]"><ClipboardCheck size={20} /><h3 className="text-lg font-semibold">Σύνδεσε τις φάσεις και προσπάθησε</h3></div>
-                  <p className="text-sm leading-7 text-[#655e55]">Γράψε το σχέδιο της λύσης. Ποιο μέγεθος βρίσκεις πρώτο; Σε ποια εξίσωση θα το χρησιμοποιήσεις μετά; Συνέχισε τους αριθμητικούς υπολογισμούς στο τετράδιό σου.</p>
-                  <label htmlFor="ormi2-plan" className="block text-sm font-semibold">Το δικό μου σχέδιο επίλυσης</label>
-                  <textarea id="ormi2-plan" value={plan} onChange={(event) => setPlan(event.target.value)} rows={5}
-                    placeholder="1. Ξεκινώ από... γιατί γνωρίζω...&#10;2. Βρίσκω τη μεταβλητή...&#10;3. Τη χρησιμοποιώ στη φάση..."
-                    className="block w-full resize-y rounded-xl border border-black/15 bg-[#faf9f5] p-4 text-sm leading-7 focus:border-[#24735a] focus:outline-2 focus:outline-offset-1 focus:outline-[#24735a]" />
-                  <div className="rounded-2xl border border-[#e7d7b7] bg-[#fffaf0] p-4">
-                    <div className="flex items-center gap-2 text-[#835a25]"><Lightbulb size={18} /><h4 className="font-semibold">Βοήθεια μόνο όταν τη χρειάζεσαι</h4></div>
-                    {help === 0 && <p className="mt-2 text-sm leading-6">Δοκίμασε πρώτα μόνος σου. Οι υποδείξεις εμφανίζονται μία-μία.</p>}
-                    {help >= 1 && <p className="mt-3 text-sm leading-6"><strong>1. Μικρή υπόδειξη:</strong> Αναζήτησε ποια φάση έχει τα περισσότερα γνωστά μεγέθη. Το ζητούμενο δεν είναι πάντα η αφετηρία.</p>}
-                    {help >= 2 && <div className="mt-3 rounded-xl bg-white p-3 text-sm leading-7"><strong>2. Χάρτης φάσεων:</strong><div className="mt-2 flex flex-wrap gap-2">{s.phases.map((p, i) => <span key={i} className="rounded-lg bg-[#e5f3e9] px-3 py-1.5 text-xs font-semibold text-[#235e4b]">{i + 1}. {p.label}</span>)}</div><p className="mt-2">Εντόπισε την κοινή ταχύτητα ή το άλλο μέγεθος που μεταφέρεται από φάση σε φάση.</p></div>}
-                    <button type="button" disabled={help === 2 || showSolution} onClick={() => setHelp((old) => Math.min(2, old + 1))}
-                      className="mt-3 inline-flex min-h-10 items-center gap-2 rounded-xl border border-[#c7a971] bg-white px-4 py-2 text-sm font-semibold text-[#755123] disabled:opacity-40"><CircleHelp size={16} /> Επόμενη υπόδειξη</button>
-                  </div>
-                  <div className="rounded-2xl border border-black/10 p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-3">
-                      <div><h4 className="font-semibold">Αναλυτική μεθοδολογία</h4><p className="mt-1 text-xs text-[#73695e]">Αν την ανοίξεις, η προσπάθεια θα καταγραφεί ως εξάσκηση με λύση.</p></div>
-                      <button type="button" disabled={plan.trim().length < 20} onClick={() => { if (!showSolution) setViewedSolution(true); setShowSolution((old) => !old); }}
-                        className="min-h-10 rounded-xl bg-[#262f2c] px-4 py-2 text-sm font-semibold text-white disabled:opacity-40">{showSolution ? "Κρύψε τη λύση" : "Δες τη μεθοδολογία"}</button>
-                    </div>
-                    {showSolution && <div className="mt-4 space-y-3">
-                      <p className="rounded-xl bg-[#e4f2e9] p-3 text-sm font-semibold text-[#1f684b]">{s.startWhy}</p>
-                      {s.phases.map((phase, i) => <div key={i} className="rounded-xl bg-[#faf9f6] p-4">
-                        <p className="text-sm font-semibold">Φάση {i + 1} · {phase.label}</p>
-                        <p className="mt-2 text-sm leading-7 text-[#655a4d]">{phase.why}</p>
-                        <p className="mt-2 overflow-x-auto whitespace-pre-wrap rounded-lg bg-white p-3 font-mono text-xs leading-6 text-[#244735]">{phase.eq}</p>
-                      </div>)}
-                    </div>}
-                  </div>
-                  {savedThisRound ? <div role="status" className="rounded-xl bg-[#e2f3e9] p-4 text-sm font-semibold text-[#1f694d]">Η προσπάθεια καταγράφηκε σε αυτή τη συσκευή. Δοκίμασε τώρα μία συγγενική άσκηση με διαφορετικές συνθήκες.</div> :
-                    <button type="button" disabled={plan.trim().length < 20} onClick={finish} className="inline-flex min-h-12 items-center gap-2 rounded-xl bg-[#1f6f5c] px-6 py-3 font-semibold text-white disabled:opacity-40"><CheckCircle2 size={19} /> Καταχώριση προσπάθειας</button>}
-                  {featuredTrick && <div className="rounded-2xl border border-[#aacdaf] bg-[#e8f5ea] p-4 sm:p-5">
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#26724c]">Μία από τις 5 ιδιαίτερα δύσκολες περιπτώσεις</p>
-                    <h4 className="mt-2 text-lg font-bold text-[#23593c]">{featuredTrick.memorable}</h4>
-                    <p className="mt-2 text-sm leading-7 text-[#476b52]">Δες την ειδική ανάλυση δυνάμεων και 4 άλλα ζητούμενα με την πλήρη διαδρομή σκέψης.</p>
-                    <Link href={"/mixalis/ormi2/kolpa?scenario="+encodeURIComponent(s.id)}
-                      className="mt-3 inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#276c4c] px-4 py-2.5 text-sm font-semibold text-white">Εξήγησέ μου την πονηριά <ArrowRight size={16}/></Link>
-                  </div>}
-                  <p className="text-xs leading-5 text-[#887f74]">Η εφαρμογή ελέγχει τη διάκριση φάσεων, τους νόμους και τη στρατηγική. Δεν ισχυρίζεται ότι διόρθωσε τις πράξεις που έγιναν στο τετράδιο.</p>
-                </div>
-              )}
-            </section>
-
-            <section className="rounded-3xl border border-black/10 bg-white p-5 sm:p-7">
-              <div className="flex items-center gap-2"><Sparkles size={19} className="text-[#986525]" /><h3 className="text-lg font-semibold">Επόμενη πρόκληση: άλλαξε τις συνθήκες</h3></div>
-              <p className="mt-2 text-sm leading-6 text-[#73695e]">Συγγενικές ασκήσεις από την ίδια υπάρχουσα τράπεζα. Σύγκρινε ποια φάση ή ποιος νόμος αλλάζει.</p>
-              <div className="mt-3 grid gap-2 sm:grid-cols-3">
-                {related.map(({ candidate, i }) => <button type="button" key={candidate.id} onClick={() => openScenario(i)}
-                  className="flex min-h-24 flex-col items-start justify-between gap-2 rounded-xl border border-[#dfddd5] bg-[#faf9f6] p-3 text-left hover:border-[#1f6f5c]">
-                  <span className="text-sm font-semibold leading-5">{candidate.title}</span>
-                  <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#24735a]">{candidate.phases.length} φάσεις <ChevronRight size={13}/></span>
-                </button>)}
-              </div>
-            </section>
-
-            <div className="flex flex-wrap gap-2 pb-5 text-sm">
-              <Link href="/mixalis/ormi" className="inline-flex items-center gap-2 rounded-xl border border-black/15 bg-white px-4 py-3 font-semibold"><BookOpen size={16} /> Θεωρία & λυμένες</Link>
-              <Link href="/mixalis/ormi/periptoseis" className="inline-flex items-center gap-2 rounded-xl border border-black/15 bg-white px-4 py-3 font-semibold"><Trophy size={16} /> 20 μεθοδολογίες</Link>
-            </div>
-          </div>
+      <section className="o2-slide">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <p className="o2-kicker">Σενάριο {index + 1} · {s.phases.length} φάσεις · {STEPS[stepPos].name}</p>
+          {record?.cleanPlans ? <span className="o2-tag">✓ Λύθηκε χωρίς βοήθεια</span>
+            : record?.attempts ? <span className="o2-tag">↻ Για επανάληψη</span> : null}
         </div>
-      </div>
-    </main>
+        <h1 className="o2-h1">{s.title}</h1>
+
+        <div className="o2-card key">
+          <p className="o2-kicker">Η αποστολή μας — Τι ψάχνουμε;</p>
+          <p className="o2-lead"><b>{s.ask}</b></p>
+          <p className="o2-small o2-muted">Θυμήσου αυτό το ζητούμενο ενώ παρακολουθείς το φαινόμενο. Μην ψάχνεις ακόμη τον νόμο: πρώτα κατάλαβε τι θέλεις να βρεις.</p>
+        </div>
+
+        <Ormi2MotionScene key={s.id} scenario={s} />
+
+        {step === "observe" && (
+          <div className="flex flex-col gap-4 o2-pop">
+            <h2 className="o2-h2">Πρώτα παρατήρησε τι συμβαίνει</h2>
+            <div className="o2-card">
+              <p className="o2-card-title">Η εκφώνηση, χωρίς έτοιμη ανάλυση</p>
+              {s.segs.map((part, i) => <p key={i}><span className="o2-m" style={{ color: "var(--accent2)" }}>{i + 1}.</span> {part}</p>)}
+            </div>
+            <div><button type="button" onClick={nextStage} className="o2-btn pri big">Θα τη χωρίσω σε φάσεις →</button></div>
+          </div>
+        )}
+
+        {step === "cuts" && (
+          <div className="flex flex-col gap-4 o2-pop">
+            <h2 className="o2-h2">Πού αλλάζει το φυσικό φαινόμενο;</h2>
+            <p className="o2-muted">Πάτησε σε κάθε θέση όπου τελειώνει μία φάση και αρχίζει άλλη. Μπορείς να επιλέξεις περισσότερες από μία τομές ή καμία.</p>
+            <div>
+              {s.segs.map((part, i) => (
+                <div key={i}>
+                  <div className="o2-card white">{part}</div>
+                  {i < s.segs.length - 1 && (
+                    <button type="button" onClick={() => switchCut(i)} aria-pressed={cuts.includes(i)} className="o2-cut">
+                      {cuts.includes(i) ? "✂ Τομή φάσης εδώ" : "+ Χώρισμα φάσης εδώ;"}
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            {verdicts.cuts !== null && <div role="status" className={"o2-fb o2-pop " + (verdicts.cuts ? "ok" : "bad")}>
+              {verdicts.cuts ? "Σωστή διάκριση των φάσεων." : "Οι τομές δεν είναι ακόμη σωστές. Δοκίμασε ξανά: πότε αλλάζει το σύστημα ή ο νόμος που χρειάζεται;"}
+            </div>}
+            <StageSupport kind="cuts" level={support.cuts} s={s} onMore={() => setSupport((old) => ({ ...old, cuts: Math.min(3, old.cuts + 1) }))} />
+            <div className="o2-seg">
+              <button type="button" onClick={() => checkStage("cuts")} className="o2-btn dark big">Έλεγχος φάσεων</button>
+              {(verdicts.cuts === true || support.cuts === 3) && <button type="button" onClick={nextStage} className="o2-btn pri big">Επιλογή νόμων →</button>}
+            </div>
+          </div>
+        )}
+
+        {step === "laws" && (
+          <div className="flex flex-col gap-4 o2-pop">
+            <h2 className="o2-h2">Ποιοι νόμοι χρειάζονται;</h2>
+            <p className="o2-muted">Για κάθε φάση επίλεξε όλους τους νόμους που χρειάζονται. Μερικές φάσεις απαιτούν συνδυασμό δύο νόμων.</p>
+            {grouped.map((parts, i) => (
+              <div key={i} className="o2-card">
+                <p className="o2-card-title"><span style={{ color: "var(--accent)" }}>Φάση {i + 1}</span> · {s.phases[i]?.label}</p>
+                <p className="o2-small o2-muted">{parts.join(" ")}</p>
+                <div className="o2-seg">
+                  {TOOLS.map((tool) => {
+                    const active = (selectedLaws[i] ?? []).includes(tool.id);
+                    return <button type="button" key={tool.id} onClick={() => switchLaw(i, tool.id)} aria-pressed={active} title={tool.description} className="o2-chip">{tool.label}</button>;
+                  })}
+                </div>
+              </div>
+            ))}
+            {verdicts.laws !== null && <div role="status" className={"o2-fb o2-pop " + (verdicts.laws ? "ok" : "bad")}>
+              {verdicts.laws ? "Σωστά εργαλεία για όλες τις φάσεις." : "Κάποια φάση χρειάζεται άλλο ή επιπλέον εργαλείο. Έλεγξε ιδιαίτερα τις περιπτώσεις με δύο ζητούμενα."}
+            </div>}
+            <StageSupport kind="laws" level={support.laws} s={s} onMore={() => setSupport((old) => ({ ...old, laws: Math.min(3, old.laws + 1) }))} />
+            <div className="o2-seg">
+              <button type="button" onClick={() => checkStage("laws")} className="o2-btn dark big">Έλεγχος νόμων</button>
+              {(verdicts.laws === true || support.laws === 3) && <button type="button" onClick={nextStage} className="o2-btn pri big">Στρατηγική επίλυσης →</button>}
+            </div>
+          </div>
+        )}
+
+        {step === "start" && (
+          <div className="flex flex-col gap-4 o2-pop">
+            <h2 className="o2-h2">Από ποια φάση ξεκινά η λύση;</h2>
+            <p className="o2-muted">Τα φυσικά γεγονότα έχουν χρονική σειρά. Όμως οι υπολογισμοί μπορεί να πρέπει να ξεκινήσουν από το τέλος. Δες τα δεδομένα και τα ζητούμενα.</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {s.phases.map((phase, i) => <button type="button" key={i} onClick={() => { setStartAt(i); setVerdicts((old) => ({ ...old, start: null })); }}
+                aria-pressed={startAt === i}
+                className={"o2-opt " + (verdicts.start !== null && startAt === i ? (verdicts.start ? "right" : "wrong") : "")}>
+                <span className="o2-display o2-small o2-muted">Φάση {i + 1}</span><br /><b>{phase.label}</b>
+              </button>)}
+            </div>
+            {verdicts.start !== null && <div role="status" className={"o2-fb o2-pop " + (verdicts.start ? "ok" : "bad")}>
+              {verdicts.start ? "Σωστή αφετηρία. " + s.startWhy : "Δοκίμασε να εντοπίσεις σε ποια φάση έχεις αρκετά γνωστά μεγέθη για να βρεις ένα άγνωστο."}
+            </div>}
+            <StageSupport kind="start" level={support.start} s={s} onMore={() => setSupport((old) => ({ ...old, start: Math.min(3, old.start + 1) }))} />
+            <div className="o2-seg">
+              <button type="button" disabled={startAt === null} onClick={() => checkStage("start")} className="o2-btn dark big">Έλεγχος στρατηγικής</button>
+              {(verdicts.start === true || support.start === 3) && <button type="button" onClick={nextStage} className="o2-btn pri big">Θα φτιάξω τη λύση →</button>}
+            </div>
+          </div>
+        )}
+
+        {step === "solve" && (
+          <div className="flex flex-col gap-4 o2-pop">
+            <h2 className="o2-h2">Σύνδεσε τις φάσεις και προσπάθησε</h2>
+            <p className="o2-muted">Γράψε το σχέδιο της λύσης. Ποιο μέγεθος βρίσκεις πρώτο; Σε ποια εξίσωση θα το χρησιμοποιήσεις μετά; Συνέχισε τους αριθμητικούς υπολογισμούς στο τετράδιό σου.</p>
+            <label htmlFor="ormi2-plan" className="o2-card-title">Το δικό μου σχέδιο επίλυσης</label>
+            <textarea id="ormi2-plan" value={plan} onChange={(event) => setPlan(event.target.value)} rows={5}
+              placeholder={"1. Ξεκινώ από... γιατί γνωρίζω...\n2. Βρίσκω τη μεταβλητή...\n3. Τη χρησιμοποιώ στη φάση..."}
+              className="o2-textarea" />
+
+            <div className="o2-card key">
+              <p className="o2-card-title">Βοήθεια μόνο όταν τη χρειάζεσαι</p>
+              {help === 0 && <p className="o2-small o2-muted">Δοκίμασε πρώτα μόνος σου. Οι υποδείξεις εμφανίζονται μία-μία και αφορούν αυτή την άσκηση.</p>}
+              {help >= 1 && <p className="o2-small o2-pop">
+                <b>1. Πρώτη εξίσωση:</b> ξεκινάς από τη Φάση {firstPhase + 1} ({s.phases[firstPhase]?.label}) με{" "}
+                <b>{(s.phases[firstPhase]?.best ?? []).map(toolLabel).join(" + ")}</b>. Γράψε μόνο αυτή την εξίσωση και βρες τον έναν άγνωστό της.
+              </p>}
+              {help >= 2 && <div className="o2-small o2-pop">
+                <b>2. Η αλυσίδα:</b>
+                <ol className="mt-1 list-decimal pl-5">
+                  {solveOrder.map((i) => <li key={i}>Φάση {i + 1} · {s.phases[i].label}: {s.phases[i].best.map(toolLabel).join(" + ")}</li>)}
+                </ol>
+                <p className="mt-1">Το μέγεθος που βρίσκεις σε κάθε βήμα (συνήθως μια ταχύτητα αμέσως πριν ή μετά την κρούση) είναι το δεδομένο του επόμενου.</p>
+              </div>}
+              {help < 2 && !showSolution && <div>
+                <button type="button" onClick={() => setHelp((old) => Math.min(2, old + 1))} className="o2-btn">
+                  {help === 0 ? "Από πού ξεκινώ;" : "Δείξε την αλυσίδα"}
+                </button>
+              </div>}
+            </div>
+
+            <div className="o2-acc">
+              <button type="button" aria-expanded={showSolution} disabled={plan.trim().length < 20}
+                onClick={() => { if (!showSolution) setViewedSolution(true); setShowSolution((old) => !old); }}
+                style={plan.trim().length < 20 ? { opacity: .5, cursor: "default" } : undefined}>
+                <span className="n">✎</span>
+                <span>Αναλυτική μεθοδολογία{plan.trim().length < 20 ? " (γράψε πρώτα το σχέδιό σου)" : ""}</span>
+                <ChevronDown size={18} className={"chev " + (showSolution ? "rotate-180" : "")} />
+              </button>
+              {showSolution && <div className="body o2-pop">
+                <p className="o2-small o2-muted">Επειδή την άνοιξες, η προσπάθεια καταγράφεται ως εξάσκηση με λύση.</p>
+                <div className="o2-fb ok">{s.startWhy}</div>
+                {s.phases.map((phase, i) => <div key={i} className="o2-card">
+                  <p className="o2-card-title">Φάση {i + 1} · {phase.label}</p>
+                  <p className="o2-small">{phase.why}</p>
+                  <code className="o2-formula">{phase.eq}</code>
+                </div>)}
+              </div>}
+            </div>
+
+            {savedThisRound
+              ? <div role="status" className="o2-fb ok o2-pop">Η προσπάθεια καταγράφηκε σε αυτή τη συσκευή. Δοκίμασε τώρα ένα συγγενικό σενάριο με διαφορετικές συνθήκες.</div>
+              : <div><button type="button" disabled={plan.trim().length < 20} onClick={finish} className="o2-btn teal big"><CheckCircle2 size={18} /> Καταχώριση προσπάθειας</button></div>}
+
+            {featuredTrick && <div className="o2-card tip">
+              <p className="o2-kicker" style={{ color: "var(--teal)" }}>Ένα από τα 5 δυνατά κόλπα</p>
+              <p className="o2-h3">{featuredTrick.memorable}</p>
+              <p className="o2-small">Δες την ειδική ανάλυση δυνάμεων και 4 άλλα ζητούμενα με την πλήρη διαδρομή σκέψης.</p>
+              <div><Link href={"/mixalis/ormi2/kolpa?scenario=" + encodeURIComponent(s.id)} className="o2-btn teal">Εξήγησέ μου την πονηριά →</Link></div>
+            </div>}
+            <p className="o2-small o2-muted">Η εφαρμογή ελέγχει τη διάκριση φάσεων, τους νόμους και τη στρατηγική. Δεν ισχυρίζεται ότι διόρθωσε τις πράξεις που έγιναν στο τετράδιο.</p>
+          </div>
+        )}
+
+        <StudyMark lesson="ormi2" id={"s-" + s.id} title={"Σενάριο " + (index + 1) + ": " + s.title} path={"/mixalis/ormi2?scenario=" + encodeURIComponent(s.id)} />
+      </section>
+
+      <Ormi2Navbar prevLabel="Προηγούμενο" nextLabel="Επόμενο σενάριο" onPrev={prevScenario} onNext={nextScenario}
+        hint="← → αλλάζουν σενάριο" />
+
+      <section className="o2-slide">
+        <p className="o2-kicker">Επόμενη πρόκληση · άλλαξε τις συνθήκες</p>
+        <p className="o2-muted o2-small">Συγγενικά σενάρια με παρόμοιους νόμους. Σύγκρινε ποια φάση ή ποιος νόμος αλλάζει.</p>
+        <div className="o2-mapgrid">
+          {related.map(({ candidate, i }) => <button type="button" key={candidate.id} onClick={() => { openScenario(i); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+            <b>{i + 1}. {candidate.title}</b>
+            <span>{candidate.phases.length} φάσεις</span>
+          </button>)}
+        </div>
+      </section>
+
+      <section className="o2-acc">
+        <button type="button" aria-expanded={libraryOpen} onClick={() => setLibraryOpen((v) => !v)}>
+          <span className="n">☰</span>
+          <span>Όλα τα {total} σενάρια · {progress} δοκιμασμένα · {independent} χωρίς βοήθεια</span>
+          <ChevronDown size={18} className={"chev " + (libraryOpen ? "rotate-180" : "")} />
+        </button>
+        {libraryOpen && <div className="body">
+          <div className="flex flex-wrap items-center gap-2">
+            <label htmlFor="ormi2-search" className="sr-only">Αναζήτηση σεναρίου</label>
+            <input id="ormi2-search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Αναζήτηση: π.χ. εκκρεμές, βλήμα"
+              className="o2-input min-w-0 flex-1" style={{ fontFamily: "var(--body)", fontWeight: 400, fontSize: 16 }} />
+            <div className="o2-seg" aria-label="Φίλτρο">
+              {([["all", "Όλα"], ["basic", "2 φάσεις"], ["advanced", "3+ φάσεις"], ["review", "Για επανάληψη"]] as const).map(([id, text]) => (
+                <button type="button" key={id} onClick={() => setFilter(id)} aria-pressed={filter === id} className="o2-btn sm">{text}</button>
+              ))}
+            </div>
+          </div>
+          {filtered.length === 0 && <p className="o2-muted o2-small">Δεν βρέθηκαν σενάρια για αυτό το φίλτρο.</p>}
+          <div className="o2-mapgrid">
+            {filtered.map(({ item, i }) => (
+              <button type="button" key={item.id} onClick={() => { openScenario(i); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+                aria-current={index === i ? "true" : undefined}>
+                <b>{i + 1}. {item.title}</b>
+                <span className="inline-flex items-center gap-1">
+                  {item.phases.length} φάσεις
+                  {history[item.id]?.cleanPlans ? <><CheckCircle2 size={14} color="var(--ok)" /> χωρίς βοήθεια</>
+                    : history[item.id]?.attempts ? <><RotateCcw size={13} color="var(--accent)" /> για επανάληψη</> : null}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>}
+      </section>
+
+      <p className="o2-small o2-muted pb-4">*Καταγράφεται η ανεξάρτητη μεθοδολογική προσπάθεια σε αυτή τη συσκευή, όχι αυτόματη βαθμολόγηση των αριθμητικών πράξεων.{" "}
+        <Link href="/mixalis/ormi/periptoseis" className="underline">Οι 20 μεθοδολογίες της Τράπεζας</Link>.</p>
+    </Ormi2Shell>
   );
 }

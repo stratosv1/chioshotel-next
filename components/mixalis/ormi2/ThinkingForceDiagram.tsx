@@ -108,11 +108,11 @@ export function ThinkingForceDiagram({ id }: { id: string }) {
       illustration=label(20,100,"Επίλεξε μια άσκηση από τα πέντε κόλπα.",false);
   }
   return (
-    <figure className="overflow-hidden rounded-2xl border border-[#cddfd2] bg-[#f7faf7]">
-      <figcaption className="px-4 pt-3 text-sm font-semibold text-[#315d49]">{title}</figcaption>
-      <svg viewBox="0 0 560 218" xmlns="http://www.w3.org/2000/svg" className="block w-full"
+    <figure className="overflow-hidden rounded-2xl border border-[#ddd6c8] bg-[#f7f4ec]">
+      <figcaption className="px-4 pt-3 text-sm font-semibold text-[#8a5a1c]">{title}</figcaption>
+      <svg viewBox="0 0 560 218" xmlns="http://www.w3.org/2000/svg" className="o2-cv" fontFamily="Commissioner, 'Segoe UI', system-ui, sans-serif"
         role="img" aria-label={"Διάγραμμα δυνάμεων και σωμάτων: "+title}>
-        <rect width="560" height="218" fill="#f7faf7"/>
+        <rect width="560" height="218" fill="#f7f4ec"/>
         {illustration}
       </svg>
       <p className="px-4 pb-3 text-xs leading-5 text-[#738475]">Σχηματική απεικόνιση — όχι υπό κλίμακα. Η φορά των βελών εξηγείται αναλυτικά παρακάτω.</p>

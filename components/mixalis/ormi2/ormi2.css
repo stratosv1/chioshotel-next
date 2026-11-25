@@ -1,0 +1,178 @@
+/*
+ * Ορμή 2 · ίδια αισθητική με το μάθημα της ορμής (public/mixalis/ormi-mathima.html):
+ * μία «διαφάνεια» τη φορά σε χαρτί, πορτοκαλί kicker, μπάρα ενοτήτων, πάγκος με
+ * κινούμενο σχέδιο και χειριστήρια, κάρτες με χρωματιστό αριστερό περίγραμμα.
+ *
+ * Όλα τα selectors είναι κλάσεις .o2-*: δεν στυλάρουμε γυμνά στοιχεία, ώστε οι
+ * Tailwind utilities (layer) να μη συγκρούονται με αυτό το αρχείο (unlayered).
+ */
+.o2 {
+  --bg: #f4f1ea; --paper: #fffdf8; --ink: #1d2433; --muted: #5d6475; --line: #ddd6c8; --soft: #f8f5ee;
+  --accent: #c9822f; --accent2: #8a5a1c; --teal: #1f6f5c;
+  --v: #1f6fd1; --F: #d9342b; --p: #1f9d55; --bench: #f7f4ec; --ok: #1f9d55; --bad: #c0392b;
+  --display: "Commissioner", "Segoe UI", system-ui, sans-serif;
+  --body: "Literata", Georgia, "Times New Roman", serif;
+  --mono: "Noto Sans Mono", ui-monospace, Menlo, monospace;
+  min-height: 100vh; background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 17px; line-height: 1.62; padding: 16px;
+  overflow-x: hidden;
+}
+.o2 *, .o2 *::before, .o2 *::after { box-sizing: border-box; }
+.o2-wrap { width: 100%; max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+
+/* Πάνω γραμμή: τίτλος μαθήματος + μετρητής */
+.o2-topline { display: flex; align-items: baseline; justify-content: space-between; gap: 6px 12px; flex-wrap: wrap; }
+.o2-brand { font-family: var(--display); font-weight: 800; font-size: 15px; color: var(--accent2); letter-spacing: .02em; text-decoration: none; }
+.o2-brand span { color: var(--muted); font-weight: 500; }
+.o2-counter { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+
+/* Οι σελίδες της Ορμής 2 */
+.o2-tabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; align-items: center; }
+.o2-tab { flex-shrink: 0; font-family: var(--display); font-size: 13.5px; font-weight: 700; padding: 6px 13px; border-radius: 999px;
+  border: 1.5px solid var(--line); background: #fff; color: var(--ink); text-decoration: none; white-space: nowrap; }
+.o2-tab:hover { border-color: var(--accent); }
+.o2-tab[aria-current="page"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.o2-tab.back { border-color: transparent; background: transparent; color: var(--muted); padding-left: 2px; }
+.o2-tab.back:hover { color: var(--accent2); }
+
+/* Μπάρα ενοτήτων / σταδίων (όπως .secs του μαθήματος) */
+.o2-secs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; scrollbar-width: thin; }
+.o2-secs button { all: unset; cursor: pointer; flex: 1 0 auto; min-width: 74px; display: flex; flex-direction: column; gap: 5px;
+  font-family: var(--display); font-size: 12.5px; font-weight: 700; color: var(--muted); }
+.o2-secs button:disabled { cursor: default; opacity: .7; }
+.o2-secs .bar { height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.o2-secs .bar i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+.o2-secs button[aria-current] { color: var(--ink); }
+.o2-secs button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* Η «διαφάνεια» */
+.o2-slide { background: var(--paper); border: 1px solid var(--line); border-radius: 22px; padding: 26px 30px 24px;
+  display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.o2-kicker { font-family: var(--display); font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .14em; color: var(--accent); margin: 0; }
+.o2-h1, .o2-h2, .o2-h3 { font-family: var(--display); font-weight: 800; line-height: 1.14; margin: 0; letter-spacing: -.01em; text-wrap: balance; }
+.o2-h1 { font-size: clamp(30px, 4.4vw, 46px); }
+.o2-h2 { font-size: clamp(22px, 2.8vw, 30px); }
+.o2-h3 { font-size: 18px; font-weight: 700; }
+.o2-lead { font-size: 18.5px; max-width: 46em; margin: 0; }
+.o2-muted { color: var(--muted); }
+.o2-small { font-size: 15px; }
+.o2-display { font-family: var(--display); }
+
+.o2-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; }
+.o2-card { background: var(--soft); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; font-size: 16px;
+  display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.o2-card.tip { border-left: 5px solid var(--teal); }
+.o2-card.trap { border-left: 5px solid var(--F); }
+.o2-card.trap .o2-h3 { color: var(--F); }
+.o2-card.key { border-left: 5px solid var(--accent); }
+.o2-card.ok { border-left: 5px solid var(--ok); background: #eef8f1; }
+.o2-card.white { background: #fff; }
+.o2-card .o2-h3 { font-size: 16px; }
+.o2-card-title { font-family: var(--display); font-weight: 700; font-size: 16px; margin: 0; }
+
+.o2-formula { display: block; font-family: var(--mono); font-size: 15px; font-weight: 700; padding: 8px 14px; border-radius: 12px;
+  border: 2px solid var(--accent); color: var(--accent2); background: #fff; overflow-x: auto; white-space: pre-wrap; }
+.o2-m { font-family: var(--mono); font-weight: 500; font-size: .94em; }
+.o2-tag.ok { background: #e3f3e8; color: #1d6b3f; }
+.o2-tag.warn { background: #fbe9d4; color: #8a4a12; }
+.o2-tag { display: inline-block; font-family: var(--display); font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: #efe7da; color: var(--accent2); }
+
+/* Πάγκος: κινούμενο σχέδιο + χειριστήρια + ενδείξεις */
+.o2-bench { background: var(--bench); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; }
+.o2-bench-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 12px; padding: 10px 16px 0;
+  font-family: var(--display); font-size: 13px; color: var(--muted); }
+.o2-bench-head b { color: var(--ink); }
+.o2-cv { display: block; width: 100%; height: auto; max-height: min(48vh, 400px); }
+.o2-ctrls { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; padding: 12px 16px; border-top: 1px solid var(--line);
+  background: #fbf9f3; font-family: var(--display); font-size: 14px; }
+.o2-ctrls input[type=range] { flex: 1 1 200px; accent-color: var(--accent); min-width: 120px; }
+.o2-ctrls output { font-family: var(--mono); font-size: 13.5px; min-width: 48px; text-align: right; }
+.o2-readout { font-family: var(--mono); font-size: 14px; padding: 10px 16px; border-top: 1px dashed var(--line); background: #fff; line-height: 1.7; }
+
+/* Κουμπιά */
+.o2-btn { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: var(--display); font-weight: 700; font-size: 14px; line-height: 1.3; padding: 8px 15px; border-radius: 999px; background: #fff;
+  border: 1.5px solid var(--line); color: var(--ink); white-space: nowrap; text-decoration: none; min-height: 38px; }
+.o2-btn:hover { border-color: var(--accent); }
+.o2-btn.pri { background: var(--accent); border-color: var(--accent); color: #fff; }
+.o2-btn.pri:hover { background: var(--accent2); border-color: var(--accent2); }
+.o2-btn.dark { background: var(--ink); border-color: var(--ink); color: #fff; }
+.o2-btn.teal { background: var(--teal); border-color: var(--teal); color: #fff; }
+.o2-btn.big { padding: 10px 20px; font-size: 15px; min-height: 44px; }
+.o2-btn.sm { padding: 4px 11px; font-size: 13px; min-height: 32px; }
+.o2-btn[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.o2-btn:disabled, .o2-btn[aria-disabled="true"] { opacity: .4; cursor: default; }
+.o2-btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.o2-seg { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+
+/* Επιλογές τύπου quiz */
+.o2-opt { all: unset; box-sizing: border-box; cursor: pointer; display: block; padding: 10px 13px; border-radius: 11px; background: #fff;
+  border: 1.5px solid var(--line); font-size: 16px; line-height: 1.5; }
+.o2-opt:hover { border-color: var(--accent); }
+.o2-opt[aria-pressed="true"] { border-color: var(--ink); background: #f1ede4; }
+.o2-opt.right { border-color: var(--ok); background: #e9f7ef; }
+.o2-opt.wrong { border-color: var(--bad); background: #fbecea; }
+.o2-opt:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.o2-cut { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%;
+  min-height: 38px; margin: 4px 0; border-radius: 11px; border: 1.5px dashed var(--line); font-family: var(--display); font-size: 13.5px;
+  font-weight: 700; color: var(--muted); }
+.o2-cut:hover { border-color: var(--accent); color: var(--accent2); }
+.o2-cut[aria-pressed="true"] { border-style: solid; border-color: var(--accent); background: #fbf1e3; color: var(--accent2); }
+.o2-chip { all: unset; box-sizing: border-box; cursor: pointer; font-family: var(--display); font-size: 13.5px; font-weight: 700;
+  padding: 6px 12px; border-radius: 999px; background: #fff; border: 1.5px solid var(--line); min-height: 34px; display: inline-flex; align-items: center; }
+.o2-chip:hover { border-color: var(--accent); }
+.o2-chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.o2-chip:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.o2-fb { font-size: 15.5px; padding: 9px 12px; border-radius: 11px; background: #fff; border-left: 4px solid var(--teal); }
+.o2-fb.ok { border-left-color: var(--ok); background: #eef8f1; }
+.o2-fb.bad { border-left-color: var(--bad); background: #fbf0ee; }
+.o2-fb.warn { border-left-color: var(--accent); background: #fdf5ea; }
+
+.o2-input { font-family: var(--mono); font-size: 17px; font-weight: 700; padding: 9px 14px; border-radius: 12px; border: 1.5px solid var(--line);
+  background: #fff; color: var(--ink); min-height: 44px; }
+.o2-input:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.o2-textarea { font-family: var(--body); font-size: 16px; line-height: 1.6; padding: 12px 14px; border-radius: 14px; border: 1.5px solid var(--line);
+  background: #fff; color: var(--ink); width: 100%; resize: vertical; }
+.o2-textarea:focus { outline: 3px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+/* Πτυσσόμενα */
+.o2-acc { border: 1px solid var(--line); border-radius: 14px; background: #fff; overflow: hidden; }
+.o2-acc > button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; gap: 10px; align-items: baseline; width: 100%;
+  padding: 11px 14px; font-family: var(--display); font-weight: 700; font-size: 15.5px; }
+.o2-acc > button .n { color: var(--accent); min-width: 1.6em; }
+.o2-acc > button .chev { margin-left: auto; color: var(--muted); }
+.o2-acc > button:focus-visible { outline: 3px solid var(--accent); outline-offset: -3px; }
+.o2-acc > .body { padding: 6px 16px 14px; border-top: 1px dashed var(--line); font-size: 16px; display: flex; flex-direction: column; gap: 10px; }
+
+/* Πλέγμα επιλογής (σενάρια, οικογένειες) */
+.o2-mapgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.o2-mapgrid button, .o2-mapgrid a { all: unset; box-sizing: border-box; cursor: pointer; background: var(--soft); border: 1px solid var(--line);
+  border-radius: 14px; padding: 11px 14px; display: flex; flex-direction: column; gap: 3px; }
+.o2-mapgrid button:hover, .o2-mapgrid a:hover { border-color: var(--accent); background: #fff; }
+.o2-mapgrid [aria-current] { border-color: var(--accent); background: #fff; box-shadow: inset 4px 0 0 var(--accent); }
+.o2-mapgrid button:focus-visible, .o2-mapgrid a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.o2-mapgrid b { font-family: var(--display); color: var(--accent2); font-size: 15px; line-height: 1.3; }
+.o2-mapgrid span { font-size: 14px; color: var(--muted); line-height: 1.4; }
+
+/* Πλοήγηση στο κάτω μέρος */
+.o2-navbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.o2-hint { font-family: var(--display); font-size: 13px; color: var(--muted); text-align: center; }
+
+.o2-meter { height: 7px; border-radius: 4px; background: var(--line); overflow: hidden; }
+.o2-meter i { display: block; height: 100%; background: var(--accent); }
+.o2-meter i.ok { background: var(--ok); }
+.o2-stat { font-family: var(--display); font-weight: 800; font-size: 30px; line-height: 1; }
+
+@keyframes o2pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.o2-pop { animation: o2pop .35s ease; }
+@media (prefers-reduced-motion: reduce) { .o2-pop { animation: none; } .o2-secs .bar i { transition: none; } }
+
+@media (max-width: 640px) {
+  .o2 { padding: 10px; font-size: 16px; }
+  .o2-slide { padding: 18px 16px; border-radius: 16px; }
+  .o2-lead { font-size: 17px; }
+  .o2-hint { display: none; }
+  .o2-hide-sm { display: none; }
+  .o2-navbar .o2-btn.big { padding: 10px 14px; }
+}
