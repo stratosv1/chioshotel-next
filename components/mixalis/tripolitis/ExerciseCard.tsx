@@ -219,7 +219,7 @@ export function ExerciseCard({ ex, accent = "#1f6f5c" }: { ex: Exercise; accent?
           </div>
         </div>
       </div>
-      <StudyMark lesson="ormi" id={`a${ex.id.replace(".", "-")}`} title={`Άσκηση ${ex.id}: ${ex.title}`} path="/mixalis/ormi" className="border-t border-black/5 px-4 py-3 sm:px-6" />
+      <StudyMark lesson="ormi" id={`a${ex.id.replace(".", "-")}`} title={`Άσκηση ${ex.id}: ${ex.title}`} path="/mixalis/ormi/askiseis" className="border-t border-black/5 px-4 py-3 sm:px-6" />
     </article>
   );
 }

@@ -12,7 +12,7 @@ export function SinthetaPresentations() {
     <div className="mt-5 grid gap-5 lg:grid-cols-2">
       {SINTHETA_CASES.map((c) => (
         <Fragment key={c.n}>
-          <AnimCard data={c} accent={ACCENT} idPrefix="s" study={{ lesson: "ormi", path: "/mixalis/ormi" }} />
+          <AnimCard data={c} accent={ACCENT} idPrefix="s" study={{ lesson: "ormi", path: "/mixalis/ormi2" }} />
           {/* Σύνθετη 5: το «πάμε παραπέρα» μπαίνει ακριβώς κάτω από την κάρτα της (owner, 2026-11-21). */}
           {c.n === 5 ? (
             <div className="lg:col-span-2">

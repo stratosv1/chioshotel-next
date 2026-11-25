@@ -194,7 +194,7 @@ function BankCard({
           </button>
         </div>
       )}
-      <StudyMark lesson="ormi" id={`tq-${keyOf(q)}`} title={`Τράπεζα ${q.code} · Θέμα ${q.part}`} path="/mixalis/ormi" className="mt-4 border-t border-black/5 pt-3" />
+      <StudyMark lesson="ormi" id={`tq-${keyOf(q)}`} title={`Τράπεζα ${q.code} · Θέμα ${q.part}`} path="/mixalis/ormi/trapeza" className="mt-4 border-t border-black/5 pt-3" />
     </article>
   );
 }

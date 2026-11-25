@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { StudyBar } from "@/components/mixalis/study/StudyBar";
+import { OrmiNav } from "@/components/mixalis/ormi/OrmiNav";
 import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { Reveal } from "@/components/mixalis/esoteriko/Reveal";
 import { Hint } from "@/components/mixalis/esoteriko/Hint";
 import { Shell, type CaseSlide } from "@/components/mixalis/esoteriko/Shell";
 import { rich } from "@/components/mixalis/esoteriko/rich";
-import { BANK_MAP, FIRST_MOVES, FORMULAS, GROUPS, type Case } from "./cases";
+import { FIRST_MOVES, GROUPS, type Case } from "./cases";
 import { CASE_FIGURES } from "./figures";
 
 /** Τα σημάδια μελέτης μπαίνουν στο μάθημα «Ορμή και κρούσεις», με id p… για να μη μπερδεύονται με τα κουτάκια του poster. */
@@ -111,16 +112,12 @@ export function OrmiPeriptoseisPage() {
   return (
     <main className="min-h-screen bg-[#f3efe8] text-[#2c2825]">
       <div className="mx-auto w-full max-w-6xl px-4 pt-5 sm:px-8 sm:pt-8">
+      <OrmiNav active="trapeza" className="mb-6" />
       <header className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm sm:p-8">
-        <div className="flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold text-[#857261]">
-          <Link href="/mixalis" prefetch={false} className="hover:underline">
-            ← Τα μαθήματά μου
-          </Link>
-          <Link href="/mixalis/ormi" prefetch={false} className="hover:underline">
-            Ορμή και κρούσεις: τυπολόγιο, μάθημα, ασκήσεις
-          </Link>
-        </div>
-        <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Φυσική Προσανατολισμού Β΄ Λυκείου · §2.3–2.7</p>
+        <Link href="/mixalis/ormi/trapeza" prefetch={false} className="text-sm font-semibold text-[#857261] hover:underline">
+          ← Τράπεζα Θεμάτων: όλες οι περιπτώσεις και τα Θέματα 2
+        </Link>
+        <p className="mt-4 text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Φυσική Προσανατολισμού Β΄ Λυκείου · Βήμα 3 · §2.3–2.7</p>
         <h1 className="mt-2 max-w-4xl text-3xl font-semibold tracking-tight sm:text-5xl">Ορμή και κρούσεις: οι περιπτώσεις ασκήσεων</h1>
         <p className="mt-5 max-w-3xl text-[19px] leading-9 text-[#5c534c]">
           Μιχάλη, τα 142 θέματα της Τράπεζας για την ορμή μοιάζουν πολλά, αλλά είναι <b>{total} περιπτώσεις</b> που επαναλαμβάνονται. Για καθεμία θα δεις τι
@@ -167,32 +164,12 @@ export function OrmiPeriptoseisPage() {
             ),
           },
           {
-            id: "typologio",
-            label: "Τυπολόγιο",
-            node: (
-              <Section id="typologio" n="2" kicker="Τυπολόγιο" title="Όλοι οι τύποι σε μία ματιά">
-                <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-                  {FORMULAS.map(([label, lines]) => (
-                    <div key={label} className="border-t-2 border-[#0e6e66] pt-3">
-                      <p className="text-sm font-semibold uppercase tracking-[0.14em] text-[#0e6e66]">{label}</p>
-                      {lines.map((l) => (
-                        <p key={l} className="mt-2 text-[20px] leading-9">
-                          {rich(l)}
-                        </p>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              </Section>
-            ),
-          },
-          {
             id: "kanones",
             label: "Φορά και ενέργεια",
             node: (
               <Section
                 id="kanones"
-                n="3"
+                n="2"
                 kicker="Τα τρία πράγματα που κρίνουν τις μονάδες"
                 title="Φορά, σύστημα, ενέργεια"
                 intro={<p>Οι περισσότερες μονάδες χάνονται σε αυτά τα τρία, όχι στις πράξεις.</p>}
@@ -226,66 +203,6 @@ export function OrmiPeriptoseisPage() {
                   Πριν και μετά την κρούση ισχύουν τα «κανονικά» εργαλεία: ΑΔΜΕ, ΘΜΚΕ, κινηματική, οριζόντια βολή, κυκλική κίνηση. Η ΑΔΟ καλύπτει{" "}
                   <b>μόνο</b> τη στιγμή της κρούσης.
                 </p>
-              </Section>
-            ),
-          },
-          {
-            id: "trapeza",
-            label: "Τράπεζα Θεμάτων",
-            node: (
-              <Section
-                id="trapeza"
-                n="4"
-                kicker="Τράπεζα Θεμάτων ΙΕΠ"
-                title="Τα θέματα της Τράπεζας για τις §2.3–2.7"
-                intro={<p>Κάθε θέμα της Τράπεζας ανήκει σε μία από τις περιπτώσεις. Πάτα την περίπτωση για να δεις τη μέθοδο.</p>}
-              >
-                <table className="w-full max-w-5xl text-left text-[17px]">
-                  <thead>
-                    <tr className="border-b-2 border-[#2c2825]/70">
-                      <th className="py-3 pr-6 font-semibold">Περίπτωση</th>
-                      <th className="py-3 pr-6 font-semibold">Θέματα</th>
-                      <th className="py-3 font-semibold">Δες</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {BANK_MAP.map(([label, codes, id, code]) => (
-                      <tr key={id} className="border-b border-black/10">
-                        <td className="py-3 pr-6">{label}</td>
-                        <td className="py-3 pr-6 text-[#5c534c]">{codes}</td>
-                        <td className="py-3">
-                          <a href={`#${id}`} className="font-semibold text-[#a8651f] underline underline-offset-2">
-                            {code}
-                          </a>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <p className="mt-4 max-w-3xl text-[15px] leading-7 text-[#857261]">
-                  Από τα 142 θέματα της Τράπεζας για τις §2.3–2.7, τα 104 που έχουν κείμενο είναι κατανεμημένα στις περιπτώσεις. Τα υπόλοιπα 38 υπάρχουν
-                  μόνο ως εικόνα στην Τράπεζα. Τα Θέματα 2 λυμένα ένα-ένα θα τα βρεις στη{" "}
-                  <Link href="/mixalis/ormi#trapeza" prefetch={false} className="font-semibold text-[#a8651f] underline underline-offset-2">
-                    σελίδα της ορμής
-                  </Link>
-                  .
-                </p>
-
-                <h3 className="mt-14 text-2xl font-semibold tracking-tight">Με ποια σειρά να τα δουλέψεις</h3>
-                <div className="mt-6 grid gap-10 sm:grid-cols-3">
-                  {[
-                    ["1", "Η βάση", "Α2, Α3 · Β1–Β3 · Γ1", "Πέφτουν σχεδόν σε κάθε Θέμα 2 και ανοίγουν κάθε Θέμα 4."],
-                    ["2", "Οι παγίδες", "Α1, Α4–Α6 · Β4 · Γ2, Γ3", "Εδώ χάνονται οι μονάδες: πρόσημα, ποιο σώμα, ποιο ποσοστό."],
-                    ["3", "Για το Θέμα 4", "Δ1–Δ5 · Β5, Β6", "Συνδυασμοί με βολή, τριβή, κύκλο και πεδία, όταν τα προηγούμενα είναι σίγουρα."],
-                  ].map(([num, h, r, t]) => (
-                    <div key={num} className="border-t-2 border-[#2c2825] pt-3">
-                      <p className="text-5xl font-bold text-[#c9822f]">{num}</p>
-                      <p className="mt-2 text-xl font-semibold">{h}</p>
-                      <p className="mt-1 text-lg font-medium text-[#5c534c]">{r}</p>
-                      <p className="mt-2 text-[17px] leading-7 text-[#5c534c]">{t}</p>
-                    </div>
-                  ))}
-                </div>
               </Section>
             ),
           },

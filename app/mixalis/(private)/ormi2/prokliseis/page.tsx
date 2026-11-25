@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OrmiNavStrip } from "@/components/mixalis/ormi/OrmiNav";
 import { Ormi2ChallengeLab } from "@/components/mixalis/ormi2/Ormi2ChallengeLab";
 
 export const metadata: Metadata = {
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function Ormi2ChallengesPage() {
-  return <Ormi2ChallengeLab />;
+  return (
+    <>
+      <OrmiNavStrip active="sintheta" />
+      <Ormi2ChallengeLab />
+    </>
+  );
 }

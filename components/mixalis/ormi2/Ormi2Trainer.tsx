@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
-  ArrowLeft, ArrowRight, BookOpen, BrainCircuit, CheckCircle2, ChevronRight,
+  ArrowRight, BookOpen, BrainCircuit, CheckCircle2, ChevronRight,
   CircleHelp, ClipboardCheck, Eye, GitBranch, Lightbulb, RotateCcw,
   Sparkles, Target, Trophy,
 } from "lucide-react";
@@ -235,12 +235,9 @@ export function Ormi2Trainer() {
     <main className="min-h-screen bg-[#f3efe8] px-3 py-5 text-[#2c2825] sm:px-6 sm:py-8">
       <div className="mx-auto max-w-7xl space-y-5">
         <header className="overflow-hidden rounded-3xl bg-[#183d35] px-5 py-7 text-white sm:px-9 sm:py-9">
-          <Link href="/mixalis/ormi" className="inline-flex items-center gap-2 text-sm text-[#cce6d6] hover:text-white">
-            <ArrowLeft size={16} /> Πίσω στο τυπολόγιο και τη θεωρία
-          </Link>
-          <div className="mt-6 flex flex-wrap items-start justify-between gap-5">
+          <div className="flex flex-wrap items-start justify-between gap-5">
             <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#a7d4bd]">Physics Workspace · Μιχάλης</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#a7d4bd]">Ορμή και κρούσεις · Βήμα 4 · Σύνθετες</p>
               <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Ορμή 2</h1>
               <p className="mt-2 text-lg font-medium text-[#d6ecde]">Εργαστήριο συνδυαστικών ασκήσεων</p>
               <p className="mt-3 max-w-xl text-sm leading-7 text-[#d2e4d9]">

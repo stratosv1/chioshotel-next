@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OrmiNavStrip } from "@/components/mixalis/ormi/OrmiNav";
 import { Ormi2ProgressDashboard } from "@/components/mixalis/ormi2/Ormi2ProgressDashboard";
 
 export const metadata: Metadata = {
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function Ormi2ProgressPage() {
-  return <Ormi2ProgressDashboard />;
+  return (
+    <>
+      <OrmiNavStrip active="proodos" />
+      <Ormi2ProgressDashboard />
+    </>
+  );
 }

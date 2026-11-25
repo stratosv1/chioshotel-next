@@ -78,13 +78,14 @@ const SUBJECTS: Subject[] = [
       },
       {
         title: "Ορμή και κρούσεις",
-        subtitle: "Θεωρία, τυπολόγιο με κινούμενα σχέδια και οι φωτοτυπίες του Τριπολίτη λυμένες.",
+        subtitle: "Σε 4 βήματα: θεωρία και τυπολόγιο, εξάσκηση, Τράπεζα Θεμάτων, σύνθετες ασκήσεις.",
         href: "/mixalis/ormi",
         study: "ormi",
         links: [
-          { label: "Περιπτώσεις ασκήσεων (Τράπεζα)", href: "/mixalis/ormi/periptoseis" },
-          { label: "Θεωρία (μάθημα με κίνηση)", href: "/mixalis/ormi#mathima" },
-          { label: "Ασκήσεις Τριπολίτη (λυμένες)", href: "/mixalis/ormi#askiseis" },
+          { label: "1 · Θεωρία & τυπολόγιο", href: "/mixalis/ormi" },
+          { label: "2 · Εξάσκηση", href: "/mixalis/ormi/askiseis" },
+          { label: "3 · Τράπεζα Θεμάτων", href: "/mixalis/ormi/trapeza" },
+          { label: "4 · Σύνθετες", href: "/mixalis/ormi2" },
         ],
         pdf: "/mixalis/ormi-typologio-A4.pdf",
       },

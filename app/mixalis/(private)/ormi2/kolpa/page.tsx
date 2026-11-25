@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OrmiNavStrip } from "@/components/mixalis/ormi/OrmiNav";
 import { Ormi2ThinkingTricks } from "@/components/mixalis/ormi2/Ormi2ThinkingTricks";
 
 export const metadata: Metadata = {
@@ -7,5 +8,10 @@ export const metadata: Metadata = {
 };
 
 export default function Ormi2ThinkingPage() {
-  return <Ormi2ThinkingTricks />;
+  return (
+    <>
+      <OrmiNavStrip active="sintheta" />
+      <Ormi2ThinkingTricks />
+    </>
+  );
 }
