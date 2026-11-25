@@ -24,7 +24,7 @@ export function OrmiNav({ active, className = "" }: { active: OrmiNavKey; classN
         </Link>
         <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Ορμή και κρούσεις</span>
       </div>
-      <ol className="flex gap-1.5 overflow-x-auto">
+      <ol className="flex gap-1.5 overflow-x-auto md:flex-wrap md:overflow-visible">
         {STEPS.map((s) => {
           const on = s.key === active;
           return (
