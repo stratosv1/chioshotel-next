@@ -76,6 +76,9 @@ function Flag({ country }: { country: HolidayCountry }) {
   );
 }
 const ROOM_COL = 150;
+const ROOM_COL_NARROW = 48;
+// Owner, 2026-11-25: the plan always opens on April 2027 (month view).
+const DEFAULT_MONTH = "2027-04";
 const ROW_H = 66;
 
 async function api(path: string, init?: RequestInit) {
@@ -164,11 +167,29 @@ function categoryWarning(booking: Pick<PlanBooking, "channel" | "room">, to: num
 // ---------- main board ----------
 
 export default function PlanBoard() {
-  const [start, setStart] = useState(() => addDays(athensToday(), -1));
+  const [start, setStart] = useState(() => addDays(`${DEFAULT_MONTH}-01`, -MONTH_PAD));
   const [rangeIndex, setRangeIndex] = useState(1);
   // Selected month ("YYYY-MM") or null for the 1/2/4-week views.
-  const [month, setMonth] = useState<string | null>(null);
-  const [pickYear, setPickYear] = useState(() => Number(athensToday().slice(0, 4)));
+  const [month, setMonth] = useState<string | null>(DEFAULT_MONTH);
+  const [pickYear, setPickYear] = useState(() => Number(DEFAULT_MONTH.slice(0, 4)));
+  // Room column folds to just the number (default on phones); the choice is remembered.
+  const [narrow, setNarrow] = useState(false);
+  useEffect(() => {
+    let saved: string | null = null;
+    try {
+      saved = localStorage.getItem("pyrgos-plan-narrow");
+    } catch {}
+    setNarrow(saved === null ? window.innerWidth < 768 : saved === "1");
+  }, []);
+  const toggleNarrow = () => {
+    setNarrow((v) => {
+      try {
+        localStorage.setItem("pyrgos-plan-narrow", v ? "0" : "1");
+      } catch {}
+      return !v;
+    });
+  };
+  const ROOM_W = narrow ? ROOM_COL_NARROW : ROOM_COL;
   const range = month
     ? { days: monthDays(month) + MONTH_PAD * 2, label: "Μήνας", width: MONTH_W }
     : RANGES[rangeIndex];
@@ -402,7 +423,7 @@ export default function PlanBoard() {
   }, [resize?.b.id, resize?.edge, W]);
 
   const today = athensToday();
-  const gridWidth = ROOM_COL + days.length * W;
+  const gridWidth = ROOM_W + days.length * W;
 
   return (
     <div className="min-h-screen bg-[#eef3f7] text-[#1f2a3c]">
@@ -484,7 +505,18 @@ export default function PlanBoard() {
           <section aria-label="Πλάνο" className="overflow-x-auto rounded-2xl border border-[#e3e9f0] bg-white">
             <div style={{ width: gridWidth }} className={loading ? "opacity-60" : ""}>
               <div className="sticky top-0 z-20 flex border-b border-[#e3e9f0] bg-white">
-                <div style={{ width: ROOM_COL }} className="sticky left-0 z-30 flex items-end bg-white px-3 pb-2 text-xs font-bold text-[#5b6b80]">Δωμάτιο</div>
+                <div style={{ width: ROOM_W }} className={`sticky left-0 z-30 flex items-end justify-between bg-white pb-2 text-xs font-bold text-[#5b6b80] ${narrow ? "px-1" : "px-3"}`}>
+                  {!narrow && <span>Δωμάτιο</span>}
+                  <button
+                    type="button"
+                    onClick={toggleNarrow}
+                    aria-label={narrow ? "Άνοιγμα στήλης δωματίων" : "Μάζεμα στήλης δωματίων"}
+                    title={narrow ? "Άνοιγμα στήλης" : "Μάζεμα στήλης"}
+                    className="flex h-7 w-7 items-center justify-center rounded-full border border-[#dbe3ec] bg-white text-sm text-[#3d4b5e] hover:bg-[#f4f7fa]"
+                  >
+                    {narrow ? "»" : "«"}
+                  </button>
+                </div>
                 {days.map((d) => {
                   const outside = month !== null && d.slice(0, 7) !== month;
                   const firstOfMonth = d.endsWith("-01");
@@ -527,7 +559,14 @@ export default function PlanBoard() {
                       if (b) dropOnRoom(b, room.number);
                     }}
                   >
-                    <div style={{ width: ROOM_COL }} className={`sticky left-0 z-10 flex flex-col justify-center border-r border-[#e3e9f0] px-3 ${economy ? "bg-[#dff0fb]" : "bg-white"}`}>
+                    <div style={{ width: ROOM_W }} title={narrow ? `${room.label} · ${room.categoryLabel}` : undefined} className={`sticky left-0 z-10 flex flex-col justify-center border-r border-[#e3e9f0] ${narrow ? "items-center px-1" : "px-3"} ${economy ? "bg-[#dff0fb]" : "bg-white"}`}>
+                      {narrow ? (
+                        <span className="text-base font-black leading-none">
+                          {room.number}
+                          {roomTasks.get(room.number) && <span className={`ml-0.5 align-top text-[9px] ${roomTasks.get(room.number)!.urgent ? "text-[#991b1b]" : "text-[#b45309]"}`}>●</span>}
+                        </span>
+                      ) : (
+                      <>
                       <span className="flex items-center gap-1 text-sm font-black leading-tight">
                         {room.label}
                         {roomTasks.get(room.number) && (
@@ -542,6 +581,8 @@ export default function PlanBoard() {
                         )}
                       </span>
                       <span className={`text-[11px] ${economy ? "font-bold uppercase tracking-wide text-[#0c4a6e]" : "text-[#5b6b80]"}`}>{room.categoryLabel}</span>
+                      </>
+                      )}
                     </div>
                     {days.map((d) => {
                       const cell = cellMap.get(`${room.number}:${d}`);
@@ -592,7 +633,7 @@ export default function PlanBoard() {
                           }}
                           onClick={() => !resize && b.status !== "black" && setOpenId(b.id)}
                           title={`${b.firstName} ${b.lastName} · ${dm(b.checkin)}–${dm(b.checkout)} · ${b.channel}${b.notes ? ` · 📝 ${b.notes}` : ""}`}
-                          style={{ left: ROOM_COL + left * W + 2, width, top: 6, height: ROW_H - 12 }}
+                          style={{ left: ROOM_W + left * W + 2, width, top: 6, height: ROW_H - 12 }}
                           className={`absolute z-[5] flex flex-col justify-center overflow-hidden rounded-lg border px-2 text-left shadow-sm hover:brightness-95 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#5443c9] ${style.bar} ${b.hold ? "border-2 border-dashed border-[#b45309]" : ""} ${openId === b.id ? "ring-2 ring-[#1f2a3c]" : ""}`}
                         >
                           <span className="flex items-center gap-1 truncate text-xs font-black leading-tight">
