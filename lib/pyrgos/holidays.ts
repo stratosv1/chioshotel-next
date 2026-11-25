@@ -59,8 +59,8 @@ const BAYRAMS: { name: string; first: string; days: number; estimate?: boolean }
   { name: "Kurban Bayramı", first: "2026-05-27", days: 4 },
   { name: "Ramazan Bayramı", first: "2027-03-09", days: 3 },
   { name: "Kurban Bayramı", first: "2027-05-16", days: 4 },
-  { name: "Ramazan Bayramı", first: "2028-02-26", days: 3, estimate: true },
-  { name: "Kurban Bayramı", first: "2028-05-05", days: 4, estimate: true },
+  { name: "Ramazan Bayramı", first: "2028-02-26", days: 3 },
+  { name: "Kurban Bayramı", first: "2028-05-05", days: 4 },
 ];
 
 const cache = new Map<number, Map<string, Holiday[]>>();
