@@ -114,6 +114,14 @@ export function EsoterikoPage() {
         <p className="mt-3 max-w-3xl text-[15px] leading-7 text-[#857261]">
           Από την Τράπεζα Θεμάτων, το βοήθημα του Μπάρλα και τις σημειώσεις του φροντιστηρίου.
         </p>
+        <div className="mt-5 flex flex-wrap gap-2 text-sm font-semibold">
+          <a href="/mixalis/esoteriko-askiseis.pdf" download className="rounded-full bg-[#2c2825] px-4 py-1.5 text-white hover:bg-black">
+            ⬇ Οι 25 ασκήσεις για εκτύπωση (PDF)
+          </a>
+          <a href="/mixalis/esoteriko-voitheia-luseis.pdf" download className="rounded-full border border-black/10 bg-white px-4 py-1.5 hover:bg-[#f3efe8]">
+            ⬇ Βοήθεια και λύσεις (PDF)
+          </a>
+        </div>
       </header>
 
       <div className="mx-auto w-full max-w-[1400px] px-4 pb-4 sm:px-8">
