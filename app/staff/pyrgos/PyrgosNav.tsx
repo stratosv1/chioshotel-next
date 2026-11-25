@@ -8,27 +8,27 @@ const groups: { title: string; items: NavItem[] }[] = [
   {
     title: "Λειτουργία",
     items: [
-      { href: "/staff/pyrgos", label: "Σήμερα", match: "/staff/pyrgos" },
-      { href: "/staff/pyrgos/plano", label: "Πλάνο κρατήσεων", match: "/staff/pyrgos/plano" },
-      { href: "/staff/rooms", label: "Αφίξεις & δωμάτια", match: "/staff/rooms" },
-      { href: "/staff/pyrgos#katharismos", label: "Καθαριότητα" },
-      { href: "/staff/pyrgos/ergasies", label: "Βλάβες & εργασίες", match: "/staff/pyrgos/ergasies" },
+      { href: "/staff/pyrgos/", label: "Σήμερα", match: "/staff/pyrgos" },
+      { href: "/staff/pyrgos/plano/", label: "Πλάνο κρατήσεων", match: "/staff/pyrgos/plano" },
+      { href: "/staff/rooms/", label: "Αφίξεις & δωμάτια", match: "/staff/rooms" },
+      { href: "/staff/pyrgos/#katharismos", label: "Καθαριότητα" },
+      { href: "/staff/pyrgos/ergasies/", label: "Βλάβες & εργασίες", match: "/staff/pyrgos/ergasies" },
     ],
   },
   {
     title: "Πελάτες",
     items: [
-      { href: "/staff/crm", label: "Πελάτες (CRM)", match: "/staff/crm" },
-      { href: "/staff/ai-room-finder", label: "AI συνομιλίες", match: "/staff/ai-room-finder" },
-      { href: "/staff/offers", label: "Προσφορές & newsletter", match: "/staff/offers" },
+      { href: "/staff/crm/", label: "Πελάτες (CRM)", match: "/staff/crm" },
+      { href: "/staff/ai-room-finder/", label: "AI συνομιλίες", match: "/staff/ai-room-finder" },
+      { href: "/staff/offers/", label: "Προσφορές & newsletter", match: "/staff/offers" },
     ],
   },
   {
     title: "Οικονομικά",
     items: [
-      { href: "/staff/statistics", label: "Στατιστικά", match: "/staff/statistics" },
-      { href: "/staff/expenses", label: "Έξοδα", match: "/staff/expenses" },
-      { href: "/staff/payroll", label: "Μισθοδοσία", match: "/staff/payroll" },
+      { href: "/staff/statistics/", label: "Στατιστικά", match: "/staff/statistics" },
+      { href: "/staff/expenses/", label: "Έξοδα", match: "/staff/expenses" },
+      { href: "/staff/payroll/", label: "Μισθοδοσία", match: "/staff/payroll" },
     ],
   },
 ];
@@ -75,7 +75,7 @@ export default function PyrgosNav({ wide = "lg" }: { wide?: "lg" | "xl" }) {
           })}
         </div>
       ))}
-      <a href="/staff" className={`${idle} ${bottom}`}>
+      <a href="/staff/" className={`${idle} ${bottom}`}>
         ← Παλιό staff
       </a>
     </nav>
