@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
 import { applyBreakfastToNewBooking } from "@/lib/pyrgos/breakfast";
+import { ensureStayCharge } from "@/lib/pyrgos/beds24-write";
 
 export const runtime = "nodejs";
 
@@ -348,6 +349,14 @@ export async function POST(request: NextRequest) {
     const bookingId = extractBookingId(result);
     if (!bookingId) return json({ message: "Beds24 did not return a booking id.", details: result }, 502);
 
+    // Beds24 totals invoice lines only: the stay needs its own line next to breakfast and fees.
+    if (price !== null && price > 0) {
+      try {
+        await ensureStayCharge(String(bookingId));
+      } catch (error) {
+        console.error("[booker] stay charge failed", error);
+      }
+    }
     const breakfastOutcome = breakfast
       ? await applyBreakfastToNewBooking({ bookingId: String(bookingId), amount: breakfastPrice, nights, guests })
       : null;

@@ -1,7 +1,7 @@
 import "server-only";
 import { appendBookingNote, getBeds24WriteToken } from "@/lib/crm/booking-notes";
 import { loadConfirmation, sendConfirmation } from "@/lib/crm/booking-confirmation";
-import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, ensureClimateFee, liveOverlap, modifyBeds24Booking } from "./beds24-write";
+import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, ensureClimateFee, ensureStayCharge, liveOverlap, modifyBeds24Booking } from "./beds24-write";
 import { ensureBookingsTable } from "./bookings";
 import { deleteCharge, insertCharge, logHistory, resolvePrice, saveMoney, type PriceMode } from "./ledger";
 import { freeRooms, getBookingDetail } from "./plan";
@@ -30,8 +30,15 @@ const int = (v: unknown, fallback: number) => {
 };
 const roomLabel = (n: number | null) => roomByNumber(n)?.label ?? `Δωμ. ${n}`;
 
-/** Climate fee (ΤΑΚΚ) on the Beds24 invoice of a direct booking; never blocks the main action. */
+/** Stay line + climate fee (ΤΑΚΚ) on the Beds24 invoice of a direct booking; never blocks the main action. */
 async function syncClimateFee(id: string, nights: number) {
+  try {
+    const stay = await ensureStayCharge(id);
+    if (stay === "added" || stay === "adjusted") await logHistory(id, "Διαμονή στο τιμολόγιο", stay === "added" ? "μπήκε στο Beds24" : "διορθώθηκε στο Beds24", "ok");
+  } catch (error) {
+    console.error("[pyrgos] stay charge sync failed", error);
+    await logHistory(id, "Διαμονή στο τιμολόγιο", "δεν πέρασε στο Beds24", "failed").catch(() => undefined);
+  }
   try {
     const outcome = await ensureClimateFee(id, nights);
     if (outcome !== "exists") await logHistory(id, "Φόρος διαμονής", `${nights} × €2 · ${outcome === "added" ? "μπήκε στο Beds24" : "διορθώθηκε στο Beds24"}`, "ok");
