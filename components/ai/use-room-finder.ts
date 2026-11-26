@@ -423,13 +423,13 @@ const ROOM_INTEREST_TOO_SMALL: Record<RoomFinderLanguage, (room: number, maxGues
 // Actions offered under results, "no availability" and the summary, so the
 // guest can keep searching instead of hitting a dead end.
 const RESULT_ACTIONS: Record<RoomFinderLanguage, { dates: string; guests: string; datesShort: string; guestsShort: string; restart: string; hint: string }> = {
-  el: { dates: "Αλλαγή ημερομηνιών", guests: "Αλλαγή ατόμων", datesShort: "Ημερομηνίες", guestsShort: "Άτομα", restart: "Νέα αναζήτηση", hint: "Μπορείτε και να μου γράψετε την αλλαγή, π.χ. «check-out 15/5» ή «τελικά 3 άτομα»." },
-  en: { dates: "Change dates", guests: "Change guests", datesShort: "Dates", guestsShort: "Guests", restart: "New search", hint: "You can also just type the change, e.g. “check-out 15/5” or “actually 3 guests”." },
-  de: { dates: "Daten ändern", guests: "Gäste ändern", datesShort: "Daten", guestsShort: "Gäste", restart: "Neue Suche", hint: "Sie können die Änderung auch einfach schreiben, z. B. „Abreise 15.5.“ oder „doch 3 Personen“." },
-  fr: { dates: "Changer les dates", guests: "Changer le nombre", datesShort: "Dates", guestsShort: "Personnes", restart: "Nouvelle recherche", hint: "Vous pouvez aussi simplement écrire le changement, par ex. « départ le 15/5 » ou « finalement 3 personnes »." },
-  it: { dates: "Cambia date", guests: "Cambia ospiti", datesShort: "Date", guestsShort: "Ospiti", restart: "Nuova ricerca", hint: "Potete anche scrivere la modifica, ad es. “check-out 15/5” o “in realtà 3 persone”." },
-  es: { dates: "Cambiar fechas", guests: "Cambiar personas", datesShort: "Fechas", guestsShort: "Personas", restart: "Nueva búsqueda", hint: "También puede escribir el cambio, p. ej. «salida el 15/5» o «al final 3 personas»." },
-  tr: { dates: "Tarihleri değiştir", guests: "Kişi sayısını değiştir", datesShort: "Tarihler", guestsShort: "Kişiler", restart: "Yeni arama", hint: "Değişikliği yazabilirsiniz de, ör. “çıkış 15/5” veya “aslında 3 kişi”." },
+  el: { dates: "Αλλαγή ημερομηνιών", guests: "Αλλαγή ατόμων", datesShort: "Ημερομηνίες", guestsShort: "Άτομα", restart: "Νέα αναζήτηση", hint: "Θέλετε κάτι διαφορετικό; Μπορείτε και να μου γράψετε την αλλαγή, π.χ. άλλη ημερομηνία αναχώρησης ή άλλο αριθμό ατόμων." },
+  en: { dates: "Change dates", guests: "Change guests", datesShort: "Dates", guestsShort: "Guests", restart: "New search", hint: "Want something different? You can also type the change, e.g. a different check-out date or number of guests." },
+  de: { dates: "Daten ändern", guests: "Gäste ändern", datesShort: "Daten", guestsShort: "Gäste", restart: "Neue Suche", hint: "Möchten Sie etwas ändern? Sie können es auch einfach schreiben, z. B. ein anderes Abreisedatum oder eine andere Personenzahl." },
+  fr: { dates: "Changer les dates", guests: "Changer le nombre", datesShort: "Dates", guestsShort: "Personnes", restart: "Nouvelle recherche", hint: "Vous souhaitez autre chose ? Vous pouvez aussi écrire le changement, par ex. une autre date de départ ou un autre nombre de personnes." },
+  it: { dates: "Cambia date", guests: "Cambia ospiti", datesShort: "Date", guestsShort: "Ospiti", restart: "Nuova ricerca", hint: "Volete qualcosa di diverso? Potete anche scrivere la modifica, ad es. un’altra data di partenza o un altro numero di persone." },
+  es: { dates: "Cambiar fechas", guests: "Cambiar personas", datesShort: "Fechas", guestsShort: "Personas", restart: "Nueva búsqueda", hint: "¿Desea otra cosa? También puede escribir el cambio, p. ej. otra fecha de salida u otro número de personas." },
+  tr: { dates: "Tarihleri değiştir", guests: "Kişi sayısını değiştir", datesShort: "Tarihler", guestsShort: "Kişiler", restart: "Yeni arama", hint: "Farklı bir şey mi istiyorsunuz? Değişikliği yazabilirsiniz de, ör. farklı bir çıkış tarihi veya kişi sayısı." },
 };
 
 // Guest question when the booking is one room: "how many guests", without
