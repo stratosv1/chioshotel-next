@@ -169,9 +169,58 @@ export async function cancelBeds24Booking(id: string) {
   await post({ id: Number(id), status: "cancelled" });
 }
 
+const BREAKFAST = /breakfast|πρωιν|frühst|colazione|petit[- ]d[ée]j|desayuno|kahvalt/i;
+
+type UpsellLine = { name: string; vat: number | null };
+let breakfastUpsell: { value: UpsellLine | null; at: number } | null = null;
+
+/**
+ * The breakfast upsell item of the property (owner, 2026-11-26: breakfast is an upsell in Beds24).
+ * API V2 cannot attach an upsell item to a booking (an invoice line's subType is read-only), so
+ * breakfast lines are written with the upsell's exact name and VAT instead. Cached for an hour.
+ */
+async function getBreakfastUpsell(): Promise<UpsellLine | null> {
+  if (breakfastUpsell && Date.now() - breakfastUpsell.at < 3_600_000) return breakfastUpsell.value;
+  let value: UpsellLine | null = null;
+  try {
+    const token = process.env.BEDS24_API_TOKEN?.trim() || (await getBeds24WriteToken());
+    const url = new URL(`${API}/properties`);
+    url.searchParams.set("id", String(PROPERTY_ID));
+    url.searchParams.set("includeUpsellItems", "true");
+    url.searchParams.set("includeTexts", "property");
+    url.searchParams.append("includeLanguages", "all");
+    const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
+    const property = ((await response.json().catch(() => null)) as any)?.data?.[0];
+    const items: any[] = Array.isArray(property?.upsellItems) ? property.upsellItems : [];
+    const texts: any[] = Array.isArray(property?.texts) ? property.texts : [];
+    // English name first (the language the invoice lines are kept in), then any language.
+    texts.sort((a, b) => (text(a?.language) === "en" ? -1 : 0) - (text(b?.language) === "en" ? -1 : 0));
+    for (const item of items) {
+      const index = Number(item?.index);
+      if (!index || item?.enable === false || text(item?.type) === "notUsed") continue;
+      const names = texts.map((t) => text(t?.[`upsellItemName${index}`])).filter(Boolean);
+      if (!names.some((name) => BREAKFAST.test(name))) continue;
+      const vat = Number(item?.vat);
+      value = { name: names[0], vat: Number.isFinite(vat) && vat > 0 ? vat : null };
+      break;
+    }
+  } catch (error) {
+    console.error("[pyrgos] breakfast upsell lookup failed", error);
+  }
+  breakfastUpsell = { value, at: Date.now() };
+  return value;
+}
+
 /** Adds a charge line to the Beds24 booking invoice (a negative amount reverses an earlier line). */
 export async function addBeds24Charge(id: string, description: string, qty: number, unitPrice: number) {
-  await post({ id: Number(id), invoiceItems: [{ type: "charge", description, qty, amount: unitPrice }] });
+  const line: Record<string, unknown> = { type: "charge", description, qty, amount: unitPrice };
+  // Breakfast goes in with the name and VAT of the breakfast upsell item.
+  const upsell = BREAKFAST.test(description) ? await getBreakfastUpsell() : null;
+  if (upsell) {
+    line.description = /^Ακύρωση:/.test(description) ? `Ακύρωση: ${upsell.name}` : upsell.name;
+    if (upsell.vat !== null) line.vatRate = upsell.vat;
+  }
+  await post({ id: Number(id), invoiceItems: [line] });
 }
 
 const FEE_LINE = /κλιματ|climate|resilience|ΤΑΚΚ|τακκ|iklim/i;
