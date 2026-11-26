@@ -27,6 +27,9 @@ type Draft = {
   phone: string;
   language: string;
   totalPrice: number | null;
+  /** Breakfast is a separate charge line; totalPrice is the stay only. */
+  breakfast: boolean;
+  breakfastPrice: number | null;
   comments: string;
   notes: string;
 };
@@ -44,6 +47,9 @@ type IntakeFields = {
   phone: string | null;
   language: string | null;
   totalPrice: number | null;
+  breakfastIncluded?: boolean | null;
+  breakfastPrice?: number | null;
+  grandTotal?: number | null;
   comments: string | null;
   notes: string | null;
 };
@@ -58,6 +64,7 @@ type IntakeResult = {
 
 type BookingResult = {
   message?: string;
+  breakfast?: { extras: string; charge: string; note: string } | null;
   bookingId?: string | number;
   roomLabel?: string;
   categoryLabel?: string;
@@ -166,6 +173,8 @@ const EMPTY_DRAFT: Draft = {
   phone: "",
   language: "",
   totalPrice: null,
+  breakfast: false,
+  breakfastPrice: null,
   comments: "",
   notes: "",
 };
@@ -268,6 +277,14 @@ function mergeIntake(current: Draft, result: IntakeResult) {
   assignString("phone", fields.phone);
   assignString("language", fields.language);
   assignNumber("totalPrice", fields.totalPrice);
+  if (typeof fields.breakfastIncluded === "boolean") {
+    next.breakfast = fields.breakfastIncluded;
+    if (!fields.breakfastIncluded) next.breakfastPrice = null;
+  }
+  if (fields.breakfastPrice !== null && fields.breakfastPrice !== undefined && Number.isFinite(Number(fields.breakfastPrice)) && Number(fields.breakfastPrice) > 0) {
+    next.breakfast = true;
+    next.breakfastPrice = Number(fields.breakfastPrice);
+  }
   assignString("comments", fields.comments);
   assignString("notes", fields.notes);
 
@@ -423,9 +440,9 @@ function DatePick({ min, onPick, label = "📅 Ημερολόγιο" }: { min: s
   );
 }
 
-type DetailsValues = Pick<Draft, "firstName" | "lastName" | "email" | "phone" | "language" | "totalPrice" | "comments">;
+type DetailsValues = Pick<Draft, "firstName" | "lastName" | "email" | "phone" | "language" | "totalPrice" | "breakfast" | "breakfastPrice" | "comments">;
 
-function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit }: { draft: Draft; suggestedPrice: number | null; summary: string; canBook: boolean; saving: boolean; onSubmit: (values: DetailsValues) => void }) {
+function DetailsForm({ draft, suggestedPrice, suggestedBreakfast, summary, canBook, saving, onSubmit }: { draft: Draft; suggestedPrice: number | null; suggestedBreakfast: number | null; summary: string; canBook: boolean; saving: boolean; onSubmit: (values: DetailsValues) => void }) {
   const [firstName, setFirstName] = useState(draft.firstName);
   const [lastName, setLastName] = useState(draft.lastName);
   const [email, setEmail] = useState(draft.email);
@@ -433,8 +450,12 @@ function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit
   const [language, setLanguage] = useState(draft.language || guessLanguageFromPhone(draft.phone) || "");
   const [languageTouched, setLanguageTouched] = useState(Boolean(draft.language));
   const [price, setPrice] = useState(draft.totalPrice !== null ? String(draft.totalPrice) : suggestedPrice !== null ? String(suggestedPrice) : "");
+  const [breakfast, setBreakfast] = useState(draft.breakfast);
+  const [breakfastPrice, setBreakfastPrice] = useState(draft.breakfastPrice !== null ? String(draft.breakfastPrice) : "");
   const [comments, setComments] = useState(draft.comments);
   const parsedPrice = parsePrice(price);
+  const parsedBreakfast = breakfast ? parsePrice(breakfastPrice) : null;
+  const grandTotal = parsedPrice !== null ? Math.round((parsedPrice + (parsedBreakfast ?? 0)) * 100) / 100 : null;
   const ready = Boolean(firstName.trim() && lastName.trim() && language && parsedPrice !== null);
   const input = "min-h-11 w-full rounded-xl border border-[#ddd3c6] bg-[#fbf9f6] px-3 text-[16px] outline-none focus:border-[#66714f]";
 
@@ -448,6 +469,8 @@ function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit
       phone: phone.trim(),
       language,
       totalPrice: parsedPrice,
+      breakfast,
+      breakfastPrice: parsedBreakfast,
       comments: comments.trim(),
     });
   }
@@ -479,13 +502,31 @@ function DetailsForm({ draft, suggestedPrice, summary, canBook, saving, onSubmit
           <Chip key={option.code} label={option.label} active={language === option.code} onClick={() => { setLanguage(option.code); setLanguageTouched(true); }} />
         ))}
       </div>
-      <p className="mt-3 text-xs font-bold text-[#8a7f72]">Συνολική τιμή (€) *</p>
+      <p className="mt-3 text-xs font-bold text-[#8a7f72]">Τιμή διαμονής χωρίς πρωινό (€) *</p>
       <div className="mt-1.5 flex items-center gap-2">
-        <input aria-label="Συνολική τιμή" inputMode="decimal" value={price} onChange={(event) => setPrice(event.target.value)} className={`${input} flex-1`} />
+        <input aria-label="Τιμή διαμονής" inputMode="decimal" value={price} onChange={(event) => setPrice(event.target.value)} className={`${input} flex-1`} />
         {suggestedPrice !== null && parsePrice(price) !== suggestedPrice && <Chip label={`Προτεινόμενη ${money(suggestedPrice)}`} onClick={() => setPrice(String(suggestedPrice))} />}
       </div>
+      <label className="mt-3 flex min-h-11 items-center gap-2 text-sm font-bold">
+        <input
+          type="checkbox"
+          className="h-5 w-5"
+          checked={breakfast}
+          onChange={(event) => {
+            setBreakfast(event.target.checked);
+            if (event.target.checked && !breakfastPrice && suggestedBreakfast) setBreakfastPrice(String(suggestedBreakfast));
+          }}
+        />
+        Πρωινό περιλαμβάνεται
+      </label>
+      {breakfast && (
+        <div className="mt-1.5 flex items-center gap-2">
+          <input aria-label="Τιμή πρωινού" placeholder="Τιμή πρωινού (€)" inputMode="decimal" value={breakfastPrice} onChange={(event) => setBreakfastPrice(event.target.value)} className={`${input} flex-1`} />
+          {suggestedBreakfast !== null && parsePrice(breakfastPrice) !== suggestedBreakfast && <Chip label={`Προτεινόμενη ${money(suggestedBreakfast)}`} onClick={() => setBreakfastPrice(String(suggestedBreakfast))} />}
+        </div>
+      )}
       <textarea aria-label="Σχόλια" placeholder="Σχόλια (π.χ. ώρα άφιξης)" rows={2} value={comments} onChange={(event) => setComments(event.target.value)} className={`${input} mt-3 resize-none py-2.5`} />
-      <p className="mt-3 rounded-2xl bg-[#f8f5f0] px-3 py-2.5 text-sm font-bold text-[#4a443c]">{summary} · {parsedPrice !== null ? money(parsedPrice) : "—"}</p>
+      <p className="mt-3 rounded-2xl bg-[#f8f5f0] px-3 py-2.5 text-sm font-bold text-[#4a443c]">{summary} · {parsedPrice !== null ? money(parsedPrice) : "—"}{breakfast ? ` + πρωινό ${parsedBreakfast !== null ? money(parsedBreakfast) : "(χωρίς ποσό)"} = ${grandTotal !== null ? money(grandTotal) : "—"}` : ""}</p>
       <button type="submit" disabled={!ready || !canBook || saving} className="mt-3 min-h-12 w-full rounded-2xl bg-[#66714f] px-5 font-black text-white disabled:bg-[#b8b2a9]">
         {saving ? "Καταχώρηση…" : "Καταχώρηση στο Beds24"}
       </button>
@@ -572,7 +613,7 @@ export default function BookerApp() {
     setDraft((current) => ({ ...current, ...values }));
     setEmailSkipped(!values.email);
     setPhoneSkipped(!values.phone);
-    push(user(`${values.firstName} ${values.lastName} · ${languageLabel(values.language)} · ${money(values.totalPrice ?? 0)}`));
+    push(user(`${values.firstName} ${values.lastName} · ${languageLabel(values.language)} · ${money(values.totalPrice ?? 0)}${values.breakfast ? ` + πρωινό${values.breakfastPrice ? ` ${money(values.breakfastPrice)}` : ""}` : ""}`));
     setAwaiting(null);
     setMode("review");
     void createBooking(values);
@@ -953,6 +994,8 @@ export default function BookerApp() {
           adults: booking.adults,
           children: booking.children,
           price: booking.totalPrice,
+          breakfast: booking.breakfast,
+          breakfastPrice: booking.breakfast ? booking.breakfastPrice : null,
           comments: booking.comments,
           notes: booking.notes,
           overrideAvailability: overrideRoom,
@@ -974,6 +1017,16 @@ export default function BookerApp() {
     setResult(data);
     setMode("done");
     push(assistant(`✓ Η κράτηση δημιουργήθηκε στο Beds24 (#${data.bookingId}).`));
+    if (data.breakfast) {
+      const failed = [
+        data.breakfast.extras === "failed" ? "το τικ «Πρωινό» στον Πύργο" : "",
+        data.breakfast.charge === "failed" ? "η γραμμή χρέωσης πρωινού" : "",
+        data.breakfast.note === "failed" ? "η σημείωση πρωινού στο Beds24" : "",
+      ].filter(Boolean);
+      push(assistant(failed.length
+        ? `⚠️ Πρωινό: δεν πέρασε ${failed.join(", ")}. Έλεγξέ το στον Πύργο.`
+        : `✓ Πρωινό: τικ στον Πύργο${data.breakfast.charge === "ok" ? ", ξεχωριστή γραμμή χρέωσης" : ""} και σημείωση στο Beds24.`));
+    }
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -1120,6 +1173,7 @@ export default function BookerApp() {
                 key={detailsKey}
                 draft={draft}
                 suggestedPrice={overrideRoom ? null : selectedOffer.directTotal}
+                suggestedBreakfast={overrideRoom ? null : (Number(selectedOffer.breakfastTotalIfAdded) || null)}
                 summary={`${prettyDate(draft.checkin)} → ${prettyDate(draft.checkout)} · ${nights} ${nights === 1 ? "νύχτα" : "νύχτες"} · ${totalGuests} ${totalGuests === 1 ? "άτομο" : "άτομα"} · ${selectedOffer.name}`}
                 canBook={Boolean(capability?.apiReady && capability?.propertyReady)}
                 saving={saving}
@@ -1138,7 +1192,7 @@ export default function BookerApp() {
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Διαμονή</span><strong className="mt-1 block text-sm">{prettyDate(draft.checkin)} → {prettyDate(draft.checkout)} · {nights} νύχτες</strong></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επισκέπτες</span><strong className="mt-1 block text-sm">{draft.adults} ενήλικες · {draft.children} παιδιά</strong></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Δωμάτιο</span><strong className="mt-1 block text-sm">{selectedOffer.name}</strong>{overrideRoom && <span className="mt-1 block text-xs font-bold text-amber-700">Κλειστό δωμάτιο · χωρίς έλεγχο διαθεσιμότητας</span>}</div>
-                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Συνολική τιμή</span><strong className="mt-1 block text-lg text-[#5f7448]">{money(draft.totalPrice || 0)}</strong></div>
+                  <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Τιμή</span>{draft.breakfast ? (<><span className="mt-1 block text-sm">Διαμονή {money(draft.totalPrice || 0)}</span><span className="block text-sm">Πρωινό {draft.breakfastPrice ? money(draft.breakfastPrice) : "(χωρίς ποσό)"}</span><strong className="mt-1 block text-lg text-[#5f7448]">Σύνολο {money((draft.totalPrice || 0) + (draft.breakfastPrice || 0))}</strong></>) : <strong className="mt-1 block text-lg text-[#5f7448]">{money(draft.totalPrice || 0)}</strong>}</div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Πελάτης</span><strong className="mt-1 block text-sm">{draft.firstName} {draft.lastName}</strong><span className="mt-1 block text-xs text-[#746b60]">Γλώσσα: {languageLabel(draft.language)}</span></div>
                   <div className="rounded-2xl bg-[#f8f5f0] p-3"><span className="text-xs text-[#8a7f72]">Επικοινωνία</span><strong className="mt-1 block break-all text-sm">{draft.email || "Χωρίς email"}</strong><span className="mt-1 block text-sm">{draft.phone || "Χωρίς τηλέφωνο"}</span></div>
                   {(draft.comments || draft.notes) && <div className="rounded-2xl bg-[#f8f5f0] p-3 sm:col-span-2"><span className="text-xs text-[#8a7f72]">Σημειώσεις</span>{draft.comments && <p className="mt-1 text-sm"><b>Πελάτης:</b> {draft.comments}</p>}{draft.notes && <p className="mt-1 text-sm"><b>Εσωτερικό:</b> {draft.notes}</p>}</div>}

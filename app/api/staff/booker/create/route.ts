@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { neon } from "@neondatabase/serverless";
 import { todayInAthensIso } from "@/lib/ai-assistant/room-finder-date";
+import { applyBreakfastToNewBooking } from "@/lib/pyrgos/breakfast";
 
 export const runtime = "nodejs";
 
@@ -250,6 +251,11 @@ export async function POST(request: NextRequest) {
     const price = body.price === null || body.price === "" || typeof body.price === "undefined"
       ? null
       : cleanNumber(body.price, NaN);
+    // Breakfast is its own charge line; `price` is the stay only (owner, 2026-11-26).
+    const breakfast = body.breakfast === true;
+    const breakfastPrice = breakfast && body.breakfastPrice !== null && body.breakfastPrice !== "" && typeof body.breakfastPrice !== "undefined"
+      ? cleanNumber(body.breakfastPrice, NaN)
+      : null;
     const comments = cleanString(body.comments);
     const notes = cleanString(body.notes);
     // Staff-only override (owner, 2026-11-19): Stratos closes rooms in Beds24
@@ -275,6 +281,7 @@ export async function POST(request: NextRequest) {
     const guests = adults + children;
     if (guests < 1 || guests > 5) return json({ message: "This booking must contain between 1 and 5 guests." }, 400);
     if (price !== null && (!Number.isFinite(price) || price < 0)) return json({ message: "Invalid total price." }, 400);
+    if (breakfastPrice !== null && (!Number.isFinite(breakfastPrice) || breakfastPrice < 0)) return json({ message: "Μη έγκυρη τιμή πρωινού." }, 400);
 
     if (!overrideAvailability) {
       const availability = await verifyAvailability({ arrival, departure, guests, roomId, unitId });
@@ -341,15 +348,21 @@ export async function POST(request: NextRequest) {
     const bookingId = extractBookingId(result);
     if (!bookingId) return json({ message: "Beds24 did not return a booking id.", details: result }, 502);
 
+    const breakfastOutcome = breakfast
+      ? await applyBreakfastToNewBooking({ bookingId: String(bookingId), amount: breakfastPrice, nights, guests })
+      : null;
+    const grandTotal = price !== null ? Math.round((price + (breakfastPrice ?? 0)) * 100) / 100 : null;
+
     const digits = whatsappNumber(phone);
     const whatsappText = encodeURIComponent(
-      `Voulamandis House\nBooking ${bookingId}\n${arrival} → ${departure}\n${room.label}\n${adults} adults${children ? ` + ${children} children` : ""}${price !== null ? `\nTotal: €${price}` : ""}`,
+      `Voulamandis House\nBooking ${bookingId}\n${arrival} → ${departure}\n${room.label}\n${adults} adults${children ? ` + ${children} children` : ""}${breakfast ? "\nBreakfast included" : ""}${grandTotal !== null ? `\nTotal: €${grandTotal}` : ""}`,
     );
 
     return json({
       bookingId,
       roomLabel: room.label,
       categoryLabel: room.categoryLabel,
+      breakfast: breakfastOutcome,
       whatsappUrl: digits ? `https://wa.me/${digits}?text=${whatsappText}` : "",
     });
   } catch (error) {

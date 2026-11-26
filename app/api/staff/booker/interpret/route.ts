@@ -70,6 +70,9 @@ const BOOKING_SCHEMA = {
         "phone",
         "language",
         "totalPrice",
+        "breakfastIncluded",
+        "breakfastPrice",
+        "grandTotal",
         "comments",
         "notes",
       ],
@@ -87,6 +90,9 @@ const BOOKING_SCHEMA = {
         phone: { type: ["string", "null"] },
         language: { type: ["string", "null"], enum: [null, ...LANGUAGES] },
         totalPrice: { type: ["number", "null"], minimum: 0 },
+        breakfastIncluded: { type: ["boolean", "null"] },
+        breakfastPrice: { type: ["number", "null"], minimum: 0 },
+        grandTotal: { type: ["number", "null"], minimum: 0 },
         comments: { type: ["string", "null"] },
         notes: { type: ["string", "null"] },
       },
@@ -145,6 +151,7 @@ GUESTS
 ROOM REQUEST
 - If the staff explicitly requests a physical room number from 1 to 10, extract it as requestedRoomNumber.
 - Examples: "δωμάτιο 5", "στο 5", "room 5", "Room No 5" when the context clearly means a room assignment.
+- A booking request, email or screenshot that names the room the guest chose also counts, e.g. an AI Room Finder request line "Room 2: €460.65", "Apartment 8: €713.80", "Zimmer 5" or "Δωμάτιο 3". Apartment 8/9/10 means room number 8/9/10.
 - requestedRoomNumber is a staff selection request, NOT a guest comment and NOT a staff note.
 - Do not put the requested room into comments or notes.
 - The application will still perform live availability before honoring this request. You do not decide whether the room is available.
@@ -162,11 +169,16 @@ PRICE
 - totalPrice is the TOTAL booking amount in EUR, not the nightly rate.
 - If only a nightly rate is shown and total cannot be established without calculation, return totalPrice=null. The application handles pricing separately.
 - If an explicit total is shown, extract its numeric EUR value.
+- BREAKFAST: if the source shows breakfast as its own amount (e.g. "Room 2: €460.65 / Breakfast: €168.00 / Total: €628.65"), then totalPrice is the accommodation amount WITHOUT breakfast (460.65), breakfastPrice is the breakfast amount (168), breakfastIncluded=true and grandTotal is the overall total including breakfast (628.65). Never put breakfast into totalPrice when it has its own amount.
+- If breakfast is requested or included but no separate breakfast amount is shown, set breakfastIncluded=true, breakfastPrice=null, and totalPrice/grandTotal as shown.
+- If the source explicitly says no breakfast, breakfastIncluded=false. If breakfast is not mentioned, breakfastIncluded=null and breakfastPrice=null.
+- grandTotal is the overall total shown in the source (or null). When there is no breakfast it equals totalPrice.
 
 COMMENTS / NOTES
-- comments are guest-facing requests or information that belongs with the reservation: arrival time, breakfast request, cot, accessibility request, transport, special request, etc.
+- comments are guest-facing requests or information that belongs with the reservation: arrival time, cot, accessibility request, transport, special request, etc.
 - notes are only internal staff notes explicitly identified as internal/staff notes. Do not turn ordinary prose into staff notes.
 - A requested physical room number is never a comment or note; use requestedRoomNumber only.
+- Breakfast is never a comment; use breakfastIncluded/breakfastPrice only.
 
 CLEARING OPTIONAL FIELDS
 - If the staff explicitly says there is no email / no phone / no guest comment / no staff note, include that field name in clearFields.
@@ -345,6 +357,38 @@ function normalizeRoomRequest(parsed: any, latestText: string) {
   fields.requestedRoomNumber = requestedRoomNumber;
   fields.comments = stripRoomAssignmentComment(fields.comments, requestedRoomNumber);
   fields.notes = stripRoomAssignmentComment(fields.notes, requestedRoomNumber);
+  return parsed;
+}
+
+function roundMoney(value: number) {
+  return Math.round(value * 100) / 100;
+}
+
+// Breakfast has its own charge line, so the stay price must never contain it.
+// Safety net for when the model returns the overall total as the stay price.
+function normalizeBreakfast(parsed: any) {
+  if (!parsed || typeof parsed !== "object" || !parsed.fields || typeof parsed.fields !== "object") return parsed;
+  if (parsed.intent === "arrivals_query") return parsed;
+  const fields = parsed.fields as Record<string, unknown>;
+  const price = (value: unknown) => {
+    const number = Number(value);
+    return value !== null && value !== undefined && value !== "" && Number.isFinite(number) && number >= 0 ? roundMoney(number) : null;
+  };
+  let total = price(fields.totalPrice);
+  const breakfast = price(fields.breakfastPrice);
+  const grand = price(fields.grandTotal);
+  if (breakfast !== null && breakfast > 0) {
+    fields.breakfastIncluded = true;
+    if (grand !== null && grand > breakfast && (total === null || Math.abs(total - grand) < 0.01)) total = roundMoney(grand - breakfast);
+    if (total !== null && grand !== null && Math.abs(total + breakfast - grand) > 0.05) {
+      parsed.clarification = parsed.clarification
+        || `Δεν βγαίνει το σύνολο: διαμονή ${total}€ + πρωινό ${breakfast}€ ≠ ${grand}€. Πες μου την τιμή διαμονής χωρίς πρωινό.`;
+    }
+  }
+  fields.totalPrice = total;
+  fields.breakfastPrice = breakfast;
+  fields.grandTotal = grand;
+  if (typeof fields.breakfastIncluded !== "boolean") fields.breakfastIncluded = null;
   return parsed;
 }
 
@@ -533,6 +577,9 @@ function emptyBookingFields() {
     phone: null,
     language: null,
     totalPrice: null,
+    breakfastIncluded: null,
+    breakfastPrice: null,
+    grandTotal: null,
     comments: null,
     notes: null,
   };
@@ -634,7 +681,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ message: "OpenAI returned no structured intake." }, { status: 502, headers: noStoreHeaders() });
       }
 
-      const parsed = normalizeRoomRequest(
+      const parsed = normalizeBreakfast(normalizeRoomRequest(
         normalizeGuestComposition(
           dropUnfoundedGuests(
             normalizeYearlessDates(JSON.parse(output), message, Boolean(image)),
@@ -645,7 +692,7 @@ export async function POST(request: NextRequest) {
           message,
         ),
         message,
-      );
+      ));
 
       if (parsed?.intent === "arrivals_query") {
         const queryDate = dateOnly(parsed?.arrivalQueryDate);
