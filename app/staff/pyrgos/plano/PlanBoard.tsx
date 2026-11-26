@@ -1704,7 +1704,6 @@ function Charges({
         <span className="text-xs font-black uppercase tracking-wide text-[#5b6b80]">Ανάλυση λογαριασμού</span>
       </div>
       {!b.masterId && <AutoLines nights={nights} stayTotal={stayTotal} nightPrice={nightPrice} />}
-      {b.charges.length === 0 && <p className="text-xs text-[#5b6b80]">Χωρίς επιπλέον χρεώσεις.</p>}
       <ul className="divide-y divide-[#eef2f6] text-sm">
         {b.charges.map((c) => (
           <li key={c.id} className="flex items-center justify-between gap-2 py-1.5">
@@ -1734,39 +1733,33 @@ function Charges({
           </li>
         ))}
       </ul>
-      <div className="pt-1 text-[11px] font-bold text-[#5b6b80]">Νέα χρέωση (π.χ. πρωινό, μαρμελάδες)</div>
-      <div className="flex flex-wrap gap-1">
-        {CHARGE_PRESETS.map((preset) => (
-          <button key={preset} type="button" onClick={() => setDesc(preset)} className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${desc === preset ? "border-[#5443c9] bg-[#ece9fd]" : "border-[#dbe3ec]"}`}>
-            {preset}
-          </button>
-        ))}
+      {/* One entry line only (owner, 2026-11-26): description · qty · € · add */}
+      <div className="grid grid-cols-[1fr_3rem_4.5rem_2.75rem] gap-1.5 pt-1">
+        <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Νέα χρέωση" aria-label="Περιγραφή χρέωσης" className={`${input} mt-0 px-2.5`} />
+        <input inputMode="decimal" value={qty} onChange={(e) => setQty(e.target.value)} aria-label="Ποσότητα" className={`${input} mt-0 px-2 text-center`} />
+        <input inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="€" aria-label="Τιμή μονάδας" className={`${input} mt-0 px-2.5`} />
+        <button
+          type="button"
+          aria-label="Προσθήκη χρέωσης"
+          disabled={!desc.trim() || amount <= 0}
+          onClick={() =>
+            setConfirm({
+              title: "Νέα χρέωση",
+              lines: [`${desc} · ${qty} × ${euro(Number(price.replace(",", ".")))} = ${euro(amount)}`, b.masterId ? "Μπαίνει στην κύρια κράτηση του group." : "", "Μπαίνει και στο τιμολόγιο του Beds24."].filter(Boolean),
+              confirmLabel: "Προσθήκη",
+              onConfirm: async () => {
+                await run({ action: "charge_add", id: b.id, description: desc, qty, unitPrice: price }, `Χρέωση ${euro(amount)} προστέθηκε`);
+                setDesc("");
+                setQty("1");
+                setPrice("");
+              },
+            })
+          }
+          className="min-h-11 rounded-lg bg-[#3b2f8a] text-xl font-bold text-white disabled:bg-[#cbd5e1]"
+        >
+          +
+        </button>
       </div>
-      <div className="grid grid-cols-[1fr_4rem_5.5rem] gap-2">
-        <input value={desc} onChange={(e) => setDesc(e.target.value)} placeholder="Περιγραφή" aria-label="Περιγραφή χρέωσης" className={`${input} mt-0`} />
-        <input inputMode="decimal" value={qty} onChange={(e) => setQty(e.target.value)} aria-label="Ποσότητα" className={`${input} mt-0`} />
-        <input inputMode="decimal" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="€" aria-label="Τιμή μονάδας" className={`${input} mt-0`} />
-      </div>
-      <button
-        type="button"
-        disabled={!desc.trim() || amount <= 0}
-        onClick={() =>
-          setConfirm({
-            title: "Νέα χρέωση",
-            lines: [`${desc} · ${qty} × ${euro(Number(price.replace(",", ".")))} = ${euro(amount)}`, b.masterId ? "Μπαίνει στην κύρια κράτηση του group." : "", "Μπαίνει και στο τιμολόγιο του Beds24."].filter(Boolean),
-            confirmLabel: "Προσθήκη",
-            onConfirm: async () => {
-              await run({ action: "charge_add", id: b.id, description: desc, qty, unitPrice: price }, `Χρέωση ${euro(amount)} προστέθηκε`);
-              setDesc("");
-              setQty("1");
-              setPrice("");
-            },
-          })
-        }
-        className="min-h-11 w-full rounded-full border border-[#cfd9e4] text-sm font-bold disabled:opacity-50"
-      >
-        + Προσθήκη χρέωσης{amount > 0 ? ` (${euro(amount)})` : ""}
-      </button>
       {grandTotal !== null && (
         <p className="flex justify-between border-t border-[#eef2f6] pt-2 text-sm"><span className="font-bold">Σύνολο</span><strong>{euro(grandTotal)}</strong></p>
       )}
