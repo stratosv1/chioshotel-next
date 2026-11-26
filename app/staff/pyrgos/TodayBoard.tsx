@@ -206,7 +206,7 @@ export default function TodayBoard() {
                   </ul>
                 </section>
               ) : null}
-              <section aria-label="Σύνοψη ημέρας" className="grid grid-cols-2 gap-3 lg:grid-cols-3 2xl:grid-cols-6">
+              <section aria-label="Σύνοψη ημέρας" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                 <div className="rounded-2xl bg-[#ffe7bd] p-4 text-[#5a3a00]">
                   <div className="text-sm font-semibold opacity-85">Αφίξεις</div>
                   <div className="mt-1 text-3xl font-black">{data.arriving.length}</div>
@@ -249,6 +249,24 @@ export default function TodayBoard() {
                       {data.ahead.priced < data.ahead.bookings ? ` · ${data.ahead.bookings - data.ahead.priced} χωρίς τιμή` : ""}
                     </div>
                   </div>
+                ) : null}
+                {data.upsells ? (
+                  <>
+                    <div className="rounded-2xl bg-[#fff3c4] p-4 text-[#5c4300]">
+                      <div className="text-sm font-semibold opacity-85">☕ Πρωινά σεζόν {data.season?.label}</div>
+                      <div className="mt-1 text-3xl font-black">{euro(data.upsells.breakfast.season)}</div>
+                      <div className="text-xs opacity-85">
+                        {data.month.label} {euro(data.upsells.breakfast.month)} · {data.upsells.breakfast.bookings} κρατήσεις · {data.upsells.breakfast.qty} μερίδες
+                      </div>
+                    </div>
+                    <div className="rounded-2xl bg-[#ffe1cc] p-4 text-[#6b2e0b]">
+                      <div className="text-sm font-semibold opacity-85">🍊 Μαρμελάδες σεζόν {data.season?.label}</div>
+                      <div className="mt-1 text-3xl font-black">{euro(data.upsells.marmalade.season)}</div>
+                      <div className="text-xs opacity-85">
+                        {data.month.label} {euro(data.upsells.marmalade.month)} · {data.upsells.marmalade.bookings} κρατήσεις · {data.upsells.marmalade.qty} τεμ.
+                      </div>
+                    </div>
+                  </>
                 ) : null}
               </section>
 

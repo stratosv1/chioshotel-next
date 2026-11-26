@@ -1573,7 +1573,7 @@ function GuestCrm({ booking: b, setConfirm, onToast }: { booking: PlanBooking; s
 
 // ---------- extra charges ----------
 
-const CHARGE_PRESETS = ["Πρωινό", "Ράντζο", "Κούνια", "Μεταφορά", "Late check-out", "Μίνι μπαρ", "Πλυντήριο"];
+const CHARGE_PRESETS = ["Πρωινό", "Μαρμελάδες", "Ράντζο", "Κούνια", "Μεταφορά", "Late check-out", "Μίνι μπαρ", "Πλυντήριο"];
 
 function AutoLines({ nights, stayTotal, nightPrice }: { nights: number; stayTotal: number | null; nightPrice?: number | null }) {
   if (nights <= 0) return null;

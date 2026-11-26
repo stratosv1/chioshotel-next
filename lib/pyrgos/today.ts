@@ -57,8 +57,12 @@ export type TodayData = {
   // Owner (2026-11-20): next to the month — the season (March–October) and everything from today on.
   season: { label: string; gross: number; net: number; bookings: number; priced: number };
   ahead: { gross: number; net: number; bookings: number; priced: number };
+  // Owner (2026-11-26): upsell sales charged during stays (breakfast, marmalades), to watch them.
+  upsells: { breakfast: UpsellSales; marmalade: UpsellSales };
   holds: HoldListItem[];
 };
+
+export type UpsellSales = { season: number; month: number; bookings: number; qty: number };
 
 const toNumber = (value: unknown) => {
   const n = Number(String(value ?? "").replace(/[^0-9.\-]/g, ""));
@@ -131,6 +135,22 @@ export async function getToday(day: string): Promise<TodayData> {
       sql`select channel, price, commission from public.pyrgos_bookings
         where status in ('confirmed', 'new') and checkin >= ${seasonFrom}::date and checkin < ${seasonTo}::date` as Promise<any[]>,
   );
+  // Upsell charges (control tower charge lines) on season stays, by stay check-in month.
+  const upsellPromise = ensureBookingsTable()
+    .then(
+      () =>
+        sql`select c.booking_id, to_char(b.checkin, 'YYYY-MM') as month, c.qty, c.qty * c.unit_price as total,
+            case when c.description ~* '(πρωιν|Πρωιν|ΠΡΩΙΝ|breakfast)' then 'breakfast' else 'marmalade' end as kind
+          from public.pyrgos_booking_charges c
+          join public.pyrgos_bookings b on b.booking_id = c.booking_id
+          where c.deleted_at is null and b.status in ('confirmed', 'new')
+            and b.checkin >= ${seasonFrom}::date and b.checkin < ${seasonTo}::date
+            and c.description ~* '(πρωιν|Πρωιν|ΠΡΩΙΝ|breakfast|μαρμελ|Μαρμελ|ΜΑΡΜΕΛ|marmalade)'` as Promise<any[]>,
+    )
+    .catch((error) => {
+      console.error("[pyrgos] upsell sales failed", error);
+      return [] as any[];
+    });
   const aheadPromise = ensureBookingsTable().then(
     () =>
       sql`select channel, price, commission from public.pyrgos_bookings
@@ -250,7 +270,16 @@ export async function getToday(day: string): Promise<TodayData> {
     bookings: rows.length,
     priced: rows.filter((row) => toNumber(row.price)).length,
   });
-  const [seasonRows, aheadRows] = await Promise.all([seasonPromise, aheadPromise]);
+  const [seasonRows, aheadRows, upsellRows] = await Promise.all([seasonPromise, aheadPromise, upsellPromise]);
+  const upsell = (kind: string): UpsellSales => {
+    const rows = upsellRows.filter((row) => row.kind === kind);
+    return {
+      season: Math.round(rows.reduce((sum, row) => sum + (Number(row.total) || 0), 0)),
+      month: Math.round(rows.filter((row) => row.month === month).reduce((sum, row) => sum + (Number(row.total) || 0), 0)),
+      bookings: new Set(rows.map((row) => row.booking_id)).size,
+      qty: Math.round(rows.reduce((sum, row) => sum + (Number(row.qty) || 0), 0)),
+    };
+  };
 
   const feed: FeedItem[] = feedRows.map((row) => {
     const cancelled = /cancel/i.test(String(row.status ?? ""));
@@ -283,5 +312,6 @@ export async function getToday(day: string): Promise<TodayData> {
     month: { label: monthLabel, ...revenue(monthRows) },
     season: { label: `03–10/${seasonYear}`, ...revenue(seasonRows) },
     ahead: revenue(aheadRows),
+    upsells: { breakfast: upsell("breakfast"), marmalade: upsell("marmalade") },
   };
 }
