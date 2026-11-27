@@ -191,26 +191,83 @@ function ReadingTest({test, index}: {test: Test; index: number}) {
   );
 }
 
+const QUESTION_EL = ["Πού γεννήθηκες;","Τι χρώμα έχουν τα μαλλιά σου;","Έχεις κατοικίδιο;","Πού μένεις;","Τι ύψος έχεις;","Πώς σε λένε;","Σε ποια τάξη πηγαίνεις;","Πόσο χρονών είσαι;","Πότε πηγαίνεις στο σχολείο;","Από πού κατάγεσαι;","Σε ποιο σχολείο πηγαίνεις;","Πώς λένε τους γονείς σου;","Πώς λένε τον καλύτερό σου φίλο / την καλύτερή σου φίλη;","Τι χρώμα έχουν τα μάτια σου;","Έχεις αδέλφια;","Πότε έχεις γενέθλια;","Τι σου αρέσει να φοράς;","Ποιο είναι το αγαπημένο σου φαγητό;","Ποιο χρώμα σου αρέσει;","Τι κάνεις στον ελεύθερο χρόνο σου;","Τι κάνεις στις διακοπές;","Τι σου αρέσει να βλέπεις στην τηλεόραση;","Τι σου αρέσει να κάνεις στα γενέθλιά σου;","Τι κάνεις με τους φίλους σου;","Τι σου αρέσει να βλέπεις στο σινεμά;","Τι σου αρέσει να διαβάζεις;","Τι μουσική ακούς;","Τι σου αρέσει να κάνεις στο σχολείο;","Ποια ζώα σου αρέσουν;","Ποιες γλώσσες μιλάς;","Ποιο άθλημα σου αρέσει;","Ποια παιχνίδια σου αρέσουν;"];
+type OralAnswer = {de:string;el:string};
+const oralButton = "rounded-xl border border-black/15 bg-white px-3 py-2 text-sm font-semibold disabled:opacity-40";
+
 function OralPractice(){
   const [current,setCurrent]=useState(0);
   const [done,setDone]=useState<number[]>([]);
+  const [order,setOrder]=useState(()=>QUESTIONS.map((_,i)=>i));
+  const [answers,setAnswers]=useState<OralAnswer[]|null>(null);
+  const [show,setShow]=useState(false);
+  const [translation,setTranslation]=useState(false);
+  const [loading,setLoading]=useState(false);
+  const [error,setError]=useState("");
+  const [audioError,setAudioError]=useState("");
+  const pos=order.indexOf(current);
+  const answer=answers?.[current];
+  function go(i:number){setCurrent(i);setShow(false);setTranslation(false);setAudioError("");if(typeof window!=="undefined" && "speechSynthesis" in window) window.speechSynthesis.cancel();}
+  function speak(value:string){
+    if(!("speechSynthesis" in window) || typeof SpeechSynthesisUtterance==="undefined"){setAudioError("Η συσκευή δεν υποστηρίζει ανάγνωση κειμένου.");return;}
+    setAudioError("");
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(value);u.lang="de-DE";u.rate=0.85;
+    const voice=window.speechSynthesis.getVoices().find(v=>v.lang.toLowerCase().startsWith("de"));
+    if(voice)u.voice=voice;
+    u.onerror=()=>setAudioError("Δεν ήταν δυνατή η αναπαραγωγή. Έλεγξε τη γερμανική φωνή της συσκευής.");
+    window.speechSynthesis.speak(u);
+  }
+  async function reveal(){
+    if(show){setShow(false);return;}
+    if(answers){setShow(true);return;}
+    setLoading(true);setError("");
+    try{
+      const response=await fetch("/sideris/api/kid-a1/oral",{cache:"no-store",credentials:"same-origin"});
+      if(!response.ok)throw Error("unavailable");
+      const data=await response.json();
+      if(!Array.isArray(data.answers)||data.answers.length!==32)throw Error("invalid");
+      setAnswers(data.answers);setShow(true);
+    }catch{setError("Οι απαντήσεις δεν φορτώθηκαν. Δοκίμασε ξανά ή συνδέσου πάλι.");}
+    finally{setLoading(false);}
+  }
+  function reset(random:boolean){
+    const next=QUESTIONS.map((_,i)=>i);
+    if(random)for(let i=next.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[next[i],next[j]]=[next[j],next[i]];}
+    setOrder(next);setDone([]);go(next[0]);
+  }
   return <section id="sprechen" className="scroll-mt-4 rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8 print:border-0 print:shadow-none">
     <p className="text-sm font-semibold text-[#857261]">ÖSD KID A1 · Sprechen</p>
     <h2 className="mt-2 text-2xl font-bold">32 ερωτήσεις προφορικών</h2>
-    <p className="mt-2 text-sm text-[#6b625b] print:hidden">Απάντησε προφορικά στα γερμανικά, με ολοκληρωμένη πρόταση.</p>
+    <p className="mt-2 text-sm text-[#6b625b] print:hidden">Άκουσε την ερώτηση, απάντησε προφορικά και μετά δες τη δική σου διορθωμένη απάντηση.</p>
     <div className="my-5 rounded-2xl bg-[#f8e9e0] p-5 print:hidden">
-      <p className="text-sm font-semibold text-[#86391a]">Ερώτηση {current+1}/32 · Ολοκληρωμένες {done.length}/32</p>
-      <p className="my-5 text-2xl font-semibold" lang="de">{QUESTIONS[current]}</p>
+      <p className="text-sm font-semibold text-[#86391a]">Ερώτηση {current+1} · Σειρά {pos+1}/32 · Ολοκληρωμένες {done.length}/32</p>
+      <p className="my-4 text-2xl font-semibold" lang="de">{QUESTIONS[current]}</p>
       <div className="flex flex-wrap gap-2">
-        <button type="button" disabled={current===0} onClick={()=>setCurrent(v=>v-1)} className="rounded-xl border border-black/15 bg-white px-3 py-2 disabled:opacity-40">Προηγούμενη</button>
-        <button type="button" onClick={()=>{setDone(old=>old.includes(current)?old:[...old,current]);setCurrent(v=>Math.min(v+1,31))}} className="rounded-xl bg-[#b5562a] px-3 py-2 font-semibold text-white">Απάντησα</button>
-        <button type="button" onClick={()=>setCurrent(v=>(v+1)%32)} className="rounded-xl border border-black/15 bg-white px-3 py-2">Επόμενη</button>
-        <button type="button" onClick={()=>{setDone([]);setCurrent(0)}} className="rounded-xl border border-black/15 bg-white px-3 py-2">Επανεκκίνηση</button>
+        <button type="button" className={oralButton} onClick={()=>speak(QUESTIONS[current])}>Ακρόαση ερώτησης</button>
+        <button type="button" className={oralButton} onClick={()=>setTranslation(v=>!v)}>{translation?"Απόκρυψη μετάφρασης":"Μετάφραση ερώτησης"}</button>
       </div>
+      {translation&&<p className="mt-3 text-base">{QUESTION_EL[current]}</p>}
+      <button type="button" disabled={loading} onClick={reveal} className="mt-4 rounded-xl bg-[#b5562a] px-4 py-3 font-semibold text-white disabled:opacity-50">{loading?"Φόρτωση…":show?"Απόκρυψη απάντησης":"Δες την απάντησή μου"}</button>
+      {error&&<p role="alert" className="mt-2 text-red-700">{error}</p>}
+      {show&&answer&&<div className="mt-4 rounded-xl border border-[#b5562a]/25 bg-white p-4">
+        <p lang="de" className="text-lg font-medium leading-relaxed">{answer.de}</p>
+        <button type="button" onClick={()=>speak(answer.de)} className={oralButton+" mt-3"}>Ακρόαση απάντησης</button>
+        <details className="mt-3"><summary className="cursor-pointer font-semibold text-sm">Ελληνική μετάφραση απάντησης</summary><p className="mt-2 leading-relaxed">{answer.el}</p></details>
+      </div>}
+      {audioError&&<p role="status" className="mt-2 text-sm">{audioError}</p>}
+      <div className="mt-5 flex flex-wrap gap-2 border-t border-black/10 pt-4">
+        <button type="button" disabled={pos===0||loading} onClick={()=>go(order[pos-1])} className={oralButton}>Προηγούμενη</button>
+        <button type="button" disabled={loading} onClick={()=>{setDone(old=>old.includes(current)?old:[...old,current]);if(pos<31)go(order[pos+1]);else setShow(false)}} className="rounded-xl bg-[#b5562a] px-3 py-2 font-semibold text-white disabled:opacity-50">Απάντησα</button>
+        <button type="button" disabled={pos===31||loading} onClick={()=>go(order[pos+1])} className={oralButton}>Επόμενη</button>
+        <button type="button" disabled={loading} onClick={()=>reset(true)} className={oralButton}>Τυχαία εξέταση</button>
+        <button type="button" disabled={loading} onClick={()=>reset(false)} className={oralButton}>Επανεκκίνηση</button>
+      </div>
+      {done.length===32&&<p className="mt-3 font-semibold text-green-800">Ολοκλήρωσες και τις 32 ερωτήσεις!</p>}
     </div>
     {[0,16].map(start=><div key={start} className="mt-5 print:break-inside-avoid">
       <h3 className="mb-2 font-semibold">Teil {start===0?1:2}</h3>
-      <ol start={start+1} className="list-decimal space-y-2 pl-6" lang="de">{QUESTIONS.slice(start,start+16).map((q,i)=><li key={q}><button type="button" onClick={()=>setCurrent(start+i)} className="text-left hover:underline print:hidden">{q}</button><span className="hidden print:inline">{q}</span>{done.includes(start+i)&&<span className="ml-2 text-green-700 print:hidden">✓</span>}</li>)}</ol>
+      <ol start={start+1} className="list-decimal space-y-2 pl-6" lang="de">{QUESTIONS.slice(start,start+16).map((q,i)=><li key={q}><button type="button" disabled={loading} onClick={()=>go(start+i)} className="text-left hover:underline disabled:opacity-50 print:hidden">{q}</button><span className="hidden print:inline">{q}</span>{done.includes(start+i)&&<span className="ml-2 text-green-700 print:hidden">✓</span>}</li>)}</ol>
     </div>)}
   </section>
 }
