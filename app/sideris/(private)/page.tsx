@@ -75,6 +75,18 @@ const SUBJECTS: Subject[] = [
         href: "/sideris/germanika/lexeis",
         links: [],
       },
+      {
+        title: "ÖSD KID A1 · Lesen & Sprechen",
+        subtitle: "4 τεστ συμπλήρωσης λέξεων με έλεγχο και επανάληψη, 32 ερωτήσεις προφορικών και εκτύπωση χωρίς λύσεις.",
+        href: "/sideris/germanika/kid-a1",
+        links: [
+          { label: "Die Goggis", href: "/sideris/germanika/kid-a1#lesen-1" },
+          { label: "Pinocchio", href: "/sideris/germanika/kid-a1#lesen-2" },
+          { label: "Oldtimer", href: "/sideris/germanika/kid-a1#lesen-3" },
+          { label: "Asterix und Obelix", href: "/sideris/germanika/kid-a1#lesen-4" },
+          { label: "Προφορικά", href: "/sideris/germanika/kid-a1#sprechen" },
+        ],
+      },
     ],
   },
 ];
