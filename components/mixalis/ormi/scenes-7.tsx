@@ -650,4 +650,74 @@ const case63: Case = {
   trap: "Ένα σώμα: οι C φαίνονται και αλλάζουν την ορμή του. Σύστημα: οι C είναι εσωτερικές και δεν μπαίνουν. Πρώτα διαλέγεις τι απομονώνεις!",
 };
 
-export const section10: Case[] = [case54, case55, case56, case57, case58, case59, case60, case61, case62, case63];
+/* 64. Σφυρί, μαχαίρι, πατάτα: η λάμα γλιστρά, η πατάτα «ανεβαίνει».
+ * Πατάτα 0,2 kg, μέγιστη τριβή 4 N, το μαχαίρι παίρνει 3 m/s σε 0,005 s. */
+const case64: Case = {
+  n: 64,
+  title: "Σφυρί, μαχαίρι, πατάτα",
+  what: "Μια πατάτα είναι καρφωμένη στη λάμα ενός μαχαιριού. Χτυπάμε με σφυρί την κορυφή της λαβής: το μαχαίρι πετάγεται προς τα κάτω, η πατάτα σχεδόν μένει στη θέση της και «ανεβαίνει» πάνω στη λάμα.",
+  given: "Πατάτα m = 0,2 kg, μέγιστη τριβή από τη λάμα T = 4 N, g = 10 m/s². Το σφυρί δίνει στο μαχαίρι 3 m/s σε Δt = 0,005 s.",
+  ask: "Τι δύναμη θα χρειαζόταν για να ακολουθήσει η πατάτα και πόση ταχύτητα παίρνει τελικά.",
+  period: 7.5,
+  legend: ["v", "F"],
+  phases: [
+    { until: 1.5, label: "Πριν", say: "Το μαχαίρι κρέμεται με τη λάμα προς τα κάτω και η πατάτα είναι καρφωμένη πάνω της. Το σφυρί έρχεται να χτυπήσει την κορυφή της λαβής." },
+    {
+      until: 3.5,
+      label: "Χτύπημα · αργή κίνηση",
+      say: "Το σφυρί χτυπά ΜΟΝΟ το μαχαίρι. Απομονώνω την πατάτα: δέχεται το βάρος της και την τριβή T από τη λάμα, που την τραβά προς τα κάτω. Τη δύναμη του σφυριού δεν τη δέχεται.",
+    },
+    {
+      until: 5.5,
+      label: "Η λάμα γλιστρά",
+      say: "Για να πάρει κι αυτή 3 m/s σε 0,005 s θα ήθελε F = 0,2·3/0,005 = 120 N. Η τριβή όμως δίνει το πολύ 4 N. Η λάμα γλιστρά μέσα από την πατάτα.",
+    },
+    { until: 7.5, label: "Αποτέλεσμα", say: "Δυ = (T + mg)·Δt/m = 6·0,005/0,2 = 0,15 m/s. Το μαχαίρι κατέβηκε, η πατάτα σχεδόν όχι: τη βλέπουμε πιο ψηλά πάνω στη λάμα." },
+  ],
+  Scene: ({ t }) => {
+    const x = 96;
+    const k = seg(t, 1.5, 5.5); // the knife slides down during the blow
+    const sliding = t >= 1.5 && t < 5.5;
+    const knifeDy = 46 * (1 - Math.pow(1 - k, 2));
+    const potatoDy = 2.3 * (1 - Math.pow(1 - k, 2));
+    const hy = 34 + knifeDy; // top of the handle
+    const hammerY = t < 1.5 ? lerp(-4, hy - 14, t / 1.5) : hy - 14 - 10 * seg(t, 1.6, 2.6);
+    const hitting = t >= 1.5 && t < 2.3;
+    const vKnife = sliding ? 3 : 0;
+    const vPotato = sliding ? 0.15 * clamp((t - 1.5) / 0.8) : 0;
+    const py = 132 + potatoDy;
+    return (
+      <g>
+        <rect x={x - 22} y={hammerY} width={44} height={14} rx={3} fill="#9aa3b2" stroke={C.edge} />
+        <line x1={x + 22} y1={hammerY + 7} x2={x + 60} y2={hammerY - 20} stroke="#c8a27a" strokeWidth={5} strokeLinecap="round" />
+        {hitting ? <Vec x={x - 34} y={hy - 18} dx={0} dy={20} color={C.F} label="σφυρί" labelSide="left" width={3.2} /> : null}
+        <rect x={x - 6} y={hy} width={12} height={30} rx={2} fill="#7a5a3a" stroke={C.edge} />
+        <polygon points={`${x - 6},${hy + 30} ${x + 6},${hy + 30} ${x + 4},${hy + 104} ${x - 2},${hy + 112}`} fill="#e1e4e9" stroke={C.edge} />
+        <ellipse cx={x} cy={py} rx={30} ry={13} fill="#c9a06a" stroke={C.edge} strokeWidth={1.3} />
+        <T x={14} y={204} s={`λάμα κάτω από την πατάτα: ${num(Math.max(0, 112 + hy - py - 13) / 10, 1)} cm`} size={9.5} color={C.muted} anchor="start" bold={false} />
+        <Vec x={x + 26} y={hy + 6} dx={0} dy={vKnife * 10} label={vKnife ? "υ_{μαχ}" : undefined} labelSide="right" />
+        <Tag x={14} y={22} s="αργή κίνηση" color={C.F} show={sliding} />
+        <Panel x={226} y={10} w={128} h={170} title="μόνο η πατάτα">
+          <ellipse cx={290} cy={62} rx={26} ry={12} fill="#c9a06a" stroke={C.edge} strokeWidth={1.3} />
+          <Vec x={278} y={74} dx={0} dy={18} color={C.F} label="mg" labelSide="left" width={2.4} />
+          {sliding ? <Vec x={302} y={74} dx={0} dy={26} color={C.K} label="T" labelSide="right" width={3} /> : null}
+          <T x={290} y={116} s={sliding ? "T ≤ 4 N" : t >= 5.5 ? "η λάμα σταμάτησε" : "ακίνητη"} size={9.5} color={sliding ? C.K : C.muted} />
+          <T x={290} y={129} s="όχι δύναμη σφυριού" size={8.5} color={C.muted} bold={false} />
+          <line x1={234} y1={138} x2={346} y2={138} stroke="#eceef2" />
+          <T x={236} y={155} s={`υ_{μαχ} = ${num(vKnife, 2)} m/s`} size={10} color={C.v} anchor="start" />
+          <T x={236} y={172} s={`υ_{πατ} = ${num(vPotato, 2)} m/s`} size={10} color={C.p} anchor="start" />
+        </Panel>
+
+      </g>
+    );
+  },
+  solve: (
+    <>
+      Για να ακολουθήσει: F = mΔυ/Δt = 0,2·3/0,005 = <b>120 N</b>, ενώ η τριβή φτάνει το πολύ 4 N. Πραγματικά: (T + mg)·Δt = m·Δυ ⇒ Δυ = 6·0,005/0,2 ={" "}
+      <b>0,15 m/s</b>, είκοσι φορές λιγότερο από το μαχαίρι. Η λάμα γλιστρά μέσα από την πατάτα.
+    </>
+  ),
+  trap: "Το σφυρί δεν σπρώχνει την πατάτα. Και η πατάτα δεν «ανεβαίνει»: σχεδόν μένει ακίνητη, το μαχαίρι κατεβαίνει. Είναι το αντίθετο του 57 και του 62: εκεί μεγάλο Δt ⇒ μικρή δύναμη, εδώ μικρό Δt ⇒ η μικρή τριβή δεν προλαβαίνει.",
+};
+
+export const section10: Case[] = [case54, case55, case56, case57, case58, case59, case60, case61, case62, case63, case64];

@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 3512" width="1212" height="3512" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
-<rect width="1212" height="3512" fill="#fbfaf7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 3768" width="1212" height="3768" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
+<rect width="1212" height="3768" fill="#fbfaf7"/>
 <text x="606.0" y="52.0" font-size="40" fill="#14306b" text-anchor="middle" font-weight="900">ΟΡΜΗ ΚΑΙ ΚΡΟΥΣΕΙΣ – ΤΥΠΟΛΟΓΙΟ</text>
-<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">63 περιπτώσεις • Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας, συνθετικές • Φυσική Προσανατολισμού Β΄ Λυκείου</text>
+<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">64 περιπτώσεις • Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας, συνθετικές • Φυσική Προσανατολισμού Β΄ Λυκείου</text>
 <text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Πρώτα: σύστημα + χρονικό διάστημα + εξωτερική ώθηση → ΑΔΟ αν η εξωτερική ώθηση ≈ 0, αλλιώς Δp = εξωτερική ώθηση → ενέργεια αν χρειάζεται</text>
 <rect x="14" y="112" width="1184" height="250" rx="10" fill="#eaf2fd" stroke="#1e5fb4" stroke-width="1.5"/>
 <rect x="14" y="112" width="1184" height="30" rx="10" fill="#1e5fb4"/>
@@ -1019,7 +1019,7 @@
 <text x="981.0" y="2886.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Ελάχιστη απόσταση: κοινή υ</text>
 <text x="1183.0" y="2912.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ Πεδίο Κ4, Κ29</text>
 <!-- fbd-start -->
-<rect x="14.0" y="2928.0" width="1184.0" height="506.0" fill="#eef2f4" stroke="#455a64" stroke-width="1.5" rx="10"/>
+<rect x="14.0" y="2928.0" width="1184.0" height="762.0" fill="#eef2f4" stroke="#455a64" stroke-width="1.5" rx="10"/>
 <rect x="14.0" y="2928.0" width="1184.0" height="30.0" fill="#455a64" rx="10"/>
 <rect x="14.0" y="2948.0" width="1184.0" height="10.0" fill="#455a64"/>
 <text x="30.0" y="2949.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">12. ΔΙΑΓΡΑΜΜΑΤΑ ΔΥΝΑΜΩΝ ΣΤΗΝ ΚΡΟΥΣΗ: ΑΠΟΜΟΝΩΝΩ ΤΟ ΣΩΜΑ</text>
@@ -1397,8 +1397,47 @@
 <text x="981.0" y="3383.0" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δ(p<tspan dy="3.3" font-size="7.7">A</tspan><tspan dy="-3.3">​</tspan> + p<tspan dy="3.3" font-size="7.7">B</tspan><tspan dy="-3.3">​</tspan>) = 0 ⇒ ΑΔΟ</text>
 <text x="981.0" y="3398.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Κατακόρυφα: N<tspan dy="3.3" font-size="7.7">ολ</tspan><tspan dy="-3.3">​</tspan> = m<tspan dy="3.3" font-size="7.7">ολ</tspan><tspan dy="-3.3">​</tspan>g</text>
 <text x="1183.0" y="3424.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 12</text>
+<rect x="17.0" y="3474.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="32.0" cy="3489.0" r="10" fill="#455a64"/>
+<text x="32.0" y="3493.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">64</text>
+<text x="47.0" y="3494.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Σφυρί, μαχαίρι, πατάτα</text>
+<line x1="137.0" y1="3506.0" x2="137.0" y2="3594.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="189.0" y="3515.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<rect x="57.0" y="3504.0" width="34.0" height="12.0" fill="#9aa3b2" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<line x1="74.0" y1="3516.0" x2="74.0" y2="3519.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="74.0,3528.0 69.5,3519.0 78.5,3519.0" fill="#d9342b"/>
+<text x="107.0" y="3514.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">σφυρί</text>
+<rect x="69.0" y="3530.0" width="10.0" height="22.0" fill="#7a5a3a" stroke="#4a5568" stroke-width="1" rx="2"/>
+<polygon points="69.0,3552.0 79.0,3552.0 77.0,3590.0 71.0,3596.0" fill="#d6dae1" stroke="#4a5568" stroke-width="1"/>
+<ellipse cx="74.0" cy="3576.0" rx="21" ry="10" fill="#c9a06a" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="113.0" y1="3538.0" x2="113.0" y2="3565.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="113.0,3574.0 108.5,3565.0 117.5,3565.0" fill="#1f6fd1"/>
+<text x="131.0" y="3558.0" font-size="9.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">3 m/s</text>
+<text x="113.0" y="3592.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">μαχαίρι</text>
+<ellipse cx="189.0" cy="3544.0" rx="22" ry="11" fill="#c9a06a" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="179.0" y1="3555.0" x2="179.0" y2="3564.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="179.0,3573.0 174.5,3564.0 183.5,3564.0" fill="#d9342b"/>
+<text x="166.0" y="3572.0" font-size="10.5" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
+<line x1="199.0" y1="3555.0" x2="199.0" y2="3570.0" stroke="#e08a1e" stroke-width="3" stroke-linecap="round"/>
+<polygon points="199.0,3579.0 194.5,3570.0 203.5,3570.0" fill="#e08a1e"/>
+<text x="209.0" y="3573.0" font-size="11.5" fill="#e08a1e" text-anchor="middle" font-weight="bold" font-style="italic">T</text>
+<text x="189.0" y="3592.0" font-size="8.5" fill="#5b6577" text-anchor="middle" font-weight="normal">όχι δύναμη σφυριού</text>
+<text x="29.0" y="3608.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Στην πατάτα: μόνο mg και T</text>
+<text x="29.0" y="3623.5" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">Θα ήθελε F = mΔυ/Δt = 120 N</text>
+<text x="29.0" y="3639.0" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Όμως T ≤ μN = 4 N</text>
+<text x="29.0" y="3654.5" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δυ<tspan dy="3.3" font-size="7.7">πατ</tspan><tspan dy="-3.3">​</tspan> ≈ 0,15 m/s ≪ 3 m/s</text>
+<text x="231.0" y="3680.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ αντίθετο του 57, 62</text>
+<rect x="255.0" y="3474.0" width="940.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<text x="269.0" y="3496.0" font-size="13.5" fill="#455a64" text-anchor="start" font-weight="bold">Πώς φτιάχνω διάγραμμα δυνάμεων σε μια κρούση</text>
+<text x="269.0" y="3522.0" font-size="12" fill="#1c2433" text-anchor="start" font-weight="normal">1. Διαλέγω ΤΙ εξετάζω: ένα σώμα (απομονωμένο) ή όλο το σύστημα A + B.</text>
+<text x="269.0" y="3544.5" font-size="12" fill="#1c2433" text-anchor="start" font-weight="normal">2. Ζωγραφίζω ΜΟΝΟ αυτό, χωρίς τοίχους, πατώματα και άλλα σώματα γύρω του.</text>
+<text x="269.0" y="3567.0" font-size="12" fill="#1c2433" text-anchor="start" font-weight="normal">3. Βάζω κάθε δύναμη που ΔΕΧΕΤΑΙ: επαφής (C ή N), βάρος mg, τριβή T. Οι ταχύτητες δεν είναι δυνάμεις.</text>
+<text x="269.0" y="3589.5" font-size="12" fill="#1c2433" text-anchor="start" font-weight="normal">4. Διαλέγω θετική φορά και γράφω σε κάθε άξονα: ΣF·Δt = Δp = m(υ<tspan dy="3.6" font-size="8.4">τελ</tspan><tspan dy="-3.6">​</tspan> − υ<tspan dy="3.6" font-size="8.4">αρχ</tspan><tspan dy="-3.6">​</tspan>).</text>
+<text x="269.0" y="3612.0" font-size="12" fill="#1c2433" text-anchor="start" font-weight="normal">5. Μικρό Δt και τεράστια C ⇒ το βάρος συχνά αμελείται. Αν η άσκηση δίνει Δt, το mg μπαίνει (60, 62).</text>
+<text x="269.0" y="3634.5" font-size="12" fill="#1c2433" text-anchor="start" font-weight="normal">6. Στο σύστημα οι δυνάμεις επαφής είναι εσωτερικές και φεύγουν ⇒ ΑΔΟ (63).</text>
+<text x="269.0" y="3657.0" font-size="12" fill="#1c2433" text-anchor="start" font-weight="normal">7. Πολύ μικρό Δt: μια μικρή δύναμη (π.χ. τριβή) δεν προλαβαίνει να αλλάξει την ορμή (64).</text>
 <!-- fbd-end -->
-<text x="606.0" y="3458.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q απώλεια κινητικής ενέργειας • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
-<text x="606.0" y="3480.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = εξωτερική ώθηση. Στην ελαστική κρούση διατηρείται και η K.</text>
-<text x="606.0" y="3508.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
+<text x="606.0" y="3714.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q απώλεια κινητικής ενέργειας • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
+<text x="606.0" y="3736.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = εξωτερική ώθηση. Στην ελαστική κρούση διατηρείται και η K.</text>
+<text x="606.0" y="3764.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
 </svg>

@@ -8,7 +8,7 @@ export type OrmiNavKey = "theoria" | "askiseis" | "trapeza" | "sintheta" | "proo
  * στην κορυφή κάθε σελίδας του κεφαλαίου, ώστε να φαίνεται πάντα πού είσαι.
  */
 const STEPS: { key: OrmiNavKey; n?: string; label: string; hint: string; href: string }[] = [
-  { key: "theoria", n: "1", label: "Θεωρία & τυπολόγιο", hint: "μάθημα με κίνηση · 63 περιπτώσεις", href: "/mixalis/ormi" },
+  { key: "theoria", n: "1", label: "Θεωρία & τυπολόγιο", hint: "μάθημα με κίνηση · 64 περιπτώσεις", href: "/mixalis/ormi" },
   { key: "askiseis", n: "2", label: "Εξάσκηση", hint: "ΑΔΟ ή Δp; · λυμένες Τριπολίτη", href: "/mixalis/ormi/askiseis" },
   { key: "trapeza", n: "3", label: "Τράπεζα Θεμάτων", hint: "20 περιπτώσεις · Θέματα 2", href: "/mixalis/ormi/trapeza" },
   { key: "sintheta", n: "4", label: "Σύνθετες", hint: "36 σενάρια · κόλπα · προκλήσεις", href: "/mixalis/ormi2" },

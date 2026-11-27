@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Adds section 12 «Διαγράμματα δυνάμεων στην κρούση» (boxes 54–63) to the ormi formula poster.
+"""Adds section 12 «Διαγράμματα δυνάμεων στην κρούση» (boxes 54–64) to the ormi formula poster.
 
   python3 scripts/mixalis/ormi_poster_fbd.py
 
@@ -9,7 +9,7 @@ replaced, so it is safe to run again. It also rebuilds page 3 of the A4 PDF
 (public/mixalis/ormi-typologio-A4.pdf) from the same drawings.
 
 Cell geometry must match `cells` in app/mixalis/(private)/ormi/page.tsx:
-boxes 54–63 sit in rows 12 and 13 (y = 146 + 256·11 and 146 + 256·12).
+boxes 54–64 sit in rows 12–14 (y = 146 + 256·11, ·12, ·13); row 14 also holds a rules panel.
 """
 
 from __future__ import annotations
@@ -28,7 +28,7 @@ SVG_PATH = ROOT / "public" / "mixalis" / "ormi-typologio.svg"
 PDF_PATH = ROOT / "public" / "mixalis" / "ormi-typologio-A4.pdf"
 
 START, END = "<!-- fbd-start -->", "<!-- fbd-end -->"
-OLD_H, NEW_H = 3000, 3512
+OLD_H = 3000  # height of the poster before section 12
 SEC_Y = 2928  # frame top of section 12
 COLOR, BG = "#455a64", "#eef2f4"
 TITLE = "12. ΔΙΑΓΡΑΜΜΑΤΑ ΔΥΝΑΜΩΝ ΣΤΗΝ ΚΡΟΥΣΗ: ΑΠΟΜΟΝΩΝΩ ΤΟ ΣΩΜΑ"
@@ -90,10 +90,11 @@ class S(Svg):
         X2, Y2 = self.at(x2, y2)
         self.line(X1, Y1, X2, Y2, color, w, dash)
 
-    def split(self):
+    def split(self, left_caption=True):
         """Left half: the setup. Right half: the isolated body with only its forces."""
         self.L(120, 32, 120, 120, "#c5cbd3", 1, "3 3")
-        self.T(62, 41, "σχήμα", 9, MUTED, bold=False)
+        if left_caption:
+            self.T(62, 41, "σχήμα", 9, MUTED, bold=False)
         self.T(172, 41, "μόνο το σώμα", 9, F_RED, bold=True)
 
     def plus(self, x, y, dx=18, dy=0, label="+"):
@@ -249,6 +250,30 @@ def c63(s: S):  # system A+B: internal forces drop out
     s.T(172, 122, "καμία οριζόντια", 9, MUTED, bold=False)
 
 
+def c64(s: S):  # hammer hits the knife, the potato "climbs" the blade
+    s.split(left_caption=False)
+    # hammer head and the blow
+    s.box(40, 30, 34, 12, "#9aa3b2")
+    s.A(57, 42, 0, 12, F_RED, 3, None)
+    s.T(90, 40, "σφυρί", 9, F_RED, bold=True)
+    # knife: handle on top, blade pointing down
+    X, Y = s.at(52, 56)
+    s.rect(X, Y, 10, 22, "#7a5a3a", EDGE, 1, 2)
+    bx, by = s.at(52, 78)
+    s.poly([(bx, by), (bx + 10, by), (bx + 8, by + 38), (bx + 2, by + 44)], "#d6dae1", stroke=EDGE)
+    # potato on the blade
+    X, Y = s.at(57, 102)
+    s.add(f'<ellipse cx="{X:.1f}" cy="{Y:.1f}" rx="21" ry="10" fill="#c9a06a" stroke="{EDGE}" stroke-width="1.2"/>')
+    s.A(96, 64, 0, 36, V_BLUE, 2.6, "3 m/s", lx=18, ly=2, size=9.5)
+    s.T(96, 118, "μαχαίρι", 9, MUTED, bold=False)
+    # isolated potato: weight and friction, both down; nothing from the hammer
+    X, Y = s.at(172, 70)
+    s.add(f'<ellipse cx="{X:.1f}" cy="{Y:.1f}" rx="22" ry="11" fill="#c9a06a" stroke="{EDGE}" stroke-width="1.2"/>')
+    s.A(162, 81, 0, 18, F_RED, 2.4, "mg", lx=-13, ly=8, size=10.5)
+    s.A(182, 81, 0, 24, K_ORANGE, 3, "T", lx=10, ly=6, size=11.5)
+    s.T(172, 118, "όχι δύναμη σφυριού", 8.5, MUTED, bold=False)
+
+
 # (title, drawer, [(text, color, bold)], ref)
 CELLS = [
     (54, "Μπάλα χτυπά τοίχο", c54, [
@@ -311,7 +336,27 @@ CELLS = [
         ("Δ(p_{A} + p_{B}) = 0 ⇒ ΑΔΟ", P_GREEN, True),
         ("Κατακόρυφα: N_{ολ} = m_{ολ}g", MUTED, False),
     ], "→ δες και 12"),
+    (64, "Σφυρί, μαχαίρι, πατάτα", c64, [
+        ("Στην πατάτα: μόνο mg και T", INK, True),
+        ("Θα ήθελε F = mΔυ/Δt = 120 N", F_RED, True),
+        ("Όμως T ≤ μN = 4 N", K_ORANGE, True),
+        ("Δυ_{πατ} ≈ 0,15 m/s ≪ 3 m/s", P_GREEN, True),
+    ], "→ αντίθετο του 57, 62"),
 ]
+
+RULES = [
+    "1. Διαλέγω ΤΙ εξετάζω: ένα σώμα (απομονωμένο) ή όλο το σύστημα A + B.",
+    "2. Ζωγραφίζω ΜΟΝΟ αυτό, χωρίς τοίχους, πατώματα και άλλα σώματα γύρω του.",
+    "3. Βάζω κάθε δύναμη που ΔΕΧΕΤΑΙ: επαφής (C ή N), βάρος mg, τριβή T. Οι ταχύτητες δεν είναι δυνάμεις.",
+    "4. Διαλέγω θετική φορά και γράφω σε κάθε άξονα: ΣF·Δt = Δp = m(υ_{τελ} − υ_{αρχ}).",
+    "5. Μικρό Δt και τεράστια C ⇒ το βάρος συχνά αμελείται. Αν η άσκηση δίνει Δt, το mg μπαίνει (60, 62).",
+    "6. Στο σύστημα οι δυνάμεις επαφής είναι εσωτερικές και φεύγουν ⇒ ΑΔΟ (63).",
+    "7. Πολύ μικρό Δt: μια μικρή δύναμη (π.χ. τριβή) δεν προλαβαίνει να αλλάξει την ορμή (64).",
+]
+
+ROWS = -(-(len(CELLS) + 1) // 5)  # cells plus the rules panel
+FRAME_H = 250 + 256 * (ROWS - 1)
+SHIFT = 256 * ROWS  # how far the footer moves down
 
 
 def draw_cell(s: S, entry, x: float, y: float):
@@ -327,34 +372,43 @@ def draw_cell(s: S, entry, x: float, y: float):
     s.text(x + 214, y + 206, ref, 9.5, MUTED, "end", bold=False, italic=True)
 
 
+def rules_panel(s: S, x: float, y: float, w: float):
+    s.rect(x, y, w, CELL_H, "#ffffff", "#d6dae1", 1, 7)
+    s.text(x + 14, y + 22, "Πώς φτιάχνω διάγραμμα δυνάμεων σε μια κρούση", 13.5, COLOR, "start")
+    for i, t in enumerate(RULES):
+        s.text(x + 14, y + 48 + 22.5 * i, t, 12, INK, "start", bold=False)
+
+
 def section_block(top: float) -> str:
     s = S()
-    s.rect(14, top, 1184, 506, BG, COLOR, 1.5, 10)
+    s.rect(14, top, 1184, FRAME_H, BG, COLOR, 1.5, 10)
     s.rect(14, top, 1184, 30, COLOR, rx=10)
     s.rect(14, top + 20, 1184, 10, COLOR)
     s.text(30, top + 21, TITLE, 16, "#ffffff", "start")
     for i, entry in enumerate(CELLS):
         row, col = divmod(i, 5)
         draw_cell(s, entry, 17 + 238 * col, top + 34 + 256 * row)
+    row, col = divmod(len(CELLS), 5)
+    rules_panel(s, 17 + 238 * col, top + 34 + 256 * row, 238 * (5 - col) - 12)
     return "\n".join(s.parts)
 
 
 def patch_svg() -> None:
     src = SVG_PATH.read_text(encoding="utf-8")
+    cur_h = int(re.search(r'viewBox="0 0 1212 (\d+)"', src).group(1))
     if START in src:
         src = re.sub(re.escape(START) + r".*?" + re.escape(END) + "\n", "", src, flags=re.S)
-        shift = 0
-    else:
-        shift = NEW_H - OLD_H
-    if shift:
-        src = src.replace(f'viewBox="0 0 1212 {OLD_H}" width="1212" height="{OLD_H}"', f'viewBox="0 0 1212 {NEW_H}" width="1212" height="{NEW_H}"')
-        src = src.replace(f'<rect width="1212" height="{OLD_H}"', f'<rect width="1212" height="{NEW_H}"')
-        # move the footer (symbols, rule, signature) under the new section
-        for y in ("2946.0", "2968.0", "2996.0"):
-            src = src.replace(f'<text x="606.0" y="{y}"', f'<text x="606.0" y="{float(y) + shift:.1f}"')
-        src = src.replace("53 περιπτώσεις •", "63 περιπτώσεις •")
+    prev = cur_h - OLD_H
+    new_h = OLD_H + SHIFT
+    src = src.replace(f'viewBox="0 0 1212 {cur_h}" width="1212" height="{cur_h}"', f'viewBox="0 0 1212 {new_h}" width="1212" height="{new_h}"')
+    src = src.replace(f'<rect width="1212" height="{cur_h}"', f'<rect width="1212" height="{new_h}"')
+    # move the footer (symbols, rule, signature) under the new section
+    for y in (2946.0, 2968.0, 2996.0):
+        src = src.replace(f'<text x="606.0" y="{y + prev:.1f}"', f'<text x="606.0" y="{y + SHIFT:.1f}"')
+    src = re.sub(r"\d+ περιπτώσεις •", f"{53 + len(CELLS)} περιπτώσεις •", src, count=1)
     block = section_block(SEC_Y)
-    anchor = '<text x="606.0" y="3458.0"'
+    anchor = f'<text x="606.0" y="{2946.0 + SHIFT:.1f}"'
+    assert anchor in src, anchor
     src = src.replace(anchor, f"{START}\n{block}\n{END}\n{anchor}", 1)
     SVG_PATH.write_text(src, encoding="utf-8")
 
@@ -369,21 +423,9 @@ def a4_page() -> None:
     s.text(W / 2, 56, "Ορμή και κρούσεις – τυπολόγιο (συνέχεια) · σελίδα 3", 30, "#14306b")
     s.text(W / 2, 88, "Διάγραμμα δυνάμεων: απομονώνω το σώμα και σχεδιάζω ΜΟΝΟ τις δυνάμεις που δέχεται στη διάρκεια της κρούσης", 15, MUTED, bold=False)
     body = section_block(110)
-    s.text(W / 2, 660, "Κόκκινο = δύναμη • μπλε = ταχύτητα • C = δύναμη επαφής • T = τριβή • N = κάθετη δύναμη • J = ώθηση = ΣF·Δt = Δp", 14, MUTED, bold=False)
-    s.text(W / 2, 686, "Η μέση δύναμη F_{μ} = Δp/Δt είναι μικρότερη από τη μέγιστη δύναμη της κρούσης.", 14, INK)
-    s.rect(14, 720, 1184, 300, "#ffffff", "#d6dae1", 1, 10)
-    s.text(36, 756, "Πώς φτιάχνω διάγραμμα δυνάμεων σε μια κρούση", 20, COLOR, "start")
-    steps = [
-        ("1.", "Διαλέγω ΤΙ εξετάζω: ένα σώμα (απομονωμένο) ή όλο το σύστημα A + B."),
-        ("2.", "Ζωγραφίζω ΜΟΝΟ αυτό, χωρίς τοίχους, πατώματα και άλλα σώματα γύρω του."),
-        ("3.", "Βάζω κάθε δύναμη που ΔΕΧΕΤΑΙ: επαφής (C ή N), βάρος mg, τριβή T. Οι ταχύτητες δεν είναι δυνάμεις."),
-        ("4.", "Διαλέγω θετική φορά και γράφω σε κάθε άξονα: ΣF·Δt = Δp = m(υ_{τελ} − υ_{αρχ})."),
-        ("5.", "Μικρό Δt και τεράστια C ⇒ το βάρος συχνά αμελείται. Αν η άσκηση δίνει Δt, το mg μπαίνει (κουτάκια 60, 62)."),
-        ("6.", "Στο σύστημα οι δυνάμεις επαφής είναι εσωτερικές και φεύγουν ⇒ ΑΔΟ, αν δεν υπάρχει εξωτερική οριζόντια ώθηση."),
-    ]
-    for i, (k, t) in enumerate(steps):
-        s.text(40, 798 + 36 * i, k, 16, COLOR, "start")
-        s.text(66, 798 + 36 * i, t, 16, INK, "start", bold=False)
+    below = 110 + FRAME_H + 40
+    s.text(W / 2, below, "Κόκκινο = δύναμη • μπλε = ταχύτητα • C = δύναμη επαφής • T = τριβή • N = κάθετη δύναμη • J = ώθηση = ΣF·Δt = Δp", 14, MUTED, bold=False)
+    s.text(W / 2, below + 26, "Η μέση δύναμη F_{μ} = Δp/Δt είναι μικρότερη από τη μέγιστη δύναμη της κρούσης.", 14, INK)
     s.text(W / 2, H - 24, "Physics Workspace • Μιχάλης", 12, "#9aa3b2", bold=False)
     svg = (
         f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
