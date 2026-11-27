@@ -496,7 +496,6 @@ export default function PlanBoard() {
             ))}
             <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-[repeating-linear-gradient(45deg,#e5e7eb,#e5e7eb_3px,#f3f4f6_3px,#f3f4f6_6px)]" />Κλειστό</span>
             <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded border-2 border-dashed border-[#f59e0b] bg-[#fffbeb]" />Κενό 1–2 νυχτών</span>
-            <span className="text-[#5b6b80]">Σύρε κράτηση σε άλλη γραμμή = μετακίνηση (πάνω σε άλλη κράτηση = αντιμετάθεση) · σύρε την άκρη = ημερομηνίες · κενό κελί = νέα κράτηση</span>
           </div>
 
           {error && <p className="rounded-xl bg-[#fff4dc] px-4 py-3 text-sm font-semibold text-[#92400e]">{error}</p>}
@@ -944,10 +943,12 @@ function BookingPanel({
 
   if (!data || !form) {
     return (
-      <aside className="fixed inset-y-0 right-0 z-[60] w-full max-w-md overflow-y-auto bg-white p-5 shadow-2xl">
-        <button type="button" onClick={onClose} className="float-right text-2xl" aria-label="Κλείσιμο">×</button>
-        <p className="text-sm text-[#5b6b80]">{error || "Φόρτωση…"}</p>
-      </aside>
+      <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-[#1f2a3c]/40 p-4" role="dialog" aria-modal="true">
+        <div className="w-full max-w-2xl rounded-2xl bg-white p-5 shadow-xl">
+          <button type="button" onClick={onClose} className="float-right h-10 w-10 rounded-full bg-[#f4f7fa] text-xl" aria-label="Κλείσιμο">×</button>
+          <p className="py-2 text-sm text-[#5b6b80]">{error || "Φόρτωση…"}</p>
+        </div>
+      </div>
     );
   }
 
@@ -1113,7 +1114,8 @@ function BookingPanel({
   const breakfastCharged = b.charges.some((c) => /πρωιν|breakfast/i.test(c.description));
 
   return (
-    <aside className="fixed inset-y-0 right-0 z-[60] flex w-full max-w-md flex-col bg-white shadow-2xl" aria-labelledby="bk-title">
+    <div className="fixed inset-0 z-[60] flex items-start justify-center bg-[#1f2a3c]/40 p-4" role="dialog" aria-modal="true" aria-labelledby="bk-title">
+    <div className="flex max-h-[calc(100dvh-2rem)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-xl">
       {/* 1. Header: who, when, money, what is missing */}
       <div className="border-b border-[#eef2f6] bg-white p-4">
         <div className="flex items-start justify-between gap-2">
@@ -1159,8 +1161,7 @@ function BookingPanel({
         )}
 
         {/* 2. Confirmation: the most used action, at the top */}
-        <section className={`${section} border-[#cfc6fb] bg-[#f7f5ff]`}>
-          <h3 className={h3}>Επιβεβαίωση προς τον πελάτη</h3>
+        <FormSection tone="purple" title="✉️ Επιβεβαίωση προς τον πελάτη">
           <label className="block text-xs font-bold">
             Σημείωση για τον πελάτη <span className="font-normal text-[#5443c9]">· φαίνεται στο email επιβεβαίωσης</span>
             <textarea rows={2} value={form.guestNote} onChange={(e) => set({ guestNote: e.target.value })} placeholder="π.χ. Συμφωνήσαμε late check-out στις 13:00" className={input} />
@@ -1203,20 +1204,10 @@ function BookingPanel({
             ) : null}
           </div>
           {dirty && <p className="text-xs font-semibold text-[#92400e]">Πάτα πρώτα «Αποθήκευση» κάτω — η επιβεβαίωση στέλνει τα αποθηκευμένα στοιχεία.</p>}
-        </section>
+        </FormSection>
 
-        {/* 3. Stay + arrival */}
-        <section className={section}>
-          <h3 className={h3}>Διαμονή</h3>
-          <label className="block text-xs font-bold">
-            Δωμάτιο
-            <select value={form.room} onChange={(e) => set({ room: Number(e.target.value) })} className={input}>
-              {PYRGOS_ROOMS.map((r) => (
-                <option key={r.number} value={r.number}>{r.label} — {r.categoryLabel}</option>
-              ))}
-            </select>
-          </label>
-          {roomWarning && <p className="rounded-lg border-2 border-[#f87171] bg-[#fef2f2] px-3 py-2 text-xs font-bold text-[#991b1b]">⚠️ {roomWarning}</p>}
+        {/* 3. Dates, people, arrival */}
+        <FormSection tone="blue" title="📅 Ημερομηνίες & άτομα">
           <div className="grid grid-cols-2 gap-2">
             <label className="text-xs font-bold">Check-in<input type="date" disabled={ota} value={form.checkin} onChange={(e) => set({ checkin: e.target.value })} className={input} /></label>
             <label className="text-xs font-bold">Check-out<input type="date" disabled={ota} value={form.checkout} onChange={(e) => set({ checkout: e.target.value })} className={input} /></label>
@@ -1234,49 +1225,22 @@ function BookingPanel({
               <input disabled={!arrival} value={arrival?.details ?? ""} onChange={(e) => arrival && setArrival({ ...arrival, details: e.target.value })} placeholder="π.χ. Aegean A3 284" className={input} />
             </label>
           </div>
-        </section>
+        </FormSection>
 
-        {/* 4. Guest */}
-        <section className={section}>
-          <h3 className={h3}>Πελάτης</h3>
-          <div className="grid grid-cols-2 gap-2">
-            <label className="text-xs font-bold">Όνομα<input value={form.firstName} onChange={(e) => set({ firstName: e.target.value })} className={input} /></label>
-            <label className="text-xs font-bold">Επώνυμο<input value={form.lastName} onChange={(e) => set({ lastName: e.target.value })} className={input} /></label>
-            <label className="col-span-2 text-xs font-bold">Email<input type="email" value={form.email} onChange={(e) => set({ email: e.target.value })} className={input} /></label>
-            <label className="col-span-2 text-xs font-bold">Τηλέφωνο<input type="tel" value={form.phone} onChange={(e) => set({ phone: e.target.value })} className={input} /></label>
-          </div>
-        </section>
-
-        {/* 5. Room preparation (for housekeeping — no charge) */}
-        <section className={section}>
-          <h3 className={h3}>Ετοιμασία δωματίου</h3>
-          <p className={hint}>Για την καθαριότητα · δεν προσθέτει χρέωση</p>
+        <FormSection tone="purple" title="🛏️ Δωμάτιο">
           <label className="block text-xs font-bold">
-            Κρεβάτι
-            <select value={form.bedSetup} onChange={(e) => set({ bedSetup: e.target.value })} className={input}>
-              <option value="">— δεν ορίστηκε —</option>
-              {BED_OPTIONS.map((o) => (
-                <option key={o.value} value={o.value}>{o.label}</option>
+            Δωμάτιο
+            <select value={form.room} onChange={(e) => set({ room: Number(e.target.value) })} className={input}>
+              {PYRGOS_ROOMS.map((r) => (
+                <option key={r.number} value={r.number}>{r.label} — {r.categoryLabel}</option>
               ))}
             </select>
           </label>
-          <div className="grid grid-cols-3 gap-2">
-            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.breakfast} onChange={(e) => set({ breakfast: e.target.checked })} /> Πρωινό</label>
-            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.cot} onChange={(e) => set({ cot: e.target.checked })} /> Κούνια</label>
-            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.rollaway} onChange={(e) => set({ rollaway: e.target.checked })} /> Ράντζο</label>
-          </div>
-          {form.breakfast && !breakfastCharged && !b.masterId && (
-            <p className="text-xs text-[#92400e]">Αν το πρωινό χρεώνεται, πρόσθεσέ το και στις χρεώσεις πιο κάτω.</p>
-          )}
-          <label className="block text-xs font-bold">
-            Άλλο
-            <input value={form.bedOther} onChange={(e) => set({ bedOther: e.target.value })} placeholder="π.χ. επιπλέον μαξιλάρια" className={input} />
-          </label>
-        </section>
+          {roomWarning && <p className="rounded-lg border-2 border-[#f87171] bg-[#fef2f2] px-3 py-2 text-xs font-bold text-[#991b1b]">⚠️ {roomWarning}</p>}
+        </FormSection>
 
         {/* 6. Price & payment */}
-        <section className={`${section} bg-[#f8fafc]`}>
-          <h3 className={h3}>Τιμή & πληρωμή</h3>
+        <FormSection tone="green" title="💶 Τιμή & πληρωμή">
           {b.masterId ? (
             <>
               <p className="text-sm text-[#5b6b80]">Μέρος group: η τιμή και η πληρωμή είναι στην κύρια κράτηση #{b.masterId}. Οι χρεώσεις που προσθέτεις εδώ πάνε εκεί.</p>
@@ -1306,7 +1270,43 @@ function BookingPanel({
               <Charges booking={b} setConfirm={setConfirm} run={run} grandTotal={grandTotal} nights={nights} stayTotal={form.total ? totalNum : null} nightPrice={form.night ? Number(form.night) : null} />
             </>
           )}
-        </section>
+        </FormSection>
+
+        {/* 4. Guest */}
+        <FormSection tone="teal" title="👤 Στοιχεία πελάτη">
+          <div className="grid grid-cols-2 gap-2">
+            <label className="text-xs font-bold">Όνομα<input value={form.firstName} onChange={(e) => set({ firstName: e.target.value })} className={input} /></label>
+            <label className="text-xs font-bold">Επώνυμο<input value={form.lastName} onChange={(e) => set({ lastName: e.target.value })} className={input} /></label>
+            <label className="col-span-2 text-xs font-bold">Email<input type="email" value={form.email} onChange={(e) => set({ email: e.target.value })} className={input} /></label>
+            <label className="col-span-2 text-xs font-bold">Τηλέφωνο<input type="tel" value={form.phone} onChange={(e) => set({ phone: e.target.value })} className={input} /></label>
+          </div>
+        </FormSection>
+
+        {/* 5. Room preparation (for housekeeping — no charge) */}
+        <FormSection tone="pink" title="🧺 Κρεβάτια & πρωινό">
+          <p className={hint}>Για την καθαριότητα · δεν προσθέτει χρέωση</p>
+          <label className="block text-xs font-bold">
+            Κρεβάτι
+            <select value={form.bedSetup} onChange={(e) => set({ bedSetup: e.target.value })} className={input}>
+              <option value="">— δεν ορίστηκε —</option>
+              {BED_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>{o.label}</option>
+              ))}
+            </select>
+          </label>
+          <div className="grid grid-cols-3 gap-2">
+            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.breakfast} onChange={(e) => set({ breakfast: e.target.checked })} /> Πρωινό</label>
+            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.cot} onChange={(e) => set({ cot: e.target.checked })} /> Κούνια</label>
+            <label className="flex min-h-11 items-center gap-2 text-sm font-semibold"><input type="checkbox" className="h-5 w-5" checked={form.rollaway} onChange={(e) => set({ rollaway: e.target.checked })} /> Ράντζο</label>
+          </div>
+          {form.breakfast && !breakfastCharged && !b.masterId && (
+            <p className="text-xs text-[#92400e]">Αν το πρωινό χρεώνεται, πρόσθεσέ το και στις χρεώσεις πιο κάτω.</p>
+          )}
+          <label className="block text-xs font-bold">
+            Άλλο
+            <input value={form.bedOther} onChange={(e) => set({ bedOther: e.target.value })} placeholder="π.χ. επιπλέον μαξιλάρια" className={input} />
+          </label>
+        </FormSection>
 
         {/* 7. Messages & communication */}
         <section className={section}>
@@ -1314,8 +1314,7 @@ function BookingPanel({
         </section>
 
         {/* 8. Internal notes */}
-        <section className={section}>
-          <h3 className={h3}>Εσωτερικές σημειώσεις</h3>
+        <FormSection tone="slate" title="📝 Εσωτερικές σημειώσεις">
           {b.notes ? <p className="whitespace-pre-line rounded-lg bg-[#fff8e8] p-3 text-sm">{b.notes}</p> : null}
           <div className="flex gap-2">
             <input value={form.note} onChange={(e) => set({ note: e.target.value })} placeholder="Μόνο για εσάς" aria-label="Νέα σημείωση" className={`${input} mt-0`} />
@@ -1328,7 +1327,7 @@ function BookingPanel({
               Προσθήκη
             </button>
           </div>
-        </section>
+        </FormSection>
 
         {/* 9. Changes to the booking (move, swap, hold, split) */}
         <section className={section}>
@@ -1438,7 +1437,8 @@ function BookingPanel({
           </button>
         </div>
       </div>
-    </aside>
+    </div>
+    </div>
   );
 }
 
