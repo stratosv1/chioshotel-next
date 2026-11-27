@@ -104,6 +104,13 @@ export function channelFromEmail(email: string | null | undefined): Channel {
   return /expedia/i.test(email ?? "") ? "Expedia" : /booking\.com/i.test(email ?? "") ? "Booking" : "Απευθείας";
 }
 
+/** Channel from the control tower base; the email is only the fallback for rows not there yet. */
+function channelOf(pyrgosChannel: string | null | undefined, email: string | null | undefined): Channel {
+  if (pyrgosChannel === "Booking" || pyrgosChannel === "Expedia") return pyrgosChannel;
+  if (pyrgosChannel) return "Απευθείας";
+  return channelFromEmail(email);
+}
+
 const ORDER: Record<TaskKind, number> = { turnover: 0, prepare: 1, checkout: 2, stay: 3 };
 
 export async function getToday(day: string): Promise<TodayData> {
@@ -158,7 +165,12 @@ export async function getToday(day: string): Promise<TodayData> {
   );
   const [bookingRows, extras, housekeeping, attention, monthRows, feedRows] = await Promise.all([
     ids.length
-      ? (sql`select booking_id, email, phone, price from public.beds24_bookings where booking_id = any(${ids}::text[])` as Promise<any[]>)
+      ? // Channel and price from the control tower base (audit 2026-11-27): a Booking.com guest whose
+        // real email was saved no longer shows as direct, and the price is the one set in the Πύργος.
+        (sql`select b.booking_id, b.email, b.phone, coalesce(p.price::text, b.price) as price, p.channel as p_channel
+          from public.beds24_bookings b
+          left join public.pyrgos_bookings p on p.booking_id = b.booking_id
+          where b.booking_id = any(${ids}::text[])` as Promise<any[]>)
       : Promise.resolve([] as any[]),
     getExtras(ids),
     getHousekeeping(day),
@@ -175,7 +187,7 @@ export async function getToday(day: string): Promise<TodayData> {
     ensureBookingsTable().then(
       () =>
         sql`select b.booking_id, b.status, b.firstname, b.lastname, b.room, b.email, b.price,
-          p.room_number, p.price as p_price,
+          p.room_number, p.price as p_price, p.channel as p_channel,
           to_char(b.checkin, 'DD/MM/YY') as checkin, to_char(b.checkout, 'DD/MM/YY') as checkout,
           to_char(b.checkin, 'YYYY-MM-DD') as checkin_iso,
           to_char(b.updated_at at time zone 'Europe/Athens', 'DD/MM HH24:MI') as time,
@@ -199,7 +211,7 @@ export async function getToday(day: string): Promise<TodayData> {
     return {
       ...stay,
       people,
-      channel: row ? channelFromEmail(row.email) : null,
+      channel: row ? channelOf(row.p_channel, row.email) : null,
       price: row ? toNumber(row.price) : null,
       phone: row?.phone ?? null,
       ...merged,
@@ -289,7 +301,7 @@ export async function getToday(day: string): Promise<TodayData> {
     const price = toNumber(row.p_price) ?? toNumber(row.price);
     return {
       time: row.time,
-      title: `${kind} · ${channelFromEmail(row.email)}`,
+      title: `${kind} · ${channelOf(row.p_channel, row.email)}`,
       detail: [name, room, `${row.checkin} → ${row.checkout}`, price ? `€${Math.round(price)}` : ""].filter(Boolean).join(" · "),
       tone: cancelled ? "cancel" : row.is_new ? "new" : "change",
       bookingId: row.booking_id ? String(row.booking_id) : undefined,

@@ -1,9 +1,9 @@
 import "server-only";
 import { appendBookingNote, getBeds24WriteToken } from "@/lib/crm/booking-notes";
 import { loadConfirmation, sendConfirmation } from "@/lib/crm/booking-confirmation";
-import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, ensureClimateFee, ensureStayCharge, liveOverlap, modifyBeds24Booking } from "./beds24-write";
+import { addBeds24Charge, cancelBeds24Booking, createBeds24Booking, ensureInvoiceBase, liveOverlap, modifyBeds24Booking } from "./beds24-write";
 import { ensureBookingsTable } from "./bookings";
-import { deleteCharge, insertCharge, logHistory, resolvePrice, saveMoney, type PriceMode } from "./ledger";
+import { deleteCharge, findCharge, insertCharge, logHistory, resolvePrice, saveMoney, type PriceMode } from "./ledger";
 import { freeRooms, getBookingDetail } from "./plan";
 import { closeHold, setHold } from "./holds";
 import { isCategoryChange, roomByNumber } from "./rooms";
@@ -32,25 +32,22 @@ const roomLabel = (n: number | null) => roomByNumber(n)?.label ?? `Δωμ. ${n}`
 
 /** Stay line + climate fee (ΤΑΚΚ) on the Beds24 invoice of a direct booking; never blocks the main action. */
 async function syncClimateFee(id: string, nights: number) {
+  // One Beds24 read and at most one write for both lines (audit 2026-11-27).
   try {
-    const stay = await ensureStayCharge(id);
+    const { stay, fee } = await ensureInvoiceBase(id, nights);
     if (stay === "added" || stay === "adjusted") await logHistory(id, "Διαμονή στο τιμολόγιο", stay === "added" ? "μπήκε στο Beds24" : "διορθώθηκε στο Beds24", "ok");
+    if (fee === "added" || fee === "adjusted") await logHistory(id, "Φόρος διαμονής", `${nights} × €2 · ${fee === "added" ? "μπήκε στο Beds24" : "διορθώθηκε στο Beds24"}`, "ok");
   } catch (error) {
-    console.error("[pyrgos] stay charge sync failed", error);
-    await logHistory(id, "Διαμονή στο τιμολόγιο", "δεν πέρασε στο Beds24", "failed").catch(() => undefined);
-  }
-  try {
-    const outcome = await ensureClimateFee(id, nights);
-    if (outcome !== "exists") await logHistory(id, "Φόρος διαμονής", `${nights} × €2 · ${outcome === "added" ? "μπήκε στο Beds24" : "διορθώθηκε στο Beds24"}`, "ok");
-  } catch (error) {
-    console.error("[pyrgos] climate fee sync failed", error);
-    await logHistory(id, "Φόρος διαμονής", `${nights} × €2`, "failed").catch(() => undefined);
+    console.error("[pyrgos] invoice lines sync failed", error);
+    await logHistory(id, "Διαμονή & φόρος στο τιμολόγιο", `${nights} × €2 · δεν πέρασε στο Beds24`, "failed").catch(() => undefined);
   }
 }
 
 async function assertFree(room: number, arrival: string, departure: string, ignoreId?: string) {
-  const free = await freeRooms(arrival, departure, ignoreId);
-  if (!free.includes(room)) throw new ActionError(`Το ${roomLabel(room)} δεν είναι ελεύθερο ή είναι κλειστό εκείνες τις μέρες.`, 409);
+  // Closed rooms count as free here: the owner closes rooms in Beds24 precisely to enter
+  // bookings himself (owner, 2026-11-19). Staff-only; the public site never gets this.
+  const free = await freeRooms(arrival, departure, ignoreId, { includeClosed: true });
+  if (!free.includes(room)) throw new ActionError(`Το ${roomLabel(room)} δεν είναι ελεύθερο εκείνες τις μέρες.`, 409);
   const clash = await liveOverlap(room, arrival, departure, ignoreId ? [ignoreId] : []);
   if (clash) {
     const who = `${clash.firstName ?? ""} ${clash.lastName ?? ""}`.trim();
@@ -104,6 +101,18 @@ export async function createBooking(body: any) {
   };
   const notes = clean(body.notes, 500);
   const created: { id: string; room: number; master: string | null }[] = [];
+  const record = async (c: { id: string; room: number; master: string | null }) => {
+    const isMaster = c.master === null;
+    await getSql()`
+      insert into public.pyrgos_bookings (booking_id, master_id, status, channel, referer, room_number, checkin, checkout, nights,
+        adults, children, first_name, last_name, email, phone, country, price, booked_at, price_source, notes)
+      values (${c.id}, ${c.master ?? (rooms.length > 1 ? c.id : null)}, 'confirmed', 'Απευθείας', 'Πύργος ελέγχου', ${c.room},
+        ${arrival}::date, ${departure}::date, ${nights}, ${adults}, ${children}, ${firstName}, ${lastName},
+        ${guest.email || null}, ${guest.phone || null}, ${guest.country || null},
+        ${isMaster ? price.totalPrice : null}, now(), ${isMaster && price.totalPrice !== null ? "pyrgos" : null}, ${notes || null})
+      on conflict (booking_id) do nothing
+    `;
+  };
   for (const [index, room] of rooms.entries()) {
     const master = index === 0 ? null : created[0].id;
     try {
@@ -119,6 +128,9 @@ export async function createBooking(body: any) {
       created.push({ id, room, master });
     } catch (error) {
       if (!created.length) throw error;
+      // The rooms already created exist in Beds24: show them in the plan right away.
+      for (const c of created) await record(c).catch((e) => console.error("[pyrgos] partial group record failed", e));
+      for (const c of created) await logHistory(c.id, "Νέα κράτηση (group, μισή)", `${roomLabel(c.room)} · ${arrival} → ${departure} · το ${roomLabel(room)} απέτυχε`, "ok").catch(() => undefined);
       throw new ActionError(
         `Μπήκαν ${created.length} από ${rooms.length} δωμάτια (${created.map((c) => roomLabel(c.room)).join(", ")}). ` +
           `Το ${roomLabel(room)} απέτυχε: ${error instanceof Error ? error.message : "σφάλμα"}`,
@@ -128,16 +140,7 @@ export async function createBooking(body: any) {
   }
 
   for (const c of created) {
-    const isMaster = c.master === null;
-    await getSql()`
-      insert into public.pyrgos_bookings (booking_id, master_id, status, channel, referer, room_number, checkin, checkout, nights,
-        adults, children, first_name, last_name, email, phone, country, price, booked_at, price_source, notes)
-      values (${c.id}, ${c.master ?? (rooms.length > 1 ? c.id : null)}, 'confirmed', 'Απευθείας', 'Πύργος ελέγχου', ${c.room},
-        ${arrival}::date, ${departure}::date, ${nights}, ${adults}, ${children}, ${firstName}, ${lastName},
-        ${guest.email || null}, ${guest.phone || null}, ${guest.country || null},
-        ${isMaster ? price.totalPrice : null}, now(), ${isMaster && price.totalPrice !== null ? "pyrgos" : null}, ${notes || null})
-      on conflict (booking_id) do nothing
-    `;
+    await record(c);
     if (body.bedSetup || body.cot || body.rollaway || body.bedOther || body.breakfast || body.guestNote) {
       await saveExtras({
         bookingId: c.id,
@@ -245,18 +248,11 @@ export async function updateBooking(body: any) {
 
   // Keep the price rule when the dates change: a night price recomputes the total, a total stays.
   let total: number | null | undefined;
+  let resolvedMoney: ReturnType<typeof resolvePrice> | null = null;
   const nights = nightsOf(arrival, departure);
   if (datesChanged && current.priceMode) {
-    const resolved = resolvePrice(current.priceMode, current.nightPrice, current.totalPrice, nights);
-    total = resolved.totalPrice;
-    await saveMoney({
-      bookingId: id,
-      priceMode: current.priceMode,
-      nightPrice: resolved.nightPrice,
-      totalPrice: resolved.totalPrice,
-      deposit: current.deposit,
-      paid: current.paid,
-    });
+    resolvedMoney = resolvePrice(current.priceMode, current.nightPrice, current.totalPrice, nights);
+    total = resolvedMoney.totalPrice;
   }
 
   await modifyBeds24Booking(id, {
@@ -265,6 +261,18 @@ export async function updateBooking(body: any) {
     ...Object.fromEntries(Object.entries(guest).filter(([, v]) => v !== undefined)),
     ...(total !== undefined && !OTA.has(current.channel) ? { total } : {}),
   });
+
+  // Only after Beds24 accepted the change (audit 2026-11-27: a refused change used to leave the new price here).
+  if (resolvedMoney) {
+    await saveMoney({
+      bookingId: id,
+      priceMode: current.priceMode,
+      nightPrice: resolvedMoney.nightPrice,
+      totalPrice: resolvedMoney.totalPrice,
+      deposit: current.deposit,
+      paid: current.paid,
+    });
+  }
 
   if (datesChanged && !OTA.has(current.channel)) await syncClimateFee(id, nights);
 
@@ -295,16 +303,41 @@ export async function updateBooking(body: any) {
 
 export async function cancelBooking(body: any) {
   const id = clean(body.id, 20);
-  const current = (await getBookingDetail(id))?.booking;
-  if (!current) throw new ActionError("Η κράτηση δεν βρέθηκε.", 404);
+  const detail = await getBookingDetail(id);
+  const current = detail?.booking;
+  if (!detail || !current) throw new ActionError("Η κράτηση δεν βρέθηκε.", 404);
   if (OTA.has(current.channel)) {
     throw new ActionError(`Κράτηση ${current.channel}: ακυρώνεται από το ${current.channel}, όχι από εδώ.`);
   }
-  await cancelBeds24Booking(id);
-  await getSql()`update public.pyrgos_bookings set status = 'cancelled', updated_at = now() where booking_id = ${id}`;
-  await logHistory(id, "Ακύρωση", `${roomLabel(current.room)} · ${current.checkin}–${current.checkout}`, "ok");
-  await closeHold(id, "cancelled");
-  return { id };
+  // The master of a group carries the price of every room: cancelling it alone would leave the
+  // other rooms booked at €0 (audit 2026-11-27). Ask, then cancel the whole group.
+  const others = detail.group.filter((g) => g.id !== id);
+  const isMaster = !current.masterId && others.length > 0;
+  if (isMaster && !body.wholeGroup) {
+    throw new ActionError(
+      `Είναι η κύρια κράτηση ενός group (${detail.group.map((g) => roomLabel(g.room)).join(", ")}) και έχει την τιμή όλου του group.`,
+      409,
+      "group",
+    );
+  }
+  const targets = isMaster ? [current, ...(await Promise.all(others.map(async (g) => (await getBookingDetail(g.id))?.booking))).filter(Boolean)] : [current];
+  const done: string[] = [];
+  for (const b of targets as typeof current[]) {
+    try {
+      await cancelBeds24Booking(b.id);
+    } catch (error) {
+      if (!done.length) throw error;
+      throw new ActionError(
+        `Ακυρώθηκαν ${done.length} από ${targets.length} δωμάτια. Το ${roomLabel(b.room)} απέτυχε: ${error instanceof Error ? error.message : "σφάλμα"}`,
+        502,
+      );
+    }
+    await getSql()`update public.pyrgos_bookings set status = 'cancelled', updated_at = now() where booking_id = ${b.id}`;
+    await logHistory(b.id, "Ακύρωση", `${roomLabel(b.room)} · ${b.checkin}–${b.checkout}${isMaster ? " · όλο το group" : ""}`, "ok");
+    await closeHold(b.id, "cancelled");
+    done.push(b.id);
+  }
+  return { id, cancelled: done };
 }
 
 // ---------- money ----------
@@ -427,8 +460,8 @@ export async function swapBookings(body: any) {
   const roomA = a.room;
   const roomB = b.room;
   // A goes to B's room for A's dates, B to A's room for B's dates; only each other may be in the way.
-  const freeForA = await freeRooms(a.checkin, a.checkout, a.id);
-  const freeForB = await freeRooms(b.checkin, b.checkout, b.id);
+  const freeForA = await freeRooms(a.checkin, a.checkout, a.id, { includeClosed: true });
+  const freeForB = await freeRooms(b.checkin, b.checkout, b.id, { includeClosed: true });
   const aBlockedOnlyByB = freeForA.includes(roomB) || (await onlyOther(roomB, a.checkin, a.checkout, [a.id, b.id]));
   const bBlockedOnlyByA = freeForB.includes(roomA) || (await onlyOther(roomA, b.checkin, b.checkout, [a.id, b.id]));
   if (!aBlockedOnlyByB || !bBlockedOnlyByA) throw new ActionError("Η αντιμετάθεση δεν χωράει: υπάρχει και άλλη κράτηση στη μέση.", 409);
@@ -459,11 +492,8 @@ async function onlyOther(room: number, from: string, to: string, ids: string[]) 
     where room_number = ${room} and status in ('confirmed', 'new', 'request', 'black')
       and checkin < ${to}::date and checkout > ${from}::date
   `) as { booking_id: string }[];
-  const closed = (await getSql()`
-    select 1 from booking_core.inventory where room_number = ${room} and stay_date >= ${from}::date and stay_date < ${to}::date
-      and booking_id is null and reason = 'CLOSED' limit 1
-  `) as unknown[];
-  return !closed.length && rows.every((row) => ids.includes(String(row.booking_id)));
+  // Closed nights do not block staff moves (owner, 2026-11-19).
+  return rows.every((row) => ids.includes(String(row.booking_id)));
 }
 
 // ---------- split stay ----------
@@ -473,6 +503,11 @@ export async function splitBooking(body: any) {
   const current = (await getBookingDetail(id))?.booking;
   if (!current) throw new ActionError("Η κράτηση δεν βρέθηκε.", 404);
   if (current.status === "black") throw new ActionError("Τα μπλοκαρίσματα αλλάζουν μόνο στο Beds24.");
+  if (OTA.has(current.channel)) {
+    // Split shortens the original booking in Beds24 while the channel keeps it whole; a later
+    // modification from the channel can stretch it back over the second part (audit 2026-11-27).
+    throw new ActionError(`Κράτηση ${current.channel}: δεν γίνεται split stay εδώ. Μετακίνησε όλη την κράτηση σε άλλο δωμάτιο, ή άλλαξε πρώτα τις ημερομηνίες στο ${current.channel}.`);
+  }
   const splitDate = body.splitDate;
   const newRoom = Number(body.room);
   if (!isDay(splitDate) || splitDate <= current.checkin || splitDate >= current.checkout) {
@@ -576,20 +611,24 @@ export async function addCharge(body: any) {
 export async function removeCharge(body: any) {
   const chargeId = clean(body.chargeId, 20);
   if (!/^\d+$/.test(chargeId)) throw new ActionError("Μη έγκυρη χρέωση.");
-  const removed = await deleteCharge(chargeId);
-  if (!removed) throw new ActionError("Η χρέωση δεν βρέθηκε.", 404);
-  const qty = Number(removed.qty);
-  const unit = Number(removed.unit_price);
-  let beds24 = "ok";
-  try {
-    // Beds24 history stays intact: a reversing line instead of deleting the original one.
-    await addBeds24Charge(String(removed.booking_id), `Ακύρωση: ${removed.description}`, qty, -unit);
-  } catch (error) {
-    console.error("[pyrgos] charge reversal to Beds24 failed", error);
-    beds24 = "failed";
+  const charge = await findCharge(chargeId);
+  if (!charge) throw new ActionError("Η χρέωση δεν βρέθηκε.", 404);
+  const qty = Number(charge.qty);
+  const unit = Number(charge.unit_price);
+  // A line that never reached Beds24 needs no reversal there.
+  if (charge.beds24 !== "failed") {
+    try {
+      // Beds24 history stays intact: a reversing line instead of deleting the original one.
+      await addBeds24Charge(String(charge.booking_id), `Ακύρωση: ${charge.description}`, qty, -unit);
+    } catch (error) {
+      // Keep it here too, so the control tower and the Beds24 invoice never disagree (audit 2026-11-27).
+      console.error("[pyrgos] charge reversal to Beds24 failed", error);
+      throw new ActionError(`Η χρέωση δεν σβήστηκε: το Beds24 δεν δέχτηκε την ακύρωση (${error instanceof Error ? error.message : "σφάλμα"}).`, 502);
+    }
   }
-  await logHistory(String(removed.booking_id), "Διαγραφή χρέωσης", `${removed.description} · ${qty} × €${unit}`, beds24);
-  return { id: String(removed.booking_id), beds24 };
+  await deleteCharge(chargeId);
+  await logHistory(String(charge.booking_id), "Διαγραφή χρέωσης", `${charge.description} · ${qty} × €${unit}`, "ok");
+  return { id: String(charge.booking_id), beds24: "ok" };
 }
 
 // ---------- holds ("σε αναμονή") ----------

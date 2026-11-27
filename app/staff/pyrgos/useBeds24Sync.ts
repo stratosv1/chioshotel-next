@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const EVERY = 120_000;
+// Every 5 minutes (was 2): the Beds24 webhook is the main path, and each run uses Beds24 credits
+// shared with booking writes (audit 2026-11-27, HTTP 429 while entering bookings).
+const EVERY = 300_000;
 const MAX_MINUTES = 7 * 24 * 60;
 
 /**
  * Safety net for bookings typed straight into Beds24 (shared by Σήμερα and Πλάνο).
- * - Runs once on open (last 24 h), then every 2 minutes while the page is visible.
+ * - Runs once on open (last 24 h), then every 5 minutes while the page is visible.
  * - Each run asks for everything changed since the last successful run (+5 min margin), so a tab
  *   that was hidden for hours does not miss changes (it used to look back only 30 minutes).
  * - Coming back to the tab syncs right away if the last run is older than a minute.

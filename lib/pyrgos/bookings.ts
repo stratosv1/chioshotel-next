@@ -181,6 +181,17 @@ export async function importFromLocal(fromDate = "2025-01-01", toDate = "2028-12
 
 export class Beds24RateLimited extends Error {}
 
+/** Beds24 sometimes answers 200 with an empty body (seen 2026-11-21): treat it as a short pause, not a crash. */
+async function readBeds24Json(response: Response) {
+  const body = await response.text();
+  if (!body.trim()) throw new Beds24RateLimited("empty_response");
+  try {
+    return JSON.parse(body);
+  } catch {
+    throw new Beds24RateLimited("bad_json");
+  }
+}
+
 type ApiBooking = Record<string, any>;
 
 // Apt 11 is sold only directly (never given to the channel manager): any other room of the
@@ -262,7 +273,7 @@ export async function importFromBeds24Month(month: string) {
       continue;
     }
     if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
-    const payload = (await response.json()) as any;
+    const payload = (await readBeds24Json(response)) as any;
     for (const booking of Array.isArray(payload?.data) ? payload.data : []) {
       const row = rowFromApi(booking);
       if (row.booking_id && /^\d{4}-\d{2}-\d{2}$/.test(row.checkin) && /^\d{4}-\d{2}-\d{2}$/.test(row.checkout)) rows.push(row);
@@ -333,7 +344,7 @@ export async function fetchBookingsWithGroups(ids: string[]) {
     const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(20_000) });
     if (response.status === 429) throw new Beds24RateLimited("rate_limited");
     if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
-    const payload = (await response.json()) as any;
+    const payload = (await readBeds24Json(response)) as any;
     return (Array.isArray(payload?.data) ? payload.data : []) as ApiBooking[];
   };
   const found = new Map<string, ApiBooking>();
@@ -455,7 +466,7 @@ export async function syncRecentFromBeds24(minutes = 30) {
       continue;
     }
     if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
-    const payload = (await response.json()) as any;
+    const payload = (await readBeds24Json(response)) as any;
     for (const booking of Array.isArray(payload?.data) ? payload.data : []) {
       const row = rowFromApi(booking);
       if (row.booking_id && /^\d{4}-\d{2}-\d{2}$/.test(row.checkin) && /^\d{4}-\d{2}-\d{2}$/.test(row.checkout)) rows.push(row);

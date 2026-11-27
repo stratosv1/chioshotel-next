@@ -85,13 +85,24 @@ export async function liveOverlap(roomNumber: number, arrival: string, departure
 
 async function post(body: Record<string, unknown>) {
   const token = await getBeds24WriteToken();
-  const response = await fetch(`${API}/bookings`, {
-    method: "POST",
-    headers: { accept: "application/json", "content-type": "application/json", token },
-    body: JSON.stringify([body]),
-    cache: "no-store",
-    signal: AbortSignal.timeout(20_000),
-  });
+  const send = () =>
+    fetch(`${API}/bookings`, {
+      method: "POST",
+      headers: { accept: "application/json", "content-type": "application/json", token },
+      body: JSON.stringify([body]),
+      cache: "no-store",
+      signal: AbortSignal.timeout(20_000),
+    });
+  let response = await send();
+  if (response.status === 429) {
+    // Beds24 5-minute credit limit: a 429 means nothing was written, so one short retry is safe.
+    const wait = Math.min(8, Math.max(2, Number(response.headers.get("retry-after")) || 4));
+    await new Promise((resolve) => setTimeout(resolve, wait * 1000));
+    response = await send();
+  }
+  if (response.status === 429) {
+    throw new Error("Το Beds24 έχει προσωρινό όριο κλήσεων (HTTP 429). Δεν άλλαξε τίποτα — δοκίμασε ξανά σε 5 λεπτά.");
+  }
   const result = (await response.json().catch(() => null)) as any;
   const first = Array.isArray(result) ? result[0] : result;
   const createdId = first?.new?.id ?? first?.info?.[0]?.id;
@@ -236,72 +247,85 @@ export async function addBeds24Charge(id: string, description: string, qty: numb
 }
 
 const FEE_LINE = /κλιματ|climate|resilience|ΤΑΚΚ|τακκ|iklim/i;
-const STAY_LINE = /^Διαμονή\b/;
+// No \b here: without the u flag \b treats Greek letters as non-word, so /^Διαμονή\b/ never matched
+// and every price save added the stay line again (audit 2026-11-27).
+const STAY_LINE = /^Διαμονή(?!\p{L})/u;
 
 const dmy = (iso: string, withYear: boolean) => {
   const [y, m, d] = iso.split("-");
   return withYear ? `${d}/${m}/${y}` : `${d}/${m}`;
 };
 
+type InvoiceOutcome = "exists" | "added" | "adjusted" | "no_price" | "skipped";
+
 /**
  * Beds24 totals only the invoice lines, not the booking's "price" field, and bookings created
  * through the API get no room line (owner, 2026-11-26: the stay was missing from the charges).
  * Keeps exactly one "Διαμονή" line equal to the booking price: adds it, or corrects its amount.
- * Never touches other lines. Direct bookings only (OTA invoices come from the channel).
+ * With `nights`, also makes the invoice carry exactly nights × €2 of climate fee (ΤΑΚΚ).
+ * One read and at most one write to Beds24 (audit 2026-11-27: two reads + two writes per booking
+ * helped hit the Beds24 credit limit). Never touches other lines. Direct bookings only.
  */
-export async function ensureStayCharge(id: string) {
+export async function ensureInvoiceBase(id: string, nights: number | null) {
   const token = process.env.BEDS24_API_TOKEN?.trim() || (await getBeds24WriteToken());
   const url = new URL(`${API}/bookings`);
   url.searchParams.set("id", id);
   url.searchParams.set("includeInvoiceItems", "true");
   const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
+  if (response.status === 429) throw new Error("Το Beds24 έχει προσωρινό όριο κλήσεων (HTTP 429).");
   if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
   const payload = (await response.json().catch(() => null)) as any;
   const booking = (Array.isArray(payload?.data) ? payload.data : []).find((b: any) => text(b?.id) === id);
   if (!booking) throw new Error("Η κράτηση δεν βρέθηκε στο Beds24.");
-  const price = Math.round((Number(booking.price) || 0) * 100) / 100;
-  if (price <= 0) return "no_price";
   const charges = (Array.isArray(booking.invoiceItems) ? booking.invoiceItems : []).filter((item: any) => !/payment/i.test(text(item.type)));
-  const stay = charges.filter((item: any) => Number(item.subType) === 1 || STAY_LINE.test(text(item.description)));
-  const current = stay.reduce((sum: number, item: any) => sum + (Number(item.qty) || 1) * (Number(item.amount) || 0), 0);
-  if (Math.abs(current - price) < 0.01) return "exists";
-  const arrival = text(booking.arrival).slice(0, 10);
-  const departure = text(booking.departure).slice(0, 10);
-  const description = arrival && departure ? `Διαμονή ${dmy(arrival, false)}–${dmy(departure, true)}` : "Διαμονή";
-  if (stay.length === 1 && stay[0]?.id) {
-    await post({ id: Number(id), invoiceItems: [{ id: Number(stay[0].id), qty: 1, amount: price, description }] });
-    return "adjusted";
+  const items: Record<string, unknown>[] = [];
+  const sum = (list: any[]) => list.reduce((total: number, item: any) => total + (Number(item.qty) || 1) * (Number(item.amount) || 0), 0);
+
+  // 1) Stay line
+  let stayOutcome: InvoiceOutcome = "exists";
+  const price = Math.round((Number(booking.price) || 0) * 100) / 100;
+  if (price <= 0) stayOutcome = "no_price";
+  else {
+    const stay = charges.filter((item: any) => Number(item.subType) === 1 || STAY_LINE.test(text(item.description)));
+    const current = sum(stay);
+    if (Math.abs(current - price) >= 0.01) {
+      const arrival = text(booking.arrival).slice(0, 10);
+      const departure = text(booking.departure).slice(0, 10);
+      const description = arrival && departure ? `Διαμονή ${dmy(arrival, false)}–${dmy(departure, true)}` : "Διαμονή";
+      if (stay.length === 1 && stay[0]?.id) {
+        items.push({ id: Number(stay[0].id), qty: 1, amount: price, description });
+        stayOutcome = "adjusted";
+      } else {
+        const diff = Math.round((price - current) * 100) / 100;
+        items.push({ type: "charge", description, qty: 1, amount: current ? diff : price });
+        stayOutcome = current ? "adjusted" : "added";
+      }
+    }
   }
-  const diff = Math.round((price - current) * 100) / 100;
-  await post({ id: Number(id), invoiceItems: [{ type: "charge", description, qty: 1, amount: current ? diff : price }] });
-  return current ? "adjusted" : "added";
+
+  // 2) Climate fee (ΤΑΚΚ)
+  let feeOutcome: InvoiceOutcome = "skipped";
+  if (nights !== null) {
+    const current = sum(charges.filter((item: any) => FEE_LINE.test(text(item.description))));
+    const wanted = Math.max(nights, 0) * CLIMATE_FEE_PER_NIGHT;
+    const diff = Math.round((wanted - current) * 100) / 100;
+    if (Math.abs(diff) < 0.01) feeOutcome = "exists";
+    else {
+      const qty = Math.round(diff / CLIMATE_FEE_PER_NIGHT);
+      if (qty !== 0 && Math.abs(qty * CLIMATE_FEE_PER_NIGHT - diff) < 0.01) {
+        items.push({ type: "charge", description: CLIMATE_FEE_LABEL, qty: Math.abs(qty), amount: qty > 0 ? CLIMATE_FEE_PER_NIGHT : -CLIMATE_FEE_PER_NIGHT });
+      } else {
+        items.push({ type: "charge", description: CLIMATE_FEE_LABEL, qty: 1, amount: diff });
+      }
+      feeOutcome = current ? "adjusted" : "added";
+    }
+  }
+
+  if (items.length) await post({ id: Number(id), invoiceItems: items });
+  return { stay: stayOutcome, fee: feeOutcome };
 }
 
-/**
- * Makes the Beds24 invoice carry exactly nights × €2 of climate fee (ΤΑΚΚ): adds a line when
- * none exists, or a correcting line when the nights changed. Never touches other lines.
- */
-export async function ensureClimateFee(id: string, nights: number) {
-  const token = process.env.BEDS24_API_TOKEN?.trim() || (await getBeds24WriteToken());
-  const url = new URL(`${API}/bookings`);
-  url.searchParams.set("id", id);
-  url.searchParams.set("includeInvoiceItems", "true");
-  const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
-  if (!response.ok) throw new Error(`Beds24 HTTP ${response.status}`);
-  const payload = (await response.json().catch(() => null)) as any;
-  const booking = (Array.isArray(payload?.data) ? payload.data : []).find((b: any) => text(b?.id) === id);
-  if (!booking) throw new Error("Η κράτηση δεν βρέθηκε στο Beds24.");
-  const current = (Array.isArray(booking.invoiceItems) ? booking.invoiceItems : [])
-    .filter((item: any) => !/payment/i.test(text(item.type)) && FEE_LINE.test(text(item.description)))
-    .reduce((sum: number, item: any) => sum + (Number(item.qty) || 1) * (Number(item.amount) || 0), 0);
-  const wanted = Math.max(nights, 0) * CLIMATE_FEE_PER_NIGHT;
-  const diff = Math.round((wanted - current) * 100) / 100;
-  if (Math.abs(diff) < 0.01) return "exists";
-  const qty = Math.round(diff / CLIMATE_FEE_PER_NIGHT);
-  if (qty !== 0 && Math.abs(qty * CLIMATE_FEE_PER_NIGHT - diff) < 0.01) {
-    await addBeds24Charge(id, CLIMATE_FEE_LABEL, Math.abs(qty), qty > 0 ? CLIMATE_FEE_PER_NIGHT : -CLIMATE_FEE_PER_NIGHT);
-  } else {
-    await addBeds24Charge(id, CLIMATE_FEE_LABEL, 1, diff);
-  }
-  return current ? "adjusted" : "added";
+/** Stay line only (used by /staff/booker). */
+export async function ensureStayCharge(id: string) {
+  return (await ensureInvoiceBase(id, null)).stay;
 }

@@ -100,6 +100,15 @@ export async function insertCharge(bookingId: string, description: string, qty: 
   return String(rows[0].id);
 }
 
+export async function findCharge(chargeId: string) {
+  await ensureLedgerTables();
+  const rows = (await getSql()`
+    select booking_id, description, qty, unit_price, beds24 from public.pyrgos_booking_charges
+    where id = ${Number(chargeId)} and deleted_at is null
+  `) as any[];
+  return rows[0] ?? null;
+}
+
 export async function deleteCharge(chargeId: string) {
   await ensureLedgerTables();
   const rows = (await getSql()`

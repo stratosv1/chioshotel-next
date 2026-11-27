@@ -5,18 +5,34 @@ const beds24BaseUrl = "https://beds24.com/api/v2";
 const beds24PropertyId = String(process.env.BEDS24_PROPERTY_ID || "117813");
 const clean = (value: unknown) => String(value ?? "").trim();
 
+// A refreshed token is valid for 24 h: keep it per warm instance instead of asking Beds24 for a
+// new one on every write (each refresh used Beds24 credits; audit 2026-11-27, HTTP 429).
+let cachedWriteToken: { token: string; until: number } | null = null;
+
 export async function getBeds24WriteToken() {
   const refreshToken = process.env.BEDS24_REFRESH_TOKEN?.trim();
   if (refreshToken) {
-    const tokenResponse = await fetch(`${beds24BaseUrl}/authentication/token`, {
-      headers: { accept: "application/json", refreshToken },
-      cache: "no-store",
-    });
-    const tokenData = await tokenResponse.json().catch(() => null);
+    if (cachedWriteToken && Date.now() < cachedWriteToken.until) return cachedWriteToken.token;
+    const ask = () =>
+      fetch(`${beds24BaseUrl}/authentication/token`, {
+        headers: { accept: "application/json", refreshToken },
+        cache: "no-store",
+        signal: AbortSignal.timeout(12_000),
+      });
+    let tokenResponse = await ask();
+    let tokenData = await tokenResponse.json().catch(() => null);
+    if (tokenResponse.ok && !tokenData?.token) {
+      // Seen 2026-11-21: HTTP 200 with an empty body. Transient — ask once more.
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+      tokenResponse = await ask();
+      tokenData = await tokenResponse.json().catch(() => null);
+    }
     if (!tokenResponse.ok || !tokenData?.token) {
       throw new Error(`Beds24 write-token refresh failed (${tokenResponse.status}).`);
     }
-    return tokenData.token as string;
+    const lifetime = Number(tokenData.expiresIn) > 0 ? Number(tokenData.expiresIn) * 1000 : 3_600_000;
+    cachedWriteToken = { token: tokenData.token as string, until: Date.now() + Math.min(lifetime - 600_000, 3_600_000) };
+    return cachedWriteToken.token;
   }
   const directWriteToken = process.env.BEDS24_WRITE_API_TOKEN?.trim();
   if (directWriteToken) return directWriteToken;

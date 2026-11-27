@@ -653,6 +653,71 @@ function unauthorizedAndreasResponse() {
   });
 }
 
+// Cross-site request guard for the staff and partner areas (audit 2026-11-27). The browser sends
+// Basic Auth credentials on its own, so without this a foreign page could post to /api/staff/*
+// (create/cancel bookings, send SMS/email) while Stratos is logged in. Requests that change things
+// must come from the site itself; server-to-server calls (no Origin, no Sec-Fetch-Site) still pass.
+function isCrossSiteWrite(request: NextRequest) {
+  const method = request.method.toUpperCase();
+  if (method === "GET" || method === "HEAD" || method === "OPTIONS") return false;
+  if (request.headers.get("sec-fetch-site") === "cross-site") return true;
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  const bare = (host: string) => host.toLowerCase().replace(/^www\./, "");
+  try {
+    const host = request.headers.get("host") || request.nextUrl.host;
+    return bare(new URL(origin).host) !== bare(host);
+  } catch {
+    return true;
+  }
+}
+
+function forbiddenCrossSiteResponse() {
+  return new NextResponse("Forbidden", {
+    status: 403,
+    headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": "noindex, nofollow", "cache-control": "no-store" },
+  });
+}
+
+// Slows down password guessing on the staff/partner login: after 10 wrong passwords from one
+// address within 15 minutes, further attempts get 429 for the rest of that window. Kept per
+// server instance (no database writes), so it is a brake, not a wall — a strong password still matters.
+const failedLogins = new Map<string, { count: number; since: number }>();
+const LOGIN_WINDOW_MS = 15 * 60_000;
+const LOGIN_MAX_FAILS = 10;
+
+function clientAddress(request: NextRequest) {
+  return (request.headers.get("x-forwarded-for") || "").split(",")[0].trim() || request.headers.get("x-real-ip") || "unknown";
+}
+
+function isLoginLocked(request: NextRequest) {
+  const entry = failedLogins.get(clientAddress(request));
+  if (!entry) return false;
+  if (Date.now() - entry.since > LOGIN_WINDOW_MS) {
+    failedLogins.delete(clientAddress(request));
+    return false;
+  }
+  return entry.count >= LOGIN_MAX_FAILS;
+}
+
+function noteFailedLogin(request: NextRequest) {
+  // Only a request that actually tried a password counts (the first visit has no Authorization header).
+  if (!request.headers.get("authorization")) return;
+  const key = clientAddress(request);
+  const now = Date.now();
+  const entry = failedLogins.get(key);
+  if (!entry || now - entry.since > LOGIN_WINDOW_MS) failedLogins.set(key, { count: 1, since: now });
+  else entry.count += 1;
+  if (failedLogins.size > 5000) failedLogins.clear();
+}
+
+function tooManyLoginsResponse() {
+  return new NextResponse("Too many attempts. Try again in 15 minutes.", {
+    status: 429,
+    headers: { "content-type": "text/plain; charset=utf-8", "x-robots-tag": "noindex, nofollow", "cache-control": "no-store", "retry-after": "900" },
+  });
+}
+
 function unauthorizedStaffResponse() {
   return new NextResponse("Authentication required", {
     status: 401,
@@ -849,8 +914,17 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
     }
   }
 
+  if ((isStaffPath(pathname) || isAndreasPath(pathname)) && isLoginLocked(request)) {
+    return tooManyLoginsResponse();
+  }
+
   if (isStaffPath(pathname) && !isAuthorizedStaffRequest(request)) {
+    noteFailedLogin(request);
     return unauthorizedStaffResponse();
+  }
+
+  if ((isStaffPath(pathname) || isAndreasPath(pathname)) && isCrossSiteWrite(request)) {
+    return forbiddenCrossSiteResponse();
   }
 
   if (pathname === "/Andreas" || pathname === "/Andreas/" || pathname === "/ANDREAS") {
@@ -860,6 +934,7 @@ export async function proxy(request: NextRequest, event: NextFetchEvent) {
   }
 
   if (isAndreasPath(pathname) && !isAuthorizedAndreasRequest(request)) {
+    noteFailedLogin(request);
     return unauthorizedAndreasResponse();
   }
 

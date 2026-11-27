@@ -591,12 +591,13 @@ export default function PlanBoard() {
                           key={d}
                           type="button"
                           style={{ width: W }}
-                          disabled={busy || cell?.closed}
+                          disabled={busy}
                           onClick={() => setNewBooking({ room: room.number, checkin: d })}
-                          aria-label={`${room.label} ${dm(d)}${cell?.closed ? " κλειστό" : ""}`}
+                          title={cell?.closed ? "Κλειστό στο Beds24 · μπορείς να βάλεις κράτηση εσύ" : undefined}
+                          aria-label={`${room.label} ${dm(d)}${cell?.closed ? " κλειστό στο Beds24" : ""}`}
                           className={`flex items-end justify-center border-l border-[#eef2f6] pb-1 text-[10px] text-[#8a97a8] ${
                             cell?.closed ? "bg-[repeating-linear-gradient(45deg,#eceef1,#eceef1_4px,#f6f7f9_4px,#f6f7f9_8px)]" : gap ? "bg-[#fffbeb] outline outline-2 -outline-offset-4 outline-dashed outline-[#f59e0b]" : d === today ? "bg-[#f6f4fe]" : ""
-                          } ${!busy && !cell?.closed ? "hover:bg-[#ece9fd]" : ""}`}
+                          } ${!busy ? "hover:bg-[#ece9fd]" : ""}`}
                         >
                           {!busy && cell?.price ? <span className={W < 72 ? "text-[9px] tracking-tight" : ""}>{W < 72 ? Math.round(cell.price) : `€${Math.round(cell.price)}`}</span> : ""}
                         </button>
@@ -1355,7 +1356,10 @@ function BookingPanel({
             </select>
           )}
           {!b.hold && <HoldSection b={b} onDone={async (text) => { await reload(); onChanged(text); }} setError={setError} />}
-          {b.nights >= 2 && b.status !== "black" && (
+          {b.nights >= 2 && b.status !== "black" && OTA.has(b.channel) && (
+            <p className="text-xs text-[#5b6b80]">↔ Split stay: όχι σε κράτηση {b.channel} (το κανάλι κρατά την κράτηση ολόκληρη). Μετακίνησε όλη την κράτηση, ή άλλαξε πρώτα τις ημερομηνίες στο {b.channel}.</p>
+          )}
+          {b.nights >= 2 && b.status !== "black" && !OTA.has(b.channel) && (
             <details className="rounded-xl border border-[#cfd9e4] bg-white px-3 py-2 text-sm">
               <summary className="cursor-pointer font-semibold text-[#334155]">↔ Split stay (αλλαγή δωματίου στη μέση)</summary>
               <div className="mt-2"><SplitStay booking={b} setConfirm={setConfirm} onDone={(text) => { onChanged(text); reload(); }} /></div>
@@ -1392,6 +1396,26 @@ function BookingPanel({
                   confirmLabel: "Ακύρωση κράτησης",
                   onConfirm: async () => {
                     const json = await post({ action: "cancel", id: b.id });
+                    if (!json.ok && json.code === "group") {
+                      // Master of a group: it carries the price of every room, so the whole group goes.
+                      // (Opened on the next tick: the current dialog closes itself after this returns.)
+                      setTimeout(() => setConfirm({
+                        title: "Ακύρωση όλου του group",
+                        lines: [json.error, "Θα ακυρωθούν όλα τα δωμάτια του group, και στο Beds24."],
+                        danger: true,
+                        confirmLabel: "Ακύρωση όλου του group",
+                        onConfirm: async () => {
+                          const all = await post({ action: "cancel", id: b.id, wholeGroup: true });
+                          if (!all.ok) {
+                            setError(all.error || "Η ακύρωση απέτυχε.");
+                            return;
+                          }
+                          onChanged("Το group ακυρώθηκε");
+                          onClose();
+                        },
+                      }), 0);
+                      return;
+                    }
                     if (!json.ok) {
                       setError(json.error || "Η ακύρωση απέτυχε.");
                       return;
@@ -1888,7 +1912,6 @@ function SplitStay({ booking: b, setConfirm, onDone }: { booking: PlanBooking; s
         `${roomLabel(b.room)}: ${dm(b.checkin)} → ${dm(day)} (${diffDays(b.checkin, day)} ν.)`,
         `${roomLabel(room)}: ${dm(day)} → ${dm(b.checkout)} (${diffDays(day, b.checkout)} ν.)`,
         "Στο Beds24 γίνονται δύο κρατήσεις μαζί (group). Η τιμή μένει στην πρώτη.",
-        ...(OTA.has(b.channel) ? [`Στο ${b.channel} η κράτηση μένει όπως είναι.`] : []),
       ],
       warning,
       requireCheck: warning ? "Ναι, θέλω αλλαγή κατηγορίας" : undefined,
@@ -1982,6 +2005,7 @@ function NewBookingDialog({
     holdNote: "",
   });
   const [free, setFree] = useState<number[] | null>(null);
+  const [closed, setClosed] = useState<number[]>([]);
   const [error, setError] = useState("");
   const [step, setStep] = useState(0);
   const set = (patch: Record<string, unknown>) => setF((cur: any) => ({ ...cur, ...patch }));
@@ -1995,6 +2019,7 @@ function NewBookingDialog({
       const json = await api(`/api/staff/pyrgos/plan/?free&from=${f.checkin}&to=${f.checkout}${f.room ? `&room=${f.room}` : ""}`);
       if (!alive || !json.ok) return;
       setFree(json.free);
+      setClosed(Array.isArray(json.closed) ? json.closed : []);
       // Beds24 rate as a suggestion, only while no price was typed.
       if (json.suggestion && !f.night && !f.total) {
         setF((cur: any) =>
@@ -2179,6 +2204,7 @@ function NewBookingDialog({
                       >
                         <span className="block text-sm font-black">{r.label}</span>
                         <span className={`block text-xs ${isFree ? "text-[#5b6b80]" : "font-bold text-[#b45309]"}`}>{isFree ? r.categoryLabel : "δεν είναι ελεύθερο"}</span>
+                        {isFree && closed.includes(r.number) ? <span className="block text-[11px] font-bold text-[#475569]">🔒 κλειστό στο Beds24</span> : null}
                       </button>
                     );
                   })}

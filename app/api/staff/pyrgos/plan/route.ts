@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { freeRooms, getBookingDetail, getPlan, searchBookings, suggestedNightPrice } from "@/lib/pyrgos/plan";
+import { closedRooms, freeRooms, getBookingDetail, getPlan, searchBookings, suggestedNightPrice } from "@/lib/pyrgos/plan";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -28,10 +28,14 @@ export async function GET(request: NextRequest) {
     const to = p.get("to");
     if (!isDay(from) || !isDay(to) || to <= from) return fail("Μη έγκυρες ημερομηνίες.");
     if (p.get("free") !== null) {
-      const free = await freeRooms(from, to, p.get("ignore") ?? undefined);
+      // Closed rooms are offered too (marked), because staff may book them (owner, 2026-11-19).
+      const [free, closed] = await Promise.all([
+        freeRooms(from, to, p.get("ignore") ?? undefined, { includeClosed: true }),
+        closedRooms(from, to),
+      ]);
       const room = Number(p.get("room"));
       const suggestion = room ? await suggestedNightPrice(room, from, to) : null;
-      return NextResponse.json({ ok: true, free, suggestion }, { headers });
+      return NextResponse.json({ ok: true, free, closed, suggestion }, { headers });
     }
     const days = (Date.parse(to) - Date.parse(from)) / 86_400_000;
     if (days > 62) return fail("Μέγιστο 2 μήνες.");

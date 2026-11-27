@@ -155,8 +155,11 @@ export async function searchBookings(query: string) {
   return enrich(rows);
 }
 
-/** Free rooms (no live booking, not closed) for every night of the stay. */
-export async function freeRooms(from: string, to: string, ignoreId?: string) {
+/**
+ * Free rooms (no live booking) for every night of the stay. Closed rooms count as taken unless
+ * `includeClosed`: staff may book a room the owner closed in Beds24 (owner, 2026-11-19).
+ */
+export async function freeRooms(from: string, to: string, ignoreId?: string, options: { includeClosed?: boolean } = {}) {
   await ensureBookingsTable();
   const sql = getSql();
   const [busy, closed] = await Promise.all([
@@ -169,15 +172,25 @@ export async function freeRooms(from: string, to: string, ignoreId?: string) {
     sql`select distinct room_number from booking_core.inventory
         where stay_date >= ${from}::date and stay_date < ${to}::date and booking_id is null and reason = 'CLOSED'` as Promise<any[]>,
   ]);
-  const taken = new Set([...busy, ...closed].map((row) => Number(row.room_number)));
+  const taken = new Set([...busy, ...(options.includeClosed ? [] : closed)].map((row) => Number(row.room_number)));
   return Array.from({ length: 11 }, (_, i) => i + 1).filter((room) => !taken.has(room));
+}
+
+/** Rooms with at least one night closed in Beds24 (no booking) during the stay. */
+export async function closedRooms(from: string, to: string) {
+  const rows = (await getSql()`
+    select distinct room_number from booking_core.inventory
+    where stay_date >= ${from}::date and stay_date < ${to}::date and booking_id is null and reason = 'CLOSED'
+  `) as any[];
+  return rows.map((row) => Number(row.room_number)).sort((x, y) => x - y);
 }
 
 /** Suggested night price from the Beds24 rates in Booking Core (average of the stay's nights). */
 export async function suggestedNightPrice(room: number, from: string, to: string) {
   const rows = (await getSql()`
     select avg(base_price) as price from booking_core.inventory
-    where room_number = ${room} and stay_date >= ${from}::date and stay_date < ${to}::date and reason = 'PRICE_OK'
+    where room_number = ${room} and stay_date >= ${from}::date and stay_date < ${to}::date and booking_id is null
+      and reason in ('PRICE_OK', 'CLOSED')
   `) as any[];
   const price = num(rows[0]?.price);
   return price === null ? null : Math.round(price * 100) / 100;
