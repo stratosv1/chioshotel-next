@@ -11,11 +11,11 @@ import { OrmiNav } from "@/components/mixalis/ormi/OrmiNav";
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
   description:
-    "Διαδραστικό μάθημα του κεφαλαίου 2 (ορμή) με κίνηση και λυμένες όλες τις ασκήσεις του βιβλίου, και 53 περιπτώσεις ορμής και κρούσεων σε ένα poster με κινούμενο σχέδιο για καθεμία.",
+    "Διαδραστικό μάθημα του κεφαλαίου 2 (ορμή) με κίνηση και λυμένες όλες τις ασκήσεις του βιβλίου, και 63 περιπτώσεις ορμής και κρούσεων σε ένα poster με κινούμενο σχέδιο για καθεμία.",
 };
 
 const POSTER_W = 1212;
-const POSTER_H = 3000;
+const POSTER_H = 3512;
 
 const sectionNames = [
   "Ορμή",
@@ -27,7 +27,11 @@ const sectionNames = [
   "Άλλες κρούσεις",
   "Ωθήσεις & ροές",
   "Ειδικές",
+  "Διαγράμματα δυνάμεων",
 ];
+
+/** Box range of each animated section (sections 1–9 run 1–43, section 10 is 54–63). */
+const sectionRanges = ["1–5", "6–10", "11–15", "16–20", "21–25", "26–30", "31–35", "36–40", "41–43", "54–63"];
 
 const groups: { range: string; title: string; text: string }[] = [
   { range: "1–5", title: "Ορμή και μεταβολή ορμής", text: "Πάντα διάλεξε θετική φορά πριν γράψεις Δp = p_τελ − p_αρχ. Στην αναπήδηση τα μέτρα «προστίθενται»." },
@@ -41,6 +45,7 @@ const groups: { range: string; title: string; text: string }[] = [
   { range: "41–43", title: "Ειδικές περιπτώσεις", text: "Ελαστική: έλεγχος με K πριν = K μετά, το ελαφρύ γυρίζει πίσω. Τρία κομμάτια: τα βέλη ορμής κλείνουν τρίγωνο. Κινούμενο όχημα: p πριν ≠ 0." },
   { range: "44–48", title: "Κρούση και μετά", text: "Πρώτα ΑΔΟ για την κρούση. Μετά: κύκλος (κεντρομόλος στην κορυφή), ράμπα (ΑΔΜΕ ή ΘΜΚΕ), ελατήριο ή σανίδα (κοινή ταχύτητα στο τέλος), εκκρεμές (υ = √(2gh))." },
   { range: "49–53", title: "Διαγράμματα, πολλές κρούσεις, ποσοστά", text: "Στο x–t η κλίση είναι η ταχύτητα. Πολλές κρούσεις: μία τη φορά. Ποσοστό ενέργειας ⇒ λόγος μαζών. Φορτισμένα σωματίδια: ΑΔΟ μαζί με ΑΔΜΕ." },
+  { range: "54–63", title: "Διαγράμματα δυνάμεων στην κρούση", text: "Απομόνωσε το σώμα και βάλε ΜΟΝΟ τις δυνάμεις που δέχεται. Τοίχος: μόνο C. Δάπεδο ή χέρι: N (ή C) και mg, οπότε N = mg + Δp/Δt. Σύστημα A + B: οι C είναι εσωτερικές ⇒ ΑΔΟ." },
 ];
 
 /** Clickable areas over the poster cells (SVG coordinates of the poster). */
@@ -58,7 +63,7 @@ const EXTRA_BOX: Record<number, string> = {
   53: "/mixalis/pedio#k69",
 };
 
-const cells = Array.from({ length: 53 }, (_, i) => {
+const cells = Array.from({ length: 63 }, (_, i) => {
   // Section 9 has boxes 41–43 and a related-boxes panel, so boxes 44+ start a new row of five.
   const k = i < 43 ? i : i + 2;
   const section = Math.floor(k / 5);
@@ -77,7 +82,7 @@ export default function OrmiPage() {
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Φυσική Προσανατολισμού Β΄ Λυκείου · Βήμα 1</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-5xl">Ορμή και κρούσεις: θεωρία και τυπολόγιο</h1>
           <p className="mt-4 max-w-3xl text-[15px] leading-7 text-[#5c534c] sm:text-base">
-            Ξεκίνα από το μάθημα με κίνηση και μετά πέρνα στο τυπολόγιο: 53 περιπτώσεις σε ένα σχέδιο, από την Τράπεζα Θεμάτων, το σχολικό βιβλίο, τις λυμένες
+            Ξεκίνα από το μάθημα με κίνηση και μετά πέρνα στο τυπολόγιο: 63 περιπτώσεις σε ένα σχέδιο, από την Τράπεζα Θεμάτων, το σχολικό βιβλίο, τις λυμένες
             του Σαββάλα και τις συνθετικές ασκήσεις. Σε κάθε κουτάκι βλέπεις ταχύτητες (μπλε), δυνάμεις (κόκκινο) και αποτελέσματα (πράσινο).{" "}
             <b>Πάτα ένα κουτάκι</b> και θα σε πάει στο κινούμενο σχέδιό του, όπου το φαινόμενο εξηγείται βήμα βήμα. Όταν τελειώσεις, συνέχισε στο{" "}
             <b>βήμα 2 · Εξάσκηση</b> από την μπάρα πάνω.
@@ -126,7 +131,7 @@ export default function OrmiPage() {
         <section id="typologio" className="scroll-mt-20 rounded-3xl border border-black/10 bg-white p-3 shadow-sm sm:p-5">
           <div className="px-2 pb-3 pt-1 sm:px-1">
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#c9822f]">Το τυπολόγιο</p>
-            <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">53 περιπτώσεις σε ένα σχέδιο</h2>
+            <h2 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">63 περιπτώσεις σε ένα σχέδιο</h2>
           </div>
           <div className="mb-4 rounded-2xl border border-black/10 bg-[#fbf8f3] p-3 sm:hidden">
             <h3 className="text-base font-bold">Το τυπολόγιο ανά ενότητα</h3>
@@ -134,17 +139,17 @@ export default function OrmiPage() {
             <div className="mt-3 grid grid-cols-2 gap-2">
               {sectionNames.map((name, i) => (
                 <a key={name} href={`#enotita-${i + 1}`} className="rounded-xl border border-black/10 bg-white px-3 py-2 text-xs font-semibold leading-5 text-[#3d4452]">
-                  {i + 1}. {name} · {i * 5 + 1}–{Math.min(43, (i + 1) * 5)}
+                  {i + 1}. {name} · {sectionRanges[i]}
                 </a>
               ))}
             </div>
           </div>
-          <div className="overflow-x-auto rounded-2xl border border-black/10 bg-[#fbfaf7]" aria-label="Τυπολόγιο 53 περιπτώσεων, κυλήστε οριζόντια στο κινητό">
+          <div className="overflow-x-auto rounded-2xl border border-black/10 bg-[#fbfaf7]" aria-label="Τυπολόγιο 63 περιπτώσεων, κυλήστε οριζόντια στο κινητό">
             <div className="relative min-w-[850px] sm:min-w-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src="/mixalis/ormi-typologio.svg"
-              alt="Τυπολόγιο ορμής και κρούσεων: 53 περιπτώσεις με σχήματα και εξισώσεις"
+              alt="Τυπολόγιο ορμής και κρούσεων: 63 περιπτώσεις με σχήματα και εξισώσεις"
               width={POSTER_W}
               height={POSTER_H}
               decoding="async"

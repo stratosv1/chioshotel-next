@@ -1,7 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 3000" width="1212" height="3000" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
-<rect width="1212" height="3000" fill="#fbfaf7"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1212 3512" width="1212" height="3512" font-family="Inter, 'Segoe UI', Roboto, Arial, sans-serif">
+<rect width="1212" height="3512" fill="#fbfaf7"/>
 <text x="606.0" y="52.0" font-size="40" fill="#14306b" text-anchor="middle" font-weight="900">ΟΡΜΗ ΚΑΙ ΚΡΟΥΣΕΙΣ – ΤΥΠΟΛΟΓΙΟ</text>
-<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">53 περιπτώσεις • Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας, συνθετικές • Φυσική Προσανατολισμού Β΄ Λυκείου</text>
+<text x="606.0" y="84.0" font-size="19" fill="#1e5fb4" text-anchor="middle" font-weight="bold">63 περιπτώσεις • Τράπεζα Θεμάτων, σχολικό βιβλίο, Σαββάλας, συνθετικές • Φυσική Προσανατολισμού Β΄ Λυκείου</text>
 <text x="606.0" y="104.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Πρώτα: σύστημα + χρονικό διάστημα + εξωτερική ώθηση → ΑΔΟ αν η εξωτερική ώθηση ≈ 0, αλλιώς Δp = εξωτερική ώθηση → ενέργεια αν χρειάζεται</text>
 <rect x="14" y="112" width="1184" height="250" rx="10" fill="#eaf2fd" stroke="#1e5fb4" stroke-width="1.5"/>
 <rect x="14" y="112" width="1184" height="30" rx="10" fill="#1e5fb4"/>
@@ -1018,7 +1018,387 @@
 <text x="981.0" y="2871.0" font-size="11" fill="#3949ab" text-anchor="start" font-weight="bold">ΑΔΜΕ: U<tspan baseline-shift="sub" font-size="70%">αρχ</tspan> = K₁ + K₂ + U<tspan baseline-shift="sub" font-size="70%">τελ</tspan></text>
 <text x="981.0" y="2886.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">Ελάχιστη απόσταση: κοινή υ</text>
 <text x="1183.0" y="2912.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ Πεδίο Κ4, Κ29</text>
-<text x="606.0" y="2946.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q απώλεια κινητικής ενέργειας • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
-<text x="606.0" y="2968.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = εξωτερική ώθηση. Στην ελαστική κρούση διατηρείται και η K.</text>
-<text x="606.0" y="2996.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
+<!-- fbd-start -->
+<rect x="14.0" y="2928.0" width="1184.0" height="506.0" fill="#eef2f4" stroke="#455a64" stroke-width="1.5" rx="10"/>
+<rect x="14.0" y="2928.0" width="1184.0" height="30.0" fill="#455a64" rx="10"/>
+<rect x="14.0" y="2948.0" width="1184.0" height="10.0" fill="#455a64"/>
+<text x="30.0" y="2949.0" font-size="16" fill="#ffffff" text-anchor="start" font-weight="bold">12. ΔΙΑΓΡΑΜΜΑΤΑ ΔΥΝΑΜΩΝ ΣΤΗΝ ΚΡΟΥΣΗ: ΑΠΟΜΟΝΩΝΩ ΤΟ ΣΩΜΑ</text>
+<rect x="17.0" y="2962.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="32.0" cy="2977.0" r="10" fill="#455a64"/>
+<text x="32.0" y="2981.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">54</text>
+<text x="47.0" y="2982.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μπάλα χτυπά τοίχο</text>
+<line x1="137.0" y1="2994.0" x2="137.0" y2="3082.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="79.0" y="3003.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="189.0" y="3003.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="121.0" y1="3010.0" x2="121.0" y2="3076.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
+<line x1="122.0" y1="3016.0" x2="127.0" y2="3011.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="122.0" y1="3024.0" x2="127.0" y2="3019.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="122.0" y1="3032.0" x2="127.0" y2="3027.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="122.0" y1="3040.0" x2="127.0" y2="3035.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="122.0" y1="3048.0" x2="127.0" y2="3043.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="122.0" y1="3056.0" x2="127.0" y2="3051.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="122.0" y1="3064.0" x2="127.0" y2="3059.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="122.0" y1="3072.0" x2="127.0" y2="3067.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<text x="31.0" y="3024.0" font-size="9" fill="#5b6577" text-anchor="start" font-weight="normal">πριν</text>
+<circle cx="69.0" cy="3034.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="80.0" y1="3034.0" x2="101.0" y2="3034.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="110.0,3034.0 101.0,3038.5 101.0,3029.5" fill="#1f6fd1"/>
+<text x="95.0" y="3027.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<text x="31.0" y="3054.0" font-size="9" fill="#5b6577" text-anchor="start" font-weight="normal">μετά</text>
+<circle cx="107.0" cy="3066.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="96.0" y1="3066.0" x2="85.0" y2="3066.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="76.0,3066.0 85.0,3061.5 85.0,3070.5" fill="#1f6fd1"/>
+<text x="86.0" y="3059.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ′</text>
+<circle cx="207.0" cy="3044.0" r="11" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="195.0" y1="3044.0" x2="164.0" y2="3044.0" stroke="#d9342b" stroke-width="3.2" stroke-linecap="round"/>
+<polygon points="155.0,3044.0 164.0,3039.5 164.0,3048.5" fill="#d9342b"/>
+<text x="175.0" y="3036.0" font-size="13" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<text x="189.0" y="3074.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="normal">μόνο οριζόντια</text>
+<text x="29.0" y="3096.0" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δp = −mυ′ − mυ = −m(υ + υ′)</text>
+<text x="29.0" y="3111.5" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">C = m(υ + υ′)/Δt (μέτρο)</text>
+<text x="29.0" y="3127.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Ο τοίχος ασκεί μόνο τη C</text>
+<text x="29.0" y="3142.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Θετική φορά: προς τον τοίχο</text>
+<text x="231.0" y="3168.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 3, 7</text>
+<rect x="255.0" y="2962.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="270.0" cy="2977.0" r="10" fill="#455a64"/>
+<text x="270.0" y="2981.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">55</text>
+<text x="285.0" y="2982.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Γυρίζει με ίδια ταχύτητα</text>
+<line x1="375.0" y1="2994.0" x2="375.0" y2="3082.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="317.0" y="3003.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="427.0" y="3003.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="359.0" y1="3010.0" x2="359.0" y2="3076.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
+<line x1="360.0" y1="3016.0" x2="365.0" y2="3011.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="360.0" y1="3024.0" x2="365.0" y2="3019.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="360.0" y1="3032.0" x2="365.0" y2="3027.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="360.0" y1="3040.0" x2="365.0" y2="3035.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="360.0" y1="3048.0" x2="365.0" y2="3043.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="360.0" y1="3056.0" x2="365.0" y2="3051.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="360.0" y1="3064.0" x2="365.0" y2="3059.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="360.0" y1="3072.0" x2="365.0" y2="3067.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<circle cx="307.0" cy="3034.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="318.0" y1="3034.0" x2="339.0" y2="3034.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="348.0,3034.0 339.0,3038.5 339.0,3029.5" fill="#1f6fd1"/>
+<text x="333.0" y="3027.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">+υ</text>
+<circle cx="345.0" cy="3066.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="334.0" y1="3066.0" x2="313.0" y2="3066.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="304.0,3066.0 313.0,3061.5 313.0,3070.5" fill="#1f6fd1"/>
+<text x="319.0" y="3059.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">−υ</text>
+<circle cx="451.0" cy="3044.0" r="11" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="439.0" y1="3044.0" x2="394.0" y2="3044.0" stroke="#d9342b" stroke-width="3.6" stroke-linecap="round"/>
+<polygon points="385.0,3044.0 394.0,3039.5 394.0,3048.5" fill="#d9342b"/>
+<text x="412.0" y="3036.0" font-size="13" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<text x="427.0" y="3074.0" font-size="9.5" fill="#1f9d55" text-anchor="middle" font-weight="bold">διπλάσια Δp</text>
+<text x="267.0" y="3096.0" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δp = −mυ − mυ = −2mυ</text>
+<text x="267.0" y="3111.5" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">ΔK = 0, αλλά Δp ≠ 0</text>
+<text x="267.0" y="3127.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">C = 2mυ/Δt</text>
+<text x="267.0" y="3142.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Η ορμή είναι διάνυσμα</text>
+<text x="469.0" y="3168.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 3</text>
+<rect x="493.0" y="2962.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="508.0" cy="2977.0" r="10" fill="#455a64"/>
+<text x="508.0" y="2981.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">56</text>
+<text x="523.0" y="2982.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Σταματά, δεν αναπηδά</text>
+<line x1="613.0" y1="2994.0" x2="613.0" y2="3082.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="555.0" y="3003.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="665.0" y="3003.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="597.0" y1="3010.0" x2="597.0" y2="3076.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
+<line x1="598.0" y1="3016.0" x2="603.0" y2="3011.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="598.0" y1="3024.0" x2="603.0" y2="3019.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="598.0" y1="3032.0" x2="603.0" y2="3027.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="598.0" y1="3040.0" x2="603.0" y2="3035.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="598.0" y1="3048.0" x2="603.0" y2="3043.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="598.0" y1="3056.0" x2="603.0" y2="3051.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="598.0" y1="3064.0" x2="603.0" y2="3059.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="598.0" y1="3072.0" x2="603.0" y2="3067.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<circle cx="537.0" cy="3032.0" r="9" fill="#b08968" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="548.0" y1="3032.0" x2="569.0" y2="3032.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="578.0,3032.0 569.0,3036.5 569.0,3027.5" fill="#1f6fd1"/>
+<text x="563.0" y="3025.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<ellipse cx="591.0" cy="3064.0" rx="5" ry="10" fill="#b08968" stroke="#4a5568" stroke-width="1.2"/>
+<text x="563.0" y="3068.0" font-size="10" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ′ = 0</text>
+<circle cx="683.0" cy="3044.0" r="11" fill="#b08968" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="671.0" y1="3044.0" x2="653.0" y2="3044.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="644.0,3044.0 653.0,3039.5 653.0,3048.5" fill="#d9342b"/>
+<text x="657.5" y="3036.0" font-size="13" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<text x="665.0" y="3074.0" font-size="9.5" fill="#5b6577" text-anchor="middle" font-weight="normal">μισή από το 55</text>
+<text x="505.0" y="3096.0" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δp = 0 − mυ = −mυ</text>
+<text x="505.0" y="3111.5" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">C = mυ/Δt</text>
+<text x="505.0" y="3127.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Αναπήδηση ⇒ διπλή Δp και C</text>
+<text x="505.0" y="3142.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">(για τον ίδιο χρόνο Δt)</text>
+<text x="707.0" y="3168.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ σύγκρινε με 55</text>
+<rect x="731.0" y="2962.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="746.0" cy="2977.0" r="10" fill="#455a64"/>
+<text x="746.0" y="2981.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">57</text>
+<text x="761.0" y="2982.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μαξιλάρι: πιο πολύς χρόνος</text>
+<line x1="851.0" y1="2994.0" x2="851.0" y2="3082.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="793.0" y="3003.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="903.0" y="3003.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="839.0" y1="3010.0" x2="839.0" y2="3076.0" stroke="#8a8f99" stroke-width="2" stroke-linecap="round"/>
+<line x1="840.0" y1="3016.0" x2="845.0" y2="3011.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="840.0" y1="3024.0" x2="845.0" y2="3019.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="840.0" y1="3032.0" x2="845.0" y2="3027.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="840.0" y1="3040.0" x2="845.0" y2="3035.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="840.0" y1="3048.0" x2="845.0" y2="3043.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="840.0" y1="3056.0" x2="845.0" y2="3051.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="840.0" y1="3064.0" x2="845.0" y2="3059.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="840.0" y1="3072.0" x2="845.0" y2="3067.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<path d="M823.0,3014.0 q-6,7 0,14 q-6,7 0,14 q-6,7 0,14 q-6,7 0,14 l16,0 l0,-56 z" fill="#cfe3c8" stroke="#4a5568" stroke-width="1"/>
+<text x="815.0" y="3084.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">μαξιλάρι</text>
+<circle cx="775.0" cy="3042.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="786.0" y1="3042.0" x2="803.0" y2="3042.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="812.0,3042.0 803.0,3046.5 803.0,3037.5" fill="#1f6fd1"/>
+<text x="799.0" y="3035.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<text x="935.0" y="3019.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σκληρό</text>
+<circle cx="935.0" cy="3032.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="925.0" y1="3032.0" x2="886.0" y2="3032.0" stroke="#d9342b" stroke-width="3.4" stroke-linecap="round"/>
+<polygon points="877.0,3032.0 886.0,3027.5 886.0,3036.5" fill="#d9342b"/>
+<text x="901.0" y="3025.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<text x="935.0" y="3057.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">μαλακό</text>
+<circle cx="935.0" cy="3070.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="925.0" y1="3070.0" x2="920.0" y2="3070.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="911.0,3070.0 920.0,3065.5 920.0,3074.5" fill="#d9342b"/>
+<text x="918.0" y="3082.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<text x="743.0" y="3096.0" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Ίδια Δp = mυ και στα δύο</text>
+<text x="743.0" y="3111.5" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">C<tspan dy="3.3" font-size="7.7">μ</tspan><tspan dy="-3.3">​</tspan> = mυ/Δt</text>
+<text x="743.0" y="3127.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Δt ×10 ⇒ C : 10</text>
+<text x="743.0" y="3142.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">αερόσακος, ζώνη, στρώμα</text>
+<text x="945.0" y="3168.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 35</text>
+<rect x="969.0" y="2962.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="984.0" cy="2977.0" r="10" fill="#455a64"/>
+<text x="984.0" y="2981.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">58</text>
+<text x="999.0" y="2982.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Ζεύγος δυνάμεων επαφής</text>
+<line x1="1089.0" y1="2994.0" x2="1089.0" y2="3082.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="1031.0" y="3003.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="1141.0" y="3003.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="979.0" y1="3066.0" x2="1081.0" y2="3066.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="985.0" y1="3067.0" x2="980.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="995.0" y1="3067.0" x2="990.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1005.0" y1="3067.0" x2="1000.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1015.0" y1="3067.0" x2="1010.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1025.0" y1="3067.0" x2="1020.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1035.0" y1="3067.0" x2="1030.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1045.0" y1="3067.0" x2="1040.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1055.0" y1="3067.0" x2="1050.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1065.0" y1="3067.0" x2="1060.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1075.0" y1="3067.0" x2="1070.0" y2="3072.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="987.0" y="3044.0" width="26.0" height="22.0" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="1000.0" y="3059.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">A</text>
+<line x1="1015.0" y1="3038.0" x2="1028.0" y2="3038.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="1037.0,3038.0 1028.0,3042.5 1028.0,3033.5" fill="#1f6fd1"/>
+<text x="1026.0" y="3032.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<rect x="1047.0" y="3044.0" width="26.0" height="22.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="1060.0" y="3059.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">B</text>
+<rect x="1119.0" y="3018.0" width="24.0" height="20.0" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="1131.0" y="3031.8" font-size="10.5" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">A</text>
+<line x1="1119.0" y1="3028.0" x2="1104.0" y2="3028.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1095.0,3028.0 1104.0,3023.5 1104.0,3032.5" fill="#d9342b"/>
+<text x="1107.0" y="3021.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<rect x="1133.0" y="3052.0" width="24.0" height="20.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="1145.0" y="3065.8" font-size="10.5" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">B</text>
+<line x1="1157.0" y1="3062.0" x2="1172.0" y2="3062.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="1181.0,3062.0 1172.0,3066.5 1172.0,3057.5" fill="#d9342b"/>
+<text x="1169.0" y="3055.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<text x="1141.0" y="3084.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">ίσες και αντίθετες</text>
+<text x="981.0" y="3096.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">C στο A = −C στο B</text>
+<text x="981.0" y="3111.5" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δp<tspan dy="3.3" font-size="7.7">A</tspan><tspan dy="-3.3">​</tspan> = −Δp<tspan dy="3.3" font-size="7.7">B</tspan><tspan dy="-3.3">​</tspan></text>
+<text x="981.0" y="3127.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Ίδιος χρόνος επαφής Δt</text>
+<text x="981.0" y="3142.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Δράση–αντίδραση (3ος νόμος)</text>
+<text x="1183.0" y="3168.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 11</text>
+<rect x="17.0" y="3218.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="32.0" cy="3233.0" r="10" fill="#455a64"/>
+<text x="32.0" y="3237.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">59</text>
+<text x="47.0" y="3238.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Άνισες μάζες, ίδια C</text>
+<line x1="137.0" y1="3250.0" x2="137.0" y2="3338.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="79.0" y="3259.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="189.0" y="3259.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="27.0" y1="3322.0" x2="129.0" y2="3322.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="33.0" y1="3323.0" x2="28.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="43.0" y1="3323.0" x2="38.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="53.0" y1="3323.0" x2="48.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="63.0" y1="3323.0" x2="58.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="73.0" y1="3323.0" x2="68.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="83.0" y1="3323.0" x2="78.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="93.0" y1="3323.0" x2="88.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="103.0" y1="3323.0" x2="98.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="113.0" y1="3323.0" x2="108.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="123.0" y1="3323.0" x2="118.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="37.0" y="3306.0" width="18.0" height="16.0" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="46.0" y="3317.6" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="57.0" y1="3298.0" x2="70.0" y2="3298.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="79.0,3298.0 70.0,3302.5 70.0,3293.5" fill="#1f6fd1"/>
+<text x="68.0" y="3292.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<rect x="87.0" y="3290.0" width="38.0" height="32.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="106.0" y="3310.3" font-size="12" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">M</text>
+<rect x="203.0" y="3268.0" width="18.0" height="16.0" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="212.0" y="3279.6" font-size="10" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="203.0" y1="3276.0" x2="184.0" y2="3276.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="175.0,3276.0 184.0,3271.5 184.0,3280.5" fill="#d9342b"/>
+<text x="189.0" y="3269.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<line x1="223.0" y1="3294.0" x2="196.0" y2="3294.0" stroke="#5b6577" stroke-width="1.4" stroke-linecap="round"/>
+<polygon points="187.0,3294.0 196.0,3289.5 196.0,3298.5" fill="#5b6577"/>
+<text x="205.0" y="3305.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="bold" font-style="italic">μεγάλη α</text>
+<rect x="157.0" y="3310.0" width="34.0" height="22.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="174.0" y="3325.3" font-size="12" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">M</text>
+<line x1="191.0" y1="3321.0" x2="208.0" y2="3321.0" stroke="#d9342b" stroke-width="3" stroke-linecap="round"/>
+<polygon points="217.0,3321.0 208.0,3325.5 208.0,3316.5" fill="#d9342b"/>
+<text x="204.0" y="3314.0" font-size="12" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<line x1="167.0" y1="3336.0" x2="168.0" y2="3336.0" stroke="#5b6577" stroke-width="1.4" stroke-linecap="round"/>
+<polygon points="177.0,3336.0 168.0,3340.5 168.0,3331.5" fill="#5b6577"/>
+<text x="205.0" y="3339.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">μικρή α</text>
+<text x="29.0" y="3352.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">Ίδιο μέτρο C στα δύο</text>
+<text x="29.0" y="3367.5" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">α<tspan dy="3.3" font-size="7.7">m</tspan><tspan dy="-3.3">​</tspan> = C/m, α<tspan dy="3.3" font-size="7.7">M</tspan><tspan dy="-3.3">​</tspan> = C/M</text>
+<text x="29.0" y="3383.0" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Ίδια |Δp|, άνισες |Δυ|</text>
+<text x="29.0" y="3398.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Το ελαφρύ αλλάζει πιο πολύ υ</text>
+<text x="231.0" y="3424.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 41</text>
+<rect x="255.0" y="3218.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="270.0" cy="3233.0" r="10" fill="#455a64"/>
+<text x="270.0" y="3237.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">60</text>
+<text x="285.0" y="3238.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Μπάλα χτυπά το δάπεδο</text>
+<line x1="375.0" y1="3250.0" x2="375.0" y2="3338.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="317.0" y="3259.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="427.0" y="3259.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="269.0" y1="3328.0" x2="367.0" y2="3328.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="275.0" y1="3329.0" x2="270.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="285.0" y1="3329.0" x2="280.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="295.0" y1="3329.0" x2="290.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="305.0" y1="3329.0" x2="300.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="315.0" y1="3329.0" x2="310.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="325.0" y1="3329.0" x2="320.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="335.0" y1="3329.0" x2="330.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="345.0" y1="3329.0" x2="340.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="355.0" y1="3329.0" x2="350.0" y2="3334.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<circle cx="307.0" cy="3319.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="335.0" y1="3270.0" x2="335.0" y2="3295.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="335.0,3304.0 330.5,3295.0 339.5,3295.0" fill="#1f6fd1"/>
+<text x="345.0" y="3291.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<line x1="353.0" y1="3306.0" x2="353.0" y2="3289.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="353.0,3280.0 357.5,3289.0 348.5,3289.0" fill="#1f6fd1"/>
+<text x="363.0" y="3297.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ′</text>
+<circle cx="427.0" cy="3304.0" r="11" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="427.0" y1="3293.0" x2="427.0" y2="3270.0" stroke="#d9342b" stroke-width="3.4" stroke-linecap="round"/>
+<polygon points="427.0,3261.0 431.5,3270.0 422.5,3270.0" fill="#d9342b"/>
+<text x="437.0" y="3271.0" font-size="13" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">N</text>
+<line x1="427.0" y1="3315.0" x2="427.0" y2="3324.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="427.0,3333.0 422.5,3324.0 431.5,3324.0" fill="#d9342b"/>
+<text x="441.0" y="3332.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
+<line x1="459.0" y1="3322.0" x2="459.0" y2="3313.0" stroke="#5b6577" stroke-width="1" stroke-linecap="round"/>
+<polygon points="459.0,3304.0 463.5,3313.0 454.5,3313.0" fill="#5b6577"/>
+<text x="466.0" y="3316.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">+</text>
+<text x="267.0" y="3352.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">(N − mg)·Δt = Δp</text>
+<text x="267.0" y="3367.5" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δp = m(υ′ + υ), θετικά ↑</text>
+<text x="267.0" y="3383.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">N = mg + m(υ + υ′)/Δt</text>
+<text x="267.0" y="3398.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Εδώ μπαίνει και το βάρος</text>
+<text x="469.0" y="3424.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 4, 33</text>
+<rect x="493.0" y="3218.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="508.0" cy="3233.0" r="10" fill="#455a64"/>
+<text x="508.0" y="3237.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">61</text>
+<text x="523.0" y="3238.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Φρενάρει με τριβή</text>
+<line x1="613.0" y1="3250.0" x2="613.0" y2="3338.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="555.0" y="3259.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="665.0" y="3259.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="503.0" y1="3322.0" x2="605.0" y2="3322.0" stroke="#8a8f99" stroke-width="2.4" stroke-linecap="round"/>
+<line x1="503.0" y1="3322.0" x2="605.0" y2="3322.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="509.0" y1="3323.0" x2="504.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="519.0" y1="3323.0" x2="514.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="529.0" y1="3323.0" x2="524.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="539.0" y1="3323.0" x2="534.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="549.0" y1="3323.0" x2="544.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="559.0" y1="3323.0" x2="554.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="569.0" y1="3323.0" x2="564.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="579.0" y1="3323.0" x2="574.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="589.0" y1="3323.0" x2="584.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="599.0" y1="3323.0" x2="594.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="531.0" y="3298.0" width="32.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="547.0" y="3314.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="567.0" y1="3292.0" x2="584.0" y2="3292.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="593.0,3292.0 584.0,3296.5 584.0,3287.5" fill="#1f6fd1"/>
+<text x="580.0" y="3286.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<text x="555.0" y="3338.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">τραχύ, μ</text>
+<rect x="651.0" y="3288.0" width="30.0" height="24.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="666.0" y="3304.0" font-size="11" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">m</text>
+<line x1="666.0" y1="3288.0" x2="666.0" y2="3273.0" stroke="#d9342b" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="666.0,3264.0 670.5,3273.0 661.5,3273.0" fill="#d9342b"/>
+<text x="675.0" y="3272.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">N</text>
+<line x1="666.0" y1="3312.0" x2="666.0" y2="3327.0" stroke="#d9342b" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="666.0,3336.0 661.5,3327.0 670.5,3327.0" fill="#d9342b"/>
+<text x="679.0" y="3330.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
+<line x1="651.0" y1="3306.0" x2="634.0" y2="3306.0" stroke="#e08a1e" stroke-width="3" stroke-linecap="round"/>
+<polygon points="625.0,3306.0 634.0,3301.5 634.0,3310.5" fill="#e08a1e"/>
+<text x="638.0" y="3299.0" font-size="12" fill="#e08a1e" text-anchor="middle" font-weight="bold" font-style="italic">T</text>
+<text x="505.0" y="3352.0" font-size="11" fill="#e08a1e" text-anchor="start" font-weight="bold">T = μN = μmg (σταθερή)</text>
+<text x="505.0" y="3367.5" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">−T·Δt = 0 − mυ</text>
+<text x="505.0" y="3383.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Δt = υ/(μg)</text>
+<text x="505.0" y="3398.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">N και mg αλληλοαναιρούνται</text>
+<text x="707.0" y="3424.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 22</text>
+<rect x="731.0" y="3218.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="746.0" cy="3233.0" r="10" fill="#455a64"/>
+<text x="746.0" y="3237.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">62</text>
+<text x="761.0" y="3238.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Πιάνω μπάλα που πέφτει</text>
+<line x1="851.0" y1="3250.0" x2="851.0" y2="3338.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="793.0" y="3259.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="903.0" y="3259.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<path d="M765.0,3316.0 q20,14 52,0 l4,-6 q3,-4 -2,-5 l-6,4 q-20,9 -44,1 z" fill="#f1c9a5" stroke="#4a5568" stroke-width="1.1"/>
+<circle cx="791.0" cy="3302.0" r="9" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="815.0" y1="3264.0" x2="815.0" y2="3285.0" stroke="#1f6fd1" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="815.0,3294.0 810.5,3285.0 819.5,3285.0" fill="#1f6fd1"/>
+<text x="825.0" y="3283.0" font-size="11.5" fill="#1f6fd1" text-anchor="middle" font-weight="bold" font-style="italic">υ</text>
+<text x="791.0" y="3336.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">τελική υ = 0</text>
+<circle cx="901.0" cy="3302.0" r="11" fill="#f4a261" stroke="#4a5568" stroke-width="1.2"/>
+<line x1="901.0" y1="3291.0" x2="901.0" y2="3272.0" stroke="#d9342b" stroke-width="3.4" stroke-linecap="round"/>
+<polygon points="901.0,3263.0 905.5,3272.0 896.5,3272.0" fill="#d9342b"/>
+<text x="911.0" y="3271.0" font-size="13" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">C</text>
+<line x1="901.0" y1="3313.0" x2="901.0" y2="3322.0" stroke="#d9342b" stroke-width="2.4" stroke-linecap="round"/>
+<polygon points="901.0,3331.0 896.5,3322.0 905.5,3322.0" fill="#d9342b"/>
+<text x="915.0" y="3330.0" font-size="11" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">mg</text>
+<line x1="935.0" y1="3322.0" x2="935.0" y2="3313.0" stroke="#5b6577" stroke-width="1" stroke-linecap="round"/>
+<polygon points="935.0,3304.0 939.5,3313.0 930.5,3313.0" fill="#5b6577"/>
+<text x="942.0" y="3316.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">+</text>
+<text x="743.0" y="3352.0" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">C − mg = mυ/Δt (θετικά ↑)</text>
+<text x="743.0" y="3367.5" font-size="11" fill="#d9342b" text-anchor="start" font-weight="bold">C = mg + mυ/Δt</text>
+<text x="743.0" y="3383.0" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Λυγίζω το χέρι ⇒ μεγάλο Δt</text>
+<text x="743.0" y="3398.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">μεγάλο Δt ⇒ μικρή C</text>
+<text x="945.0" y="3424.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 35, 57</text>
+<rect x="969.0" y="3218.0" width="226.0" height="212.0" fill="#ffffff" stroke="#d6dae1" stroke-width="1" rx="7"/>
+<circle cx="984.0" cy="3233.0" r="10" fill="#455a64"/>
+<text x="984.0" y="3237.5" font-size="12" fill="#ffffff" text-anchor="middle" font-weight="bold">63</text>
+<text x="999.0" y="3238.0" font-size="13.5" fill="#1c2433" text-anchor="start" font-weight="bold">Σύστημα A + B</text>
+<line x1="1089.0" y1="3250.0" x2="1089.0" y2="3338.0" stroke="#c5cbd3" stroke-width="1" stroke-linecap="round" stroke-dasharray="3 3"/>
+<text x="1031.0" y="3259.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σχήμα</text>
+<text x="1141.0" y="3259.0" font-size="9" fill="#d9342b" text-anchor="middle" font-weight="bold">μόνο το σώμα</text>
+<line x1="979.0" y1="3322.0" x2="1081.0" y2="3322.0" stroke="#8a8f99" stroke-width="1.6" stroke-linecap="round"/>
+<line x1="985.0" y1="3323.0" x2="980.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="995.0" y1="3323.0" x2="990.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1005.0" y1="3323.0" x2="1000.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1015.0" y1="3323.0" x2="1010.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1025.0" y1="3323.0" x2="1020.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1035.0" y1="3323.0" x2="1030.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1045.0" y1="3323.0" x2="1040.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1055.0" y1="3323.0" x2="1050.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1065.0" y1="3323.0" x2="1060.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<line x1="1075.0" y1="3323.0" x2="1070.0" y2="3328.0" stroke="#8a8f99" stroke-width="0.9" stroke-linecap="round"/>
+<rect x="981.0" y="3284.0" width="98.0" height="34.0" fill="none" stroke="#5b6577" stroke-width="1" rx="4"/>
+<text x="1030.0" y="3278.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">σύστημα</text>
+<rect x="989.0" y="3298.0" width="24.0" height="22.0" fill="#9fb3c8" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="1001.0" y="3312.8" font-size="10.5" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">A</text>
+<line x1="1015.0" y1="3292.0" x2="1024.0" y2="3292.0" stroke="#1f6fd1" stroke-width="2.2" stroke-linecap="round"/>
+<polygon points="1033.0,3292.0 1024.0,3296.5 1024.0,3287.5" fill="#1f6fd1"/>
+<rect x="1045.0" y="3298.0" width="24.0" height="22.0" fill="#f2c46d" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="1057.0" y="3312.8" font-size="10.5" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">B</text>
+<rect x="1119.0" y="3288.0" width="44.0" height="24.0" fill="#d9c9a3" stroke="#4a5568" stroke-width="1.2" rx="3"/>
+<text x="1141.0" y="3303.8" font-size="10.5" fill="#1c2433" text-anchor="middle" font-weight="bold" font-style="italic">A+B</text>
+<line x1="1141.0" y1="3288.0" x2="1141.0" y2="3275.0" stroke="#d9342b" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="1141.0,3266.0 1145.5,3275.0 1136.5,3275.0" fill="#d9342b"/>
+<text x="1155.0" y="3275.0" font-size="10.5" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">N<tspan dy="3.1" font-size="7.3">ολ</tspan><tspan dy="-3.1">​</tspan></text>
+<line x1="1141.0" y1="3312.0" x2="1141.0" y2="3321.0" stroke="#d9342b" stroke-width="2.6" stroke-linecap="round"/>
+<polygon points="1141.0,3330.0 1136.5,3321.0 1145.5,3321.0" fill="#d9342b"/>
+<text x="1160.0" y="3325.0" font-size="10.5" fill="#d9342b" text-anchor="middle" font-weight="bold" font-style="italic">m<tspan dy="3.1" font-size="7.3">ολ</tspan><tspan dy="-3.1">​</tspan>g</text>
+<text x="1141.0" y="3340.0" font-size="9" fill="#5b6577" text-anchor="middle" font-weight="normal">καμία οριζόντια</text>
+<text x="981.0" y="3352.0" font-size="11" fill="#455a64" text-anchor="start" font-weight="bold">Οι C είναι εσωτερικές: φεύγουν</text>
+<text x="981.0" y="3367.5" font-size="11" fill="#1c2433" text-anchor="start" font-weight="bold">Οριζόντια: ΣF<tspan dy="3.3" font-size="7.7">εξ</tspan><tspan dy="-3.3">​</tspan> = 0</text>
+<text x="981.0" y="3383.0" font-size="11" fill="#1f9d55" text-anchor="start" font-weight="bold">Δ(p<tspan dy="3.3" font-size="7.7">A</tspan><tspan dy="-3.3">​</tspan> + p<tspan dy="3.3" font-size="7.7">B</tspan><tspan dy="-3.3">​</tspan>) = 0 ⇒ ΑΔΟ</text>
+<text x="981.0" y="3398.5" font-size="11" fill="#5b6577" text-anchor="start" font-weight="normal">Κατακόρυφα: N<tspan dy="3.3" font-size="7.7">ολ</tspan><tspan dy="-3.3">​</tspan> = m<tspan dy="3.3" font-size="7.7">ολ</tspan><tspan dy="-3.3">​</tspan>g</text>
+<text x="1183.0" y="3424.0" font-size="9.5" fill="#5b6577" text-anchor="end" font-weight="normal" font-style="italic">→ δες και 12</text>
+<!-- fbd-end -->
+<text x="606.0" y="3458.0" font-size="13" fill="#5b6577" text-anchor="middle" font-weight="normal">Σύμβολα: p ορμή • υ ταχύτητα πριν • V κοινή ταχύτητα μετά • Δp μεταβολή ορμής • Q απώλεια κινητικής ενέργειας • μ συντελεστής τριβής • N κάθετη δύναμη • d διείσδυση • g = 10 m/s²</text>
+<text x="606.0" y="3480.0" font-size="13" fill="#1c2433" text-anchor="middle" font-weight="bold">ΑΔΟ: συνολική εξωτερική ώθηση ≈ 0 στο σύστημα ή στον άξονα. Διαφορετικά Δp = εξωτερική ώθηση. Στην ελαστική κρούση διατηρείται και η K.</text>
+<text x="606.0" y="3508.0" font-size="12" fill="#9aa3b2" text-anchor="middle" font-weight="normal">Physics Workspace • Μιχάλης</text>
 </svg>

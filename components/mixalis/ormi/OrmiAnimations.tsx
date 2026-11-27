@@ -8,6 +8,7 @@ import { section4, section5 } from "./scenes-3";
 import { section6, section7 } from "./scenes-4";
 import { section8 } from "./scenes-5";
 import { section9 } from "./scenes-6";
+import { section10 } from "./scenes-7";
 
 export const SECTIONS: { title: string; color: string; bg: string; intro: string; cases: Case[] }[] = [
   {
@@ -72,6 +73,14 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
     bg: "#e6f4f1",
     intro: "Τρεις περιπτώσεις που πέφτουν συχνά: ελαστική κρούση με άνισες μάζες, έκρηξη σε τρία κομμάτια και άλμα από όχημα που ήδη κινείται.",
     cases: section9,
+  },
+  {
+    title: "Διαγράμματα δυνάμεων στην κρούση",
+    color: "#455a64",
+    bg: "#eef2f4",
+    intro:
+      "Απομονώνεις το σώμα και σχεδιάζεις ΜΟΝΟ τις δυνάμεις που δέχεται όσο διαρκεί η κρούση (λευκό πλαίσιο «μόνο το σώμα»). Μετά γράφεις ΣF·Δt = Δp σε κάθε άξονα. Η μέση δύναμη δεν είναι η μέγιστη.",
+    cases: section10,
   },
 ];
 
