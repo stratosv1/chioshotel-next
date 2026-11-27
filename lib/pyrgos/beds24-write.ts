@@ -58,7 +58,17 @@ export async function liveOverlap(roomNumber: number, arrival: string, departure
   url.searchParams.set("roomId", String(roomId));
   url.searchParams.set("arrivalTo", addDays(departure, -1));
   url.searchParams.set("departureFrom", addDays(arrival, 1));
-  const response = await fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
+  const ask = () => fetch(url, { headers: { accept: "application/json", token }, cache: "no-store", signal: AbortSignal.timeout(12_000) });
+  let response = await ask();
+  if (response.status === 429) {
+    // Beds24 5-minute credit limit (e.g. right after a big group was created): wait briefly, try once more.
+    const wait = Math.min(8, Math.max(2, Number(response.headers.get("retry-after")) || 4));
+    await new Promise((resolve) => setTimeout(resolve, wait * 1000));
+    response = await ask();
+  }
+  if (response.status === 429) {
+    throw new Error("Το Beds24 έχει προσωρινό όριο κλήσεων (HTTP 429). Δεν άλλαξε τίποτα — δοκίμασε ξανά σε 5 λεπτά.");
+  }
   if (!response.ok) throw new Error(`Δεν μπόρεσα να ελέγξω το Beds24 για διπλή κράτηση (HTTP ${response.status}).`);
   const payload = (await response.json().catch(() => null)) as any;
   const list: any[] = Array.isArray(payload?.data) ? payload.data : [];

@@ -229,7 +229,10 @@ export async function updateBooking(body: any) {
   if (roomChanged && isCategoryChange(current.room, room) && !body.confirmCategory) {
     throw new ActionError("Αλλαγή κατηγορίας δωματίου: χρειάζεται επιβεβαίωση.", 409, "category");
   }
-  if (roomChanged || datesChanged) await assertFree(room as number, arrival, departure, id);
+  // Shortening a stay in the same room frees nights and cannot create a clash: no Beds24 check needed
+  // (it used to fail the save whenever Beds24 was rate-limited, e.g. right after a group was created).
+  const onlyShortened = !roomChanged && arrival >= current.checkin && departure <= current.checkout;
+  if ((roomChanged || datesChanged) && !onlyShortened) await assertFree(room as number, arrival, departure, id);
 
   const guest = {
     firstName: body.firstName === undefined ? undefined : clean(body.firstName, 60),
