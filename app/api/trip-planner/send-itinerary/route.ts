@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { checkPublicRateLimit, checkGlobalHourlyLimit, readBoundedJson } from "@/lib/ai-assistant/public-rate-limit";
 import { dayTripAreaById } from "@/content/trip-planner/day-trips";
 import { buildDayPlan, directionsUrl, type DayPlan } from "@/lib/trip-planner/day-plan";
 
@@ -96,8 +97,10 @@ function emailHtml(plan: DayPlan, day: string) {
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json().catch(() => null)) as Payload | null;
-    if (!body) return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
+    const parsed = await readBoundedJson(request, 16 * 1024);
+    if (!parsed.ok) return NextResponse.json({ ok: false, error: "invalid" }, { status: parsed.status });
+    const body = parsed.value as Payload | null;
+    if (!body || typeof body !== "object" || Array.isArray(body)) return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
 
     // Honeypot: real visitors never fill this in. Pretend success for bots.
     if (clean(body.website)) return NextResponse.json({ ok: true });
@@ -123,6 +126,10 @@ export async function POST(request: Request) {
     if (limited(`ip:${ip}`, MAX_PER_IP) || limited(`email:${email}`, MAX_PER_EMAIL)) {
       return NextResponse.json({ ok: false, error: "rate" }, { status: 429 });
     }
+
+    const rate = await checkPublicRateLimit(request, "trip-planner:send-itinerary", { perMinute: 2, perHour: 5, failClosed: true });
+    if (rate.limited) return NextResponse.json({ ok: false, error: "rate" }, { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds) } });
+    if (!(await checkGlobalHourlyLimit("trip-planner:send-itinerary", 60))) return NextResponse.json({ ok: false, error: "rate" }, { status: 429, headers: { "Retry-After": "60" } });
 
     const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
     const smtpPort = Number(process.env.SMTP_PORT || "465");

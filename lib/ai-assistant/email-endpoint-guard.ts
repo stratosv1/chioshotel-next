@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
-import { checkPublicRateLimit } from "@/lib/ai-assistant/public-rate-limit";
+import { checkPublicRateLimit, checkGlobalHourlyLimit } from "@/lib/ai-assistant/public-rate-limit";
 
 // Abuse protection for the public enquiry-email endpoints
 // (/api/ai-assistant/summary-email, /api/ai-assistant/request-email).
 // Rate limiting is shared with the other public Room Finder endpoints via
 // lib/ai-assistant/public-rate-limit.ts, using a separate key namespace.
 
-const EMAIL_LIMITS = { perMinute: 3, perHour: 10 };
+const EMAIL_LIMITS = { perMinute: 3, perHour: 10, failClosed: true };
 
 // Shared by every public Room Finder endpoint that writes data or sends email.
 export function isAllowedSiteOrigin(request: Request) {
@@ -39,6 +39,10 @@ export async function guardEmailEndpoint(request: Request, scope: string): Promi
       { ok: false, error: "Too many requests. Please try again later." },
       { status: 429, headers: { "Retry-After": String(retryAfterSeconds), "Cache-Control": "no-store" } },
     );
+  }
+
+  if (!(await checkGlobalHourlyLimit(`email:${scope}`, 60))) {
+    return NextResponse.json({ ok: false, error: "Too many requests. Please try again later." }, { status: 429, headers: { "Retry-After": "60", "Cache-Control": "no-store" } });
   }
 
   return null;

@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 
 // Guests only sign up once or twice; this blocks scripted sign-ups of
 // third-party addresses.
-const RATE_LIMITS = { perMinute: 3, perHour: 10 };
+const RATE_LIMITS = { perMinute: 3, perHour: 10, failClosed: true };
 
 const headers = { "Cache-Control": "no-store", "X-Robots-Tag": "noindex, nofollow" };
 

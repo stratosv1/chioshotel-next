@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { searchSalesKnowledge, type KnowledgeKind } from "@/lib/ai-assistant/knowledge";
 import type { AssistantLanguage, AssistantPreferences } from "@/lib/ai-assistant/types";
 import { searchPropertyKnowledge } from "@/lib/property-knowledge";
+import { checkPublicRateLimit, readBoundedJson } from "@/lib/ai-assistant/public-rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,11 +23,16 @@ const KINDS: KnowledgeKind[] = [
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const rate = await checkPublicRateLimit(request, "room-finder:knowledge", { perMinute: 30, perHour: 180, failClosed: true });
+    if (rate.limited) return NextResponse.json({ error: "Too many requests. Please try again later." }, { status: 429, headers: { "Retry-After": String(rate.retryAfterSeconds), "Cache-Control": "no-store" } });
+    const parsed = await readBoundedJson(request, 64 * 1024);
+    if (!parsed.ok) return NextResponse.json({ error: "Invalid or oversized request." }, { status: parsed.status });
+    const body = parsed.value as { query?: unknown; language?: AssistantLanguage; kinds?: KnowledgeKind[]; preferences?: AssistantPreferences; limit?: unknown } | null;
+    if (!body || typeof body !== "object" || Array.isArray(body)) return NextResponse.json({ error: "Invalid request." }, { status: 400 });
     const query = typeof body?.query === "string" ? body.query.trim() : "";
-    if (!query) return NextResponse.json({ error: "Query is required." }, { status: 400 });
+    if (!query || query.length > 2000) return NextResponse.json({ error: "Invalid query." }, { status: 400 });
 
-    const language = LANGUAGES.includes(body?.language) ? body.language : "en";
+    const language = body.language && LANGUAGES.includes(body.language) ? body.language : "en";
     const kinds = Array.isArray(body?.kinds)
       ? body.kinds.filter((kind: KnowledgeKind) => KINDS.includes(kind))
       : undefined;

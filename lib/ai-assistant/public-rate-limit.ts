@@ -6,8 +6,8 @@ import { neon } from "@neondatabase/serverless";
 // (ai_security.rate_limit_windows); each caller passes its own scope so the
 // counters of different endpoints never mix.
 //
-// Fails open: if the database is unreachable the request is allowed, because
-// blocking a real guest is worse than letting a few extra requests through.
+// Read-only availability callers can fail open. Optional write/cost callers
+// can explicitly fail closed if the shared counter is unavailable.
 
 export type RateLimitResult = { limited: boolean; retryAfterSeconds: number };
 
@@ -20,11 +20,11 @@ export function getClientIp(request: Request): string {
 export async function checkPublicRateLimit(
   request: Request,
   scope: string,
-  limits: { perMinute: number; perHour: number },
+  limits: { perMinute: number; perHour: number; failClosed?: boolean },
 ): Promise<RateLimitResult> {
   if (!process.env.DATABASE_URL) {
     console.error(`Rate limiting skipped for ${scope}: DATABASE_URL is missing`);
-    return { limited: false, retryAfterSeconds: 0 };
+    return limits.failClosed ? { limited: true, retryAfterSeconds: 60 } : { limited: false, retryAfterSeconds: 0 };
   }
 
   try {
@@ -62,7 +62,7 @@ export async function checkPublicRateLimit(
     };
   } catch (error) {
     console.error(`Rate limiting failed for ${scope}`, error);
-    return { limited: false, retryAfterSeconds: 0 };
+    return limits.failClosed ? { limited: true, retryAfterSeconds: 60 } : { limited: false, retryAfterSeconds: 0 };
   }
 }
 
@@ -88,5 +88,37 @@ export async function checkGlobalHourlyLimit(scope: string, perHour: number): Pr
   } catch (error) {
     console.error(`Global limit check failed for ${scope}`, error);
     return false;
+  }
+}
+
+// Bound the actual streamed body, not only the client-supplied Content-Length.
+export async function readBoundedJson(request: Request, maxBytes: number): Promise<
+  { ok: true; value: unknown } | { ok: false; status: 400 | 413 }
+> {
+  const declared = Number(request.headers.get("content-length") || 0);
+  if (declared > maxBytes) return { ok: false, status: 413 };
+  if (!request.body) return { ok: false, status: 400 };
+  const reader = request.body.getReader();
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let bytes = 0;
+  let raw = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > maxBytes) {
+        await reader.cancel().catch(() => undefined);
+        return { ok: false, status: 413 };
+      }
+      raw += decoder.decode(value, { stream: true });
+    }
+    raw += decoder.decode();
+    return { ok: true, value: JSON.parse(raw) as unknown };
+  } catch {
+    await reader.cancel().catch(() => undefined);
+    return { ok: false, status: 400 };
+  } finally {
+    reader.releaseLock();
   }
 }
