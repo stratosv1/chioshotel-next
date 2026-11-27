@@ -38,6 +38,26 @@ export type DealsPageData = {
     /** ISO date-time when this offer stops; null/undefined = no end date. */
     validUntil?: string | null;
   }[];
+  /** Room offers declared from the staff booking plan (filled at request time). */
+  planDeals?: PlanDeal[];
+};
+
+/** One room offer from the booking plan, ready for the public deals page. */
+export type PlanDeal = {
+  id: string;
+  room: number;
+  title: string;
+  image: string;
+  imageAlt: string;
+  roomPageHref: string;
+  from: string;
+  to: string;
+  nights: number;
+  discount: number;
+  code: string;
+  nightPrice: number | null;
+  dealNightPrice: number | null;
+  whatsappHref: string;
 };
 
 const dealsHeroImage =

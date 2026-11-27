@@ -7,6 +7,8 @@ import { CLIMATE_FEE_LABEL, CLIMATE_FEE_PER_NIGHT, PYRGOS_ROOMS, isCategoryChang
 import PyrgosNav from "../PyrgosNav";
 import { holidaysOn, type HolidayCountry } from "@/lib/pyrgos/holidays";
 import { foreignTextInEmail, type ConfirmationData } from "@/lib/crm/booking-confirmation-email";
+import { OFFER_ROOMS, defaultOfferCode, type PlanOffer } from "@/lib/pyrgos/offer-types";
+import OfferDialog, { type OfferDraft } from "./OfferDialog";
 
 // ---------- helpers ----------
 
@@ -209,6 +211,13 @@ export default function PlanBoard() {
 
   const [bookings, setBookings] = useState<PlanBooking[]>([]);
   const [cells, setCells] = useState<PlanCell[]>([]);
+  const [offers, setOffers] = useState<PlanOffer[]>([]);
+  const [offerDraft, setOfferDraft] = useState<OfferDraft | null>(null);
+  // Range picked by dragging over free days of one room → offer or booking (owner, 2026-11-27).
+  const [sel, setSel] = useState<{ room: number; a: string; b: string } | null>(null);
+  const selRef = useRef(sel);
+  selRef.current = sel;
+  const [rangePick, setRangePick] = useState<{ room: number; from: string; to: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [toast, setToast] = useState<{ text: string; undo?: () => void } | null>(null);
@@ -221,7 +230,7 @@ export default function PlanBoard() {
     if (from && /^\d{4}-\d{2}-\d{2}$/.test(from)) goDay(addDays(from, -1));
     if (q.get("open")) setOpenId(q.get("open"));
   }, []);
-  const [newBooking, setNewBooking] = useState<{ room: number; checkin: string } | null>(null);
+  const [newBooking, setNewBooking] = useState<{ room: number; checkin: string; checkout?: string } | null>(null);
   // Open faults / jobs per room (Βλάβες & εργασίες) for a 🔧 badge next to the room name.
   const [roomTasks, setRoomTasks] = useState<Map<number, { count: number; urgent: boolean; titles: string[] }>>(new Map());
   useEffect(() => {
@@ -258,6 +267,7 @@ export default function PlanBoard() {
     if (json.ok) {
       setBookings(json.bookings);
       setCells(json.cells);
+      setOffers(json.offers ?? []);
     } else setError(json.error || "Δεν φόρτωσε το πλάνο.");
     setLoading(false);
   }, [start, end]);
@@ -289,6 +299,44 @@ export default function PlanBoard() {
     (room: number, day: string) => (byRoom.get(room) ?? []).some((b) => b.checkin <= day && b.checkout > day),
     [byRoom],
   );
+
+  const busyBetween = useCallback(
+    (room: number, from: string, to: string) => (byRoom.get(room) ?? []).some((b) => b.checkin < to && b.checkout > from),
+    [byRoom],
+  );
+  const offersByRoom = useMemo(() => {
+    const map = new Map<number, PlanOffer[]>();
+    for (const o of offers) map.set(o.room, [...(map.get(o.room) ?? []), o]);
+    return map;
+  }, [offers]);
+  const newOffer = (room: number, from: string, to: string) =>
+    setOfferDraft({ room: (OFFER_ROOMS as readonly number[]).includes(room) ? room : 1, from, to, discount: 10, code: defaultOfferCode(10), active: true });
+
+  // Finish a drag selection: one cell = new booking (as before), several = ask offer or booking.
+  useEffect(() => {
+    const finish = () => {
+      const s = selRef.current;
+      if (!s) return;
+      setSel(null);
+      const from = s.a < s.b ? s.a : s.b;
+      const last = s.a < s.b ? s.b : s.a;
+      if (from === last) setNewBooking({ room: s.room, checkin: from });
+      else setRangePick({ room: s.room, from, to: addDays(last, 1) });
+    };
+    const cancel = () => setSel(null);
+    window.addEventListener("pointerup", finish);
+    window.addEventListener("pointercancel", cancel);
+    return () => {
+      window.removeEventListener("pointerup", finish);
+      window.removeEventListener("pointercancel", cancel);
+    };
+  }, []);
+  const inSel = (room: number, day: string) => {
+    if (!sel || sel.room !== room) return false;
+    const lo = sel.a < sel.b ? sel.a : sel.b;
+    const hi = sel.a < sel.b ? sel.b : sel.a;
+    return day >= lo && day <= hi;
+  };
 
   // 1–2 night gaps: free nights (not booked, not closed) with something on both sides.
   const gaps = useMemo(() => {
@@ -464,6 +512,7 @@ export default function PlanBoard() {
                 ⟳ Συγχρονισμός
               </button>
               {syncInfo && <span className="text-xs font-semibold text-[#5b6b80]">{syncInfo}</span>}
+              <button type="button" onClick={() => newOffer(1, today, addDays(today, 3))} title="Προσφορά δωματίου για τη σελίδα Προσφορών (WhatsApp)" className="h-10 rounded-full bg-[#fef3c7] px-4 text-sm font-bold text-[#92400e]">+ Προσφορά</button>
               <button type="button" onClick={() => setNewBooking({ room: 0, checkin: today })} className="h-10 rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]">+ Νέα κράτηση</button>
             </div>
           </header>
@@ -496,6 +545,8 @@ export default function PlanBoard() {
             ))}
             <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded bg-[repeating-linear-gradient(45deg,#e5e7eb,#e5e7eb_3px,#f3f4f6_3px,#f3f4f6_6px)]" />Κλειστό</span>
             <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded border-2 border-dashed border-[#f59e0b] bg-[#fffbeb]" />Κενό 1–2 νυχτών</span>
+            <span className="flex items-center gap-1.5"><span className="h-3 w-5 rounded-full bg-[#dc2626]" />Προσφορά στο site</span>
+            <span className="text-[#5b6b80]">Σύρε πάνω σε κενές μέρες για προσφορά</span>
           </div>
 
           {error && <p className="rounded-xl bg-[#fff4dc] px-4 py-3 text-sm font-semibold text-[#92400e]">{error}</p>}
@@ -592,14 +643,45 @@ export default function PlanBoard() {
                           type="button"
                           style={{ width: W }}
                           disabled={busy}
-                          onClick={() => setNewBooking({ room: room.number, checkin: d })}
+                          // Mouse/touch go through the drag selection; keyboard (detail 0) opens a booking directly.
+                          onClick={(e) => e.detail === 0 && setNewBooking({ room: room.number, checkin: d })}
+                          onPointerDown={(e) => {
+                            if (busy || e.button !== 0) return;
+                            setSel({ room: room.number, a: d, b: d });
+                          }}
+                          onPointerEnter={() => {
+                            const s = selRef.current;
+                            if (!s || s.room !== room.number || busy) return;
+                            const lo = d < s.a ? d : s.a;
+                            const hi = d < s.a ? s.a : d;
+                            if (busyBetween(room.number, lo, addDays(hi, 1))) return;
+                            setSel({ ...s, b: d });
+                          }}
                           title={cell?.closed ? "Κλειστό στο Beds24 · μπορείς να βάλεις κράτηση εσύ" : undefined}
                           aria-label={`${room.label} ${dm(d)}${cell?.closed ? " κλειστό στο Beds24" : ""}`}
                           className={`flex items-end justify-center border-l border-[#eef2f6] pb-1 text-[10px] text-[#8a97a8] ${
                             cell?.closed ? "bg-[repeating-linear-gradient(45deg,#eceef1,#eceef1_4px,#f6f7f9_4px,#f6f7f9_8px)]" : gap ? "bg-[#fffbeb] outline outline-2 -outline-offset-4 outline-dashed outline-[#f59e0b]" : d === today ? "bg-[#f6f4fe]" : ""
-                          } ${!busy ? "hover:bg-[#ece9fd]" : ""}`}
+                          } ${!busy ? "hover:bg-[#ece9fd]" : ""} ${inSel(room.number, d) ? "!bg-[#fde68a]" : ""} select-none`}
                         >
                           {!busy && cell?.price ? <span className={W < 72 ? "text-[9px] tracking-tight" : ""}>{W < 72 ? Math.round(cell.price) : `€${Math.round(cell.price)}`}</span> : ""}
+                        </button>
+                      );
+                    })}
+                    {(offersByRoom.get(room.number) ?? []).map((o) => {
+                      const left = Math.max(diffDays(start, o.from), 0);
+                      const right = Math.min(diffDays(start, o.to), days.length);
+                      if (right <= left) return null;
+                      const live = o.active && !o.booked && o.to > today;
+                      return (
+                        <button
+                          key={`offer-${o.id}`}
+                          type="button"
+                          onClick={() => setOfferDraft({ id: o.id, room: o.room, from: o.from, to: o.to, discount: o.discount, code: o.code, active: o.active })}
+                          title={`Προσφορά -${o.discount}% · ${o.code} · ${dm(o.from)}–${dm(o.to)}${o.booked ? " · κλείστηκε, δεν φαίνεται" : !o.active ? " · κρυφή" : " · φαίνεται στο site"}`}
+                          style={{ left: ROOM_W + left * W + 2, width: Math.max((right - left) * W - 4, 18), top: 2, height: 16 }}
+                          className={`absolute z-[4] truncate rounded-full px-2 text-left text-[10px] font-black leading-4 ${live ? "bg-[#dc2626] text-white" : "bg-[#e5e7eb] text-[#6b7280] line-through"}`}
+                        >
+                          🏷️ -{o.discount}% {W >= 40 && (right - left) > 1 ? o.code : ""}
                         </button>
                       );
                     })}
@@ -718,6 +800,55 @@ export default function PlanBoard() {
           setConfirm={setConfirm}
           onCreated={(text) => {
             setNewBooking(null);
+            setToast({ text });
+            load();
+          }}
+        />
+      )}
+
+      {rangePick && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/30 p-4" role="dialog" aria-modal="true" aria-labelledby="range-pick-title">
+          <div className="w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl">
+            <h2 id="range-pick-title" className="text-lg font-black">{roomLabel(rangePick.room)} · {dm(rangePick.from)} – {dm(rangePick.to)}</h2>
+            <p className="mt-1 text-sm text-[#5b6b80]">{diffDays(rangePick.from, rangePick.to)} νύχτες · τι θέλεις να κάνεις;</p>
+            <div className="mt-4 grid gap-2">
+              {(OFFER_ROOMS as readonly number[]).includes(rangePick.room) ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    newOffer(rangePick.room, rangePick.from, rangePick.to);
+                    setRangePick(null);
+                  }}
+                  className="min-h-11 rounded-full bg-[#fef3c7] px-4 text-sm font-bold text-[#92400e]"
+                >
+                  🏷️ Προσφορά στο site
+                </button>
+              ) : (
+                <p className="text-xs text-[#5b6b80]">Το Apt 11 δεν μπαίνει σε προσφορές στο site.</p>
+              )}
+              <button
+                type="button"
+                onClick={() => {
+                  setNewBooking({ room: rangePick.room, checkin: rangePick.from, checkout: rangePick.to });
+                  setRangePick(null);
+                }}
+                className="min-h-11 rounded-full bg-[#e9e4fe] px-4 text-sm font-bold text-[#3b2f8a]"
+              >
+                + Νέα κράτηση
+              </button>
+              <button type="button" onClick={() => setRangePick(null)} className="min-h-11 rounded-full px-4 text-sm font-bold text-[#4b5b70]">Άκυρο</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {offerDraft && (
+        <OfferDialog
+          initial={offerDraft}
+          onClose={() => setOfferDraft(null)}
+          isBusy={busyBetween}
+          onSaved={(text) => {
+            setOfferDraft(null);
             setToast({ text });
             load();
           }}
@@ -1968,7 +2099,7 @@ function NewBookingDialog({
   onCreated,
   setConfirm,
 }: {
-  initial: { room: number; checkin: string };
+  initial: { room: number; checkin: string; checkout?: string };
   onClose: () => void;
   onCreated: (text: string) => void;
   setConfirm: (c: ConfirmState) => void;
@@ -1978,7 +2109,7 @@ function NewBookingDialog({
     group: false,
     rooms: initial.room ? [initial.room] : [],
     checkin: initial.checkin,
-    checkout: addDays(initial.checkin, 1),
+    checkout: initial.checkout ?? addDays(initial.checkin, 1),
     adults: 2,
     children: 0,
     firstName: "",

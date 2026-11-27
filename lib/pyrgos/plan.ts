@@ -3,6 +3,7 @@ import { ensureBookingsTable } from "./bookings";
 import { ensureLedgerTables, getCharges, getHistory, getMoney, type BookingCharge } from "./ledger";
 import { bedsText, getExtras, getSql } from "./store";
 import { getHolds, type Hold } from "./holds";
+import { listPlanOffers } from "./plan-offers";
 
 export type PlanBooking = {
   id: string;
@@ -117,7 +118,12 @@ export async function getPlan(from: string, to: string) {
       price: num(cell.base_price),
       closed: cell.reason === "CLOSED",
     }));
-  return { bookings: await enrich(rows), cells: plan };
+  // Offers are extra: if their table fails, the plan still loads.
+  const offers = await listPlanOffers(from, to).catch((error) => {
+    console.error("[pyrgos] plan offers failed", error);
+    return [];
+  });
+  return { bookings: await enrich(rows), cells: plan, offers };
 }
 
 export async function getBookingDetail(id: string) {

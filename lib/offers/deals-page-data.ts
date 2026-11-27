@@ -5,6 +5,7 @@ import { homePageDe, homePageEl, homePageEn, homePageEs, homePageFr, homePageIt,
 import type { HomePageData } from "@/content/home";
 import { toDealsOffers } from "@/lib/offers/catalog";
 import { hasOffersDatabase, listLiveOffers } from "@/lib/offers/store";
+import { getPlanDeals } from "@/lib/offers/plan-deals";
 import type { OfferLanguage } from "@/lib/offers/types";
 
 const homeByLanguage: Record<OfferLanguage, HomePageData> = {
@@ -31,12 +32,17 @@ export async function getLiveDealsPage(language: OfferLanguage): Promise<LiveDea
   const base = getDealsIntentData(language);
   let offers: DealsPageData["offers"] = base.offers.map((offer) => ({ ...offer, validUntil: null }));
 
+  let planDeals: DealsPageData["planDeals"] = [];
   if (hasOffersDatabase()) {
-    try {
-      offers = toDealsOffers(await listLiveOffers(), language);
-    } catch (error) {
-      console.error("Offers: falling back to static deals", error);
-    }
+    const [stored, fromPlan] = await Promise.all([
+      listLiveOffers().catch((error) => {
+        console.error("Offers: falling back to static deals", error);
+        return null;
+      }),
+      getPlanDeals(language),
+    ]);
+    if (stored) offers = toDealsOffers(stored, language);
+    planDeals = fromPlan;
   }
 
   const nextExpiry =
@@ -46,7 +52,7 @@ export async function getLiveDealsPage(language: OfferLanguage): Promise<LiveDea
       .sort()[0] ?? "";
 
   return {
-    data: { ...base, offers, countdown: { ...base.countdown, targetIso: nextExpiry } },
+    data: { ...base, offers, planDeals, countdown: { ...base.countdown, targetIso: nextExpiry } },
     lastMinute: homeByLanguage[language].lastMinute,
   };
 }

@@ -10,6 +10,7 @@ import { LazyLastMinuteDeals } from "@/components/home/LazyLastMinuteDeals";
 import { LocalizedChiosHotelsLiveSearch } from "@/components/booking/LocalizedChiosHotelsLiveSearch";
 import { CHIOS_HOTELS_GUIDE_PATHS } from "@/lib/chios-hotels-guide-i18n";
 import { NewsletterSignupForm } from "@/components/newsletter/NewsletterSignupForm";
+import { PlanDealsSection } from "@/components/deals/PlanDealsSection";
 
 type DealsPageProps = {
   data: DealsPageData;
@@ -527,7 +528,9 @@ export function DealsPage({ data, lastMinute }: DealsPageProps) {
         </div>
       </section>
 
-      <StatusStrip data={data} labels={labels} offerCount={offerCount} />
+      <StatusStrip data={data} labels={labels} offerCount={offerCount + (data.planDeals?.length ?? 0)} />
+
+      <PlanDealsSection deals={data.planDeals ?? []} locale={locale} onTrack={emit} />
 
       <section id="offers" className="scroll-mt-24 px-0 py-16 md:py-20" aria-labelledby="deals-intro-title">
         <div className="mx-auto w-[min(1240px,calc(100%-40px))] max-md:w-[calc(100%-24px)]">
