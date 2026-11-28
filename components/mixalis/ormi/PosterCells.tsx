@@ -66,6 +66,7 @@ export function PosterCells({ cells, posterW, posterH, lesson }: { cells: Cell[]
         return (
           <a
             key={c.n}
+            id={`t${c.n}`}
             href={c.href ?? `#k${c.n}`}
             aria-label={`Κινούμενο σχέδιο για το κουτάκι ${c.n}${label}`}
             className="absolute rounded-lg outline-none transition hover:bg-[#c9822f]/10 hover:ring-2 hover:ring-[#c9822f] focus-visible:ring-2 focus-visible:ring-[#c9822f]"

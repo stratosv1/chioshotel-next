@@ -7,6 +7,7 @@ import { OrmiMapEmbed } from "@/components/mixalis/ormi/OrmiMapEmbed";
 import { OrmiMathimaEmbed } from "@/components/mixalis/ormi/OrmiMathimaEmbed";
 import { PosterCells, PosterRevisionNote } from "@/components/mixalis/ormi/PosterCells";
 import { OrmiNav } from "@/components/mixalis/ormi/OrmiNav";
+import { BackToPoster } from "@/components/mixalis/ormi/BackToPoster";
 
 export const metadata: Metadata = {
   title: { absolute: "Ορμή και κρούσεις · Τυπολόγιο · Physics Workspace" },
@@ -80,6 +81,7 @@ const cells = Array.from({ length: 77 }, (_, i) => {
 export default function OrmiPage() {
   return (
     <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8">
+      <BackToPoster />
       <div className="mx-auto max-w-6xl space-y-6">
         <OrmiNav active="theoria" />
 
