@@ -1,6 +1,8 @@
 "use client";
 
+import { Fragment } from "react";
 import { AnimCard } from "./AnimCard";
+import { MoreQuestions } from "./MoreQuestions";
 import { STEPS } from "./solutions";
 import type { Case } from "./kit";
 import { section1 } from "./scenes-1";
@@ -97,7 +99,10 @@ export function OrmiAnimations() {
           <p className="mt-2 max-w-3xl text-[15px] leading-7 text-[#3d4452]">{s.intro}</p>
           <div className="mt-5 grid gap-5 lg:grid-cols-2">
             {s.cases.map((c) => (
-              <AnimCard key={c.n} data={STEPS[c.n] ? { ...c, steps: STEPS[c.n] } : c} accent={s.color} study={{ lesson: "ormi", path: "/mixalis/ormi" }} />
+              <Fragment key={c.n}>
+                <AnimCard data={STEPS[c.n] ? { ...c, steps: STEPS[c.n] } : c} accent={s.color} study={{ lesson: "ormi", path: "/mixalis/ormi" }} moreInside={false} />
+                {c.more?.length ? <MoreQuestions n={c.n} title={c.title} items={c.more} asCard /> : null}
+              </Fragment>
             ))}
           </div>
         </section>

@@ -27,6 +27,9 @@ export const H = 210;
 
 export type Phase = { until: number; label: string; say: ReactNode };
 
+/** A follow-up question on the same phenomenon. */
+export type MoreQuestion = { q: string; fig?: ReactNode; steps?: string[]; a: string };
+
 export type Case = {
   n: number;
   title: string;
@@ -45,8 +48,8 @@ export type Case = {
   /** Optional step-by-step explanation shown above `solve` («Δείξε τη λύση»). */
   steps?: { t: string; b: string }[];
   trap?: ReactNode;
-  /** Other questions a teacher could ask on the same phenomenon, with hidden answers. */
-  more?: { q: string; a: string }[];
+  /** Other questions a teacher could ask on the same phenomenon (figure, hidden steps and answer). */
+  more?: MoreQuestion[];
   legend?: ("v" | "F" | "p" | "K")[];
 };
 

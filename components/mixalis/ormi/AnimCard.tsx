@@ -4,6 +4,7 @@ import { Children, cloneElement, isValidElement, useEffect, useState, type React
 import { StudyMark } from "@/components/mixalis/study/StudyMark";
 import { usePlaying, useClock } from "@/components/mixalis/omali/shared";
 import { C, H, W, type Case } from "./kit";
+import { MoreQuestions } from "./MoreQuestions";
 
 /** Turns "υ_1", "F_μ" or "p_{ολ,πριν}" inside plain text into real subscripts. */
 export function rich(node: ReactNode): ReactNode {
@@ -43,12 +44,15 @@ export function AnimCard({
   accent,
   study,
   idPrefix = "k",
+  moreInside = true,
 }: {
   data: Case;
   accent: string;
   study?: { lesson: string; path: string };
   /** Anchor prefix, so other card sets (e.g. the composite presentations) do not clash with #k1…#k43. */
   idPrefix?: string;
+  /** Show the «ερωτήσεις καθηγητή» inside the card (false: the page shows them next to it). */
+  moreInside?: boolean;
 }) {
   const [playing, setPlaying] = usePlaying(true);
   const [slow, setSlow] = useState(false);
@@ -297,7 +301,7 @@ export function AnimCard({
           </div>
         )}
       </div>
-      {data.more?.length ? <MoreQuestions items={data.more} /> : null}
+      {data.more?.length && moreInside ? <MoreQuestions n={data.n} title={data.title} items={data.more} /> : null}
       {study ? (
         <StudyMark lesson={study.lesson} id={`${idPrefix}${data.n}`} title={`${data.n}. ${data.title}`} path={study.path} className="border-t border-black/5 px-4 py-3 sm:px-5" />
       ) : null}
@@ -305,43 +309,3 @@ export function AnimCard({
   );
 }
 
-/** «Τι άλλο μπορεί να ρωτήσει ο καθηγητής»: questions on the same phenomenon, answers hidden until asked for. */
-function MoreQuestions({ items }: { items: { q: string; a: string }[] }) {
-  const [open, setOpen] = useState<Set<number>>(new Set());
-  const toggle = (i: number) =>
-    setOpen((prev) => {
-      const next = new Set(prev);
-      if (next.has(i)) next.delete(i);
-      else next.add(i);
-      return next;
-    });
-  return (
-    <div className="border-t border-black/5 px-4 py-3 text-sm leading-6 sm:px-5" style={{ backgroundColor: "#f4f1fa" }}>
-      <p className="mb-2 font-semibold" style={{ color: "#5b3f8f" }}>
-        Τι άλλο μπορεί να ρωτήσει ο καθηγητής σε αυτό το φαινόμενο
-      </p>
-      <ol className="space-y-2">
-        {items.map((item, i) => (
-          <li key={i} className="rounded-xl border bg-white px-3 py-2" style={{ borderColor: "rgba(91, 63, 143, 0.2)" }}>
-            <div className="flex items-start gap-2">
-              <span className="font-bold" style={{ color: "#5b3f8f" }}>
-                {i + 1}.
-              </span>
-              <span className="flex-1 text-[#1c2433]">{rich(item.q)}</span>
-              <button
-                type="button"
-                onClick={() => toggle(i)}
-                aria-expanded={open.has(i)}
-                className="flex-none rounded-full border px-2.5 py-0.5 text-xs font-semibold"
-                style={{ borderColor: "rgba(91, 63, 143, 0.4)", color: "#5b3f8f" }}
-              >
-                {open.has(i) ? "Κρύψε" : "Απάντηση"}
-              </button>
-            </div>
-            {open.has(i) ? <p className="mt-1.5 border-t border-black/5 pt-1.5 text-[#3d4452]">{rich(item.a)}</p> : null}
-          </li>
-        ))}
-      </ol>
-    </div>
-  );
-}
