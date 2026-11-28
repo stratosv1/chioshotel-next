@@ -405,42 +405,87 @@ const case25: Case = {
   n: 25,
   given: "Όπως στο 24: M + m = 4 kg, V = 2,5 m/s αμέσως μετά, ℓ = 1 m, g = 10 m/s².",
   ask: "Την τάση του νήματος αμέσως μετά την κρούση.",
-  what: "Ο κύβος της κούνιας αμέσως μετά το χτύπημα, με τις δυνάμεις πάνω του. Δείχνει γιατί η τάση του νήματος μεγαλώνει (κεντρομόλος).",
+  what: "Το βλήμα σφηνώνεται στον κύβο που κρέμεται από νήμα και ο κύβος αρχίζει να κάνει κύκλο γύρω από το σημείο ανάρτησης. Για να κάνει κύκλο, το νήμα πρέπει να τραβά ΠΙΟ ΠΟΛΥ από το βάρος: η διαφορά είναι η κεντρομόλος δύναμη. Γι' αυτό η τάση πηδά από 39 N σε 65 N.",
   title: "Νήμα: τάση μετά την κρούση",
-  period: 6,
+  period: 10,
   legend: ["v", "F"],
   phases: [
-    { until: 1.6, label: "Πριν", say: "Ο κύβος (3,9 kg) κρέμεται ακίνητος: T = Mg = 39 N. Τάση και βάρος ισορροπούν." },
-    { until: 6, label: "Αμέσως μετά", say: "Τώρα το σύνολο (4 kg) κάνει κυκλική κίνηση με V = 2,5 m/s. Χρειάζεται κεντρομόλος: T − (M + m)g = (M + m)V²/ℓ ⇒ T = 40 + 25 = 65 N." },
+    { until: 1.6, label: "Πριν", say: "Ο κύβος (3,9 kg) κρέμεται ακίνητος: τάση και βάρος ισορροπούν, T = Mg = 39 N." },
+    {
+      until: 4.2,
+      label: "Αμέσως μετά · πάγωμα",
+      say: "Το βλήμα σφηνώθηκε: το σύνολο (4 kg) έχει V = 2,5 m/s και είναι ακόμα στο κατώτατο σημείο. Όμως ξεκινά κίνηση σε ΚΥΚΛΟ (διακεκομμένος) με κέντρο το σημείο ανάρτησης. Για κύκλο χρειάζεται συνισταμένη προς το κέντρο: T − (M + m)g = (M + m)V²/ℓ = 25 N ⇒ T = 40 + 25 = 65 N.",
+    },
+    {
+      until: 10,
+      label: "Κούνια",
+      say: "Καθώς ανεβαίνει, η ταχύτητα μικραίνει και η τάση πέφτει: T = (M+m)(g·συνθ + υ²/ℓ). Στο ψηλότερο σημείο (υ = 0) γίνεται 27,5 N. Η μεγαλύτερη τάση είναι στο κατώτατο σημείο, αμέσως μετά την κρούση.",
+    },
   ],
   Scene: ({ t }) => {
     const tc = 1.6;
-    const pivot = { x: 150, y: 16 };
-    const L = 110;
-    const by = pivot.y + L;
+    const tFreeze = 4.2;
+    const pivot = { x: 150, y: 14 };
+    const Lpx = 104;
+    const g = 10;
+    const ell = 1;
+    const V = 2.5;
+    const mTot = 4;
+    const cosMax = 1 - (V * V) / (2 * g * ell); // 0,6875
+    const thMax = Math.acos(cosMax);
+    const swinging = t >= tFreeze;
+    const th = swinging ? thMax * Math.sin((2 * Math.PI * (t - tFreeze)) / 5.8) : 0;
+    const v2 = Math.max(0, V * V - 2 * g * ell * (1 - Math.cos(th)));
     const after = t >= tc;
-    const Tn = after ? 65 : 39;
-    const W = after ? 40 : 39;
-    const sc = 1.1;
-    const bulletX = t < tc ? pivot.x - 20 - 110 * (tc - t) : null;
+    const Tn = after ? mTot * (g * Math.cos(th) + v2 / ell) : 39;
+    const Wn = after ? 40 : 39;
+    const bx = pivot.x + Lpx * Math.sin(th);
+    const by = pivot.y + Lpx * Math.cos(th);
+    const sc = 0.9;
+    const ux = -Math.sin(th);
+    const uy = -Math.cos(th);
+    const frozen = after && !swinging;
+    const vSign = Math.cos((2 * Math.PI * (t - tFreeze)) / 5.8) >= 0 ? 1 : -1;
+    const vNow = Math.sqrt(v2) * (swinging ? vSign : 1);
+    const bulletX = t < tc ? pivot.x - 22 - 110 * (tc - t) : null;
     return (
       <g>
         <line x1={pivot.x - 40} y1={pivot.y} x2={pivot.x + 40} y2={pivot.y} stroke={C.edge} strokeWidth={3} />
-        <line x1={pivot.x} y1={pivot.y} x2={pivot.x} y2={by} stroke={C.edge} strokeWidth={1.6} />
-        <rect x={pivot.x - 20} y={by} width={40} height={34} rx={3} fill={C.wood} stroke={C.edge} />
-        {bulletX !== null ? <Bullet x={bulletX} y={by + 17} /> : null}
-        <Vec x={pivot.x + 26} y={by + 6} dx={0} dy={-Tn * sc} color={C.F} label={`T = ${Tn} N`} width={3.4} />
-        <Vec x={pivot.x - 26} y={by + 28} dx={0} dy={W * sc} color={C.F} label={after ? "(M+m)g = 40 N" : "Mg = 39 N"} labelSide="left" width={3.4} />
-        {after ? <Vec x={pivot.x + 24} y={by + 50} dx={40} label="V" /> : null}
         {after ? (
-          <g>
-            <T x={296} y={40} s="ΣF_{κ} = T − (M+m)g" size={11} color={C.ink} />
-            <T x={296} y={58} s="= 65 − 40 = 25 N" size={11} color={C.ink} />
-            <T x={296} y={84} s="(M+m)V²/ℓ = 4·6,25/1" size={10.5} color={C.muted} />
-            <T x={296} y={100} s="= 25 N ✓" size={10.5} color={C.p} />
-          </g>
+          <circle cx={pivot.x} cy={pivot.y} r={Lpx} fill="none" stroke={C.faint} strokeDasharray="4 5" />
         ) : null}
-        <Bars y={176} max={70} items={[{ label: "T", value: Tn, color: C.F, unit: "N" }, { label: "βάρος", value: W, color: C.F, unit: "N" }]} />
+        <line x1={pivot.x} y1={pivot.y} x2={bx} y2={by} stroke={C.edge} strokeWidth={1.6} />
+        <circle cx={pivot.x} cy={pivot.y} r={3} fill={C.edge} />
+        <g transform={`rotate(${(-th * 180) / Math.PI} ${bx} ${by})`}>
+          <rect x={bx - 18} y={by - 15} width={36} height={30} rx={3} fill={C.wood} stroke={C.edge} />
+          <T x={bx} y={by + 5} s={after ? "M+m" : "M"} size={10} italic />
+        </g>
+        {bulletX !== null ? <Bullet x={bulletX} y={by} /> : null}
+        <Vec x={bx + ux * 18} y={by + uy * 18} dx={ux * Tn * sc} dy={uy * Tn * sc} color={C.F} label={`T = ${num(Tn, 1)} N`} width={3.4} />
+        <Vec x={bx - (frozen ? 26 : 0)} y={by + 16} dx={0} dy={Wn * sc} color={C.F} label={after ? "(M+m)g" : "Mg"} labelSide="left" width={3} />
+        {frozen ? <Vec x={bx + 30} y={by - 4} dx={0} dy={-25 * sc * 1.2} color={C.p} label="ΣF = 25 N" width={2.6} /> : null}
+        {after && Math.abs(vNow) > 0.15 ? (
+          <Vec x={bx + Math.sin(th) * 26} y={by + Math.cos(th) * 26} dx={Math.cos(th) * vNow * 18} dy={-Math.sin(th) * vNow * 18} label="υ" />
+        ) : null}
+        <Tag x={10} y={20} s="αμέσως μετά: πάγωμα" color={C.F} show={frozen} />
+        {frozen ? (
+          <g>
+            <T x={354} y={40} s="κύκλος ⇒ κεντρομόλος" size={10} color={C.muted} anchor="end" />
+            <T x={354} y={56} s="(M+m)V²/ℓ = 4·2,5²/1" size={10} color={C.muted} anchor="end" />
+            <T x={354} y={72} s="= 25 N" size={11} color={C.p} anchor="end" />
+            <T x={354} y={94} s="T = 40 + 25 = 65 N" size={11.5} color={C.F} anchor="end" />
+          </g>
+        ) : swinging ? (
+          <g>
+            <T x={354} y={44} s="T = (M+m)(g·συνθ + υ²/ℓ)" size={9.5} color={C.ink} anchor="end" />
+            <T x={354} y={62} s={`θ = ${num(Math.abs((th * 180) / Math.PI), 0)}°, υ = ${num(Math.sqrt(v2), 1)} m/s`} size={10} color={C.v} anchor="end" />
+            <T x={354} y={80} s="ψηλά: T = 27,5 N" size={10} color={C.muted} anchor="end" />
+            <T x={354} y={96} s="κάτω: T = 65 N" size={10} color={C.muted} anchor="end" />
+          </g>
+        ) : (
+          <T x={354} y={56} s="ισορροπία: T = Mg" size={11} color={C.ink} anchor="end" />
+        )}
+        <Bars y={168} max={70} items={[{ label: "T", value: Tn, color: C.F, unit: "N" }, { label: "βάρος", value: Wn, color: C.F, unit: "N" }]} />
       </g>
     );
   },
@@ -449,7 +494,7 @@ const case25: Case = {
       T = (M + m)g + (M + m)V²/ℓ = 40 + 4·2,5²/1 = <b>65 N</b>. Πριν την κρούση ήταν 39 N.
     </>
   ),
-  trap: "«Αμέσως μετά» το σώμα είναι ακόμα στην κατώτατη θέση, αλλά ήδη κάνει κυκλική κίνηση: T > βάρος.",
+  trap: "«Αμέσως μετά» το σώμα είναι ακόμα στην κατώτατη θέση, αλλά ήδη κάνει κυκλική κίνηση: δεν ισορροπεί, άρα T > βάρος.",
 };
 
 export const section4: Case[] = [case16, case17, case18, case19, case20];
