@@ -25,12 +25,19 @@ export function cleanContent(value: unknown): CampaignContent {
   return Object.fromEntries(BULK_LANGUAGES.map((language) => [language, cleanText(source[language])])) as CampaignContent;
 }
 
-const toCampaign = (row: any): Campaign => ({
+const SEND_STATES = new Set(["draft", "sending", "paused", "done", "stopped"]);
+
+export const toCampaign = (row: any): Campaign => ({
   id: Number(row.id),
   title: row.title,
   image: row.image ?? "",
   content: cleanContent(row.content),
   updatedAt: row.updated_at,
+  offerKey: row.offer_key ?? null,
+  offer: row.offer && typeof row.offer === "object" ? row.offer : null,
+  sendState: SEND_STATES.has(row.send_state) ? row.send_state : "draft",
+  sendLanguages: (row.send_languages ?? []).filter((language: string) => BULK_LANGUAGES.includes(language as EmailLanguage)),
+  sendNote: row.send_note ?? null,
 });
 
 export async function listCampaigns(): Promise<(Campaign & { sent: number })[]> {
@@ -45,7 +52,8 @@ export async function listCampaigns(): Promise<(Campaign & { sent: number })[]> 
 
 export async function getCampaign(id: number): Promise<Campaign | null> {
   const sql = getSql();
-  const [row] = (await sql`select id, title, image, content, to_char(updated_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as updated_at
+  const [row] = (await sql`select id, title, image, content, offer_key, offer, send_state, send_languages, send_note,
+      to_char(updated_at at time zone 'Europe/Athens', 'YYYY-MM-DD HH24:MI') as updated_at
     from public.crm_campaigns where id = ${id}`) as any[];
   return row ? toCampaign(row) : null;
 }
@@ -75,7 +83,7 @@ export async function getCampaignStatus(id: number): Promise<BulkStatus> {
   return getBulkStatus(keyPrefix(id));
 }
 
-export async function sendCampaignBatch(campaign: Campaign, languages: EmailLanguage[], retryFailed: boolean) {
+export async function sendCampaignBatch(campaign: Campaign, languages: EmailLanguage[], retryFailed: boolean, limit?: number) {
   const ready = languages.filter((language) => isCampaignReady(campaign.content[language]));
   if (!ready.length) throw new Error("Συμπλήρωσε θέμα και κείμενο στη γλώσσα που θες να στείλεις.");
   return sendBulkBatch({
@@ -83,8 +91,10 @@ export async function sendCampaignBatch(campaign: Campaign, languages: EmailLang
     emailType: `campaign_${campaign.id}`,
     languages: ready,
     retryFailed,
+    limit,
     build: (recipient, unsubscribe) => buildCampaignEmail(campaign.content[recipient.language] as CampaignText, recipient.language, {
       firstName: recipient.firstName, lastName: recipient.lastName, image: campaign.image, unsubscribeUrl: unsubscribe,
+      offer: campaign.offer?.blocks?.[recipient.language] ?? null,
     }),
   });
 }
@@ -94,6 +104,7 @@ export async function sendCampaignTest(campaign: Campaign, language: EmailLangua
   if (!isCampaignReady(text)) throw new Error("Συμπλήρωσε θέμα και κείμενο σε αυτή τη γλώσσα.");
   const email = buildCampaignEmail(text as CampaignText, language, {
     firstName: "Maria", lastName: "Papadopoulou", image: campaign.image, unsubscribeUrl: unsubscribeUrl(normalizeEmail(to), language),
+    offer: campaign.offer?.blocks?.[language] ?? null,
   });
   await deliverEmail(to, `[ΔΟΚΙΜΗ] ${email.subject}`, email.html, email.text);
 }

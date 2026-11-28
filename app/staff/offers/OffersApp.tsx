@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
+import OfferCampaignDrawer, { GROUPS, STATE_LABELS } from "./OfferCampaignDrawer";
 
 type Lang = "el" | "en" | "fr" | "de" | "it" | "es" | "tr";
 const LANGS: Lang[] = ["el", "en", "fr", "de", "it", "es", "tr"];
@@ -31,9 +32,34 @@ type Offer = {
   shareLinks: Record<Lang, string>;
 };
 
+type PlanOffer = {
+  id: string;
+  room: number;
+  title: string;
+  image: string;
+  from: string;
+  to: string;
+  nights: number;
+  discount: number;
+  code: string;
+  nightPrice: number | null;
+  dealNightPrice: number | null;
+};
+
+type GroupCounts = { total: number; sent: number; failed: number; waiting: number };
+type CampaignSummary = {
+  id: number;
+  state: string;
+  note: string | null;
+  languages: ("el" | "en" | "tr")[];
+  status: { byLanguage: Record<"el" | "en" | "tr", GroupCounts> } | null;
+};
+
 type Payload = {
   ok: boolean;
   error?: string;
+  planOffers?: PlanOffer[];
+  campaigns?: Record<string, CampaignSummary>;
   offers: Offer[];
   rooms: { key: string; label: string }[];
   images: { key: string; label: string; image: string }[];
@@ -112,6 +138,27 @@ function status(offer: Offer) {
   return { label: "Live στο site", className: "bg-emerald-100 text-emerald-800" };
 }
 
+function dayLabel(iso: string) {
+  return new Date(`${iso}T12:00:00Z`).toLocaleDateString("el-GR", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+}
+
+/** "Στάλθηκε σε 🇹🇷 84/120 · 🇬🇷 30/30" under each offer. */
+function CampaignLine({ summary }: { summary?: CampaignSummary }) {
+  if (!summary || summary.state === "draft" || !summary.status) return null;
+  const state = STATE_LABELS[summary.state] ?? STATE_LABELS.draft;
+  const parts = GROUPS.filter((group) => summary.languages.includes(group.key) || summary.status!.byLanguage[group.key].sent)
+    .map((group) => `${group.flag} ${summary.status!.byLanguage[group.key].sent}/${summary.status!.byLanguage[group.key].total}`);
+  return (
+    <p className="mt-2 flex flex-wrap items-center gap-2 text-xs font-bold text-[#334155]">
+      <span className={`rounded-full px-2.5 py-0.5 ${state.className}`}>✉️ {state.label}</span>
+      <span>{parts.join(" · ")}</span>
+      {summary.note ? <span className="font-normal text-[#7a4b00]">{summary.note}</span> : null}
+    </p>
+  );
+}
+
+const emailButtonClass = "rounded-full bg-[#5443c9] px-4 py-2 text-sm font-black text-white shadow-sm hover:bg-[#4636b3]";
+
 function offerToForm(offer: Offer): FormState {
   const translations = emptyTranslations();
   for (const lang of LANGS) {
@@ -146,6 +193,7 @@ export default function OffersApp() {
   const [tab, setTab] = useState<"offers" | "newsletter">("offers");
   const [subscribers, setSubscribers] = useState<Subscriber[] | null>(null);
   const [shareLang, setShareLang] = useState<Lang>("el");
+  const [mailing, setMailing] = useState<{ key: string; title: string } | null>(null);
 
   const load = useCallback(async () => {
     setError("");
@@ -405,6 +453,51 @@ export default function OffersApp() {
 
             {!data && !error ? <p className="text-sm text-[#4b5b70]">Φόρτωση…</p> : null}
 
+            {data ? (
+              <section className="mb-8">
+                <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
+                  <div>
+                    <h2 className="text-xl font-black">Από το Πλάνο</h2>
+                    <p className="text-sm text-[#5b6b80]">Οι προσφορές δωματίων που δηλώνεις στο Πλάνο κρατήσεων. Εμφανίζονται εδώ μόνες τους όσο είναι live στο site.</p>
+                  </div>
+                  <a href="/staff/pyrgos/plano/" className="rounded-full border border-[#cfd9e4] bg-white px-4 py-2 text-sm font-black text-[#3b2f8a]">Άνοιγμα Πλάνου</a>
+                </div>
+                {data.planOffers?.length ? (
+                  <div className="grid gap-4 xl:grid-cols-2">
+                    {data.planOffers.map((plan) => {
+                      const key = `plan:${plan.id}`;
+                      return (
+                        <article key={key} className="flex gap-4 rounded-2xl bg-white p-4 shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={plan.image} alt="" className="h-28 w-36 shrink-0 rounded-xl object-cover" />
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-black text-emerald-800">Live στο site</span>
+                              <span className="inline-flex rounded-full bg-[#fdf0e1] px-3 py-1 text-xs font-black text-[#8a5318]">−{plan.discount}%</span>
+                            </div>
+                            <h3 className="mt-1.5 text-lg font-black">Δωμάτιο {plan.room} · {plan.title}</h3>
+                            <p className="text-sm text-[#4b5b70]">
+                              {dayLabel(plan.from)} → {dayLabel(plan.to)} · {plan.nights} {plan.nights === 1 ? "νύχτα" : "νύχτες"} · Κωδικός <strong className="font-mono">{plan.code}</strong>
+                              {plan.dealNightPrice !== null ? <> · <s>€{plan.nightPrice}</s> <strong>€{plan.dealNightPrice}</strong>/νύχτα</> : null}
+                            </p>
+                            <CampaignLine summary={data.campaigns?.[key]} />
+                            <div className="mt-3">
+                              <button type="button" className={emailButtonClass} onClick={() => setMailing({ key, title: `Δωμάτιο ${plan.room} · ${plan.title} · ${dayLabel(plan.from)} → ${dayLabel(plan.to)}` })}>
+                                ✉️ Αποστολή σε πελάτες
+                              </button>
+                            </div>
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="rounded-2xl bg-white p-4 text-sm text-[#4b5b70] shadow-sm">Δεν υπάρχει live προσφορά από το Πλάνο αυτή τη στιγμή.</p>
+                )}
+              </section>
+            ) : null}
+
+            <h2 className="mb-3 text-xl font-black">Προσφορές κατηγοριών</h2>
             <div className="mb-3 flex items-center gap-2 text-sm">
               <span className="font-bold text-[#334155]">Links newsletter σε:</span>
               <select className="rounded-lg border border-[#cfd9e4] bg-white px-2 py-1" value={shareLang} onChange={(e) => setShareLang(e.target.value as Lang)}>
@@ -430,8 +523,14 @@ export default function OffersApp() {
                         <p className="mt-1 text-xs text-[#5b6b80]">
                           Από {formatDate(offer.validFrom)} · Λήξη {formatDate(offer.validUntil)} · Γλώσσες: {LANGS.filter((l) => offer.translations[l]).join(", ")}
                         </p>
+                        <CampaignLine summary={data.campaigns?.[`catalog:${offer.id}`]} />
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex flex-wrap gap-2">
+                        {offer.live ? (
+                          <button type="button" className={emailButtonClass} onClick={() => setMailing({ key: `catalog:${offer.id}`, title: offer.translations.el?.title ?? offer.slug })}>
+                            ✉️ Αποστολή σε πελάτες
+                          </button>
+                        ) : null}
                         <button type="button" onClick={() => { setForm(offerToForm(offer)); setLang("el"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="rounded-full bg-[#e9e4fe] px-4 py-2 text-sm font-black text-[#3b2f8a]">
                           Επεξεργασία
                         </button>
@@ -489,6 +588,9 @@ export default function OffersApp() {
           </section>
         )}
       </div>
+      {mailing ? (
+        <OfferCampaignDrawer key={mailing.key} offerKey={mailing.key} title={mailing.title} onClose={() => setMailing(null)} onChanged={() => void load()} />
+      ) : null}
     </main>
   );
 }

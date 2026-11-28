@@ -1,11 +1,26 @@
-import { button, emailShell, esc, htmlToText, paragraph as p, type EmailLanguage } from "@/lib/crm/email-design";
+import { button, emailShell, esc, htmlToText, offerCard, paragraph as p, type EmailLanguage, type OfferEmailBlock } from "@/lib/crm/email-design";
 
 // Newsletter campaigns written by staff in /staff/crm. No Node or DB imports:
 // the editor renders a live preview in the browser.
 
 export type CampaignText = { subject: string; heading: string; body: string; buttonLabel: string; buttonUrl: string };
 export type CampaignContent = Partial<Record<EmailLanguage, CampaignText>>;
-export type Campaign = { id: number; title: string; image: string; content: CampaignContent; updatedAt: string };
+export type CampaignSendState = "draft" | "sending" | "paused" | "done" | "stopped";
+/** Offer card per group language, snapshot of the offer when the campaign was saved. */
+export type CampaignOffer = { blocks: Partial<Record<EmailLanguage, OfferEmailBlock>> };
+export type Campaign = {
+  id: number;
+  title: string;
+  image: string;
+  content: CampaignContent;
+  updatedAt: string;
+  /** "plan:12" or "catalog:5" when the campaign belongs to an offer. */
+  offerKey?: string | null;
+  offer?: CampaignOffer | null;
+  sendState?: CampaignSendState;
+  sendLanguages?: EmailLanguage[];
+  sendNote?: string | null;
+};
 
 export const emptyCampaignText = (): CampaignText => ({ subject: "", heading: "", body: "", buttonLabel: "", buttonUrl: "" });
 
@@ -29,11 +44,12 @@ function paragraphs(text: string) {
 export function buildCampaignEmail(
   text: CampaignText,
   language: EmailLanguage,
-  ctx: { firstName: string; lastName: string; image: string; unsubscribeUrl: string },
+  ctx: { firstName: string; lastName: string; image: string; unsubscribeUrl: string; offer?: OfferEmailBlock | null },
 ) {
   const full = `${ctx.firstName} ${ctx.lastName}`.trim();
   const body = (full ? p(`${SALUTATION[language]} ${esc(full)},`) : "")
     + paragraphs(text.body)
+    + (ctx.offer ? offerCard(ctx.offer) : "")
     + (text.buttonLabel.trim() && isWebUrl(text.buttonUrl) ? button(text.buttonUrl.trim(), text.buttonLabel.trim()) : "");
   const unsubscribe = UNSUBSCRIBE[language];
   const footerNote = `${esc(unsubscribe.text)} <a href="${esc(ctx.unsubscribeUrl)}" style="color:#7c8682;text-decoration:underline">${esc(unsubscribe.link)}</a>`;

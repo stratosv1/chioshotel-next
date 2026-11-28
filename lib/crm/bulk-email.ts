@@ -88,6 +88,39 @@ export type Contact = {
   unsubscribed: boolean;
 };
 
+// ---- Groups: Τούρκοι (tr) · Έλληνες (el) · Υπόλοιποι (en) -----------------
+// A contact's group is also the language of every greeting and campaign it gets.
+// Order (owner, 2026-11-28): hand-picked group → booking country → phone prefix →
+// booking/site language. A Turkish guest who booked in English is still a Turk.
+
+const GREEK_COUNTRIES = new Set(["GR", "CY"]);
+
+/** Country from a phone number written any way Beds24 stores it (+90…, 0090…, 90…, 05…, 69…). */
+export function phoneGroup(phone: string | null | undefined): EmailLanguage | null {
+  let digits = String(phone ?? "").replace(/[^0-9]/g, "");
+  if (digits.startsWith("00")) digits = digits.slice(2);
+  if (!digits) return null;
+  if (digits.startsWith("90") && digits.length === 12) return "tr";
+  if ((digits.startsWith("30") && digits.length === 12) || (digits.startsWith("357") && digits.length === 11)) return "el";
+  // Without a country code: Turkish mobiles 05xx… / 5xx…, Greek 69… / 2… (10 digits).
+  if ((digits.length === 11 && digits.startsWith("05")) || (digits.length === 10 && digits.startsWith("5"))) return "tr";
+  if (digits.length === 10 && (digits.startsWith("69") || digits.startsWith("2"))) return "el";
+  return null;
+}
+
+export function contactGroup(input: { override: string | null; country: string | null; phone: string | null; language: string | null }): EmailLanguage {
+  const override = input.override?.slice(0, 2).toLowerCase();
+  if (override === "el" || override === "en" || override === "tr") return override;
+  const country = input.country?.trim().toUpperCase() ?? "";
+  if (country === "TR") return "tr";
+  if (GREEK_COUNTRIES.has(country)) return "el";
+  if (!country) {
+    const byPhone = phoneGroup(input.phone);
+    if (byPhone) return byPhone;
+  }
+  return chooseLanguage(input.language?.slice(0, 2).toLowerCase() ?? null, country || null);
+}
+
 const STAFF_SOURCES = new Set(["crm-manual", "crm-import"]);
 
 export async function listContacts(): Promise<Contact[]> {
@@ -100,11 +133,11 @@ export async function listContacts(): Promise<Contact[]> {
   ]);
   const excluded = new Set(excludedRows.map((row) => normalizeEmail(row.email)));
   const languageOverride = new Map(overrides.map((row) => [normalizeEmail(row.email), String(row.language)]));
-  const contacts = new Map<string, Contact & { rawLanguage: string | null }>();
+  const contacts = new Map<string, Contact & { rawLanguage: string | null; phone: string | null }>();
 
   for (const guest of guests) {
     contacts.set(guest.email, {
-      email: guest.email, name: guest.name, language: "en", rawLanguage: guest.language, country: guest.country,
+      email: guest.email, name: guest.name, language: "en", rawLanguage: guest.language, phone: guest.phone ?? null, country: guest.country,
       sources: ["guest"], stays: guest.stays, unsubscribed: guest.unsubscribed,
     });
   }
@@ -120,16 +153,16 @@ export async function listContacts(): Promise<Contact[]> {
     // An unsubscribe row alone is not a contact.
     if (!source) continue;
     contacts.set(email, {
-      email, name: String(row.name ?? ""), language: "en", rawLanguage: row.language, country: null,
+      email, name: String(row.name ?? ""), language: "en", rawLanguage: row.language, phone: null, country: null,
       sources: [source], stays: 0, unsubscribed: Boolean(row.unsubscribed),
     });
   }
 
   return [...contacts.values()]
     .filter((contact) => isValidEmail(contact.email) && !isVirtualEmail(contact.email) && !excluded.has(contact.email))
-    .map(({ rawLanguage, ...contact }) => ({
+    .map(({ rawLanguage, phone, ...contact }) => ({
       ...contact,
-      language: chooseLanguage(languageOverride.get(contact.email) ?? rawLanguage?.slice(0, 2).toLowerCase() ?? null, contact.country),
+      language: contactGroup({ override: languageOverride.get(contact.email) ?? null, country: contact.country, phone, language: rawLanguage }),
     }));
 }
 
@@ -226,6 +259,8 @@ export async function sendBulkBatch(params: {
   emailType: string;
   languages: EmailLanguage[];
   retryFailed: boolean;
+  /** Fewer than the default batch (the background sender sends one at a time). */
+  limit?: number;
   build: (recipient: Recipient, unsubscribeLink: string) => BuiltEmail;
 }): Promise<BulkBatchResult> {
   const [recipients, log, today] = await Promise.all([listRecipients(params.languages), loadLog(params.prefix), sentToday()]);
@@ -238,7 +273,7 @@ export async function sendBulkBatch(params: {
   if (!room) return result;
 
   const sql = getSql();
-  for (const recipient of candidates.slice(0, Math.min(BATCH_SIZE, room))) {
+  for (const recipient of candidates.slice(0, Math.min(params.limit ?? BATCH_SIZE, BATCH_SIZE, room))) {
     const key = `${params.prefix}${recipient.email}`;
     const claimed = (await sql`
       insert into public.crm_email_log (dedupe_key, booking_id, email_type, language, recipient, guest_email, mode, status)

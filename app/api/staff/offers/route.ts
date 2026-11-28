@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { DEALS_PAGE_PATHS, offerShareLink, roomImageChoices, ROOM_LABELS } from "@/lib/offers/catalog";
 import { deleteOffer, listAllOffers, saveOffer, validateOfferInput } from "@/lib/offers/store";
 import { isOfferLive, OFFER_LANGUAGES } from "@/lib/offers/types";
+import { getPlanDeals } from "@/lib/offers/plan-deals";
+import { listOfferCampaignSummaries } from "@/lib/crm/offer-campaigns";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,7 +20,14 @@ function refreshDealsPages() {
 }
 
 async function payload() {
-  const offers = await listAllOffers();
+  const [offers, planDeals, campaigns] = await Promise.all([
+    listAllOffers(),
+    getPlanDeals("el"),
+    listOfferCampaignSummaries().catch((error) => {
+      console.error("staff offers: campaign summaries failed", error);
+      return {};
+    }),
+  ]);
   return {
     ok: true,
     offers: offers.map((offer) => ({
@@ -29,6 +38,21 @@ async function payload() {
     rooms: Object.entries(ROOM_LABELS).map(([key, label]) => ({ key, label })),
     images: roomImageChoices(),
     dealsPages: DEALS_PAGE_PATHS,
+    // Room offers from the booking plan that are live on the site right now.
+    planOffers: planDeals.map((deal) => ({
+      id: deal.id.replace(/^room-/, ""),
+      room: deal.room,
+      title: deal.title,
+      image: deal.image,
+      from: deal.from,
+      to: deal.to,
+      nights: deal.nights,
+      discount: deal.discount,
+      code: deal.code,
+      nightPrice: deal.nightPrice,
+      dealNightPrice: deal.dealNightPrice,
+    })),
+    campaigns,
   };
 }
 

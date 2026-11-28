@@ -21,9 +21,9 @@ type Draft = { id: number | null; title: string; image: string; content: Record<
 
 const API = "/api/staff/crm/newsletter/";
 const LANGUAGES: { key: EmailLanguage; label: string }[] = [
-  { key: "el", label: "Ελληνικά" },
-  { key: "en", label: "Αγγλικά" },
-  { key: "tr", label: "Τουρκικά" },
+  { key: "tr", label: "🇹🇷 Τούρκοι" },
+  { key: "el", label: "🇬🇷 Έλληνες" },
+  { key: "en", label: "🌍 Υπόλοιποι" },
 ];
 const SOURCE_LABELS: Record<Source, string> = { guest: "Πελάτης", website: "Από το site", staff: "Πρόσθεσες εσύ" };
 const panelClass = "rounded-2xl bg-white p-4 shadow-sm";
@@ -158,7 +158,7 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
           <textarea id="nl-add" rows={4} required className={inputClass} value={addText} onChange={(event) => setAddText(event.target.value)} placeholder={"maria@example.com, Maria Papadopoulou\njohn@example.com"} />
           <div className="flex flex-wrap items-end gap-2">
             <div>
-              <label htmlFor="nl-add-language" className="mb-1 block text-sm font-bold">Γλώσσα</label>
+              <label htmlFor="nl-add-language" className="mb-1 block text-sm font-bold">Ομάδα</label>
               <select id="nl-add-language" className={inputClass} value={addLanguage} onChange={(event) => setAddLanguage(event.target.value as EmailLanguage)}>
                 {LANGUAGES.map(({ key, label }) => <option key={key} value={key}>{label}</option>)}
               </select>
@@ -169,7 +169,7 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
       </section>
 
       <section className={panelClass}>
-        <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Φίλτρο γλώσσας">
+        <div className="mb-3 flex flex-wrap gap-2" role="group" aria-label="Φίλτρο ομάδας">
           <button type="button" aria-pressed={language === "all"} className={chipClass(language === "all")} onClick={() => setLanguage("all")}>Όλες</button>
           {LANGUAGES.map(({ key, label }) => (
             <button key={key} type="button" aria-pressed={language === key} className={chipClass(language === key)} onClick={() => setLanguage(key)}>{label}</button>
@@ -198,15 +198,15 @@ function ContactsView({ onNotice, onError }: { onNotice: (text: string) => void;
                 </p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                <label htmlFor={`nl-lang-${contact.email}`} className="sr-only">Γλώσσα για {contact.email}</label>
+                <label htmlFor={`nl-lang-${contact.email}`} className="sr-only">Ομάδα για {contact.email}</label>
                 <select
                   id={`nl-lang-${contact.email}`}
                   className="rounded-xl border border-[#cfd9e4] bg-white px-2 py-1.5 text-sm"
                   value={contact.language}
                   disabled={busy}
-                  onChange={(event) => act({ action: "set_language", email: contact.email, language: event.target.value }, "Η γλώσσα άλλαξε.")}
+                  onChange={(event) => act({ action: "set_language", email: contact.email, language: event.target.value }, "Η ομάδα άλλαξε.")}
                 >
-                  {LANGUAGES.map(({ key }) => <option key={key} value={key}>{key.toUpperCase()}</option>)}
+                  {LANGUAGES.map(({ key, label }) => <option key={key} value={key}>{label}</option>)}
                 </select>
                 {contact.unsubscribed ? (
                   <button type="button" className={secondaryButton} disabled={busy} onClick={() => {

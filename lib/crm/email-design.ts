@@ -50,6 +50,37 @@ export const button = (href: string, label: string) =>
 export const callout = (title: string, html: string) =>
   `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0"><tr><td style="background:${SAND};border-radius:14px;padding:18px 20px"><p style="margin:0 0 6px;font-size:15px;font-weight:700;color:${INK}">${esc(title)}</p><div style="font-size:15px;line-height:1.6;color:${BODY}">${html}</div></td></tr></table>`;
 
+/** Offer card for campaign emails: discount badge, a few detail rows, optional price and the code. */
+export type OfferEmailBlock = {
+  badge: string;
+  rows: { label: string; value: string }[];
+  price?: { label: string; old: string | null; now: string; unit: string } | null;
+  code: { label: string; value: string } | null;
+};
+
+export function offerCard(block: OfferEmailBlock) {
+  const rows = block.rows.map((row) => `<tr>
+    <td valign="top" style="padding:7px 12px 7px 0;font-size:13px;line-height:1.4;color:${MUTED};white-space:nowrap">${esc(row.label)}</td>
+    <td valign="top" style="padding:7px 0;font-size:15px;line-height:1.4;font-weight:700;color:${INK}">${esc(row.value)}</td>
+  </tr>`).join("");
+  const price = block.price
+    ? `<p style="margin:14px 0 0;font-size:13px;color:${MUTED}">${esc(block.price.label)}</p>
+       <p style="margin:2px 0 0;font-size:26px;line-height:1.2;font-weight:800;color:${INK}">${block.price.old ? `<span style="font-size:17px;font-weight:600;color:${MUTED};text-decoration:line-through">${esc(block.price.old)}</span>&nbsp; ` : ""}${esc(block.price.now)}<span style="font-size:14px;font-weight:600;color:${MUTED}"> ${esc(block.price.unit)}</span></p>`
+    : "";
+  const code = block.code
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:16px 0 0"><tr>
+        <td style="border:2px dashed ${MANDARIN};border-radius:12px;padding:10px 16px;background:#ffffff">
+          <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${MUTED}">${esc(block.code.label)}</span><br>
+          <span style="font-family:'SFMono-Regular',Menlo,Consolas,monospace;font-size:20px;font-weight:800;letter-spacing:.08em;color:${INK}">${esc(block.code.value)}</span>
+        </td></tr></table>`
+    : "";
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:6px 0 8px"><tr><td style="background:${SAND};border:1px solid ${LINE};border-radius:16px;padding:20px 22px">
+    <span style="display:inline-block;background:${MANDARIN};color:#ffffff;border-radius:999px;padding:6px 14px;font-size:15px;font-weight:800;letter-spacing:.02em">${esc(block.badge)}</span>
+    <table role="presentation" cellpadding="0" cellspacing="0" style="margin:12px 0 0">${rows}</table>
+    ${price}${code}
+  </td></tr></table>`;
+}
+
 /** Numbered checklist for things the guest has to do. */
 export function steps(items: { title: string; html: string }[]) {
   const rows = items.map((item, index) => `<tr>
