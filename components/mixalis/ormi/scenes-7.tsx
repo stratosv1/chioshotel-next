@@ -823,4 +823,477 @@ const case65: Case = {
   trap: "Η δύναμη στο μεγάλο ψάρι βγαίνει από τη ΔΙΚΗ του Δp (−0,8), όχι του μικρού. Και μετά την κατάποση το μεγάλο έχει μάζα 10 kg, όχι 8.",
 };
 
-export const section10: Case[] = [case54, case55, case56, case57, case58, case59, case60, case61, case62, case63, case64, case65];
+/** Little FBD block: N up, mg down, optional friction to the left. */
+function FbdBlock({ x, y, w = 30, h = 20, label, fill, T: Tf }: { x: number; y: number; w?: number; h?: number; label: string; fill: string; T?: boolean }) {
+  return (
+    <g>
+      <rect x={x - w / 2} y={y - h / 2} width={w} height={h} rx={3} fill={fill} stroke={C.edge} />
+      <T x={x} y={y + 4} s={label} size={10} color={C.ink} italic />
+      <Vec x={x} y={y - h / 2} dx={0} dy={-18} color={C.F} label="N" width={2.4} />
+      <Vec x={x} y={y + h / 2} dx={0} dy={18} color={C.F} label="mg" width={2.4} />
+      {Tf ? <Vec x={x - w / 2} y={y + 3} dx={-24} color={C.K} label="T" width={3} /> : null}
+    </g>
+  );
+}
+
+/* 66. Τριπολίτης: A 5 kg, 10 m/s, μ = 0,2· σε 2 s συγκρούεται πλαστικά με B 2 kg (1 m/s αντίθετα)·
+ * μετά λείο δάπεδο και τραχύ τεταρτοκύκλιο R = 0,2 m, στην κορυφή υ = √2 m/s. */
+const case66: Case = {
+  n: 66,
+  title: "Κρούση και τεταρτοκύκλιο",
+  what: "Σύνθετη άσκηση σε τρία κομμάτια: το A φρενάρει με τριβή, συγκρούεται πλαστικά με το B, και το συσσωμάτωμα ανεβαίνει σε τραχύ τεταρτοκύκλιο. Σε κάθε κομμάτι αλλάζει το διάγραμμα δυνάμεων, και μαζί του ο νόμος που χρησιμοποιούμε.",
+  given: "m_A = 5 kg με υ₀ = 10 m/s, μ = 0,2 στο πρώτο κομμάτι. Μετά από 2 s συγκρούεται πλαστικά με m_B = 2 kg που κινείται αντίθετα με 1 m/s. Μετά λείο δάπεδο και τεταρτοκύκλιο R = 0,2 m. Στο πάνω άκρο υ = √2 m/s. g = 10 m/s².",
+  ask: "Την ταχύτητα του A πριν την κρούση, την κοινή ταχύτητα V και το έργο της τριβής στο τεταρτοκύκλιο.",
+  period: 11,
+  legend: ["v", "F"],
+  phases: [
+    { until: 2.5, label: "Τριβή", say: "Μόνο το A: N, mg και τριβή T = μmg = 10 N προς τα πίσω. α = −2 m/s², άρα σε 2 s: υ_A = 10 − 2·2 = 6 m/s." },
+    { until: 3.3, label: "Κρούση", say: "Σύστημα A + B: οι δυνάμεις επαφής είναι εσωτερικές, η τριβή αμελητέα στο ελάχιστο Δt. ΑΔΟ: 5·6 − 2·1 = 7V ⇒ V = 4 m/s." },
+    { until: 5, label: "Λείο", say: "Στο λείο δάπεδο μένουν μόνο N και mg, που αλληλοαναιρούνται: ΣF = 0, άρα V = 4 m/s σταθερή μέχρι το τεταρτοκύκλιο." },
+    { until: 8, label: "Τεταρτοκύκλιο", say: "Στην καμπύλη: N προς το κέντρο, mg κάτω, T αντίθετα στην κίνηση. Η N αλλάζει σε κάθε σημείο, άρα και η T: δεν μπορώ να πω W_T = −T·s." },
+    { until: 11, label: "ΘΜΚΕ", say: "ΘΜΚΕ: ½·7·2 − ½·7·16 = W_T − 7·10·0,2 ⇒ 7 − 56 = W_T − 14 ⇒ W_T = −35 J." },
+  ],
+  Scene: ({ t }) => {
+    const gy = 160;
+    const R = 66;
+    const cx = 250;
+    const cy = gy - R;
+    let body: ReactNode;
+    let vText = "";
+    if (t < 2.5) {
+      const tau = (t / 2.5) * 2;
+      const xA = 26 + 7 * (10 * tau - tau * tau);
+      const xB = 161 + 7 * (2 - tau);
+      body = (
+        <g>
+          <Box cx={xA} y={gy} w={22} h={18} label="A" fill={C.b1} />
+          <Box cx={xB} y={gy} w={16} h={14} label="B" fill={C.b2} />
+          <Vec x={xA - 6} y={gy - 28} dx={(10 - 2 * tau) * 3} label="υ_A" />
+          <Vec x={xB + 6} y={gy - 24} dx={-8} />
+        </g>
+      );
+      vText = `υ_A = ${num(10 - 2 * tau, 1)} m/s`;
+    } else if (t < 5) {
+      const k = seg(t, 3.3, 5);
+      const xc = t < 3.3 ? 144 : lerp(144, cx - 19, k);
+      body = (
+        <g>
+          <Box cx={xc - 8} y={gy} w={22} h={18} label="A" fill={C.b1} />
+          <Box cx={xc + 11} y={gy} w={16} h={14} label="B" fill={C.b2} />
+          <Vec x={xc - 10} y={gy - 30} dx={12} label="V" />
+        </g>
+      );
+      vText = "V = 4 m/s";
+    } else {
+      const u = seg(t, 5, 8);
+      const phi = (Math.PI / 2) * (1 - (1 - u) * (1 - u));
+      const r = R - 12;
+      const bx = cx + r * Math.sin(phi);
+      const by = cy + r * Math.cos(phi);
+      body = <rect x={bx - 12} y={by - 12} width={24} height={24} rx={3} fill="#d9c9a3" stroke={C.edge} transform={`rotate(${(-phi * 180) / Math.PI} ${bx} ${by})`} />;
+      vText = t >= 8 ? "πάνω: υ = √2 m/s" : "ανεβαίνει, επιβραδύνεται";
+    }
+    const part = t < 2.5 ? 0 : t < 3.3 ? 1 : t < 5 ? 2 : 3;
+    return (
+      <g>
+        <line x1={8} y1={gy} x2={150} y2={gy} stroke={C.edge} strokeWidth={2.4} />
+        {Array.from({ length: 14 }, (_, i) => (
+          <line key={i} x1={12 + i * 10} y1={gy + 1} x2={6 + i * 10} y2={gy + 7} stroke={C.muted} />
+        ))}
+        <line x1={150} y1={gy} x2={cx} y2={gy} stroke={C.edge} strokeWidth={1.6} />
+        <path d={`M${cx},${gy} A${R},${R} 0 0 0 ${cx + R},${cy}`} fill="none" stroke={C.edge} strokeWidth={2} />
+        <T x={78} y={gy + 22} s="μ = 0,2" size={9.5} color={C.muted} bold={false} />
+        <T x={198} y={gy + 22} s="λείο" size={9.5} color={C.muted} bold={false} />
+        <T x={cx + R + 8} y={cy + 30} s="R" size={10} color={C.muted} anchor="start" />
+        {body}
+        <Panel x={8} y={6} w={230} h={96} title={part === 1 ? "μόνο το σύστημα A + B" : "μόνο το σώμα"}>
+          {part === 0 ? <FbdBlock x={56} y={60} label="A" fill={C.b1} T /> : null}
+          {part === 1 || part === 2 ? <FbdBlock x={56} y={60} w={40} label="A+B" fill="#d9c9a3" /> : null}
+          {part === 3 ? (
+            <g>
+              <rect x={44} y={48} width={22} height={22} rx={3} fill="#d9c9a3" stroke={C.edge} transform="rotate(-45 55 59)" />
+              <Vec x={47} y={51} dx={-16} dy={-16} color={C.F} label="N" width={2.6} />
+              <Vec x={55} y={71} dx={0} dy={18} color={C.F} label="mg" width={2.4} />
+              <Vec x={46} y={68} dx={-14} dy={14} color={C.K} label="T" width={2.8} />
+            </g>
+          ) : null}
+          {[
+            ["T = μmg = 10 N", "α = −2 m/s²", "υ_A = 10 − 2·2 = 6"],
+            ["C εσωτερικές ⇒ ΑΔΟ", "5·6 − 2·1 = 7V", "V = 4 m/s"],
+            ["N = mg ⇒ ΣF = 0", "V σταθερή", "= 4 m/s"],
+            t >= 8 ? ["ΘΜΚΕ:", "7 − 56 = W_T − 14", "W_T = −35 J"] : ["N αλλάζει ⇒", "T όχι σταθερή", "⇒ ΘΜΚΕ"],
+          ][part].map((line, i) => (
+            <T key={i} x={108} y={42 + 18 * i} s={line} size={10} color={i === 2 ? C.F : C.ink} anchor="start" bold={i === 2} />
+          ))}
+        </Panel>
+        <T x={300} y={24} s={vText} size={10.5} color={C.v} anchor="end" />
+      </g>
+    );
+  },
+  solve: (
+    <>
+      Τριβή: α = −μg = −2 m/s² ⇒ υ_A = 10 − 4 = <b>6 m/s</b>. ΑΔΟ: 5·6 − 2·1 = 7V ⇒ <b>V = 4 m/s</b>. ΘΜΚΕ στο τεταρτοκύκλιο: ½·7·(√2)² − ½·7·4² = W_T − 7·10·0,2 ⇒{" "}
+      <b>W_T = −35 J</b>.
+    </>
+  ),
+  trap: "Στην καμπύλη η N δεν είναι ίση με mg ούτε με τη συνιστώσα του βάρους: μπαίνει και η κεντρομόλος. Γι' αυτό η T δεν είναι σταθερή και το έργο της βγαίνει μόνο από το ΘΜΚΕ.",
+};
+
+/** Bullet into / through a block: shared scene for 67 and 68. */
+function bulletScene({ m, M, u, uOut, V, through, Fn }: { m: number; M: number; u: number; uOut: number; V: number; through: boolean; Fn: string }) {
+  const Scene = ({ t }: { t: number }) => {
+    const gy = 132;
+    const bw = 52;
+    const k = seg(t, 2, 4.5);
+    const blockX = 196 + (t < 2 ? 0 : t < 4.5 ? 3 * k * k : 3 + 12 * (Math.min(t, 6.5) - 4.5));
+    let bx: number;
+    let vb: number;
+    if (t < 2) {
+      bx = lerp(16, 196, t / 2);
+      vb = u;
+    } else if (t < 4.5) {
+      const depth = through ? bw + 6 : 34;
+      bx = blockX + depth * (2 * k - k * k);
+      vb = lerp(u, through ? uOut : V, k);
+    } else {
+      bx = through ? blockX + bw + 6 + 40 * (Math.min(t, 6.5) - 4.5) : blockX + 34;
+      vb = through ? uOut : V;
+    }
+    const inside = t >= 2 && t < 4.5;
+    const vBlock = t < 2 ? 0 : t < 4.5 ? V * k : V;
+    return (
+      <g>
+        <Ground y={gy} />
+        <rect x={blockX} y={gy - 36} width={bw} height={36} rx={3} fill="#c9a06a" stroke={C.edge} />
+        <T x={blockX + bw / 2} y={gy - 14} s="M" size={12} color={C.ink} italic />
+        <rect x={bx - 12} y={gy - 21} width={14} height={6} rx={2} fill="#5d6470" stroke={C.edge} opacity={!through && t >= 4.5 ? 0.5 : 1} />
+        {!(!through && t >= 4.5) ? <Vec x={bx - 14 - Math.min(vb, 200) * 0.18} y={gy - 34} dx={Math.min(vb, 200) * 0.18} label={`${num(vb, 0)} m/s`} /> : null}
+        {vBlock > 0.2 ? <Vec x={blockX + 8} y={gy - 46} dx={vBlock * 4 + 4} label="V" /> : null}
+        <Tag x={14} y={22} s="μέσα στο ξύλο · αργή κίνηση" color={C.F} show={inside} />
+        <Panel x={8} y={6} w={176} h={82} title="κάθε σώμα χωριστά">
+          <rect x={34} y={46} width={16} height={6} rx={2} fill="#5d6470" stroke={C.edge} />
+          <rect x={100} y={44} width={36} height={28} rx={3} fill="#c9a06a" stroke={C.edge} />
+          {inside ? (
+            <g>
+              <Vec x={32} y={49} dx={-24} color={C.F} label="F" width={3} />
+              <Vec x={136} y={58} dx={24} color={C.F} label="F" width={3} />
+            </g>
+          ) : null}
+          <T x={96} y={84} s={inside || t >= 6.5 ? Fn : "καμία δύναμη μεταξύ τους"} size={9} color={inside || t >= 6.5 ? C.F : C.muted} />
+        </Panel>
+        <Bars
+          y={150}
+          max={m * u * 1.05}
+          items={[
+            { label: "p_m", value: m * vb, color: C.p },
+            { label: "p_M", value: M * vBlock, color: "#137a3f" },
+            { label: "p_{ολ}", value: m * u, color: C.ink },
+          ]}
+        />
+      </g>
+    );
+  };
+  return Scene;
+}
+
+/* 67. Τριπολίτης: βλήμα 0,04 kg με 200 m/s σφηνώνεται σε ξύλο 0,96 kg, διεισδύει 7,68 cm. */
+const case67: Case = {
+  n: 67,
+  title: "Βλήμα σφηνώνεται σε ξύλο",
+  what: "Ένα βλήμα σφηνώνεται σε ξύλο που ηρεμεί σε λείο δάπεδο. Από την ΑΔΟ βρίσκουμε την κοινή ταχύτητα, από τη θερμότητα και το βάθος διείσδυσης τη δύναμη, και από τη Δp του ξύλου τον χρόνο.",
+  given: "Βλήμα m = 0,04 kg με 200 m/s, ξύλο M = 0,96 kg ακίνητο, λείο δάπεδο. Το βλήμα μπαίνει 7,68 cm μέσα στο ξύλο. (Άσκηση Τριπολίτη· τα 7,68 cm τα διαβάζουμε ως βάθος μέσα στο ξύλο.)",
+  ask: "V, απώλεια ενέργειας, μέση δύναμη, χρόνος διείσδυσης, μετατόπιση του ξύλου.",
+  period: 9,
+  legend: ["v", "F", "p"],
+  phases: [
+    { until: 2, label: "Πριν", say: "p_ολ = 0,04·200 = 8 kg·m/s. K = ½·0,04·200² = 800 J." },
+    { until: 4.5, label: "Διείσδυση", say: "Μέσα στο ξύλο: το ξύλο φρενάρει το βλήμα με F, το βλήμα σπρώχνει το ξύλο με ίση F. Ίσες και αντίθετες." },
+    { until: 6.5, label: "Μαζί", say: "ΑΔΟ: 8 = 1·V ⇒ V = 8 m/s. K μετά = ½·1·8² = 32 J ⇒ Q = 768 J (96 %)." },
+    {
+      until: 9,
+      label: "F και Δt",
+      say: "Η θερμότητα είναι έργο της F στο βάθος d (σχετική μετατόπιση): F = 768/0,0768 = 10⁴ N. Για το ξύλο: F·Δt = M·V ⇒ Δt = 7,68/10⁴ = 7,68·10⁻⁴ s. Το ξύλο μετακινήθηκε (V/2)·Δt ≈ 3,1 mm.",
+    },
+  ],
+  Scene: bulletScene({ m: 0.04, M: 0.96, u: 200, uOut: 8, V: 8, through: false, Fn: "F = 10⁴ N (μέση)" }),
+  solve: (
+    <>
+      V = 8/1 = <b>8 m/s</b>. Q = 800 − 32 = <b>768 J</b>. Q = F·d ⇒ F = 768/0,0768 = <b>10 000 N</b>. Δt = MV/F = 7,68/10⁴ = <b>7,68·10⁻⁴ s</b>. Μετατόπιση ξύλου = (0 + 8)/2·Δt ≈{" "}
+      <b>3,1 mm</b>.
+    </>
+  ),
+  trap: "Το βάθος d είναι ΣΧΕΤΙΚΗ μετατόπιση (βλήμα ως προς ξύλο), όχι η απόσταση που διάνυσε το βλήμα ως προς το έδαφος. Με το d δουλεύεις ενέργεια (Q = F·d), με τη Δp του ξύλου βρίσκεις το Δt.",
+};
+
+/* 68. Τριπολίτης: βλήμα 0,2 kg με 100 m/s διαπερνά ξύλο 5 kg χάνοντας 75 % της K του, Δt = 0,01 s. */
+const case68: Case = {
+  n: 68,
+  title: "Βλήμα διαπερνά ξύλο",
+  what: "Το βλήμα περνά μέσα από το ξύλο και βγαίνει από την άλλη μεριά, χάνοντας το 75 % της κινητικής του ενέργειας. Η ταχύτητα εξόδου βγαίνει από την ενέργεια, η ταχύτητα του ξύλου από την ΑΔΟ.",
+  given: "Βλήμα m = 0,2 kg με 100 m/s, ξύλο M = 5 kg ακίνητο σε οριζόντιο επίπεδο. Το βλήμα χάνει το 75 % της K του. Διάρκεια διέλευσης Δt = 0,01 s.",
+  ask: "α) υ′ του βλήματος. β) Ποσοστό της αρχικής ενέργειας του βλήματος που πήρε το ξύλο. γ) Δp του ξύλου. δ) Μέση δύναμη στο ξύλο.",
+  period: 9,
+  legend: ["v", "F", "p"],
+  phases: [
+    { until: 2, label: "Πριν", say: "K = ½·0,2·100² = 1000 J, p = 20 kg·m/s." },
+    { until: 4.5, label: "Διέλευση", say: "Όσο το βλήμα είναι μέσα: F στο βλήμα προς τα πίσω, ίση F στο ξύλο προς τα μπρος." },
+    { until: 6.5, label: "Μετά", say: "α) Μένει 25 %: K′ = 250 J ⇒ υ′ = 50 m/s. ΑΔΟ: 20 = 5V + 0,2·50 ⇒ V = 2 m/s." },
+    { until: 9, label: "Ενέργεια, F", say: "β) K_ξύλου = ½·5·2² = 10 J ⇒ 1 % των 1000 J (τα 740 J έγιναν θερμότητα). γ) Δp = 5·2 = 10 kg·m/s. δ) F = 10/0,01 = 1000 N." },
+  ],
+  Scene: bulletScene({ m: 0.2, M: 5, u: 100, uOut: 50, V: 2, through: true, Fn: "F = 1000 N (μέση)" }),
+  solve: (
+    <>
+      α) <b>υ′ = 50 m/s</b>. ΑΔΟ ⇒ <b>V = 2 m/s</b>. β) 10 J / 1000 J = <b>1 %</b>. γ) <b>Δp = 10 kg·m/s</b>. δ) <b>F = 1000 N</b>.
+    </>
+  ),
+  trap: "Το 75 % που χάνει το βλήμα δεν πάει όλο στο ξύλο: μόνο 10 J γίνονται κινητική του ξύλου, τα 740 J γίνονται θερμότητα.",
+};
+
+/* 69. Τριπολίτης: πλαστική κρούση με ακίνητο σώμα. Ποσοστό της K που γίνεται θερμότητα. */
+const case69: Case = {
+  n: 69,
+  title: "Πόσο γίνεται θερμότητα",
+  what: "Σώμα m χτυπά ακίνητο σώμα M και κολλάνε. Το ποσοστό της αρχικής κινητικής ενέργειας που γίνεται θερμότητα εξαρτάται μόνο από τις μάζες: M/(m + M).",
+  given: "Ερώτημα 1: m₁ = m₂, το δεύτερο ακίνητο (επιλογές 0 %, 25 %, 50 %). Ερώτημα 2: m με ταχύτητα u, M = 3m ακίνητο.",
+  ask: "Το ποσοστό σε θερμότητα, την κοινή ταχύτητα V και τη ΔK.",
+  period: 8,
+  legend: ["v", "p"],
+  phases: [
+    { until: 2, label: "Πριν", say: "Σώμα m με u, σώμα M = 3m ακίνητο. K_αρχ = ½mu²." },
+    { until: 3.2, label: "Κρούση", say: "Κολλάνε. ΑΔΟ: mu = 4m·V ⇒ V = u/4. Η ολική ορμή δεν αλλάζει: Δp_ολ = 0." },
+    { until: 5.5, label: "Μετά", say: "K_τελ = ½·4m·(u/4)² = mu²/8 = το 1/4 της αρχικής. ΔK = mu²/8 − 4mu²/8 = −3mu²/8: το 75 % έγινε θερμότητα." },
+    { until: 8, label: "Γενικά", say: "Q/K_αρχ = M/(m + M). Με m = M: 1/2 ⇒ 50 % (σωστό το γ). Με M = 3m: 3/4 ⇒ 75 %." },
+  ],
+  Scene: ({ t }) => {
+    const gy = 120;
+    const k = seg(t, 2, 3.2);
+    const xm = t < 2 ? lerp(30, 128, t / 2) : t < 3.2 ? 128 : 128 + 10 * (Math.min(t, 5.5) - 3.2);
+    const xM = xm + 14 + 22;
+    const v = t < 2 ? 1 : t < 3.2 ? lerp(1, 0.25, k) : 0.25;
+    const Kafter = t < 3.2 ? 1 - 0.75 * k * (t >= 2 ? 1 : 0) : 0.25;
+    return (
+      <g>
+        <Ground y={gy} />
+        <Box cx={xm} y={gy} w={26} h={22} label="m" fill={C.b1} />
+        <Box cx={t < 2 ? 164 : xM} y={gy} w={44} h={36} label="M = 3m" fill={C.b2} />
+        <Vec x={xm - 8} y={gy - 36} dx={v * 50} label={t < 2 ? "u" : "V = u/4"} />
+        <T x={64} y={150} s="K (πράσινο) και Q (πορτοκαλί)" size={9.5} color={C.muted} anchor="start" bold={false} />
+        <rect x={64} y={158} width={240} height={16} rx={3} fill="#eceef2" />
+        <rect x={64} y={158} width={240 * Kafter} height={16} rx={3} fill={C.p} />
+        <rect x={64 + 240 * Kafter} y={158} width={240 * (1 - Kafter)} height={16} rx={3} fill={C.K} />
+        <T x={64 + 120} y={192} s={t >= 3.2 ? "K = 25 %   ·   Q = 75 %" : "K = 100 %"} size={11} color={t >= 3.2 ? C.K : C.p} />
+        <Panel x={220} y={8} w={134} h={74} title="τύπος">
+          <T x={287} y={42} s="Q / K = M / (m + M)" size={10} color={C.K} />
+          <T x={287} y={58} s={t >= 5.5 ? "m = M ⇒ 50 %" : "M = 3m ⇒ 3/4"} size={10} color={C.ink} />
+          <T x={287} y={74} s={t >= 5.5 ? "M = 3m ⇒ 75 %" : "= 75 %"} size={10} color={C.ink} />
+        </Panel>
+      </g>
+    );
+  },
+  solve: (
+    <>
+      Ερώτημα 1: Q/K = m₂/(m₁ + m₂) = <b>50 %</b> (γ). Ερώτημα 2: <b>V = u/4</b>, Δp_ολ = 0, ΔK = mu²/8 − mu²/2 = <b>−3mu²/8</b> ⇒ <b>75 %</b> σε θερμότητα.
+    </>
+  ),
+  trap: "Στον τύπο Q/K = M/(m + M) στον αριθμητή είναι η μάζα του ΑΚΙΝΗΤΟΥ σώματος. Με ίσες μάζες δεν φαίνεται η διαφορά, με M = 3m φαίνεται.",
+};
+
+/* 70. Τριπολίτης: m₁ = 1 kg χτυπά τοίχο, χάνει 36 % της K, Δt = 0,1 s, F = 180 N· μετά κολλά με m₂ (1 kg) που έρχεται αντίθετα και σταματούν. */
+const case70: Case = {
+  n: 70,
+  title: "Τοίχος, μετά πλαστική",
+  what: "Μια μπάλα χτυπά τοίχο και χάνει το 36 % της κινητικής της ενέργειας. Από τη δύναμη του τοίχου βρίσκουμε τις ταχύτητες. Μετά συγκρούεται πλαστικά με σώμα που έρχεται αντίθετα, και το συσσωμάτωμα μένει ακίνητο.",
+  given: "Λείο δάπεδο, m₁ = 1 kg. Στην κρούση με τον τοίχο χάνει 36 % της K, Δt = 0,1 s, μέση δύναμη τοίχου F = 180 N. Μετά πλαστική κρούση με m₂ που κινείται αντίθετα, και το συσσωμάτωμα ακινητοποιείται. (Τριπολίτης· εδώ m₂ = 1 kg.)",
+  ask: "Τις ταχύτητες υ₁, υ₁′ και υ₂.",
+  period: 10,
+  legend: ["v", "F"],
+  phases: [
+    { until: 2, label: "Πριν", say: "Μένει το 64 % της K: ½m υ₁′² = 0,64·½m υ₁² ⇒ υ₁′ = 0,8·υ₁ (η ρίζα του 0,64)." },
+    { until: 3.4, label: "Τοίχος", say: "Μόνο η μπάλα: δέχεται τη F = 180 N από τον τοίχο. Θετικά προς τον τοίχο: −F·Δt = m(−υ₁′ − υ₁) ⇒ 18 = 1·(υ₁ + 0,8υ₁) = 1,8υ₁." },
+    { until: 6, label: "Πίσω", say: "υ₁ = 18/1,8 = 10 m/s και υ₁′ = 8 m/s. Η μπάλα γυρίζει και συναντά το m₂ που έρχεται αντίθετα." },
+    { until: 7.2, label: "Κολλάνε", say: "Το συσσωμάτωμα μένει ακίνητο ⇒ p_ολ = 0: m₁υ₁′ = m₂υ₂ ⇒ υ₂ = 1·8/1 = 8 m/s." },
+    { until: 10, label: "Τέλος", say: "Ακίνητα. Όλη η K των δύο σωμάτων (32 + 32 = 64 J) έγινε θερμότητα." },
+  ],
+  Scene: ({ t }) => {
+    const y = 110;
+    const wallX = 330;
+    const r = 10;
+    let bx: number;
+    let vb: number;
+    if (t < 2) {
+      bx = lerp(180, wallX - r, t / 2);
+      vb = 10;
+    } else if (t < 3.4) {
+      bx = wallX - r;
+      vb = lerp(10, -8, seg(t, 2, 3.4));
+    } else if (t < 6) {
+      bx = wallX - r - 58 * seg(t, 3.4, 6);
+      vb = -8;
+    } else {
+      bx = wallX - r - 58;
+      vb = t < 7.2 ? lerp(-8, 0, seg(t, 6, 7.2)) : 0;
+    }
+    const m2x = t < 6 ? lerp(40, bx - r - 12, seg(t, 0, 6)) : bx - r - 12;
+    const v2 = t < 6 ? 8 : t < 7.2 ? lerp(8, 0, seg(t, 6, 7.2)) : 0;
+    const onWall = t >= 2 && t < 3.4;
+    const Fnow = onWall ? 180 * pulse(seg(t, 2, 3.4)) : 0;
+    return (
+      <g>
+        <Ground y={y + r + 2} x2={wallX} />
+        <Wall x={wallX} y1={60} y2={y + r + 2} />
+        <Box cx={m2x} y={y + r + 2} w={24} h={22} label="m₂" fill={C.b2} />
+        {v2 > 0.3 ? <Vec x={m2x - 8} y={y - 22} dx={v2 * 3} label="υ₂" /> : null}
+        <Ball cx={bx} cy={y} r={r} />
+        {Math.abs(vb) > 0.3 ? <Vec x={vb > 0 ? bx - 6 - vb * 3 : bx - 4} y={y - 22} dx={vb * 3} label={vb > 0 ? "υ₁" : "υ₁′"} /> : null}
+        <Tag x={14} y={22} s={onWall ? "επαφή με τον τοίχο: 0,1 s" : "κολλάνε"} color={C.F} show={onWall || (t >= 6 && t < 7.2)} />
+        <Panel x={8} y={6} w={168} h={84}>
+          <Ball cx={130} cy={56} r={11} />
+          {onWall ? <Vec x={118} y={56} dx={-Fnow * 0.3} color={C.F} label="F" width={3.2} /> : null}
+          <T x={14} y={34} s={t >= 3.4 ? "υ₁ = 10 m/s" : "υ₁′ = 0,8·υ₁"} size={10} color={C.ink} anchor="start" />
+          <T x={14} y={52} s={t >= 3.4 ? "υ₁′ = 8 m/s" : "18 = 1,8·υ₁"} size={10} color={C.ink} anchor="start" />
+          <T x={14} y={84} s={t >= 7.2 ? "υ₂ = 8 m/s" : "μέση F = 180 N"} size={10} color={t >= 7.2 ? C.p : C.F} anchor="start" />
+        </Panel>
+        <Bars
+          y={152}
+          max={10.5}
+          items={[
+            { label: "p₁", value: vb, color: C.p },
+            { label: "p₂", value: v2, color: "#137a3f" },
+          ]}
+        />
+      </g>
+    );
+  },
+  solve: (
+    <>
+      υ₁′ = 0,8υ₁. F·Δt = m(υ₁ + υ₁′) ⇒ 18 = 1,8υ₁ ⇒ <b>υ₁ = 10 m/s</b>, <b>υ₁′ = 8 m/s</b>. Ακίνητο συσσωμάτωμα: m₁υ₁′ = m₂υ₂ ⇒ <b>υ₂ = 8 m/s</b> (με m₂ = 1 kg).
+    </>
+  ),
+  trap: "«Χάνει το 36 %» σημαίνει ότι ΜΕΝΕΙ το 64 % της K, άρα η ταχύτητα γίνεται √0,64 = 0,8 φορές, όχι 0,64 φορές. Και στον τοίχο η Δp έχει άθροισμα ταχυτήτων, γιατί αλλάζει φορά.",
+};
+
+/* 71. Τριπολίτης: 2 kg από 20 m, αναπηδά με 8 m/s, επαφή 0,1 s. */
+const case71: Case = {
+  n: 71,
+  title: "Πέφτει από 20 m, αναπηδά",
+  what: "Σώμα πέφτει από 20 m, χτυπά στο έδαφος και αναπηδά με 8 m/s. Ελέγχουμε αν η κρούση είναι ελαστική και βρίσκουμε τη μέση δύναμη του εδάφους. Το πιο εύκολο λάθος: το πρόσημο της ταχύτητας αναπήδησης.",
+  given: "m = 2 kg, h = 20 m, αναπηδά με υ′ = 8 m/s, διάρκεια επαφής Δt = 0,1 s, g = 10 m/s².",
+  ask: "i) Ελαστική ή όχι; ii) Τη μέση δύναμη του δαπέδου.",
+  period: 8,
+  legend: ["v", "F"],
+  phases: [
+    { until: 2, label: "Πτώση", say: "ΑΔΜΕ: mgh = ½mυ₁² ⇒ υ₁ = √(2·10·20) = 20 m/s. K πριν = ½·2·400 = 400 J." },
+    { until: 3.4, label: "Επαφή", say: "Μόνο το σώμα: N προς τα πάνω, mg = 20 N προς τα κάτω. Θετικά προς τα κάτω (όπως ο Μιχάλης): υ₁ = +20, υ′ = −8 γιατί πάει πάνω." },
+    { until: 5.5, label: "Αναπήδηση", say: "K μετά = ½·2·64 = 64 J ⇒ Q = 336 J ≠ 0: η κρούση είναι ανελαστική." },
+    { until: 8, label: "Η N", say: "Δp = 2·(−8) − 2·20 = −56 kg·m/s. mg − N = Δp/Δt = −560 ⇒ N = 20 + 560 = 580 N, προς τα πάνω." },
+  ],
+  Scene: ({ t }) => {
+    const gy = 180;
+    const r = 11;
+    const x = 80;
+    let cy: number;
+    let vDown: number;
+    if (t < 2) {
+      cy = 30 + (gy - r - 30) * (t / 2) * (t / 2);
+      vDown = 20 * (t / 2);
+    } else if (t < 3.4) {
+      cy = gy - r + 2 * Math.sin(Math.PI * seg(t, 2, 3.4));
+      vDown = lerp(20, -8, seg(t, 2, 3.4));
+    } else {
+      const u = Math.min(seg(t, 3.4, 5.5), 1);
+      cy = gy - r - 50 * (2 * u - u * u);
+      vDown = -8 * (1 - u);
+    }
+    const contact = t >= 2 && t < 3.4;
+    const Nnow = contact ? 580 * pulse(seg(t, 2, 3.4)) : 0;
+    return (
+      <g>
+        <Ground y={gy} x2={170} />
+        <line x1={40} y1={30} x2={40} y2={gy} stroke={C.muted} strokeDasharray="3 3" />
+        <T x={34} y={100} s="20 m" size={9.5} color={C.muted} anchor="end" bold={false} />
+        <Ball cx={x} cy={cy} r={r} squash={contact ? 0.25 * Math.sin(Math.PI * seg(t, 2, 3.4)) : 0} axis="y" />
+        {Math.abs(vDown) > 0.5 ? <Vec x={x + 28} y={cy} dx={0} dy={vDown * 2} label={`${num(Math.abs(vDown), 0)} m/s`} labelSide="right" /> : null}
+        <T x={150} y={40} s="+ ↓" size={11} color={C.muted} />
+        <Tag x={14} y={22} s="επαφή 0,1 s" color={C.F} show={contact} />
+        <Panel x={196} y={10} w={158} h={150}>
+          <Ball cx={234} cy={92} r={12} />
+          {contact ? <Vec x={234} y={80} dx={0} dy={-Nnow * 0.08} color={C.F} label="N" width={3.4} labelSide="left" /> : null}
+          <Vec x={234} y={104} dx={0} dy={18} color={C.F} label="mg" width={2.6} labelSide="left" />
+          <T x={258} y={50} s="υ₁ = +20 m/s" size={9.5} color={C.v} anchor="start" />
+          <T x={258} y={68} s={t >= 3.4 ? "υ′ = −8 m/s (πάνω)" : "υ′ = ;"} size={9.5} color={C.v} anchor="start" />
+          <T x={258} y={88} s={t >= 3.4 ? "Q = 400 − 64" : ""} size={9.5} color={C.K} anchor="start" />
+          <T x={258} y={104} s={t >= 3.4 ? "= 336 J" : ""} size={9.5} color={C.K} anchor="start" />
+          <T x={258} y={124} s={t >= 5.5 ? "Δp = −56" : ""} size={9.5} color={C.p} anchor="start" />
+          <T x={258} y={142} s={t >= 5.5 ? "N = 580 N" : ""} size={11} color={C.F} anchor="start" />
+        </Panel>
+      </g>
+    );
+  },
+  solve: (
+    <>
+      i) υ₁ = 20 m/s, K: 400 J → 64 J, Q = 336 J ⇒ <b>ανελαστική</b>. ii) Θετικά ↓: Δp = 2(−8) − 2·20 = −56 kg·m/s ⇒ mg − N = −560 ⇒ <b>N = 580 N</b> προς τα πάνω.
+    </>
+  ),
+  trap: "Η ταχύτητα αναπήδησης έχει ΑΝΤΙΘΕΤΟ πρόσημο από την ταχύτητα πρόσκρουσης. Αν τη βάλεις +8 με θετικά προς τα κάτω, βγαίνει λάθος (και αρνητική) δύναμη.",
+};
+
+/* 72. Τριπολίτης 4.107: m₁ = 1 kg με 10 m/s χτυπά ακίνητο m₂ = 2 kg· το 1 σταματά. */
+const D72: Duo = { mA: 1, mB: 2, u: 10, vA: 0, vB: 5, wA: 26, wB: 34, labelA: "1", labelB: "2" };
+const case72: Case = {
+  n: 72,
+  title: "4.107: το 1 σταματά",
+  what: "Το σώμα 1 χτυπά το ακίνητο σώμα 2 και μένει ακίνητο. Η ΑΔΟ δίνει την ταχύτητα του 2, και η σύγκριση των κινητικών ενεργειών δείχνει αν η κρούση είναι ελαστική.",
+  given: "m₁ = 1 kg με υ₀ = 10 m/s, m₂ = 2 kg ακίνητο. Μετά την κρούση το 1 σταματά.",
+  ask: "α) Την ταχύτητα του 2. β) Τη θερμότητα Q. Είναι ελαστική;",
+  period: 7.5,
+  legend: ["v", "F", "p"],
+  phases: [
+    { until: 2, label: "Πριν", say: "p_ολ = 1·10 = 10 kg·m/s, K = ½·1·100 = 50 J." },
+    { until: 3.2, label: "Κρούση", say: "Ίσες και αντίθετες δυνάμεις επαφής: Δp₁ = −10, Δp₂ = +10 kg·m/s." },
+    { until: 5.2, label: "Μετά", say: "ΑΔΟ: 10 = 1·0 + 2·υ₂′ ⇒ υ₂′ = 5 m/s." },
+    { until: 7.5, label: "Ενέργεια", say: "K μετά = ½·2·25 = 25 J. Q = 50 − 25 = 25 J ≠ 0 ⇒ η κρούση ΔΕΝ είναι ελαστική." },
+  ],
+  Scene: ({ t }) => {
+    const gy = 112;
+    const m = duoMotion(D72, t);
+    const Cn = m.contact ? pulse(m.k) : 0;
+    return (
+      <g>
+        <Ground y={gy} />
+        <Box cx={m.xA} y={gy} w={D72.wA} h={24} label="1" fill={C.b1} />
+        <Box cx={m.xB} y={gy} w={D72.wB} h={28} label="2" fill={C.b2} />
+        {m.vA > 0.3 ? <Vec x={m.xA - 10} y={gy - 34} dx={m.vA * 3} label="υ₁" /> : null}
+        {m.vB > 0.3 ? <Vec x={m.xB - 8} y={gy - 38} dx={m.vB * 3} label="υ₂′" /> : null}
+        <Tag x={14} y={22} s="αργή κίνηση" color={C.F} show={m.contact} />
+        <Panel x={196} y={6} w={158} h={72} title="κάθε σώμα χωριστά">
+          <Box cx={240} y={52} w={22} h={20} label="1" fill={C.b1} />
+          <Box cx={310} y={52} w={26} h={20} label="2" fill={C.b2} />
+          {m.contact ? (
+            <g>
+              <Vec x={229} y={42} dx={-Cn * 22} color={C.F} label="C" width={3} />
+              <Vec x={323} y={42} dx={Cn * 22} color={C.F} label="C" width={3} />
+            </g>
+          ) : null}
+          <T x={275} y={71} s={t >= 5.2 ? "Q = 50 − 25 = 25 J" : "Δp₁ = −Δp₂"} size={9.5} color={t >= 5.2 ? C.K : C.p} />
+        </Panel>
+        <Bars
+          y={140}
+          max={10.5}
+          items={[
+            { label: "p₁", value: D72.mA * m.vA, color: C.p },
+            { label: "p₂", value: D72.mB * m.vB, color: "#137a3f" },
+            { label: "p_{ολ}", value: 10, color: C.ink },
+          ]}
+        />
+      </g>
+    );
+  },
+  solve: (
+    <>
+      α) ΑΔΟ: 1·10 = 2·υ₂′ ⇒ <b>υ₂′ = 5 m/s</b>. β) Q = 50 − 25 = <b>25 J</b> ⇒ όχι ελαστική.
+    </>
+  ),
+  trap: "Στο Q αφαιρείς ΟΛΕΣ τις κινητικές μετά (εδώ μόνο του 2, γιατί το 1 σταμάτησε), όχι μόνο ενός σώματος.",
+};
+
+export const section10: Case[] = [case54, case55, case56, case57, case58, case59, case60, case61, case62, case63, case64, case65, case66, case67, case68, case69, case70, case71, case72];

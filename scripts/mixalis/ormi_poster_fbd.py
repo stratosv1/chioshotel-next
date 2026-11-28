@@ -90,12 +90,12 @@ class S(Svg):
         X2, Y2 = self.at(x2, y2)
         self.line(X1, Y1, X2, Y2, color, w, dash)
 
-    def split(self, left_caption=True):
+    def split(self, left_caption=True, right_caption="μόνο το σώμα"):
         """Left half: the setup. Right half: the isolated body with only its forces."""
         self.L(120, 32, 120, 120, "#c5cbd3", 1, "3 3")
         if left_caption:
             self.T(62, 41, "σχήμα", 9, MUTED, bold=False)
-        self.T(172, 41, "μόνο το σώμα", 9, F_RED, bold=True)
+        self.T(172, 41, right_caption, 9, F_RED if right_caption == "μόνο το σώμα" else K_ORANGE, bold=True)
 
     def plus(self, x, y, dx=18, dy=0, label="+"):
         self.A(x, y, dx, dy, MUTED, 1, None)
@@ -301,6 +301,224 @@ def c65(s: S):  # the big fish swallows the small one (Τριπολίτης)
     s.T(156, 120, "ίσες, αντίθετες", 8.5, MUTED, bold=False)
 
 
+def c66(s: S):  # friction, plastic collision, then up a rough quarter circle (Τριπολίτης)
+    s.split()
+    gy = 104
+    X1, Y = s.at(8, gy)
+    X2, _ = s.at(56, gy)
+    s.line(X1, Y, X2, Y, GROUND, 2.4)
+    s.ground(X1, X2, Y)
+    s.L(56, gy, 86, gy, GROUND, 1.6)
+    X, Y = s.at(86, gy - 26)
+    s.add(f'<path d="M{X:.1f},{Y + 26:.1f} A26,26 0 0 0 {X + 26:.1f},{Y:.1f}" fill="none" stroke="{GROUND}" stroke-width="2"/>')
+    s.box(14, 90, 14, 14, B1, "A", 9.5)
+    s.A(30, 84, 13, 0, V_BLUE, 2, "10", ly=-5, size=9)
+    s.box(46, 92, 12, 12, B2, "B", 9)
+    s.A(72, 98, -11, 0, V_BLUE, 2, "1", ly=-6, size=9)
+    s.T(32, 118, "μ = 0,2", 8.5, MUTED, bold=False)
+    s.T(76, 118, "λείο", 8.5, MUTED, bold=False)
+    s.T(106, 72, "R", 9.5, MUTED, bold=True)
+    s.A(112, 64, 0, -14, V_BLUE, 1.8, "√2", lx=-9, ly=0, size=8.5)
+    # isolated block on the quarter circle (centre at 136,50, R = 62, block at 45°)
+    cx, cy, R = 136, 50, 62
+    X, Y = s.at(cx, cy)
+    s.add(f'<path d="M{X:.1f},{Y + R:.1f} A{R},{R} 0 0 0 {X + R:.1f},{Y:.1f}" fill="none" stroke="#c5cbd3" stroke-width="1.4" stroke-dasharray="4 3"/>')
+    bx, by = cx + R * 0.707, cy + R * 0.707
+    X, Y = s.at(bx, by)
+    s.add(f'<rect x="{X - 8:.1f}" y="{Y - 8:.1f}" width="16" height="16" fill="#d9c9a3" stroke="{EDGE}" stroke-width="1.2" transform="rotate(-45 {X:.1f} {Y:.1f})"/>')
+    s.A(bx - 8, by - 8, -17, -17, F_RED, 2.6, "N", lx=-6, ly=-2, size=11)
+    s.A(bx, by + 10, 0, 20, F_RED, 2.4, "mg", lx=13, ly=6, size=10)
+    s.A(bx - 10, by + 10, -14, 14, K_ORANGE, 2.8, "T", lx=-6, ly=8, size=11)
+
+
+def c67(s: S):  # bullet embeds in a block on a smooth floor (Τριπολίτης)
+    s.split()
+    s.floor(8, 114, 104)
+    s.box(66, 78, 40, 26, "#c9a06a", "M", 11)
+    X, Y = s.at(20, 89)
+    s.rect(X, Y, 12, 5, "#5d6470", EDGE, 1, 2)
+    s.A(36, 91, 22, 0, V_BLUE, 2.2, "200 m/s", ly=-6, size=9)
+    s.T(86, 118, "λείο", 8.5, MUTED, bold=False)
+    # each body alone during the penetration
+    X, Y = s.at(150, 58)
+    s.rect(X, Y, 14, 6, "#5d6470", EDGE, 1, 2)
+    s.A(148, 61, -24, 0, F_RED, 2.8, "F", ly=-6, size=11.5)
+    s.box(168, 80, 34, 24, "#c9a06a", "M", 10.5)
+    s.A(202, 92, 18, 0, F_RED, 2.8, "F", ly=-6, size=11.5)
+    s.T(172, 118, "ίσες, αντίθετες", 8.5, MUTED, bold=False)
+
+
+def c68(s: S):  # bullet passes through a block and loses 75 % of its K (Τριπολίτης)
+    s.split()
+    s.floor(8, 114, 104)
+    s.box(50, 78, 26, 26, "#c9a06a", "M", 11)
+    X, Y = s.at(12, 89)
+    s.rect(X, Y, 10, 4, "#5d6470", EDGE, 1, 2)
+    s.A(24, 91, 20, 0, V_BLUE, 2.2, "100", ly=-6, size=9)
+    X, Y = s.at(84, 89)
+    s.rect(X, Y, 10, 4, "#5d6470", EDGE, 1, 2)
+    s.A(96, 91, 12, 0, V_BLUE, 2.2, "50", ly=-6, size=9)
+    s.A(63, 70, 8, 0, V_BLUE, 1.8, "V", ly=-5, size=9)
+    s.T(62, 118, "βγαίνει από την άλλη", 8.5, MUTED, bold=False)
+    X, Y = s.at(150, 58)
+    s.rect(X, Y, 14, 6, "#5d6470", EDGE, 1, 2)
+    s.A(148, 61, -24, 0, F_RED, 2.8, "F", ly=-6, size=11.5)
+    s.box(168, 80, 34, 24, "#c9a06a", "M", 10.5)
+    s.A(202, 92, 18, 0, F_RED, 2.8, "F", ly=-6, size=11.5)
+    s.T(172, 118, "όσο διαρκεί η διέλευση", 8.5, MUTED, bold=False)
+
+
+def c69(s: S):  # plastic collision with a body at rest: how much K becomes heat (Τριπολίτης)
+    s.split(right_caption="ενέργεια")
+    s.floor(8, 114, 104)
+    s.box(16, 86, 18, 18, B1, "m", 10)
+    s.A(38, 80, 22, 0, V_BLUE, 2.2, "u", ly=-6, size=10.5)
+    s.box(70, 74, 34, 30, B2, "M", 11)
+    s.T(87, 68, "ακίνητο", 8.5, MUTED, bold=False)
+    s.T(60, 118, "κολλάνε", 8.5, MUTED, bold=False)
+    # K before vs after for M = 3m: 25 % stays as motion, 75 % becomes heat
+    X, Y = s.at(132, 54)
+    s.text(X, Y + 8, "πριν", 9, MUTED, "start", bold=False)
+    s.rect(X + 26, Y, 60, 11, P_GREEN, rx=2)
+    X, Y = s.at(132, 76)
+    s.text(X, Y + 8, "μετά", 9, MUTED, "start", bold=False)
+    s.rect(X + 26, Y, 15, 11, P_GREEN, rx=2)
+    s.rect(X + 41, Y, 45, 11, K_ORANGE, rx=2)
+    s.T(172, 104, "M = 3m: 75 % → Q", 9.5, K_ORANGE, bold=True)
+    s.T(172, 118, "πράσινο K, πορτοκαλί Q", 8, MUTED, bold=False)
+
+
+def c70(s: S):  # ball hits a wall (loses 36 % of K), then sticks to m2 and both stop (Τριπολίτης)
+    s.split()
+    s.floor(8, 104, 104)
+    s.wall(104, 56, 104)
+    s.T(14, 64, "1", 9, MUTED, "start", bold=False)
+    s.ball(70, 70, 8)
+    s.A(80, 70, 16, 0, V_BLUE, 2, "υ₁", ly=-6, size=9.5)
+    s.T(14, 90, "2", 9, MUTED, "start", bold=False)
+    s.box(22, 88, 18, 16, B2, "m₂", 9)
+    s.A(42, 96, 14, 0, V_BLUE, 2, "υ₂", ly=-6, size=9.5)
+    s.ball(80, 95, 8)
+    s.A(70, 95, -12, 0, V_BLUE, 2, None)
+    s.T(84, 80, "υ₁′", 9, V_BLUE, bold=True)
+    s.T(60, 118, "μετά: όλα ακίνητα", 8.5, MUTED, bold=False)
+    s.ball(190, 82, 11)
+    s.A(178, 82, -40, 0, F_RED, 3.2, "F = 180 N", ly=-9, size=10)
+    s.T(172, 112, "από τον τοίχο", 9, MUTED, bold=False)
+
+
+def c71(s: S):  # drop from 20 m, bounces with 8 m/s, contact 0.1 s (Τριπολίτης)
+    s.split()
+    s.floor(14, 112, 110)
+    s.ball(46, 101)
+    s.L(46, 48, 46, 90, MUTED, 1, "2 3")
+    s.T(30, 66, "20 m", 9, MUTED, bold=False)
+    s.A(72, 60, 0, 30, V_BLUE, 2.4, "20", lx=10, ly=4, size=9.5)
+    s.A(92, 92, 0, -16, V_BLUE, 2.4, "8", lx=9, ly=0, size=9.5)
+    s.ball(172, 86, 11)
+    s.A(172, 75, 0, -26, F_RED, 3.4, "N", lx=10, ly=-2, size=13)
+    s.A(172, 97, 0, 14, F_RED, 2.4, "mg", lx=14, ly=6, size=11)
+    s.T(172, 122, "πρόσημο στο υ′!", 8.5, F_RED, bold=True)
+
+
+def c72(s: S):  # 4.107: m1 stops, m2 leaves with 5 m/s (Τριπολίτης)
+    s.split()
+    s.floor(8, 114, 104)
+    s.box(22, 82, 20, 22, B1, "1", 10)
+    s.A(44, 76, 22, 0, V_BLUE, 2.2, "10", ly=-6, size=9.5)
+    s.box(84, 82, 26, 22, B2, "2", 10)
+    s.T(62, 118, "μετά: 0 και 5 m/s", 8.5, MUTED, bold=False)
+    s.box(150, 56, 20, 18, B1, "1", 10)
+    s.A(150, 65, -24, 0, F_RED, 2.8, "C", ly=-6, size=11.5)
+    s.box(176, 92, 26, 22, B2, "2", 10)
+    s.A(202, 103, 18, 0, F_RED, 2.8, "C", ly=-6, size=11.5)
+
+
+def _fbd_block(s: S, x, y, label, fill=B2, friction=True, w=30, h=20):
+    s.box(x - w / 2, y - h / 2, w, h, fill, label, 10)
+    s.A(x, y - h / 2, 0, -16, F_RED, 2.2, "N", lx=9, ly=-2, size=10)
+    s.A(x, y + h / 2, 0, 16, F_RED, 2.2, "mg", lx=13, ly=6, size=10)
+    if friction:
+        s.A(x - w / 2, y + 2, -22, 0, K_ORANGE, 2.8, "T", ly=-6, size=11)
+
+
+def c73(s: S):  # 4.108: rebound with equal speeds after
+    s.split()
+    s.floor(8, 114, 104)
+    s.ball(26, 94, 9)
+    s.A(38, 94, 20, 0, V_BLUE, 2.2, "12", ly=-6, size=9.5)
+    s.ball(88, 91, 12, B2)
+    s.T(26, 80, "2 kg", 8.5, MUTED, bold=False)
+    s.T(88, 72, "5 kg", 8.5, MUTED, bold=False)
+    s.T(60, 118, "μετά: ±8 m/s", 8.5, MUTED, bold=False)
+    s.ball(146, 62, 9)
+    s.A(136, 62, -20, 0, F_RED, 2.8, "C", ly=-6, size=11)
+    s.ball(188, 96, 12, B2)
+    s.A(201, 96, 20, 0, F_RED, 2.8, "C", ly=-6, size=11)
+
+
+def c74(s: S):  # 4.109: plastic, then friction stops it in 4 s
+    s.split()
+    X1, Y = s.at(8, 104)
+    X2, _ = s.at(114, 104)
+    s.line(X1, Y, X2, Y, GROUND, 2.4)
+    s.ground(X1, X2, Y)
+    s.box(18, 86, 16, 18, B1, "1", 9)
+    s.A(36, 80, 16, 0, V_BLUE, 2, "υ₀", ly=-6, size=9.5)
+    s.box(62, 80, 24, 24, B2, "3 kg", 8.5)
+    s.T(60, 118, "μ = 0,1 · σταματά σε 4 s", 8.5, MUTED, bold=False)
+    _fbd_block(s, 176, 82, "1+2")
+
+
+def c75(s: S):  # 4.113: equal speeds opposite, plastic, stops after 0.5 m
+    s.split()
+    X1, Y = s.at(8, 104)
+    X2, _ = s.at(114, 104)
+    s.line(X1, Y, X2, Y, GROUND, 2.4)
+    s.ground(X1, X2, Y)
+    s.box(14, 84, 20, 20, B1, "4", 9.5)
+    s.A(36, 78, 16, 0, V_BLUE, 2, "υ", ly=-6, size=9.5)
+    s.box(84, 80, 24, 24, B2, "6", 9.5)
+    s.A(80, 74, -16, 0, V_BLUE, 2, "υ", ly=-6, size=9.5)
+    s.T(60, 118, "κολλάνε · s = 0,5 m", 8.5, MUTED, bold=False)
+    _fbd_block(s, 184, 82, "10 kg")
+
+
+def c76(s: S):  # 4.115: rough floor, no sticking, distance when each stops
+    s.split()
+    X1, Y = s.at(8, 104)
+    X2, _ = s.at(114, 104)
+    s.line(X1, Y, X2, Y, GROUND, 2.4)
+    s.ground(X1, X2, Y)
+    s.box(20, 80, 24, 24, B1, "4", 9.5)
+    s.A(46, 74, 10, 0, V_BLUE, 2, "2", ly=-6, size=9.5)
+    s.box(84, 86, 18, 18, B2, "1", 9.5)
+    s.A(80, 74, -22, 0, V_BLUE, 2, "10", ly=-6, size=9.5)
+    s.T(60, 118, "μ = 0,2 · δεν κολλάνε", 8.5, MUTED, bold=False)
+    s.box(136, 54, 22, 18, B1, "4", 9.5)
+    s.A(158, 63, 16, 0, K_ORANGE, 2.6, "T", ly=-6, size=10.5)
+    s.A(136, 50, -14, 0, V_BLUE, 1.8, "1", ly=-5, size=9)
+    s.box(178, 92, 18, 16, B2, "1", 9.5)
+    s.A(178, 100, -16, 0, K_ORANGE, 2.6, "T", ly=-6, size=10.5)
+    s.A(196, 86, 14, 0, V_BLUE, 1.8, "2", ly=-5, size=9)
+
+
+def c77(s: S):  # 4.117: circular motion on a string, plastic collision
+    s.split()
+    X, Y = s.at(56, 82)
+    s.add(f'<circle cx="{X:.1f}" cy="{Y:.1f}" r="30" fill="none" stroke="#c5cbd3" stroke-width="1.3" stroke-dasharray="4 3"/>')
+    s.circle(X, Y, 2.5, INK)
+    s.L(56, 82, 86, 82, INK, 1.2)
+    s.ball(86, 82, 7)
+    s.A(86, 74, 0, -18, V_BLUE, 2, "5", lx=9, ly=0, size=9.5)
+    s.ball(100, 50, 6, B2)
+    s.A(100, 58, 0, 12, V_BLUE, 2, "16", lx=-10, ly=2, size=9)
+    s.T(56, 120, "κάτοψη · l = 2 m", 8.5, MUTED, bold=False)
+    s.ball(196, 82, 10)
+    s.A(184, 82, -36, 0, F_RED, 3, "T", ly=-7, size=12)
+    s.T(160, 104, "προς το κέντρο", 8.5, MUTED, bold=False)
+
+
 # (title, drawer, [(text, color, bold)], ref)
 CELLS = [
     (54, "Μπάλα χτυπά τοίχο", c54, [
@@ -375,19 +593,94 @@ CELLS = [
         ("Δp_{μικ} = 2·0,5 − 2·0,1 = 0,8", P_GREEN, True),
         ("F_{μεγ} = −0,8 / 2 = −0,4 N", F_RED, True),
     ], "Τριπολίτης · → δες και 16, 58"),
+    (66, "Κρούση και τεταρτοκύκλιο", c66, [
+        ("υ_{A} = 10 − 2·2 = 6 m/s (τριβή)", INK, True),
+        ("5·6 − 2·1 = 7V ⇒ V = 4 m/s", P_GREEN, True),
+        ("ΘΜΚΕ: 7 − 56 = W_{T} − 14", K_ORANGE, True),
+        ("W_{T} = −35 J (T όχι σταθερή)", F_RED, True),
+    ], "Τριπολίτης · → δες και 16, 61"),
+    (67, "Βλήμα σφηνώνεται σε ξύλο", c67, [
+        ("0,04·200 = 1·V ⇒ V = 8 m/s", P_GREEN, True),
+        ("Q = 800 − 32 = 768 J (96 %)", K_ORANGE, True),
+        ("Q = F·d_{σχ} ⇒ F = 10⁴ N", F_RED, True),
+        ("Δt = MV/F = 7,68·10⁻⁴ s", INK, True),
+    ], "Τριπολίτης · → δες και 16"),
+    (68, "Βλήμα διαπερνά ξύλο", c68, [
+        ("K′ = 25 %·1000 = 250 J ⇒ υ′ = 50", K_ORANGE, True),
+        ("0,2·100 = 5V + 0,2·50 ⇒ V = 2 m/s", P_GREEN, True),
+        ("K_{M} = 10 J ⇒ 1 % της αρχικής", INK, True),
+        ("F = Δp/Δt = 10/0,01 = 1000 N", F_RED, True),
+    ], "Τριπολίτης · → σύγκρινε με 67"),
+    (69, "Πόσο γίνεται θερμότητα", c69, [
+        ("Q / K_{αρχ} = M / (m + M)", K_ORANGE, True),
+        ("m = M ⇒ 50 % (σωστό: γ)", INK, True),
+        ("M = 3m: V = u/4, Δp_{ολ} = 0", P_GREEN, True),
+        ("ΔK = −3mu²/8 ⇒ 75 % θερμότητα", F_RED, True),
+    ], "Τριπολίτης · → δες και 19"),
+    (70, "Τοίχος, μετά πλαστική", c70, [
+        ("K′ = 64 %·K ⇒ υ₁′ = 0,8·υ₁", K_ORANGE, True),
+        ("F·Δt = m(υ₁ + υ₁′) ⇒ 18 = 1,8υ₁", F_RED, True),
+        ("υ₁ = 10 m/s, υ₁′ = 8 m/s", P_GREEN, True),
+        ("Σταματούν: m₁υ₁′ = m₂υ₂ ⇒ υ₂ = 8", P_GREEN, True),
+    ], "Τριπολίτης · m₂ = 1 kg · → δες και 54"),
+    (71, "Πέφτει από 20 m, αναπηδά", c71, [
+        ("ΑΔΜΕ: υ₁ = √(2gh) = 20 m/s", INK, True),
+        ("Q = 400 − 64 = 336 J ⇒ ανελαστική", K_ORANGE, True),
+        ("+ κάτω: Δp = 2(−8) − 2·20 = −56", P_GREEN, True),
+        ("mg − N = −560 ⇒ N = 580 N", F_RED, True),
+    ], "Τριπολίτης · → δες και 60"),
+    (72, "4.107: το 1 σταματά", c72, [
+        ("1·10 + 0 = 1·0 + 2·υ₂′", P_GREEN, True),
+        ("υ₂′ = 5 m/s", P_GREEN, True),
+        ("Q = 50 − 25 = 25 J", K_ORANGE, True),
+        ("Q ≠ 0 ⇒ όχι ελαστική", INK, True),
+    ], "Τριπολίτης 4.107 · → δες και 58"),
+    (73, "4.108: αντίθετες ταχύτητες", c73, [
+        ("2·12 = 2(−υ) + 5υ", P_GREEN, True),
+        ("24 = 3υ ⇒ υ = 8 m/s", P_GREEN, True),
+        ("Δp₁ = 2(−8 − 12) = −40", F_RED, True),
+        ("|Δp₁| = 40 kg·m/s", INK, True),
+    ], "Τριπολίτης 4.108 · λυμένη στις ασκήσεις"),
+    (74, "4.109: τριπλάσια ορμή", c74, [
+        ("α = μg = 1 ⇒ V = 1·4 = 4 m/s", K_ORANGE, True),
+        ("p₂′ = 3·4 = 12 ⇒ p₁ = 36", P_GREEN, True),
+        ("36 = (m₁ + 3)·4 ⇒ m₁ = 6 kg", P_GREEN, True),
+        ("υ₀ = 36/6 = 6 m/s", INK, True),
+    ], "Τριπολίτης 4.109 · λυμένη στις ασκήσεις"),
+    (75, "4.113: πλαστική, μετά τριβή", c75, [
+        ("V² = 2μgs = 1 ⇒ V = 1 m/s", K_ORANGE, True),
+        ("p = 10·1 = 10 kg·m/s", P_GREEN, True),
+        ("6υ − 4υ = 10 ⇒ υ = 5 m/s", P_GREEN, True),
+        ("όχι 10·10: p ήδη = (m₁+m₂)V", F_RED, True),
+    ], "Τριπολίτης 4.113 · λυμένη στις ασκήσεις"),
+    (76, "4.115: απόσταση με τριβή", c76, [
+        ("8 − 10 = −4 + υ₂′ ⇒ υ₂′ = 2 m/s", P_GREEN, True),
+        ("α = μg = 2 m/s² και στα δύο", K_ORANGE, True),
+        ("σταματά το 1: 0,25 + 0,75 = 1 m", INK, True),
+        ("σταματά το 2: 1 + 0,25 = 1,25 m", INK, True),
+    ], "Τριπολίτης 4.115 · λυμένη στις ασκήσεις"),
+    (77, "4.117: κρούση σε κύκλο", c77, [
+        ("T = mυ²/l ⇒ υ = 5, p = 20", F_RED, True),
+        ("20 − 32 = 6u′ ⇒ u′ = −2 m/s", P_GREEN, True),
+        ("T′ = 6·4/2 = 12 ⇒ |ΔT| = 38 N", F_RED, True),
+        ("ω: 2,5 → −1 ⇒ Δω = −3,5 rad/s", INK, True),
+    ], "Τριπολίτης 4.117 · λυμένη στις ασκήσεις"),
 ]
 
 RULES = [
-    "1. Διαλέγω ΤΙ εξετάζω: ένα σώμα (απομονωμένο) ή όλο το σύστημα A + B.",
-    "2. Ζωγραφίζω ΜΟΝΟ αυτό, χωρίς τοίχους, πατώματα και άλλα σώματα γύρω του.",
-    "3. Βάζω κάθε δύναμη που ΔΕΧΕΤΑΙ: επαφής (C ή N), βάρος mg, τριβή T. Οι ταχύτητες δεν είναι δυνάμεις.",
-    "4. Διαλέγω θετική φορά και γράφω σε κάθε άξονα: ΣF·Δt = Δp = m(υ_{τελ} − υ_{αρχ}).",
-    "5. Μικρό Δt και τεράστια C ⇒ το βάρος συχνά αμελείται. Αν η άσκηση δίνει Δt, το mg μπαίνει (60, 62).",
-    "6. Στο σύστημα οι δυνάμεις επαφής είναι εσωτερικές και φεύγουν ⇒ ΑΔΟ (63).",
-    "7. Πολύ μικρό Δt: μια μικρή δύναμη (π.χ. τριβή) δεν προλαβαίνει να αλλάξει την ορμή (64).",
+    "1. Διαλέγω τι εξετάζω: ένα σώμα ή όλο το σύστημα A + B.",
+    "2. Ζωγραφίζω μόνο αυτό, χωρίς τοίχους, πατώματα, άλλα σώματα.",
+    "3. Βάζω κάθε δύναμη που δέχεται: C ή N, mg, T. Όχι ταχύτητες.",
+    "4. Θετική φορά, και σε κάθε άξονα: ΣF·Δt = Δp.",
+    "5. Μικρό Δt, τεράστια C ⇒ το mg αμελείται. Αν δίνεται Δt, μπαίνει.",
+    "6. Σύστημα: οι C είναι εσωτερικές ⇒ ΑΔΟ (63, 65–69).",
+    "7. Πολύ μικρό Δt: μια μικρή τριβή δεν προλαβαίνει (64).",
 ]
 
-ROWS = -(-(len(CELLS) + 1) // 5)  # cells plus the rules panel
+_COL = len(CELLS) % 5
+RULES_ROW = len(CELLS) // 5 + (1 if _COL == 4 else 0)  # the rules panel needs at least two columns
+RULES_COL = 0 if _COL == 4 else _COL
+ROWS = RULES_ROW + 1
 FRAME_H = 250 + 256 * (ROWS - 1)
 SHIFT = 256 * ROWS  # how far the footer moves down
 
@@ -407,9 +700,9 @@ def draw_cell(s: S, entry, x: float, y: float):
 
 def rules_panel(s: S, x: float, y: float, w: float):
     s.rect(x, y, w, CELL_H, "#ffffff", "#d6dae1", 1, 7)
-    s.text(x + 14, y + 22, "Πώς φτιάχνω διάγραμμα δυνάμεων σε μια κρούση", 13.5, COLOR, "start")
+    s.text(x + 14, y + 22, "Πώς φτιάχνω διάγραμμα δυνάμεων", 13.5, COLOR, "start")
     for i, t in enumerate(RULES):
-        s.text(x + 14, y + 48 + 22.5 * i, t, 12, INK, "start", bold=False)
+        s.text(x + 14, y + 48 + 22.5 * i, t, 11.5 if w < 900 else 13, INK, "start", bold=False)
 
 
 def section_block(top: float) -> str:
@@ -421,8 +714,7 @@ def section_block(top: float) -> str:
     for i, entry in enumerate(CELLS):
         row, col = divmod(i, 5)
         draw_cell(s, entry, 17 + 238 * col, top + 34 + 256 * row)
-    row, col = divmod(len(CELLS), 5)
-    rules_panel(s, 17 + 238 * col, top + 34 + 256 * row, 238 * (5 - col) - 12)
+    rules_panel(s, 17 + 238 * RULES_COL, top + 34 + 256 * RULES_ROW, 238 * (5 - RULES_COL) - 12)
     return "\n".join(s.parts)
 
 
