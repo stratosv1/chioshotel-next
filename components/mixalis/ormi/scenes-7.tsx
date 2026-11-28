@@ -720,4 +720,107 @@ const case64: Case = {
   trap: "Το σφυρί δεν σπρώχνει την πατάτα. Και η πατάτα δεν «ανεβαίνει»: σχεδόν μένει ακίνητη, το μαχαίρι κατεβαίνει. Είναι το αντίθετο του 57 και του 62: εκεί μεγάλο Δt ⇒ μικρή δύναμη, εδώ μικρό Δt ⇒ η μικρή τριβή δεν προλαβαίνει.",
 };
 
-export const section10: Case[] = [case54, case55, case56, case57, case58, case59, case60, case61, case62, case63, case64];
+/** Fish facing right (body, tail, eye). */
+function Fish({ x, y, rx, ry, fill, label, opacity = 1 }: { x: number; y: number; rx: number; ry: number; fill: string; label?: string; opacity?: number }) {
+  return (
+    <g opacity={opacity}>
+      <polygon points={`${x - rx + 2},${y} ${x - rx - ry * 1.1},${y - ry} ${x - rx - ry * 1.1},${y + ry}`} fill={fill} stroke={C.edge} />
+      <ellipse cx={x} cy={y} rx={rx} ry={ry} fill={fill} stroke={C.edge} strokeWidth={1.2} />
+      <circle cx={x + rx * 0.55} cy={y - ry * 0.3} r={1.8} fill={C.ink} />
+      {label ? <T x={x - rx * 0.15} y={y + 4} s={label} size={11} color={C.ink} italic /> : null}
+    </g>
+  );
+}
+
+/* 65. Ψάρι τρώει ψάρι (Τριπολίτης): M = 8 kg με 0,6 m/s, m = 2 kg με 0,1 m/s, ίδια φορά, κατάποση 2 s. */
+const case65: Case = {
+  n: 65,
+  title: "Ψάρι τρώει ψάρι",
+  what: "Ένα μεγάλο ψάρι κυνηγά ένα μικρό που κολυμπά προς την ίδια μεριά, και το καταπίνει. Είναι πλαστική κρούση: μετά κινούνται μαζί. Η κατάποση κρατά 2 s, οπότε βρίσκουμε και τη μέση δύναμη ανάμεσά τους.",
+  given: "Μεγάλο ψάρι M = 8 kg με 0,6 m/s, μικρό m = 2 kg με 0,1 m/s προς την ίδια φορά. Χρόνος κατάποσης Δt = 2 s. (Άσκηση Τριπολίτη.)",
+  ask: "α) Την ταχύτητα V του μεγάλου ψαριού μετά την κατάποση. β) Την απώλεια ενέργειας. γ) Τη Δp του μικρού και τη μέση δύναμη που δέχεται το μεγάλο από το μικρό.",
+  period: 9.5,
+  legend: ["v", "F", "p"],
+  phases: [
+    { until: 2.5, label: "Πριν", say: "Θετική φορά προς τα δεξιά. p_ολ = 8·0,6 + 2·0,1 = 4,8 + 0,2 = 5 kg·m/s. Το νερό δεν ασκεί οριζόντια δύναμη: ΑΔΟ." },
+    {
+      until: 5,
+      label: "Κατάποση · 2 s",
+      say: "Απομονώνω κάθε ψάρι: το μεγάλο σπρώχνει το μικρό μπροστά με F, το μικρό σπρώχνει το μεγάλο πίσω με ίση F. Το μεγάλο φρενάρει, το μικρό επιταχύνεται.",
+    },
+    { until: 7, label: "Μετά", say: "α) 5 = (8 + 2)·V ⇒ V = 0,5 m/s. Η ολική ορμή (μαύρη ράβδος) έμεινε 5 kg·m/s." },
+    {
+      until: 9.5,
+      label: "Ενέργεια, δύναμη",
+      say: "β) K πριν = 1,44 + 0,01 = 1,45 J, μετά ½·10·0,5² = 1,25 J ⇒ Q = 0,2 J. γ) Δp_μικ = 2·0,5 − 2·0,1 = 0,8 kg·m/s, άρα Δp_μεγ = −0,8 και F = −0,8/2 = −0,4 N.",
+    },
+  ],
+  Scene: ({ t }) => {
+    const y = 84;
+    const k = seg(t, 2.5, 5);
+    let bigX: number;
+    let smallX: number;
+    let vBig: number;
+    let vSmall: number;
+    if (t < 2.5) {
+      bigX = 58 + 12 * t;
+      smallX = 127 + 2 * t;
+      vBig = 0.6;
+      vSmall = 0.1;
+    } else if (t < 5) {
+      bigX = 88 + 11 * (t - 2.5);
+      smallX = lerp(132, bigX + 20, k);
+      vBig = lerp(0.6, 0.5, k);
+      vSmall = lerp(0.1, 0.5, k);
+    } else {
+      bigX = 115.5 + 10 * (Math.min(t, 7) - 5);
+      smallX = bigX + 20;
+      vBig = 0.5;
+      vSmall = 0.5;
+    }
+    const swallowing = t >= 2.5 && t < 5;
+    const F = swallowing ? 0.4 : 0;
+    const smallGone = t >= 5;
+    return (
+      <g>
+        <rect x={6} y={30} width={204} height={96} rx={8} fill="#e8f3fb" />
+        <path d="M6,34 q12,-6 24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t24,0 t12,0" fill="none" stroke="#9cc3e4" strokeWidth={1.2} />
+        <Fish x={bigX} y={y} rx={32} ry={15} fill="#7fa7c9" label={smallGone ? "M+m" : "M"} />
+        {!smallGone ? <Fish x={smallX} y={y + (swallowing ? -2 * k : 0)} rx={10 * (1 - 0.5 * k)} ry={6 * (1 - 0.5 * k)} fill="#f2c46d" opacity={1 - 0.6 * k} /> : null}
+        <Vec x={bigX - 16} y={y - 26} dx={vBig * 45} label={smallGone ? "V" : "U"} />
+        {!smallGone ? <Vec x={smallX - 4} y={y + 22} dx={vSmall * 45 + 2} label="υ" labelSide="below" /> : null}
+        <Tag x={14} y={22} s="κατάποση: Δt = 2 s" color={C.F} show={swallowing} />
+        <T x={108} y={142} s={t >= 7 ? "Q = 1,45 − 1,25 = 0,2 J" : t >= 5 ? "V = 5 / 10 = 0,5 m/s" : "p_{ολ} = 5 kg·m/s"} size={10.5} color={t >= 7 ? C.K : C.p} />
+        <Panel x={218} y={8} w={136} h={118} title="κάθε ψάρι χωριστά">
+          <Fish x={252} y={48} rx={10} ry={6} fill="#f2c46d" />
+          <Fish x={300} y={92} rx={24} ry={11} fill="#7fa7c9" label="M" />
+          {swallowing ? (
+            <g>
+              <Vec x={264} y={48} dx={30} color={C.F} label="F" width={3} />
+              <Vec x={270} y={74} dx={-30} color={C.F} label="F" width={3} />
+            </g>
+          ) : null}
+          <T x={286} y={120} s={swallowing || t >= 7 ? `F = ${num(t >= 7 ? 0.4 : F, 1)} N (μέση)` : "καμία δύναμη μεταξύ τους"} size={9} color={swallowing || t >= 7 ? C.F : C.muted} bold={swallowing || t >= 7} />
+        </Panel>
+        <Bars
+          y={152}
+          max={5.2}
+          items={[
+            { label: "p_M", value: 8 * vBig, color: C.p },
+            { label: "p_m", value: 2 * vSmall, color: "#137a3f" },
+            { label: "p_{ολ}", value: 5, color: C.ink },
+          ]}
+        />
+      </g>
+    );
+  },
+  solve: (
+    <>
+      α) ΑΔΟ: 8·0,6 + 2·0,1 = 10·V ⇒ <b>V = 0,5 m/s</b>. β) K<sub>πριν</sub> = 1,44 + 0,01 = 1,45 J, K<sub>μετά</sub> = 1,25 J ⇒ <b>Q = 0,2 J</b> (≈ 13,8 %). γ) Δp<sub>μικ</sub> ={" "}
+      <b>+0,8 kg·m/s</b>, Δp<sub>μεγ</sub> = −0,8 kg·m/s ⇒ <b>F = −0,4 N</b>: μέτρο 0,4 N, αντίθετα στην κίνηση.
+    </>
+  ),
+  trap: "Η δύναμη στο μεγάλο ψάρι βγαίνει από τη ΔΙΚΗ του Δp (−0,8), όχι του μικρού. Και μετά την κατάποση το μεγάλο έχει μάζα 10 kg, όχι 8.",
+};
+
+export const section10: Case[] = [case54, case55, case56, case57, case58, case59, case60, case61, case62, case63, case64, case65];

@@ -274,6 +274,33 @@ def c64(s: S):  # hammer hits the knife, the potato "climbs" the blade
     s.T(172, 118, "όχι δύναμη σφυριού", 8.5, MUTED, bold=False)
 
 
+def fish(s: S, x, y, rx, ry, fill, label=None, size=10):
+    """Fish facing right: body ellipse, tail on the left, an eye."""
+    X, Y = s.at(x, y)
+    s.poly([(X - rx + 2, Y), (X - rx - ry * 1.1, Y - ry), (X - rx - ry * 1.1, Y + ry)], fill, stroke=EDGE)
+    s.add(f'<ellipse cx="{X:.1f}" cy="{Y:.1f}" rx="{rx}" ry="{ry}" fill="{fill}" stroke="{EDGE}" stroke-width="1.2"/>')
+    s.circle(X + rx * 0.55, Y - ry * 0.3, 1.6, INK)
+    if label:
+        s.text(X - rx * 0.15, Y + size * 0.36, label, size, INK, italic=True)
+
+
+def c65(s: S):  # the big fish swallows the small one (Τριπολίτης)
+    s.split()
+    X, Y = s.at(6, 50)
+    s.rect(X, Y, 110, 66, "#e8f3fb", "none", 0, 6)
+    fish(s, 44, 90, 22, 11, "#7fa7c9", "M", 11)
+    s.A(36, 70, 26, 0, V_BLUE, 2.4, "0,6", ly=-5, size=9.5)
+    fish(s, 96, 90, 9, 5, "#f2c46d")
+    s.A(92, 76, 6, 0, V_BLUE, 2, "0,1", ly=-5, size=9.5)
+    s.T(60, 112, "ίδια φορά", 9, MUTED, bold=False)
+    # each fish alone, during the 2 s of swallowing
+    fish(s, 150, 58, 9, 5, "#f2c46d")
+    s.A(160, 58, 26, 0, F_RED, 2.8, "F", ly=-6, size=11.5)
+    fish(s, 192, 98, 20, 10, "#7fa7c9", "M", 10.5)
+    s.A(170, 98 - 14, -26, 0, F_RED, 2.8, "F", ly=-6, size=11.5)
+    s.T(156, 120, "ίσες, αντίθετες", 8.5, MUTED, bold=False)
+
+
 # (title, drawer, [(text, color, bold)], ref)
 CELLS = [
     (54, "Μπάλα χτυπά τοίχο", c54, [
@@ -342,6 +369,12 @@ CELLS = [
         ("Όμως T ≤ μN = 4 N", K_ORANGE, True),
         ("Δυ_{πατ} ≈ 0,15 m/s ≪ 3 m/s", P_GREEN, True),
     ], "→ αντίθετο του 57, 62"),
+    (65, "Ψάρι τρώει ψάρι", c65, [
+        ("8·0,6 + 2·0,1 = 10V ⇒ V = 0,5 m/s", P_GREEN, True),
+        ("Q = 1,45 − 1,25 = 0,2 J", K_ORANGE, True),
+        ("Δp_{μικ} = 2·0,5 − 2·0,1 = 0,8", P_GREEN, True),
+        ("F_{μεγ} = −0,8 / 2 = −0,4 N", F_RED, True),
+    ], "Τριπολίτης · → δες και 16, 58"),
 ]
 
 RULES = [
