@@ -339,6 +339,63 @@ function FlightReading(){
  </section>
 }
 
+
+const ELEPHANT_OPTIONS = [
+ ["A","Elefanten sind keine schnellen Tiere. In einer Stunde gehen sie nur circa 5 Kilometer weit."],
+ ["B","Elefantenmütter leben in Gruppen mit ihren Kindern, die Väter meistens alleine."],
+ ["C","Ein Elefant kann zwischen 2000 und 5000 Kilogramm schwer und bis zu 4 Meter hoch werden."],
+ ["D","Elefanten fressen gerne Pflanzen, besonders gut schmecken ihnen Gras und Blätter."],
+ ["E","Elefanten können gut und lange schwimmen. Besonders junge Elefanten lieben Schwimmen und Tauchen!"],
+ ["F","Elefanten sind braun oder grau, haben weiße Zähne und große Ohren."],
+ ["G","In vielen Ländern tragen Elefanten schwere Dinge oder arbeiten im Zirkus."],
+];
+const ELEPHANT_QUESTIONS = [
+ ["Wie groß sind Elefanten?","C"],
+ ["Was ist die Lieblingsspeise von Elefanten?","D"],
+ ["Wie sehen Elefanten aus?","F"],
+ ["Leben Elefanten in Familien?","B"],
+ ["Helfen Elefanten den Menschen bei der Arbeit?","G"],
+ ["Sind Elefanten gern im Wasser?","E"],
+];
+function ElephantDrawing(){
+ return <svg viewBox="0 0 260 160" role="img" aria-label="Ein Elefant mit einem jungen Elefanten" className="mx-auto block w-full max-w-[260px]">
+  <defs><g id="elephant-shape" stroke="#514c46" strokeWidth="1.5" strokeLinejoin="round"><ellipse cx="105" cy="64" rx="49" ry="34" fill="#99958e"/><path d="M69 82 L68 129 H83 L91 84 M124 84 L125 129 H140 L145 80" fill="#99958e"/><path d="M151 65 Q163 81 153 96" fill="none"/><ellipse cx="56" cy="67" rx="27" ry="30" fill="#a19d96"/><path d="M52 45 Q24 26 22 62 Q21 93 53 90 Q64 73 52 45Z" fill="#b1ada6"/><path d="M40 81 Q29 103 34 125 Q38 138 48 129 L48 120 Q41 126 43 116 L54 85" fill="#99958e"/><path d="M47 87 Q46 103 57 108 L55 88" fill="#fff8df"/><circle cx="43" cy="67" r="2" fill="#514c46"/></g></defs>
+  <path d="M9 146 H251" stroke="#b7aa93" strokeWidth="2"/>
+  <use href="#elephant-shape" transform="translate(5 1) scale(1.08)"/><use href="#elephant-shape" transform="translate(143 65) scale(.61)"/>
+ </svg>
+}
+function ElephantReading(){
+ const initial=()=>["C","","","","",""];
+ const [values,setValues]=useState<string[]>(initial);
+ const [checked,setChecked]=useState(false);
+ const [solutions,setSolutions]=useState(false);
+ const correct=ELEPHANT_QUESTIONS.map((q,i)=>values[i]===q[1]);
+ const score=correct.slice(1).filter(Boolean).length*2;
+ const used=values.slice(1).filter(Boolean);
+ const duplicate=new Set(used).size!==used.length;
+ return <section id="der-elefant" className="scroll-mt-4 rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8 print:break-after-page print:border-0 print:shadow-none print:p-0">
+  <div className="flex items-center justify-between gap-3 border-b border-black/10 pb-3"><p className="text-sm font-semibold text-[#857261]">ÖSD KID A1 · Lesen · Aufgabe 1</p><p className="text-sm font-semibold">10 Punkte</p></div>
+  <p lang="de" className="mt-4 text-sm leading-6">Situation: Was weißt du über Elefanten? Hier gibt es 5 Fragen. Findest du die richtige Antwort (A – G) zu den Fragen? Die Antwort auf Frage 0 haben wir für dich schon gefunden. Achtung: Es gibt eine Antwort zu viel.</p>
+  <h2 lang="de" className="my-5 text-center text-2xl font-bold">Der Elefant</h2>
+  <ElephantDrawing/>
+  <div className="my-5 grid grid-cols-1 gap-3 sm:grid-cols-2 print:grid-cols-3" lang="de">{ELEPHANT_OPTIONS.map(([letter,option])=><div key={letter} className="flex gap-3 rounded-xl border border-black/15 bg-[#fcf6f0] p-3 print:break-inside-avoid"><span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-[#b5562a] font-bold text-white print:bg-white print:text-black">{letter}</span><p className="text-base leading-relaxed print:text-sm">{option}</p></div>)}</div>
+  <div className="overflow-hidden rounded-xl border border-black/15" lang="de">
+   <div className="flex justify-between bg-[#f3efe8] p-3 text-sm font-semibold"><span>Fragen</span><span>Antwort</span></div>
+   {ELEPHANT_QUESTIONS.map(([question,answer],i)=><div key={i} className="flex items-center gap-3 border-t border-black/15 p-3">
+    <span className="w-5 shrink-0 font-bold">{i}</span><p className="min-w-0 flex-1 text-base leading-relaxed print:text-sm">{question}{checked&&i>0&&<span className={"ml-2 text-sm font-semibold print:hidden "+(correct[i]?"text-green-800":"text-red-700")}>{correct[i]?"Σωστό":"Λάθος"}</span>}{solutions&&i>0&&<span className="ml-2 font-bold text-[#86391a] print:hidden">→ {answer}</span>}</p>
+    {i===0?<span className="w-16 shrink-0 text-center font-bold">C</span>:<><select aria-label={"Antwort "+i} value={values[i]} onChange={e=>{setValues(old=>old.map((v,j)=>i===j?e.target.value:v));setChecked(false);setSolutions(false)}} className={"w-16 shrink-0 rounded-lg border-2 p-2 text-center text-lg print:hidden "+(checked?(correct[i]?"border-green-700 bg-green-50":"border-red-600 bg-red-50"):"border-[#b9a18d] bg-white")}><option value="">–</option>{ELEPHANT_OPTIONS.filter(([letter])=>letter!=="C").map(([letter])=><option key={letter} value={letter}>{letter}</option>)}</select><span className="hidden h-9 w-16 shrink-0 border border-black print:block"/></>}
+   </div>)}
+  </div>
+  {duplicate&&<p role="status" className="mt-2 text-sm font-semibold text-[#86391a] print:hidden">Κάθε γράμμα χρησιμοποιείται μόνο μία φορά.</p>}
+  <div className="mt-5 flex flex-wrap items-center gap-2 print:hidden">
+   <button type="button" disabled={values.some(v=>!v)||duplicate} onClick={()=>{setChecked(true);setSolutions(false)}} className="rounded-xl bg-[#b5562a] px-4 py-2.5 font-semibold text-white disabled:opacity-45">Έλεγχος</button>
+   <button type="button" onClick={()=>{setValues(initial());setChecked(false);setSolutions(false)}} className="rounded-xl border border-black/15 px-4 py-2.5 font-semibold">Ξανά από την αρχή</button>
+   {checked&&<><span role="status" className="font-semibold">Βαθμός: {score}/10</span><button type="button" onClick={()=>setSolutions(v=>!v)} className="rounded-xl border border-black/15 px-3 py-2 text-sm">{solutions?"Απόκρυψη λύσεων":"Δες τις λύσεις"}</button></>}
+  </div>
+  <p className="mt-4 text-xs text-[#6b625b]">ÖSD KID A1 · Übungssatz 3 · Aufgabe 1. Προσωπική εξάσκηση από τη φωτογραφία.</p>
+ </section>
+}
+
 export default function GermanKidA1Page(){
   return <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8 print:bg-white print:p-0">
     <div className="mx-auto max-w-4xl space-y-6">
@@ -346,14 +403,16 @@ export default function GermanKidA1Page(){
         <Link href="/sideris" prefetch={false} className="text-sm font-semibold hover:underline">← Τα μαθήματά μου</Link>
         <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-[#857261]">Γερμανικά · ÖSD KID A1</p>
         <h1 className="mt-2 text-3xl font-bold">Lesen &amp; Sprechen</h1>
-        <p className="mt-3 text-[#6b625b]">1 εικονογραφημένη άσκηση αντιστοίχισης, 4 τεστ συμπλήρωσης λέξεων και 32 ερωτήσεις προφορικών. Οι απαντήσεις δεν εμφανίζονται πριν από τον έλεγχο.</p>
+        <p className="mt-3 text-[#6b625b]">2 ασκήσεις αντιστοίχισης, 4 τεστ συμπλήρωσης λέξεων και 32 ερωτήσεις προφορικών. Οι απαντήσεις δεν εμφανίζονται πριν από τον έλεγχο.</p>
         <nav className="mt-5 flex flex-wrap gap-2" aria-label="Ασκήσεις">
+          <a href="#der-elefant" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Der Elefant</a>
           <a href="#kurzer-flug" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Ein kurzer Flug</a>
           {TESTS.map((t,i)=><a key={t.title} href={"#lesen-"+(i+1)} className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">{t.title}</a>)}
           <a href="#sprechen" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Προφορικά</a>
           <button type="button" onClick={()=>window.print()} className="rounded-full border border-black/15 px-3 py-2 text-sm font-medium">Εκτύπωση / PDF</button>
         </nav>
       </header>
+      <ElephantReading/>
       <FlightReading/>
       {TESTS.map((test,index)=><ReadingTest key={test.title} test={test} index={index}/>)}
       <OralPractice/>
