@@ -27,6 +27,8 @@ export type ECase = {
   phases: Phase[];
   Scene: (props: { t: number }) => ReactNode;
   solve: ReactNode;
+  /** Optional step-by-step explanation shown above `solve` («Δείξε τη λύση»). */
+  steps?: { t: string; b: string }[];
   trap?: ReactNode;
   legend?: ELegend[];
   /** Text in the round badge instead of the number (e.g. "Κ3"). */
