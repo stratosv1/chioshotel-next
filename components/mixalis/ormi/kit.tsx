@@ -42,6 +42,8 @@ export type Case = {
   Scene: (props: { t: number }) => ReactNode;
   /** What the student writes, with the example numbers. */
   solve: ReactNode;
+  /** Optional step-by-step explanation shown above `solve` («Δείξε τη λύση»). */
+  steps?: { t: string; b: string }[];
   trap?: ReactNode;
   legend?: ("v" | "F" | "p" | "K")[];
 };

@@ -257,9 +257,24 @@ export function AnimCard({
 
       <div className="border-t border-black/5 bg-[#fbf8f3] px-4 py-3 text-sm leading-6 sm:px-5">
         {showSolution ? (
-          <div className="space-y-2">
-            <p>
-              <span className="font-semibold text-[#1f9d55]">Γράφεις: </span>
+          <div className="space-y-3">
+            {data.steps ? (
+              <ol className="space-y-2">
+                {data.steps.map((step, i) => (
+                  <li key={i} className="flex gap-2.5">
+                    <span className="mt-0.5 flex h-5 w-5 flex-none items-center justify-center rounded-full text-[11px] font-bold text-white" style={{ backgroundColor: "#1f9d55" }}>
+                      {i + 1}
+                    </span>
+                    <span>
+                      <span className="font-semibold text-[#1c2433]">{step.t}. </span>
+                      {rich(step.b)}
+                    </span>
+                  </li>
+                ))}
+              </ol>
+            ) : null}
+            <p className="rounded-xl border bg-white px-3 py-2" style={{ borderColor: "rgba(31, 157, 85, 0.3)" }}>
+              <span className="font-semibold text-[#1f9d55]">{data.steps ? "Στο γραπτό σου: " : "Γράφεις: "}</span>
               {rich(data.solve)}
             </p>
             {data.trap ? (
