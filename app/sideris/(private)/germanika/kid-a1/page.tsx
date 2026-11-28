@@ -396,6 +396,67 @@ function ElephantReading(){
  </section>
 }
 
+
+const FASHION = [
+ {n:5,text:"Julia hat Glück: Hier gibt es noch einen Trichter! Er ist sehr teuer, aber das ist nicht wichtig. Julia kauft den Trichter."},
+ {n:1,text:"Julia sieht auf der Straße ein Bild von Sina, dem Superstar. Sina ist sehr schön. Auf dem Kopf trägt sie einen neuen Hut: der Hut ist ein Trichter*!"},
+ {n:3,text:"Aber es gibt keine Trichter mehr, alle Regale sind leer! Julia ist traurig."},
+ {n:6,text:"Mit ihrem Trichter ist Julia jetzt so schön wie der Superstar Sina. Und wie alle anderen Mädchen."},
+ {n:2,text:"Julia möchte auch so gut aussehen wie Sina! Sie will auch einen Trichter auf dem Kopf tragen! Sofort läuft sie in die Einkaufsstraße zum ersten Geschäft."},
+ {n:4,text:"Sie läuft schnell weiter zum zweiten Geschäft. Hoffentlich gibt es dort noch Trichter! Julia ist ganz nervös."},
+];
+function FashionFunnel({x=0,y=0,rotation=0,scale=1}:{x?:number;y?:number;rotation?:number;scale?:number}){
+ return <g transform={`translate(${x} ${y}) rotate(${rotation}) scale(${scale})`} stroke="#52453e" strokeWidth="1.8" strokeLinejoin="round"><path d="M-17 -13 L17 -13 L4 5 L3 19 H-3 L-4 5Z" fill="#d9ab76"/><ellipse cy="-13" rx="17" ry="3" fill="#f5dbb6"/></g>
+}
+function FashionGirl({x=0,y=0,hat=false,mirror=false,scale=1,shade="#b87560"}:{x?:number;y?:number;hat?:boolean;mirror?:boolean;scale?:number;shade?:string}){
+ return <g transform={`translate(${x} ${y}) scale(${mirror?-scale:scale} ${scale})`} stroke="#52453e" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+ <path d="M-11 -23 Q-14 -43 4 -43 Q19 -40 11 -18 L-2 -14Z" fill="#9a7152"/><ellipse cx="4" cy="-29" rx="9" ry="12" fill="#f4d6b3"/><path d="M-5 -36 Q3 -37 9 -40 L12 -31" fill="#9a7152"/><circle cx="8" cy="-29" r="1" fill="#52453e"/><path d="M9 -22 L5 -21" fill="none"/><path d="M-5 -16 H7 L16 17 H-15Z" fill={shade}/><path d="M-1 -12 L-13 2 M7 -12 L23 -5 M-7 17 L-9 33 M9 17 L13 33 M-9 33 H-14 M13 33 H20" fill="none"/>{hat&&<FashionFunnel x={2} y={-54} rotation={180} scale={.83}/>}
+ </g>
+}
+function FashionShop({second=false}:{second?:boolean}){
+ return <g stroke="#52453e" strokeWidth="1.6" strokeLinejoin="round"><rect x="90" y="5" width="88" height="115" fill="#e4d6bb"/><rect x="96" y="9" width="76" height="25" fill="#fff7e9"/><text x="134" y="19" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#52453e" stroke="none">{second?"ALLES FÜR":"HAUSHALTS-"}</text><text x="134" y="29" textAnchor="middle" fontSize="8" fontWeight="bold" fill="#52453e" stroke="none">{second?"DIE KÜCHE":"WAREN"}</text><rect x="103" y="40" width="56" height="80" fill="#d5e5e6"/><path d="M110 113 H155 M150 81 H155" fill="none"/><FashionFunnel x={132} y={63} scale={.66}/></g>
+}
+function FashionPicture({n}:{n:number}){
+ return <svg viewBox="0 0 180 124" role="img" aria-label={"Bild "+n} className="block w-full rounded-xl border border-black/15 bg-[#faf7f0]">
+ {n===1&&<g><path d="M0 112 H180 M86 103 V39 L124 15 L161 41 V103" fill="none" stroke="#9b8c7c" strokeWidth="2"/><rect x="29" y="10" width="65" height="96" rx="2" fill="#f1d7af" stroke="#52453e" strokeWidth="2"/><text x="61" y="23" fontSize="11" fontWeight="bold" textAnchor="middle" fill="#52453e">SINA</text><FashionGirl x={60} y={69} hat scale={.65} shade="#a48bb3"/><text x="61" y="99" fontSize="9" fontWeight="bold" textAnchor="middle" fill="#52453e">SUPERSTAR</text><FashionGirl x={145} y={89} mirror scale={.9}/></g>}
+ {n===2&&<g><path d="M0 108 H180 M10 67 V36 H39 V63 H72 V22 H90" fill="none" stroke="#a39280" strokeWidth="2"/><FashionShop/><path d="M15 79 H39 M8 89 H31" stroke="#a39280" strokeWidth="2"/><FashionGirl x={55} y={84} scale={.95}/></g>}
+ {n===3&&<g stroke="#52453e" strokeWidth="1.6"><rect x="72" y="5" width="103" height="115" fill="#e4d6bb"/><path d="M75 38 H172 M75 72 H172 M75 105 H172 M123 5 V120" fill="none"/><rect x="89" y="42" width="65" height="27" fill="#fff7e9"/><text x="121" y="53" textAnchor="middle" stroke="none" fill="#52453e" fontSize="8">TRICHTER</text><text x="121" y="63" textAnchor="middle" stroke="none" fill="#52453e" fontSize="8" fontWeight="bold">AUSVERKAUFT</text><FashionGirl x={42} y={86} scale={.95}/></g>}
+ {n===4&&<g><path d="M0 108 H180 M0 56 H22 V31 H67 V65 H90" fill="none" stroke="#a39280" strokeWidth="2"/><FashionShop second/><path d="M5 79 H32 M1 91 H27" stroke="#a39280" strokeWidth="2"/><FashionGirl x={52} y={84} scale={.95}/></g>}
+ {n===5&&<g stroke="#52453e" strokeWidth="1.6"><rect x="4" y="4" width="172" height="116" fill="#f3e9d9"/><rect x="57" y="8" width="115" height="20" fill="#fff"/><text x="115" y="21" fontSize="9" textAnchor="middle" stroke="none" fill="#52453e">KOCH- UND BACKZUBEHÖR</text><FashionGirl x={41} y={77} scale={.9} shade="#809a8e"/><rect x="7" y="92" width="98" height="26" fill="#b5a28c"/><FashionFunnel x={87} y={60}/><rect x="81" y="79" width="27" height="16" fill="#fff"/><text x="94" y="90" fontSize="9" textAnchor="middle" stroke="none" fill="#52453e">80 €</text><FashionGirl x={145} y={86} mirror scale={.9}/></g>}
+ {n===6&&<g><path d="M0 110 H180 M8 50 L35 19 L60 50 M103 50 L137 20 L176 49" stroke="#a39280" strokeWidth="2" fill="none"/><FashionGirl x={35} y={89} hat scale={.87}/><FashionGirl x={91} y={89} hat scale={.87} shade="#8c9eac"/><FashionGirl x={148} y={89} hat mirror scale={.87} shade="#a48bb3"/></g>}
+ <rect x="4" y="4" width="22" height="22" rx="4" fill="#443c35"/><text x="15" y="20" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">{n}</text>
+ </svg>
+}
+
+function FashionReading(){
+ const initial=()=>FASHION.map(row=>row.n===1?"1":"");
+ const [values,setValues]=useState<string[]>(initial);
+ const [checked,setChecked]=useState(false);
+ const [solutions,setSolutions]=useState(false);
+ const correct=FASHION.map((row,i)=>values[i]===String(row.n));
+ const score=correct.filter((ok,i)=>ok&&FASHION[i].n!==1).length*2;
+ return <section id="die-neue-mode" className="scroll-mt-4 rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8 print:break-after-page print:border-0 print:shadow-none print:p-0">
+  <div className="flex items-center justify-between gap-3 border-b border-black/10 pb-3"><p className="text-sm font-semibold text-[#857261]">ÖSD KID A1 · Lesen · Aufgabe 2</p><p className="text-sm font-semibold">10 Punkte</p></div>
+  <p lang="de" className="mt-4 text-sm leading-6">Situation: Du findest in einer Jugendzeitschrift folgende Bildgeschichte. Der Text zur Geschichte ist leider durcheinandergeraten. Schau dir die Geschichte genau an und ordne die Textteile (1 – 6). Textteil 1 haben wir für dich schon gefunden.</p>
+  <h2 lang="de" className="my-5 text-center text-2xl font-bold">Die neue Mode</h2>
+  <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 print:grid-cols-3">{[1,2,3,4,5,6].map(n=><FashionPicture key={n} n={n}/>)}</div>
+  <div className="overflow-hidden rounded-xl border border-black/15" lang="de">
+   <div className="flex items-center gap-3 bg-[#f3efe8] p-3 text-sm font-semibold"><span className="w-16 shrink-0">Nummer</span><span>Text</span></div>
+   {FASHION.map((row,i)=><div key={row.n} className="flex items-center gap-3 border-t border-black/15 p-3">
+    {row.n===1?<span className="w-16 shrink-0 text-center font-bold">1</span>:<><select aria-label={"Text "+(i+1)+" – Nummer"} value={values[i]} onChange={e=>{setValues(old=>old.map((v,j)=>i===j?e.target.value:v));setChecked(false);setSolutions(false)}} className={"w-16 shrink-0 rounded-lg border-2 p-2 text-center text-lg print:hidden "+(checked?(correct[i]?"border-green-700 bg-green-50":"border-red-600 bg-red-50"):"border-[#b9a18d] bg-white")}><option value="">–</option>{[2,3,4,5,6].map(n=><option key={n} value={n}>{n}</option>)}</select><span className="hidden h-9 w-16 shrink-0 border border-black print:block"/></>}
+    <div className="min-w-0 flex-1 text-base leading-relaxed print:text-sm">{row.text}{checked&&row.n!==1&&<span className={"ml-2 text-sm font-semibold print:hidden "+(correct[i]?"text-green-800":"text-red-700")}>{correct[i]?"Σωστό":"Λάθος"}</span>}{solutions&&row.n!==1&&<span className="ml-2 font-bold text-[#86391a] print:hidden">→ {row.n}</span>}</div>
+   </div>)}
+  </div>
+  <div lang="de" className="mt-3 flex items-center gap-2 text-sm"><span>* der Trichter:</span><svg viewBox="0 0 44 44" className="h-10 w-10" role="img" aria-label="Trichter"><FashionFunnel x={22} y={20}/></svg></div>
+  <div className="mt-5 flex flex-wrap items-center gap-2 print:hidden">
+   <button type="button" disabled={values.some(v=>!v)} onClick={()=>{setChecked(true);setSolutions(false)}} className="rounded-xl bg-[#b5562a] px-4 py-2.5 font-semibold text-white disabled:opacity-45">Έλεγχος</button>
+   <button type="button" onClick={()=>{setValues(initial());setChecked(false);setSolutions(false)}} className="rounded-xl border border-black/15 px-4 py-2.5 font-semibold">Ξανά από την αρχή</button>
+   {checked&&<><span role="status" className="font-semibold">Βαθμός: {score}/10</span><button type="button" onClick={()=>setSolutions(v=>!v)} className="rounded-xl border border-black/15 px-3 py-2 text-sm">{solutions?"Απόκρυψη λύσεων":"Δες τις λύσεις"}</button></>}
+  </div>
+  <p className="mt-4 text-xs text-[#6b625b]">ÖSD KID A1 · Übungssatz 3 · Aufgabe 2. Τα σκίτσα έχουν αναδημιουργηθεί από τη φωτογραφία για προσωπική εξάσκηση.</p>
+ </section>
+}
+
 export default function GermanKidA1Page(){
   return <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8 print:bg-white print:p-0">
     <div className="mx-auto max-w-4xl space-y-6">
@@ -403,8 +464,9 @@ export default function GermanKidA1Page(){
         <Link href="/sideris" prefetch={false} className="text-sm font-semibold hover:underline">← Τα μαθήματά μου</Link>
         <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-[#857261]">Γερμανικά · ÖSD KID A1</p>
         <h1 className="mt-2 text-3xl font-bold">Lesen &amp; Sprechen</h1>
-        <p className="mt-3 text-[#6b625b]">2 ασκήσεις αντιστοίχισης, 4 τεστ συμπλήρωσης λέξεων και 32 ερωτήσεις προφορικών. Οι απαντήσεις δεν εμφανίζονται πριν από τον έλεγχο.</p>
+        <p className="mt-3 text-[#6b625b]">3 ασκήσεις αντιστοίχισης, 4 τεστ συμπλήρωσης λέξεων και 32 ερωτήσεις προφορικών. Οι απαντήσεις δεν εμφανίζονται πριν από τον έλεγχο.</p>
         <nav className="mt-5 flex flex-wrap gap-2" aria-label="Ασκήσεις">
+          <a href="#die-neue-mode" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Die neue Mode</a>
           <a href="#der-elefant" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Der Elefant</a>
           <a href="#kurzer-flug" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Ein kurzer Flug</a>
           {TESTS.map((t,i)=><a key={t.title} href={"#lesen-"+(i+1)} className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">{t.title}</a>)}
@@ -413,6 +475,7 @@ export default function GermanKidA1Page(){
         </nav>
       </header>
       <ElephantReading/>
+      <FashionReading/>
       <FlightReading/>
       {TESTS.map((test,index)=><ReadingTest key={test.title} test={test} index={index}/>)}
       <OralPractice/>
