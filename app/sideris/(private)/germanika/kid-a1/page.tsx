@@ -272,6 +272,73 @@ function OralPractice(){
   </section>
 }
 
+
+const FLIGHT = [
+  {n:3,text:"Im Raumschiff gibt es einen Stuhl. Dort sitzt normalerweise der Pilot. Jetzt sitzen Lukas und Max auf dem Stuhl und spielen mit den Knöpfen."},
+  {n:6,text:"Jetzt macht Lukas seine Augen auf. Er liegt auf dem kleinen Teppich neben seinem Bett. Lukas hat geschlafen und es war alles nur ein Traum!"},
+  {n:1,text:"An einem schönen Sonntagnachmittag geht Lukas mit seinem Hund Max spazieren. Da sieht er ein Raumschiff."},
+  {n:5,text:"Plötzlich gibt es ein Problem. Etwas ist kaputt. Das Raumschiff kann nicht weiterfliegen. Es fällt ganz schnell nach unten."},
+  {n:2,text:"Die Tür vom Raumschiff ist offen. Lukas und Max gehen zum Raumschiff. Dann steigen sie ein."},
+  {n:4,text:"Dann ist es ganz laut. Das Raumschiff startet! Lukas und Max fliegen mit dem Raumschiff davon."},
+];
+function FlightRocket({x=0,y=0,rotation=0}:{x?:number;y?:number;rotation?:number}){
+ return <g transform={`translate(${x} ${y}) rotate(${rotation})`} stroke="#443c35" strokeWidth="2" strokeLinejoin="round">
+  <path d="M0 -45 Q-17 -24 -15 19 L-26 36 L-10 30 L10 30 L26 36 L15 19 Q17 -24 0 -45Z" fill="#e7e1d7"/>
+  <path d="M0 -45 Q-9 -34 -12 -21 L12 -21 Q9 -34 0 -45Z" fill="#84786a"/>
+  <circle cy="-6" r="6" fill="#a9d4e5"/><path d="M-9 30 L-8 36 H8 L9 30" fill="#84786a"/>
+ </g>
+}
+function FlightBoy({x=0,y=0,rotation=0}:{x?:number;y?:number;rotation?:number}){
+ return <g transform={`translate(${x} ${y}) rotate(${rotation})`} stroke="#443c35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <circle cy="-24" r="9" fill="#f5d6ad"/><path d="M-8 -27 Q-7 -37 4 -33 L9 -26" fill="#735744"/><circle cx="4" cy="-24" r="1" fill="#443c35"/>
+  <path d="M-7 -15 L8 -15 L12 8 L-9 8Z" fill="#9bbdc8"/><path d="M-7 -10 L-15 4 M8 -10 L20 -3 M-4 8 L-6 26 M7 8 L13 26 M-6 26 H-13 M13 26 H20" fill="none"/>
+ </g>
+}
+function FlightDog({x=0,y=0}:{x?:number;y?:number}){
+ return <g transform={`translate(${x} ${y})`} stroke="#443c35" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+ <ellipse rx="12" ry="7" fill="#d7b185"/><circle cx="12" cy="-7" r="7" fill="#d7b185"/><path d="M10 -12 L5 -20 L4 -8 M16 -10 L22 -6 L15 -4 M-12 -3 L-20 -12 M-7 6 V14 M7 6 V14" fill="none"/><circle cx="15" cy="-9" r="1" fill="#443c35"/>
+ </g>
+}
+function FlightPicture({n}:{n:number}){
+ const line={stroke:"#443c35",strokeWidth:2,strokeLinecap:"round" as const,strokeLinejoin:"round" as const};
+ return <svg viewBox="0 0 180 124" role="img" aria-label={"Bild "+n} className="block w-full rounded-xl border border-black/15 bg-[#faf7f0]">
+ {n===1&&<g {...line}><path d="M0 86 L33 51 L58 74 L85 43 L119 78 M0 106 H180" fill="none"/><path d="M83 104 L108 87 H158 L180 104" fill="#d1c7b7"/><FlightRocket x={133} y={61}/><FlightBoy x={32} y={79}/><FlightDog x={61} y={94}/></g>}
+ {n===2&&<g {...line}><path d="M45 5 H145 L160 119 H25Z" fill="#e7e1d7"/><ellipse cx="91" cy="62" rx="27" ry="38" fill="#514b45"/><ellipse cx="127" cy="65" rx="14" ry="29" fill="#d4c8b5"/><path d="M122 65 H127" fill="none"/><FlightBoy x={76} y={79} rotation={-30}/><FlightDog x={93} y={104}/></g>}
+ {n===3&&<g {...line}><path d="M0 0 H180 V124 H0Z" fill="#e9e5db"/><path d="M36 22 H57 V82 H111 V99 H36Z" fill="#b4a99a"/><path d="M70 98 V117 M139 18 L175 12 V109 H124 L143 49Z" fill="#d0c4b2"/>{[0,1,2,3,4,5].map(i=><circle key={i} cx={145+i%3*11} cy={30+Math.floor(i/3)*13} r="3" fill="#829ca2"/>)}<FlightBoy x={75} y={62} rotation={-12}/><path d="M80 57 L123 42" fill="none"/><FlightDog x={100} y={77}/></g>}
+ {n===4&&<g {...line}><FlightRocket x={95} y={10}/><path d="M88 47 L82 83 M95 47 V91 M102 47 L111 82 M72 48 L62 71" stroke="#b5562a" strokeWidth="3" fill="none"/><path d="M0 108 Q5 90 25 99 Q20 76 48 82 Q52 59 76 78 Q89 66 104 86 Q124 62 138 86 Q165 76 170 99 Q180 95 180 113 H0Z" fill="#e3ddd2"/></g>}
+ {n===5&&<g {...line}><path d="M25 100 Q32 18 85 21 Q147 17 147 64 M37 99 Q43 31 86 33 Q132 31 134 61" strokeDasharray="6 4" fill="none"/><path d="M5 111 Q14 87 37 100 Q50 81 67 108 M26 39 Q28 16 45 22 Q54 4 70 23 Q88 15 96 37" fill="#e1d9cc"/><FlightRocket x={141} y={76} rotation={180}/><path d="M124 94 L119 111 M163 94 L169 111" fill="none"/></g>}
+ {n===6&&<g {...line}><path d="M8 112 H175 M24 86 V28 H40 V62 H155 V96 H24 M40 72 H155 V92 H40Z" fill="#d3c1aa"/><rect x="119" y="9" width="34" height="42" rx="2" fill="#fff"/><g transform="translate(136 31) scale(.32)"><FlightRocket/></g><ellipse cx="85" cy="108" rx="58" ry="10" fill="#c1b6a5"/><FlightBoy x={69} y={93} rotation={-57}/><path d="M79 90 Q98 76 117 91 L143 103 H91Z" fill="#e7d7a4"/></g>}
+ <rect x="4" y="4" width="22" height="22" rx="4" fill="#443c35"/><text x="15" y="20" textAnchor="middle" fontSize="14" fontWeight="bold" fill="white">{n}</text>
+ </svg>
+}
+function FlightReading(){
+ const initial=()=>FLIGHT.map(row=>row.n===1?"1":"");
+ const [values,setValues]=useState<string[]>(initial);
+ const [checked,setChecked]=useState(false);
+ const [solutions,setSolutions]=useState(false);
+ const correct=FLIGHT.map((row,i)=>values[i]===String(row.n));
+ const score=correct.filter((ok,i)=>ok&&FLIGHT[i].n!==1).length*2;
+ return <section id="kurzer-flug" className="scroll-mt-4 rounded-3xl border border-black/10 bg-white p-5 shadow-sm sm:p-8 print:break-after-page print:border-0 print:shadow-none print:p-0">
+  <div className="flex items-center justify-between gap-3 border-b border-black/10 pb-3"><p className="text-sm font-semibold text-[#857261]">ÖSD KID A1 · Lesen · Aufgabe 2</p><p className="text-sm font-semibold">10 Punkte</p></div>
+  <p lang="de" className="mt-4 text-sm leading-6">Situation: Du findest in einer Jugendzeitschrift folgende Bildgeschichte. Der Text zur Geschichte ist leider durcheinandergeraten. Schau dir die Geschichte genau an und ordne die Textteile (1 – 6). Textteil 1 haben wir für dich schon gefunden.</p>
+  <h2 lang="de" className="my-5 text-center text-2xl font-bold">Ein kurzer Flug</h2>
+  <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-3 print:grid-cols-3">{[1,2,3,4,5,6].map(n=><FlightPicture key={n} n={n}/>)}</div>
+  <div className="overflow-hidden rounded-xl border border-black/15" lang="de">
+   <div className="flex items-center gap-3 bg-[#f3efe8] p-3 text-sm font-semibold"><span className="w-16 shrink-0">Nummer</span><span>Text</span></div>
+   {FLIGHT.map((row,i)=><div key={row.n} className="flex items-center gap-3 border-t border-black/15 p-3">
+    {row.n===1?<span className="w-16 shrink-0 text-center font-bold">1</span>:<><select aria-label={"Text "+(i+1)+" – Nummer"} value={values[i]} onChange={e=>{setValues(old=>old.map((v,j)=>i===j?e.target.value:v));setChecked(false);setSolutions(false)}} className={"w-16 shrink-0 rounded-lg border-2 p-2 text-center text-lg print:hidden "+(checked?(correct[i]?"border-green-700 bg-green-50":"border-red-600 bg-red-50"):"border-[#b9a18d] bg-white")}><option value="">–</option>{[2,3,4,5,6].map(n=><option key={n} value={n}>{n}</option>)}</select><span className="hidden h-9 w-16 shrink-0 border border-black print:block"/></>}
+    <div className="min-w-0 flex-1 text-base leading-relaxed print:text-sm">{row.text}{checked&&row.n!==1&&<span className={"ml-2 text-sm font-semibold print:hidden "+(correct[i]?"text-green-800":"text-red-700")}>{correct[i]?"Σωστό":"Λάθος"}</span>}{solutions&&row.n!==1&&<span className="ml-2 font-bold text-[#86391a] print:hidden">→ {row.n}</span>}</div>
+   </div>)}
+  </div>
+  <div className="mt-5 flex flex-wrap items-center gap-2 print:hidden">
+   <button type="button" disabled={values.some(v=>!v)} onClick={()=>{setChecked(true);setSolutions(false)}} className="rounded-xl bg-[#b5562a] px-4 py-2.5 font-semibold text-white disabled:opacity-45">Έλεγχος</button>
+   <button type="button" onClick={()=>{setValues(initial());setChecked(false);setSolutions(false)}} className="rounded-xl border border-black/15 px-4 py-2.5 font-semibold">Ξανά από την αρχή</button>
+   {checked&&<><span role="status" className="font-semibold">Βαθμός: {score}/10</span><button type="button" onClick={()=>setSolutions(v=>!v)} className="rounded-xl border border-black/15 px-3 py-2 text-sm">{solutions?"Απόκρυψη λύσεων":"Δες τις λύσεις"}</button></>}
+  </div>
+  <p className="mt-4 text-xs text-[#6b625b]">ÖSD KID A1 · Modellsatz · Aufgabe 2. Τα σκίτσα έχουν αναδημιουργηθεί από τη φωτογραφία για προσωπική εξάσκηση.</p>
+ </section>
+}
+
 export default function GermanKidA1Page(){
   return <main className="min-h-screen bg-[#f3efe8] px-4 py-5 text-[#2c2825] sm:px-8 sm:py-8 print:bg-white print:p-0">
     <div className="mx-auto max-w-4xl space-y-6">
@@ -279,13 +346,15 @@ export default function GermanKidA1Page(){
         <Link href="/sideris" prefetch={false} className="text-sm font-semibold hover:underline">← Τα μαθήματά μου</Link>
         <p className="mt-4 text-sm font-semibold uppercase tracking-wider text-[#857261]">Γερμανικά · ÖSD KID A1</p>
         <h1 className="mt-2 text-3xl font-bold">Lesen &amp; Sprechen</h1>
-        <p className="mt-3 text-[#6b625b]">4 τεστ συμπλήρωσης λέξεων και 32 ερωτήσεις προφορικών. Οι απαντήσεις δεν εμφανίζονται πριν από τον έλεγχο.</p>
+        <p className="mt-3 text-[#6b625b]">1 εικονογραφημένη άσκηση αντιστοίχισης, 4 τεστ συμπλήρωσης λέξεων και 32 ερωτήσεις προφορικών. Οι απαντήσεις δεν εμφανίζονται πριν από τον έλεγχο.</p>
         <nav className="mt-5 flex flex-wrap gap-2" aria-label="Ασκήσεις">
+          <a href="#kurzer-flug" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Ein kurzer Flug</a>
           {TESTS.map((t,i)=><a key={t.title} href={"#lesen-"+(i+1)} className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">{t.title}</a>)}
           <a href="#sprechen" className="rounded-full bg-[#f8e9e0] px-3 py-2 text-sm font-medium">Προφορικά</a>
           <button type="button" onClick={()=>window.print()} className="rounded-full border border-black/15 px-3 py-2 text-sm font-medium">Εκτύπωση / PDF</button>
         </nav>
       </header>
+      <FlightReading/>
       {TESTS.map((test,index)=><ReadingTest key={test.title} test={test} index={index}/>)}
       <OralPractice/>
       <p className="text-xs text-[#6b625b]">Πηγή κειμένων: ÖSD KID A1, Modellsatz και Übungssätze 1–3, από τις φωτογραφίες των ασκήσεων. Αναπαραγωγή για προσωπική εξάσκηση.</p>
