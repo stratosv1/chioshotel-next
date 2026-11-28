@@ -45,6 +45,8 @@ export type Case = {
   /** Optional step-by-step explanation shown above `solve` («Δείξε τη λύση»). */
   steps?: { t: string; b: string }[];
   trap?: ReactNode;
+  /** Other questions a teacher could ask on the same phenomenon, with hidden answers. */
+  more?: { q: string; a: string }[];
   legend?: ("v" | "F" | "p" | "K")[];
 };
 

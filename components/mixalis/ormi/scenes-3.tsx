@@ -425,8 +425,8 @@ const case25: Case = {
   Scene: ({ t }) => {
     const tc = 1.6;
     const tFreeze = 4.2;
-    const pivot = { x: 150, y: 14 };
-    const Lpx = 104;
+    const pivot = { x: 205, y: 14 };
+    const Lpx = 96;
     const g = 10;
     const ell = 1;
     const V = 2.5;
@@ -462,28 +462,66 @@ const case25: Case = {
         </g>
         {bulletX !== null ? <Bullet x={bulletX} y={by} /> : null}
         <Vec x={bx + ux * 18} y={by + uy * 18} dx={ux * Tn * sc} dy={uy * Tn * sc} color={C.F} label={`T = ${num(Tn, 1)} N`} width={3.4} />
-        <Vec x={bx - (frozen ? 26 : 0)} y={by + 16} dx={0} dy={Wn * sc} color={C.F} label={after ? "(M+m)g" : "Mg"} labelSide="left" width={3} />
-        {frozen ? <Vec x={bx + 30} y={by - 4} dx={0} dy={-25 * sc * 1.2} color={C.p} label="ΣF = 25 N" width={2.6} /> : null}
+        <Vec x={bx - (frozen ? 26 : 0)} y={by + 16} dx={0} dy={Wn * sc} color={C.F} label={after ? "(M+m)g" : "Mg"} labelSide={swinging && th < 0 ? "right" : "left"} width={3} />
+        {swinging ? (
+          <g>
+            <rect x={4} y={88} width={96} height={74} rx={8} fill="#ffffff" stroke="#d9cfe9" />
+            <T x={52} y={99} s="ανάλυση βάρους" size={8.5} color="#5b3f8f" />
+            {(() => {
+              const a = Math.abs(th);
+              const ox = 40;
+              const oy = 106;
+              const Wl = 30;
+              const ex = Math.sin(a);
+              const ey = Math.cos(a);
+              const rad = Wl * Math.cos(a);
+              const tx = -Math.cos(a);
+              const ty = Math.sin(a);
+              const tan = Wl * Math.sin(a);
+              return (
+                <g>
+                  <line x1={ox - ex * 10} y1={oy - ey * 10} x2={ox + ex * 40} y2={oy + ey * 40} stroke={C.edge} strokeWidth={1} strokeDasharray="3 3" />
+                  <circle cx={ox} cy={oy} r={4} fill={C.wood} stroke={C.edge} />
+                  <line x1={ox + ex * rad} y1={oy + ey * rad} x2={ox} y2={oy + Wl} stroke="#7a5ea8" strokeDasharray="2 2" />
+                  <line x1={ox + tx * tan} y1={oy + ty * tan} x2={ox} y2={oy + Wl} stroke="#7a5ea8" strokeDasharray="2 2" />
+                  <Vec x={ox} y={oy} dx={0} dy={Wl} color={C.F} width={2.4} />
+                  <Vec x={ox} y={oy} dx={ex * rad} dy={ey * rad} color="#7a5ea8" width={2.2} />
+                  <Vec x={ox} y={oy} dx={tx * tan} dy={ty * tan} color="#7a5ea8" width={2.2} />
+                  <T x={ox + ex * rad + 4} y={oy + ey * rad + 4} s="mg·συνθ" size={8} color="#5b3f8f" anchor="start" />
+                  <T x={8} y={oy + ty * tan + 12} s="mg·ημθ" size={8} color="#5b3f8f" anchor="start" />
+                  <T x={52} y={157} s="στο νήμα · στην εφαπτομένη" size={7} color={C.muted} bold={false} />
+                </g>
+              );
+            })()}
+          </g>
+        ) : null}
+        {frozen ? <Vec x={bx + 74} y={by - 4} dx={0} dy={-25 * sc * 1.2} color={C.p} label="ΣF = 25 N" width={2.6} /> : null}
         {after && Math.abs(vNow) > 0.15 ? (
-          <Vec x={bx + Math.sin(th) * 26} y={by + Math.cos(th) * 26} dx={Math.cos(th) * vNow * 18} dy={-Math.sin(th) * vNow * 18} label="υ" />
+          <Vec
+            x={bx + Math.cos(th) * Math.sign(vNow) * 24 - Math.sin(th) * 8}
+            y={by - Math.sin(th) * Math.sign(vNow) * 24 - Math.cos(th) * 8}
+            dx={Math.cos(th) * vNow * 16}
+            dy={-Math.sin(th) * vNow * 16}
+            label="υ"
+          />
         ) : null}
         <Tag x={10} y={20} s="αμέσως μετά: πάγωμα" color={C.F} show={frozen} />
         {frozen ? (
           <g>
-            <T x={354} y={40} s="κύκλος ⇒ κεντρομόλος" size={10} color={C.muted} anchor="end" />
-            <T x={354} y={56} s="(M+m)V²/ℓ = 4·2,5²/1" size={10} color={C.muted} anchor="end" />
-            <T x={354} y={72} s="= 25 N" size={11} color={C.p} anchor="end" />
-            <T x={354} y={94} s="T = 40 + 25 = 65 N" size={11.5} color={C.F} anchor="end" />
+            <T x={6} y={40} s="κύκλος ⇒ κεντρομόλος" size={10} color={C.muted} anchor="start" />
+            <T x={6} y={56} s="(M+m)V²/ℓ = 4·2,5²/1" size={10} color={C.muted} anchor="start" />
+            <T x={6} y={72} s="= 25 N" size={11} color={C.p} anchor="start" />
+            <T x={6} y={94} s="T = 40 + 25 = 65 N" size={11.5} color={C.F} anchor="start" />
           </g>
         ) : swinging ? (
           <g>
-            <T x={354} y={44} s="T = (M+m)(g·συνθ + υ²/ℓ)" size={9.5} color={C.ink} anchor="end" />
-            <T x={354} y={62} s={`θ = ${num(Math.abs((th * 180) / Math.PI), 0)}°, υ = ${num(Math.sqrt(v2), 1)} m/s`} size={10} color={C.v} anchor="end" />
-            <T x={354} y={80} s="ψηλά: T = 27,5 N" size={10} color={C.muted} anchor="end" />
-            <T x={354} y={96} s="κάτω: T = 65 N" size={10} color={C.muted} anchor="end" />
+            <T x={6} y={34} s="T = (M+m)(g·συνθ + υ²/ℓ)" size={9.5} color={C.ink} anchor="start" />
+            <T x={6} y={50} s={`θ = ${num(Math.abs((th * 180) / Math.PI), 0)}°, υ = ${num(Math.sqrt(v2), 1)} m/s`} size={9.5} color={C.v} anchor="start" />
+            <T x={6} y={64} s="ψηλά: T = 27,5 N" size={9} color={C.muted} anchor="start" />
+            <T x={6} y={77} s="κάτω: T = 65 N" size={9} color={C.muted} anchor="start" />
           </g>
         ) : (
-          <T x={354} y={56} s="ισορροπία: T = Mg" size={11} color={C.ink} anchor="end" />
+          <T x={6} y={56} s="ισορροπία: T = Mg" size={11} color={C.ink} anchor="start" />
         )}
         <Bars y={168} max={70} items={[{ label: "T", value: Tn, color: C.F, unit: "N" }, { label: "βάρος", value: Wn, color: C.F, unit: "N" }]} />
       </g>
@@ -495,6 +533,36 @@ const case25: Case = {
     </>
   ),
   trap: "«Αμέσως μετά» το σώμα είναι ακόμα στην κατώτατη θέση, αλλά ήδη κάνει κυκλική κίνηση: δεν ισορροπεί, άρα T > βάρος.",
+  more: [
+    {
+      q: "Γιατί στον τύπο της τάσης T = (M+m)(g·συνθ + υ²/ℓ) υπάρχει συνθ;",
+      a: "Όταν το νήμα σχηματίζει γωνία θ με την κατακόρυφο, το βάρος δεν είναι πια πάνω στο νήμα. Το αναλύουμε (μωβ διακεκομμένα βέλη) σε mg·συνθ κατά μήκος του νήματος, προς τα έξω, και mg·ημθ κάθετα στο νήμα, στην εφαπτομένη. Η κεντρομόλος είναι η συνισταμένη ΠΑΝΩ στο νήμα, προς το κέντρο: T − mg·συνθ = mυ²/ℓ ⇒ T = m(g·συνθ + υ²/ℓ). Το mg·ημθ δεν μπαίνει εδώ: αυτό φρενάρει τον κύβο καθώς ανεβαίνει. Στο κατώτατο σημείο θ = 0, συν0 = 1, και ο τύπος γίνεται T = mg + mυ²/ℓ.",
+    },
+    {
+      q: "Πόσο ψηλά ανεβαίνει ο κύβος και ποια είναι η μέγιστη γωνία του νήματος;",
+      a: "ΑΔΜΕ μετά την κρούση: ½(M+m)V² = (M+m)g·h ⇒ h = 2,5²/20 = 0,3125 m. Και h = ℓ(1 − συνθ_max) ⇒ συνθ_max = 1 − 0,3125 = 0,6875 ⇒ θ_max ≈ 46,6°.",
+    },
+    {
+      q: "Πόση είναι η τάση στο ψηλότερο σημείο;",
+      a: "Εκεί υ = 0, άρα T = (M+m)·g·συνθ_max = 40·0,6875 = 27,5 N. Είναι μικρότερη από το βάρος: η συνισταμένη εκεί δεν είναι μηδέν, είναι το mg·ημθ που γυρίζει τον κύβο πίσω.",
+    },
+    {
+      q: "Πόση είναι η τάση όταν το νήμα σχηματίζει 30° με την κατακόρυφο;",
+      a: "ΑΔΜΕ: υ² = V² − 2gℓ(1 − συν30°) = 6,25 − 20·(1 − 0,866) ≈ 3,57 m²/s². T = 4·(10·0,866 + 3,57/1) ≈ 4·12,23 ≈ 48,9 N.",
+    },
+    {
+      q: "Αν το νήμα αντέχει το πολύ 100 N, με ποια μέγιστη ταχύτητα μπορεί να έρθει το βλήμα χωρίς να κοπεί;",
+      a: "Η μέγιστη τάση είναι στο κάτω σημείο: 100 = 40 + 4·V²/1 ⇒ V² = 15 ⇒ V ≈ 3,87 m/s. ΑΔΟ: 0,1·υ₀ = 4·3,87 ⇒ υ₀ ≈ 155 m/s.",
+    },
+    {
+      q: "Με ποια ελάχιστη ταχύτητα πρέπει να έρθει το βλήμα ώστε ο κύβος να κάνει ολόκληρο κύκλο;",
+      a: "Οριακά στην κορυφή T = 0: (M+m)g = (M+m)υ_κ²/ℓ ⇒ υ_κ² = gℓ = 10. ΑΔΜΕ από κάτω ως πάνω (ύψος 2ℓ): V² = υ_κ² + 4gℓ = 10 + 40 = 50 ⇒ V ≈ 7,07 m/s. ΑΔΟ: υ₀ = 4·7,07/0,1 ≈ 283 m/s.",
+    },
+    {
+      q: "Πόση θερμότητα έγινε στην κρούση και πόση μέση δύναμη δέχτηκε το βλήμα, αν η κρούση κράτησε 0,01 s;",
+      a: "Q = ½·0,1·100² − ½·4·2,5² = 500 − 12,5 = 487,5 J. Βλήμα: Δp = 0,1·(2,5 − 100) = −9,75 kg·m/s ⇒ F = 9,75/0,01 = 975 N, αντίθετα στην κίνησή του.",
+    },
+  ],
 };
 
 export const section4: Case[] = [case16, case17, case18, case19, case20];
