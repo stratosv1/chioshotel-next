@@ -163,7 +163,7 @@ export default function OrmiPage() {
             <PosterCells cells={cells} posterW={POSTER_W} posterH={POSTER_H} lesson="ormi" />
             </div>
           </div>
-          <PosterRevisionNote lesson="ormi" />
+          <PosterRevisionNote lesson="ormi" cells={cells} />
         </section>
 
         <nav className="sticky top-2 z-10 rounded-2xl border border-black/10 bg-white/90 p-2 shadow-sm backdrop-blur" aria-label="Ενότητες">
