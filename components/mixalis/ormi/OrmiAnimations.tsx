@@ -75,7 +75,7 @@ export const SECTIONS: { title: string; color: string; bg: string; intro: string
     cases: section9,
   },
   {
-    title: "Διαγράμματα δυνάμεων στην κρούση",
+    title: "Ασκήσεις Τριπολίτη · Διαγράμματα δυνάμεων στην κρούση",
     color: "#455a64",
     bg: "#eef2f4",
     intro:
