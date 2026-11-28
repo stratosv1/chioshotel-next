@@ -77,9 +77,10 @@ const SUBJECTS: Subject[] = [
       },
       {
         title: "ÖSD KID A1 · Lesen & Sprechen",
-        subtitle: "4 τεστ συμπλήρωσης λέξεων με έλεγχο και επανάληψη, 32 ερωτήσεις προφορικών και εκτύπωση χωρίς λύσεις.",
+        subtitle: "1 άσκηση αντιστοίχισης εικόνων, 4 τεστ συμπλήρωσης λέξεων, 32 ερωτήσεις προφορικών και εκτύπωση χωρίς λύσεις.",
         href: "/sideris/germanika/kid-a1",
         links: [
+          { label: "Ein kurzer Flug", href: "/sideris/germanika/kid-a1#kurzer-flug" },
           { label: "Die Goggis", href: "/sideris/germanika/kid-a1#lesen-1" },
           { label: "Pinocchio", href: "/sideris/germanika/kid-a1#lesen-2" },
           { label: "Oldtimer", href: "/sideris/germanika/kid-a1#lesen-3" },
